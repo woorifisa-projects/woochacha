@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="mainPage.css">
+    <script type="module" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script defer src="./index.js"></script>
+</head>
+
+
+<body>
+
+    <h2>Input Box</h2>
+    <textarea placeholder="전달할 텍스트를 입력하세요" id="input-box" ></textarea>
+    <br>
+
+<div class="btn-group">
+    <button id="user-get" class="btn">마이페이지</button>
+    <button id="user-update" class="btn">회원 정보 수정</button>
+    <button id="user-delete" class="btn">회원 탈퇴</button>
+    <button id="product-find-all" class="btn">전체 상품 보기</button>
+    <button id="product-find-one" class="btn">상품 상세 정보 보기</button>
+    <button id="product-add" class="btn">상품 추가하기</button>
+    <button id="product-update" class="btn">상품 수정하기</button>
+    <button id="product-delete" class="btn">상품 삭제하기</button>
+</div>
+<div id = "container"></div>
+</body>
+</html>

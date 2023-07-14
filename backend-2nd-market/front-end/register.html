@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>회원가입 페이지</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script type="module" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script defer src="./register.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>회원가입</h1>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="password">이메일</label>
+                <input type="text" id="userEmail" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="usernickname">닉네임</label>
+                <input type="text" id="usernickname" name="usernickname" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="userpassword" name="password" required>
+            </div>
+            
+            
+
+            <div class="form-group">
+                <select name="gender" id ="usergender">
+                    <option value="">성별 선택</option>
+                    <option value="F">여성</option>
+                    <option value="M">남성</option>
+                    <option value="?">기타</option>
+                </select>
+            </div>
+            <form id="register-form" action="mainPage.html"> 
+                <button type="submit" id = "userregister">회원가입</button>
+            </form>
+
+
+    </div>
+
+</body>
+</html>
