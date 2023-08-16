@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
@@ -18,10 +19,12 @@ public class SaleForm {
     @Column(name = "sale_form_id")
     private Long id;
 
+    private String car_num;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-
 
 }
