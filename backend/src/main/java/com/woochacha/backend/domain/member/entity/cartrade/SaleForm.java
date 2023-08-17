@@ -1,7 +1,7 @@
 package com.woochacha.backend.domain.member.entity.cartrade;
 
 import com.woochacha.backend.domain.member.entity.branch.Branch;
-import com.woochacha.backend.domain.member.entity.user.User;
+import com.woochacha.backend.domain.member.entity.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,8 +30,8 @@ public class SaleForm {
     private LocalDateTime updated_at;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")

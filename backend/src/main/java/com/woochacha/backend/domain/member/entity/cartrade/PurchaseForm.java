@@ -1,6 +1,6 @@
 package com.woochacha.backend.domain.member.entity.cartrade;
 
-import com.woochacha.backend.domain.member.entity.user.User;
+import com.woochacha.backend.domain.member.entity.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,8 +27,8 @@ public class PurchaseForm {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @NotNull
     private LocalDateTime created_at;
