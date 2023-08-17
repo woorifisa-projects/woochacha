@@ -15,7 +15,7 @@ import java.util.List;
 
 // 유저 엔티티
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {

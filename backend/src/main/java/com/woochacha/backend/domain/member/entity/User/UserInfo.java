@@ -2,26 +2,32 @@ package com.woochacha.backend.domain.member.entity.User;
 
 import lombok.Getter;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
 public class UserInfo {
+
     private Boolean role;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false, unique = true)
     private String password;
-    private String nickname;
+    @Column(nullable = false, unique = true)
+    private String username;
+    @Column(nullable = false, unique = true)
     private String phone;
 
     protected  UserInfo(){
 
     }
 
-    public UserInfo(Boolean role, String email, String password, String nickname, String phone) {
+    public UserInfo(Boolean role, String email, String password, String username, String phone) {
         this.role = role;
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
+        this.username = username;
         this.phone = phone;
     }
 }
