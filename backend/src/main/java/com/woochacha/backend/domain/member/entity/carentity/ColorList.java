@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.member.entity.CarEntity;
+package com.woochacha.backend.domain.member.entity.carentity;
 
 // 차량 색깔
 public enum ColorList {

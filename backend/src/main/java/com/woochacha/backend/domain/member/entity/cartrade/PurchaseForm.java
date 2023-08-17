@@ -1,6 +1,6 @@
-package com.woochacha.backend.domain.member.entity;
+package com.woochacha.backend.domain.member.entity.cartrade;
 
-import com.woochacha.backend.domain.member.entity.User.User;
+import com.woochacha.backend.domain.member.entity.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

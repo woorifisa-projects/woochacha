@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.member.entity;
+package com.woochacha.backend.domain.member.entity.cartrade;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

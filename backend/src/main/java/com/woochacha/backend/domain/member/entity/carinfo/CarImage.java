@@ -1,5 +1,6 @@
-package com.woochacha.backend.domain.member.entity;
+package com.woochacha.backend.domain.member.entity.carinfo;
 
+import com.woochacha.backend.domain.member.entity.cartrade.Product;
 import lombok.Getter;
 
 import javax.persistence.*;

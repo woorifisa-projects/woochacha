@@ -1,6 +1,6 @@
-package com.woochacha.backend.domain.member.entity;
+package com.woochacha.backend.domain.member.entity.cartrade;
 
-import com.woochacha.backend.domain.member.entity.User.User;
+import com.woochacha.backend.domain.member.entity.carinfo.CarDetail;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,31 +12,31 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-@Table(name = "sale_form")
+@Table(name = "table")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// 판매 신청 폼 정보 관리 엔티티
-public class SaleForm {
-
+// 게시글 정보 관리 엔티티
+public class Product {
     @Id @GeneratedValue
-    @Column(name = "sale_form_id")
+    @Column(name = "product_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_id")
+    private  SaleForm saleForm;
+
     @NotNull
-    private String car_num;
+    private Integer price;
     @NotNull
     private LocalDateTime created_at;
     @NotNull
     private LocalDateTime updated_at;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status")
-    private CarStatus carStatus;
+    private CarStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "car_num")
+    private CarDetail carDetail;
+
 }

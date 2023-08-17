@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.member.entity;
+package com.woochacha.backend.domain.member.entity.carhistory;
 
 import lombok.Getter;
 

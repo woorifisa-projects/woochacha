@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.member.entity.CarEntity;
+package com.woochacha.backend.domain.member.entity.carentity;
 
 public enum ModelList {
     현대, 기아, 한국GM, 르노코리아, KG모빌리티, 제네시스, 벤츠, BMW, 아우디, 미니, 폭스바겐, 랜드로버, 포르쉐, 지프,

@@ -1,5 +1,6 @@
-package com.woochacha.backend.domain.member.entity;
+package com.woochacha.backend.domain.member.entity.carhistory;
 
+import com.woochacha.backend.domain.member.entity.carinfo.CarDetail;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -8,16 +9,16 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "car_accident_info")
-// 차량 사고이력 저장 엔티티
-public class CarAccidentInfo {
+@Table(name = "car_exchange_info")
+// 차량 교체이력 저장 엔티티
+public class CarExchangeInfo {
     @Id @GeneratedValue
-    @Column(name = "car_accident_info_id")
-    private Integer id;
+    @Column(name = "car_exchange_info_id")
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accident_id")
-    private AccidentType accidentType;
+    @JoinColumn(name = "part_id")
+    private PartType partType;
 
     @NotNull
     private LocalDateTime createdAt;
@@ -25,4 +26,5 @@ public class CarAccidentInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_num")
     private CarDetail carDetail;
+
 }

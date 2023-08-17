@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.member.entity.CarEntity;
+package com.woochacha.backend.domain.member.entity.carentity;
 
 import lombok.Getter;
 

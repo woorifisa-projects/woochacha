@@ -1,8 +1,8 @@
-package com.woochacha.backend.domain.member.entity.User;
+package com.woochacha.backend.domain.member.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.woochacha.backend.domain.member.entity.PurchaseForm;
-import com.woochacha.backend.domain.member.entity.SaleForm;
+import com.woochacha.backend.domain.member.entity.cartrade.PurchaseForm;
+import com.woochacha.backend.domain.member.entity.cartrade.SaleForm;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

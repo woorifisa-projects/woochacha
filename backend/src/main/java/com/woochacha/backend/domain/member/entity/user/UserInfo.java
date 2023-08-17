@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.member.entity.User;
+package com.woochacha.backend.domain.member.entity.user;
 
 import lombok.Getter;
 

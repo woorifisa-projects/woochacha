@@ -1,11 +1,10 @@
-package com.woochacha.backend.domain.member.entity;
+package com.woochacha.backend.domain.member.entity.carinfo;
 
-import com.woochacha.backend.domain.member.entity.CarEntity.*;
+import com.woochacha.backend.domain.member.entity.carentity.*;
 import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Entity
 @Getter

@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.member.entity.CarEntity;
+package com.woochacha.backend.domain.member.entity.carentity;
 
 import lombok.Getter;
 
@@ -7,11 +7,11 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Table(name = "fuel")
-// 차량 연료 카테고리 정보 저장 엔티티
-public class Fuel {
+@Table(name = "color")
+// 차량 색상 카테고리 정보 저장 엔티티
+public class Color {
     @Id @GeneratedValue
-    @Column(name = "fuel_id")
+    @Column(name = "color_id")
     private Integer id;
 
     @NotNull
