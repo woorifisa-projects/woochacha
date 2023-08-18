@@ -1,10 +1,17 @@
 package com.woochacha.backend.domain.member.entity;
 
+<<<<<<< HEAD
 import lombok.*;
+=======
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+>>>>>>> 8b74967784446299c543987bc3b7485b05de69e9
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
+<<<<<<< HEAD
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -102,4 +109,40 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+=======
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+
+// 유저 엔티티
+@Entity
+@Getter
+@DynamicInsert
+@Table(name = "member")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Embedded
+    private MemberInfo memberInfo;
+
+    @CreationTimestamp
+    private LocalDateTime createAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
+
+    @ColumnDefault("1")
+    @NotBlank
+    private short isAvailable;
+
+    @ColumnDefault("1")
+    @NotBlank
+    private boolean status;
+
+    private String profileImage;
+>>>>>>> 8b74967784446299c543987bc3b7485b05de69e9
 }
