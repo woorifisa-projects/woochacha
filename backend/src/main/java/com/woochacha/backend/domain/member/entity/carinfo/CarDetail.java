@@ -4,6 +4,7 @@ import com.woochacha.backend.domain.member.entity.carentity.*;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -13,22 +14,22 @@ import javax.validation.constraints.NotNull;
 public class CarDetail {
     @Id
     @Column(name = "car_num", length = 50) // 컬럼 이름과 길이를 지정합니다.
-    private String car_num;
+    private String carNum;
 
-    @NotNull
+    @NotBlank
     private String owner;
 
-    @NotNull
+    @NotBlank
     private String phone;
 
-    @NotNull
+    @NotBlank
     private Integer distance;
 
-    @NotNull
-    private Integer year;
+    @NotBlank
+    private short year;
 
-    @NotNull
-    private Integer capacity;
+    @NotBlank
+    private short capacity;
 
     @OneToOne
     @JoinColumn(name = "type_id")

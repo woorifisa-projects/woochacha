@@ -10,11 +10,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
 @DynamicInsert
 @Table(name = "purchase_form")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,21 +24,19 @@ public class PurchaseForm {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @CreationTimestamp
-    @NotNull
-    private LocalDateTime created_at;
+    @NotBlank
+    private LocalDateTime createdAt;
 
     @ColumnDefault("0")
-    @NotNull
+    @NotBlank
     private Boolean status;
 }

@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter @Setter
+@Getter
 @Table(name = "part_type")
 // 차량 교체부위 종류 저장 엔티티
 public class PartType {
@@ -15,7 +16,7 @@ public class PartType {
     private short id;
 
     @Enumerated(value = EnumType.STRING)
-    @NotNull
+    @NotBlank
     private PartTypeList type;
 
 }

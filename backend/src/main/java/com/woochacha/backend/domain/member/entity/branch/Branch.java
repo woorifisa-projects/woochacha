@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,6 @@ public class Branch {
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
-    @NotNull
+    @NotBlank
     private BranchList name;
-
 }

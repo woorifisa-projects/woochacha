@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.member.entity.carentity;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -14,6 +15,6 @@ public class Model {
     private Integer id;
 
     @Enumerated(value = EnumType.STRING)
-    @NotNull
+    @NotBlank
     private ModelList name;
 }

@@ -14,12 +14,16 @@ public class MemberInfo {
 
     @ColumnDefault("1")
     private Boolean role;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private String memberName;
+
     @Column(nullable = false, unique = true)
     private String phone;
 

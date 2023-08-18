@@ -17,6 +17,6 @@ public class CarStatus {
     private short id;
 
     @Enumerated(value = EnumType.STRING)
-    @NotNull
+    @NotBlank
     private CarStatusList status;
 }

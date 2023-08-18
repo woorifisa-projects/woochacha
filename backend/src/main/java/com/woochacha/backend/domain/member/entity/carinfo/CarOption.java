@@ -17,20 +17,20 @@ public class CarOption {
     @JoinColumn(name = "car_num")
     private CarDetail carDetail;
 
-    @NotNull
+    @NotBlank
     private Boolean heated_seat;
-    @NotNull
+    @NotBlank
     private Boolean smart_key;
-    @NotNull
+    @NotBlank
     private Boolean blackbox;
-    @NotNull
+    @NotBlank
     private Boolean navigation;
-    @NotNull
+    @NotBlank
     private Boolean airbag;
-    @NotNull
+    @NotBlank
     private Boolean sunroof;
-    @NotNull
+    @NotBlank
     private Boolean high_pass;
-    @NotNull
+    @NotBlank
     private Boolean rearview_camera;
 }

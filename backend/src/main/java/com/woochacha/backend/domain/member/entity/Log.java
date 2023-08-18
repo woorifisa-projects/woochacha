@@ -1,27 +1,37 @@
 package com.woochacha.backend.domain.member.entity;
 
 import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@DynamicInsert
 @Table(name = "log")
 // 사용자 로그 정보 관리 엔티티
 public class Log {
-    @Id @GeneratedValue
-    @Column(name = "log_id")
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+
+    @NotBlank
     private String email;
-    @NotNull
+
+    @NotBlank
     private String username;
-    @NotNull
+
+    @CreationTimestamp
+    @NotBlank
     private LocalDateTime date;
-    @NotNull
+
+    @NotBlank
     private String type;
-    @NotNull
+
     private String etc;
 }

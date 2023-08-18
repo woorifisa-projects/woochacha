@@ -10,15 +10,16 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 // 유저 엔티티
 @Entity
-@Table(name = "member")
+@Getter
 @DynamicInsert
-@Getter @Setter
+@Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -30,16 +31,17 @@ public class Member {
 
     @CreationTimestamp
     private LocalDateTime createAt;
+
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
     @ColumnDefault("1")
-    @NonNull
+    @NotBlank
     private short isAvailable;
 
     @ColumnDefault("1")
-    @NonNull
+    @NotBlank
     private boolean status;
-    private String profileImage;
 
+    private String profileImage;
 }
