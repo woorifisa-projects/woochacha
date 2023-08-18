@@ -11,10 +11,11 @@ import javax.validation.constraints.NotNull;
 @Table(name = "part_type")
 // 차량 교체부위 종류 저장 엔티티
 public class PartType {
-    @Id @GeneratedValue
-    @Column(name = "part_type_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private short id;
+
+    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private String type;
+    private PartTypeList type;
 
 }

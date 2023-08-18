@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "type")
 // 차종 카테고리 정보 저장 엔티티
 public class Type {
-    @Id @GeneratedValue
-    @Column(name = "type_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private String name;
+    private TypeList name;
 }

@@ -13,15 +13,10 @@ import java.util.List;
 @Table(name = "car_status")
 // 게시글 상태 정보 엔티티
 public class CarStatus {
-    @Id @GeneratedValue
-    @Column(name = "car_status_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private short id;
 
+    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private String status;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "carStatus")
-    private List<SaleForm> saleForms = new ArrayList<>();
-
+    private CarStatusList status;
 }

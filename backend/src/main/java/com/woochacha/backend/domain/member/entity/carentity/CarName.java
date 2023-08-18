@@ -10,8 +10,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "car_name")
 // 차량 이름 정보 저장 엔티티
 public class CarName {
-    @Id @GeneratedValue
-    @Column(name = "car_name_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull

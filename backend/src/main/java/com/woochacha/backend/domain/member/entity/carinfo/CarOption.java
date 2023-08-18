@@ -10,8 +10,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "car_option")
 // 차량의 옵션 정보를 저장하는 엔티티
 public class CarOption {
-    @Id @GeneratedValue
-    @Column(name = "car_option_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @OneToOne

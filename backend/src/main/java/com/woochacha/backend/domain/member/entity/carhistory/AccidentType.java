@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "accident_type")
 // 차량 사고 이력 종류 저장 엔티티
 public class AccidentType {
-    @Id @GeneratedValue
-    @Column(name = "accident_type")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private short id;
 
+    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private String type;
+    private AccidentTypeList type;
 }

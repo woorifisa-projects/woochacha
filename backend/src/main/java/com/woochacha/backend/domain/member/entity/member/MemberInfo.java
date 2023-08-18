@@ -1,14 +1,18 @@
 package com.woochacha.backend.domain.member.entity.member;
 
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
+@DynamicInsert
 public class MemberInfo {
 
+    @ColumnDefault("1")
     private Boolean role;
     @Column(nullable = false, unique = true)
     private String email;

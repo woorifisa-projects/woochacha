@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "transmission")
 // 차량 변속기 카테고리 정보 엔티티
 public class Transmission {
-    @Id @GeneratedValue
-    @Column(name = "transmission_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private String name;
+    private TransmissionList name;
 }

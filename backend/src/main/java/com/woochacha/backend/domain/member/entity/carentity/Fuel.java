@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "fuel")
 // 차량 연료 카테고리 정보 저장 엔티티
 public class Fuel {
-    @Id @GeneratedValue
-    @Column(name = "fuel_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private String name;
+    private FuelList name;
 }

@@ -13,11 +13,11 @@ import java.util.List;
 @Table(name = "branch")
 // 차고지 정보 엔티티
 public class Branch {
-    @Id @GeneratedValue
-    @Column(name = "branch_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(value = EnumType.STRING)
     @NotNull
-    private String name;
+    private BranchList name;
 
 }

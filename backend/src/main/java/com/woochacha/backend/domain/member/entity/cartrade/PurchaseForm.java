@@ -5,6 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,12 +15,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@DynamicInsert
 @Table(name = "purchase_form")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 구매 신청 요청 정보 엔티티
 public class PurchaseForm {
-    @Id @GeneratedValue
-    @Column(name = "purchase_form_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
@@ -30,11 +33,11 @@ public class PurchaseForm {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @CreationTimestamp
     @NotNull
     private LocalDateTime created_at;
 
+    @ColumnDefault("0")
     @NotNull
     private Boolean status;
-
-
 }

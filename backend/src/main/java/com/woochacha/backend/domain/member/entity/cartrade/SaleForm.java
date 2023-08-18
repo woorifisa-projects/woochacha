@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,14 +20,17 @@ import java.time.LocalDateTime;
 // 판매 신청 폼 정보 관리 엔티티
 public class SaleForm {
 
-    @Id @GeneratedValue
-    @Column(name = "sale_form_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     private String car_num;
+
+    @CreationTimestamp
     @NotNull
     private LocalDateTime created_at;
+
+    @UpdateTimestamp
     @NotNull
     private LocalDateTime updated_at;
 

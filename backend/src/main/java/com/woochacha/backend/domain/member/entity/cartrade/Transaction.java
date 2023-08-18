@@ -2,6 +2,7 @@ package com.woochacha.backend.domain.member.entity.cartrade;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,8 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "transaction")
 // 성사된 거래 정보 관리 엔티티
 public class Transaction {
-    @Id @GeneratedValue
-    @Column(name = "transaction_id")
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,6 +24,7 @@ public class Transaction {
     @JoinColumn(name = "buyer_id")
     private PurchaseForm purchaseForm;
 
+    @CreationTimestamp
     @NotNull
     private LocalDateTime created_at;
 }
