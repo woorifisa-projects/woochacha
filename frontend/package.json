@@ -12,6 +12,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.4",
     "autoprefixer": "10.4.14",
     "eslint-config-next": "13.4.13",
