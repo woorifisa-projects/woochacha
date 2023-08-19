@@ -15,8 +15,6 @@ import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +30,6 @@ import java.util.List;
 public class SignServiceImpl implements SignService {
 
     private final JPAQueryFactory queryFactory;
-
-    private final Logger LOGGER = LoggerFactory.getLogger(SignServiceImpl.class);
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
