@@ -61,7 +61,6 @@ public class Member implements UserDetails {
     private String profileImage;
 
 
-<<<<<<< HEAD
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
 //    private List<String> roles = new ArrayList<>();
@@ -73,18 +72,6 @@ public class Member implements UserDetails {
 //                .map(SimpleGrantedAuthority::new)
 //                .collect(Collectors.toList());
         return null;
-=======
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
-
-    private static final long serialVersionUID = 6014984039564979072L;
-
-    // 계정이 가지고 있는 권한 목록 리턴
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
->>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
     }
 
     // 계정 이름 리턴. 일반적으로 아이디 리턴
@@ -96,31 +83,19 @@ public class Member implements UserDetails {
     // 계정이 만료됐는지 리턴. true : 만료 X
     @Override
     public boolean isAccountNonExpired() {
-<<<<<<< HEAD
         return this.status;
-=======
-        return true;
->>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
     }
 
     // 계정이 잠겨있는지 리턴. true: 잠김 X
     @Override
     public boolean isAccountNonLocked() {
-<<<<<<< HEAD
         return this.isAvailable;
-=======
-        return true;
->>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
     }
 
     // 비밀번호가 만료됐는지 리턴. true : 만료 X
     @Override
     public boolean isCredentialsNonExpired() {
-<<<<<<< HEAD
         return true;
-=======
-        return false;
->>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
     }
 
     // 계정이 활성화돼 있는지 리턴. true: 활성화

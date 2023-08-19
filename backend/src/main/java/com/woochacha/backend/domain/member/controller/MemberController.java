@@ -1,6 +1,5 @@
 package com.woochacha.backend.domain.member.controller;
 
-<<<<<<< HEAD
 import com.woochacha.backend.domain.jwt.JwtFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
@@ -18,12 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-=======
-import com.woochacha.backend.domain.member.dto.LoginRequestDto;
-import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
-import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
-import com.woochacha.backend.domain.member.service.SignService;
->>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,7 +25,6 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class MemberController {
 
-<<<<<<< HEAD
     private SignService signService;
 
     private Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
@@ -44,12 +36,6 @@ public class MemberController {
     public MemberController(JwtTokenProvider jwtTokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-=======
-    private SignService memberService;
-
-    public MemberController(SignService memberService) {
-        this.memberService = memberService;
->>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
     }
 
     @GetMapping
@@ -59,7 +45,6 @@ public class MemberController {
 
     @PostMapping("/register")
     public SignUpResponseDto registerUser(@Valid @RequestBody SignUpRequestDto memberRequestDto){
-<<<<<<< HEAD
         return signService.signUp(memberRequestDto);
     }
 
@@ -103,16 +88,5 @@ public class MemberController {
         }
 
     }
-=======
-        return memberService.signUp(memberRequestDto);
-    }
-
-//    @PostMapping("/login")
-//    public String login(@RequestBody LoginRequestDto loginRequestDto) {
-//        System.out.println(loginRequestDto.getEmail());
-//        // 사용자 인증 처리
-//        return "redirect:/product";
-//    }
->>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
 
 }
