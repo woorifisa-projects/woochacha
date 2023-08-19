@@ -1,14 +1,13 @@
 package com.woochacha.backend.domain.jwt;
 
-import java.io.IOException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import java.io.IOException;
 
 // 인가 필터
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {

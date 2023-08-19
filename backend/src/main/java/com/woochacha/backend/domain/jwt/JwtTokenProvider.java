@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 
 /**
  * JWT 토큰을 생성하고 유효성을 검증하는 컴포넌트 클래스 JWT 는 여러 암호화 알고리즘을 제공하고 알고리즘과 비밀키를 가지고 토큰을 생성
@@ -57,45 +56,17 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-
-
-    // JWT 토큰에서 회원 구별 정보 추출
+    // JWT 토큰을 복호화하여 회원 정보 추출
     public String getUsername(String token) {
-        LOGGER.info("[getUsername] 토큰 기반 회원 구별 정보 추출");
-        String info = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody()
-                .getSubject();
-        LOGGER.info("[getUsername] 토큰 기반 회원 구별 정보 추출 완료, info : {}", info);
-        return info;
-    }
-
-    // refresh token 생성
-    public String createRefreshToken(String userPk, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
-        claims.put("roles", roles); // 정보는 key / value 쌍으로 저장된다.
-        Date now = new Date();
-        return Jwts.builder()
-                .setClaims(claims) // 정보 저장
-                .setIssuedAt(now)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
-
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
     }
 
     // JWT 토큰으로 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 시작");
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUsername(token));
-        LOGGER.info("[getAuthentication] 토큰 인증 정보 조회 완료, UserDetails UserName : {}",
-                userDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails, "",
                 userDetails.getAuthorities());
     }
-
-    // 토큰에서 회원 정보 추출
-    public String getUserPk(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
-    }
-
 
     // Request의 Header에서 (access)token 값을 가져온다
     public String resolveToken(HttpServletRequest request) {
@@ -105,11 +76,6 @@ public class JwtTokenProvider {
     // Request의 Header에서 access token 값을 가져온다
     public String resolveAccessToken(HttpServletRequest request) {
         return request.getHeader("X-AUTH-TOKEN");
-    }
-
-    // Request의 Header에서 refresh token 값을 가져온다
-    public String resolveRefreshToken(HttpServletRequest request) {
-        return request.getHeader("REFRESH_TOKEN");
     }
 
 

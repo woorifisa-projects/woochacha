@@ -83,7 +83,7 @@ public class Member implements UserDetails {
     // 계정이 만료됐는지 리턴. true : 만료 X
     @Override
     public boolean isAccountNonExpired() {
-        return this.status;
+        return true;
     }
 
     // 계정이 잠겨있는지 리턴. true: 잠김 X
@@ -101,6 +101,6 @@ public class Member implements UserDetails {
     // 계정이 활성화돼 있는지 리턴. true: 활성화
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.status;
     }
 }
