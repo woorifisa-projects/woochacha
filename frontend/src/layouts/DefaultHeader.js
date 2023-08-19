@@ -12,7 +12,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { useRouter } from 'next/router';
-import { HEADER_MENU } from '@/constants/String';
+import { HEADER_MENU } from '@/constants/string';
 import MenuAppbar from '@/components/MenuAppbar';
 import ProfileAppbar from '@/components/ProfileAppbar';
 
