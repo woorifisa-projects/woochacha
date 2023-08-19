@@ -2,11 +2,16 @@ package com.woochacha.backend.domain.member.service.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.common.CommonResponse;
+<<<<<<< HEAD
 import com.woochacha.backend.domain.jwt.JwtFilter;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
 import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.dto.LoginSuccessDto;
+=======
+import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
+import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
+>>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
@@ -17,6 +22,7 @@ import org.modelmapper.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +31,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+=======
+>>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,17 +50,27 @@ public class SignServiceImpl implements SignService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+<<<<<<< HEAD
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
                            PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder) {
+=======
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    @Autowired
+    public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+>>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
         this.queryFactory = queryFactory;
         this.memberRepository = memberRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
+<<<<<<< HEAD
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+=======
+>>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
         this.modelMapperInit(modelMapper);
     }
 
@@ -97,6 +115,7 @@ public class SignServiceImpl implements SignService {
         return signUpResponseDto;
     }
 
+<<<<<<< HEAD
     public ResponseEntity<LoginSuccessDto> login(LoginRequestDto loginRequestDto) throws BadCredentialsException {
 
         LOGGER.info("[UsernamePasswordAuthenticationToken] 토큰 생성 시작");
@@ -132,6 +151,8 @@ public class SignServiceImpl implements SignService {
         return new ResponseEntity<>(new LoginSuccessDto(jwt), httpHeaders, HttpStatus.OK);
     }
 
+=======
+>>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
     public Member save(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);

@@ -39,4 +39,8 @@ out/
 .vscode/
 
 src/main/generated/
+<<<<<<< HEAD
+=======
+src/main/java/com/woochacha/backend/domain/jwt/JwtTokenProvider.java
+>>>>>>> 32f9886682f2c2b121075c5bfc8026fb53aea5aa
 .idea
