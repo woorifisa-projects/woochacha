@@ -4,8 +4,14 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="false" />
+        <option name="testRunner" value="PLATFORM" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/backend" />
+<<<<<<< HEAD
+        <option name="gradleJvm" value="temurin-11" />
+=======
         <option name="gradleJvm" value="11" />
+>>>>>>> 8b74967784446299c543987bc3b7485b05de69e9
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/backend" />
