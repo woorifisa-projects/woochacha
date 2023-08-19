@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Avatar, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
-import { HEADER_USER_MENU } from '@/constants/String';
+import { HEADER_USER_MENU } from '@/constants/string';
 
 export default function ProfileAppbar() {
   const router = useRouter();

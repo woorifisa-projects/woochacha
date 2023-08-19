@@ -1,7 +1,7 @@
 import { Fade, Menu, MenuItem } from '@mui/material';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { HEADER_MINI_MENU } from '@/constants/String';
+import { HEADER_MINI_MENU } from '@/constants/string';
 
 export default function MenuAppbar(props) {
   const router = useRouter();
