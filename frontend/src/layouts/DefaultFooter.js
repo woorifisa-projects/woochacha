@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CssBaseline, ThemeProvider, Box, Grid } from '@mui/material';
 import theme from '@/styles/theme';
-import CopyRight from '@/components/CopyRight';
+import CopyRight from '@/components/common/CopyRight';
 
 export default function DefaultFooter() {
   return (

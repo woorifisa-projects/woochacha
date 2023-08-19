@@ -13,8 +13,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { useRouter } from 'next/router';
 import { HEADER_MENU } from '@/constants/string';
-import MenuAppbar from '@/components/MenuAppbar';
-import ProfileAppbar from '@/components/ProfileAppbar';
+import MenuAppbar from '@/components/common/MenuAppbar';
+import ProfileAppbar from '@/components/common/ProfileAppbar';
 
 function DefaultHeader() {
   const router = useRouter();
