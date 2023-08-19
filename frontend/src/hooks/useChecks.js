@@ -16,3 +16,8 @@ export const checkPassword = (data) => {
 export const checkEmail = (data) => {
   return REGEXP.EMAIL_REGEXP.test(data);
 };
+
+// 이름 유효성 검사
+export const checkName = (data) => {
+  return REGEXP.NAME_REGEXP.test(data);
+};

@@ -14,12 +14,13 @@ import {
   InputLabel,
 } from '@mui/material';
 import theme from '@/styles/theme';
-import { checkPhonenumber, checkPassword, checkEmail } from '@/hooks/useChecks';
+import { checkPhonenumber, checkPassword, checkEmail, checkName } from '@/hooks/useChecks';
 
 export default function SignUp() {
   const [emailVaild, setEmailVaild] = useState(false);
   const [pwVaild, setPwVaild] = useState(false);
   const [phoneVaild, setPhoneVaild] = useState(false);
+  const [nameVaild, setNameVaild] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -27,12 +28,14 @@ export default function SignUp() {
     setEmailVaild(!checkEmail(data.get('email')));
     setPwVaild(!checkPassword(data.get('password')));
     setPhoneVaild(!checkPhonenumber(data.get('phoneNum')));
+    setNameVaild(!checkName(data.get('name')));
 
     // TODO: 회원가입 관련 form 데이터 보내주기
     console.log({
       email: data.get('email'),
       password: data.get('password'),
       phone: data.get('phoneNum'),
+      name: data.get('name'),
     });
   };
 
@@ -45,7 +48,11 @@ export default function SignUp() {
       setPwVaild(!checkPassword(e.target.value));
       return;
     }
-    setPhoneVaild(!checkPhonenumber(e.target.value));
+    if (e.target.type.includes('tel')) {
+      setPhoneVaild(!checkPhonenumber(e.target.value));
+      return;
+    }
+    setNameVaild(!checkName(e.target.value));
   };
 
   return (
@@ -109,6 +116,21 @@ export default function SignUp() {
                   label="비밀번호를 확인해주세요"
                   type="password"
                   id="password-confirm"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <InputLabel htmlFor="phoneNum" sx={{ fontSize: '1.2rem', my: 1 }}>
+                  이름
+                </InputLabel>
+                <TextField
+                  onBlur={handleBlur}
+                  required
+                  fullWidth
+                  id="name"
+                  label="이름을 입력해주세요"
+                  name="name"
+                  type="text"
+                  error={nameVaild}
                 />
               </Grid>
               <Grid item xs={12}>
