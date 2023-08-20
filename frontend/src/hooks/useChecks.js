@@ -1,23 +1,54 @@
-import { REGEXP } from '@/constants/regExp';
+import { checkPhonenumber, checkPassword, checkEmail, checkName } from '@/utils/validate';
 
-// 형식에 맞는 경우 true 리턴
-
-// 핸드폰번호 유효성 검사
-export const checkPhonenumber = (data) => {
-  return REGEXP.CALL_REGEXP.test(data);
+/**
+ * 회원가입  form 유효성 검사
+ */
+export const checkFormValidate = (signupData) => {
+  return {
+    emailErr: !checkEmail(signupData.email),
+    pwErr: !checkPassword(signupData.password),
+    phoneErr: !checkPhonenumber(signupData.phone),
+    nameErr: !checkName(signupData.name),
+  };
 };
 
-//비밀번호 유효성 검사
-export const checkPassword = (data) => {
-  return REGEXP.PW_REGEXP.test(data);
+/**
+ * 로그인 form 유효성 검사
+ */
+export const checkLoginValidate = (loginData) => {
+  return {
+    emailErr: !checkEmail(loginData.email),
+    pwErr: !checkPassword(loginData.password),
+  };
 };
 
-// 이메일 유효성 검사
-export const checkEmail = (data) => {
-  return REGEXP.EMAIL_REGEXP.test(data);
-};
-
-// 이름 유효성 검사
-export const checkName = (data) => {
-  return REGEXP.NAME_REGEXP.test(data);
+export const handleSignupBlur = (e, setFormValid, formValid) => {
+  if (e.target.type.includes('email')) {
+    setFormValid({
+      ...formValid,
+      emailErr: !checkEmail(e.target.value),
+    });
+    return;
+  }
+  if (e.target.type.includes('password')) {
+    setFormValid({
+      ...formValid,
+      pwErr: !checkPassword(e.target.value),
+    });
+    return;
+  }
+  if (e.target.type.includes('tel')) {
+    setFormValid({
+      ...formValid,
+      phoneErr: !checkPhonenumber(e.target.value),
+    });
+    return;
+  }
+  if (e.target.id.includes('name')) {
+    setFormValid({
+      ...formValid,
+      nameErr: !checkName(e.target.value),
+    });
+    return;
+  }
 };
