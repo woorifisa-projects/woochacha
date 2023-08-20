@@ -61,16 +61,17 @@ public class Member implements UserDetails {
     private String profileImage;
 
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
-
-    private static final long serialVersionUID = 6014984039564979072L;
-
-    // 계정이 가지고 있는 권한 목록 리턴
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @Builder.Default
+//    private List<String> roles = new ArrayList<>();
+//
+//    // 계정이 가지고 있는 권한 목록 리턴
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+//        return this.roles.stream()
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+        return null;
     }
 
     // 계정 이름 리턴. 일반적으로 아이디 리턴
@@ -88,18 +89,18 @@ public class Member implements UserDetails {
     // 계정이 잠겨있는지 리턴. true: 잠김 X
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.isAvailable;
     }
 
     // 비밀번호가 만료됐는지 리턴. true : 만료 X
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     // 계정이 활성화돼 있는지 리턴. true: 활성화
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.status;
     }
 }

@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.member.controller;
 
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
+import com.woochacha.backend.domain.member.dto.LoginResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
 import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.service.SignService;
@@ -12,10 +13,10 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class MemberController {
 
-    private SignService memberService;
+    private final SignService signService;
 
-    public MemberController(SignService memberService) {
-        this.memberService = memberService;
+    public MemberController(SignService signService) {
+        this.signService = signService;
     }
 
     @GetMapping
@@ -25,14 +26,12 @@ public class MemberController {
 
     @PostMapping("/register")
     public SignUpResponseDto registerUser(@Valid @RequestBody SignUpRequestDto memberRequestDto){
-        return memberService.signUp(memberRequestDto);
+        return signService.signUp(memberRequestDto);
     }
 
-//    @PostMapping("/login")
-//    public String login(@RequestBody LoginRequestDto loginRequestDto) {
-//        System.out.println(loginRequestDto.getEmail());
-//        // 사용자 인증 처리
-//        return "redirect:/product";
-//    }
+    @PostMapping("/login")
+    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
+        return signService.login(loginRequestDto);
+    }
 
 }
