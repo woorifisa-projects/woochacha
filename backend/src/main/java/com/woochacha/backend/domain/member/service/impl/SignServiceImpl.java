@@ -2,18 +2,27 @@ package com.woochacha.backend.domain.member.service.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.common.CommonResponse;
+import com.woochacha.backend.common.ModelMapping;
+import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
+import com.woochacha.backend.domain.jwt.JwtFilter;
+import com.woochacha.backend.domain.jwt.JwtTokenProvider;
+import com.woochacha.backend.domain.member.dto.LoginRequestDto;
+import com.woochacha.backend.domain.member.dto.LoginResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
 import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.entity.QMember;
+import com.woochacha.backend.domain.member.exception.LoginException;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
-import com.woochacha.backend.domain.jwt.JwtTokenProvider;
+import com.woochacha.backend.domain.product.entity.QCarImage;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,24 +31,27 @@ import java.util.List;
 @Service
 public class SignServiceImpl implements SignService {
 
-
-//    private final JPAQueryFactory queryFactory;
-
-    private final Logger LOGGER = LoggerFactory.getLogger(SignServiceImpl.class);
+    private final JPAQueryFactory queryFactory;
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    @Autowired
-    public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+    private final ModelMapper modelMapper = ModelMapping.getInstance();
+
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+
+    public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
+                           PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder) {
+
         this.queryFactory = queryFactory;
         this.memberRepository = memberRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
-        this.modelMapperInit(modelMapper);
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
     /*
@@ -73,17 +85,47 @@ public class SignServiceImpl implements SignService {
             Member savedMember = save(signUpRequestDto);
 
             if (!savedMember.getName().isEmpty()) {
-                LOGGER.info("[getSignUpResult] 회원 가입 완료");
                 setSuccessResult(signUpResponseDto);
             } else {
-                LOGGER.info("[getSignUpResult] 회원 가입 실패");
                 setFailResult(signUpResponseDto, CommonResponse.FAIL);
             }
         }
         return signUpResponseDto;
     }
 
+    public LoginResponseDto login(LoginRequestDto loginRequestDto) throws BadCredentialsException {
+        try {
+            // Authentication 토큰 생성
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+
+            // loadUserByUsername 메소드 실행됨
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+            // Authentication 객체 생성 -> SecurityContext에 저장
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            // Authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
+            String jwt = jwtTokenProvider.createToken(authentication);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+
+            return new LoginResponseDto(1, "성공", jwt);
+        } catch (Exception e) {
+            return LoginException.exception(e);
+        }
+    }
+
+    public boolean logout() {
+
+        return true;
+    }
+
+
     public Member save(SignUpRequestDto signUpRequestDto) {
+
+        LOGGER.info(modelMapper.toString());
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);
         memberRepository.save(savedMember);
@@ -102,11 +144,5 @@ public class SignServiceImpl implements SignService {
         result.setSuccess(false);
         result.setCode(commonResponse.getCode());
         result.setMsg(commonResponse.getMsg());
-    }
-
-    private void modelMapperInit(ModelMapper modelMapper) {
-        modelMapper.getConfiguration()
-                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
-                .setFieldMatchingEnabled(true);
     }
 }
