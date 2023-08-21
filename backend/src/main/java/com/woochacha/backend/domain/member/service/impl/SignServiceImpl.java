@@ -17,9 +17,6 @@ import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,7 +52,6 @@ public class SignServiceImpl implements SignService {
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.modelMapperInit(modelMapper);
     }
 
     /*
@@ -149,12 +145,4 @@ public class SignServiceImpl implements SignService {
         result.setCode(commonResponse.getCode());
         result.setMsg(commonResponse.getMsg());
     }
-
-    private void modelMapperInit(ModelMapper modelMapper) {
-        modelMapper.getConfiguration()
-                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
-                .setFieldMatchingEnabled(true);
-    }
-
-
 }
