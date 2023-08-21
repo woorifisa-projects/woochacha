@@ -2,6 +2,8 @@ package com.woochacha.backend.domain.member.service.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.common.CommonResponse;
+import com.woochacha.backend.common.ModelMapping;
+import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
@@ -13,8 +15,8 @@ import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.exception.LoginException;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
+import com.woochacha.backend.domain.product.entity.QCarImage;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,8 +37,12 @@ public class SignServiceImpl implements SignService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
+    private final ModelMapper modelMapper = ModelMapping.getInstance();
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final ModelMapper modelMapper = new ModelMapper();
+
 
     public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
                            PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder) {
@@ -46,7 +52,6 @@ public class SignServiceImpl implements SignService {
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.modelMapperInit(modelMapper);
     }
 
     /*
@@ -112,7 +117,15 @@ public class SignServiceImpl implements SignService {
         }
     }
 
+    public boolean logout() {
+
+        return true;
+    }
+
+
     public Member save(SignUpRequestDto signUpRequestDto) {
+
+        LOGGER.info(modelMapper.toString());
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);
         memberRepository.save(savedMember);
@@ -132,12 +145,4 @@ public class SignServiceImpl implements SignService {
         result.setCode(commonResponse.getCode());
         result.setMsg(commonResponse.getMsg());
     }
-
-    private void modelMapperInit(ModelMapper modelMapper) {
-        modelMapper.getConfiguration()
-                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
-                .setFieldMatchingEnabled(true);
-    }
-
-
 }
