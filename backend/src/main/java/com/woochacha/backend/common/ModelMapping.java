@@ -3,12 +3,13 @@ package com.woochacha.backend.common;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ModelMapping {
-    private static ModelMapper modelMapper = null;
+    private static ModelMapper modelMapper = new ModelMapper();
 
     private ModelMapping() {
-        modelMapper = new ModelMapper();
 
         /*
             ModelMapper 라이브러리 사용 시, Entity에 @Setter가 꼭 필요한데
