@@ -109,6 +109,4 @@ public class SignServiceImpl implements SignService {
                 .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
                 .setFieldMatchingEnabled(true);
     }
-
-
 }
