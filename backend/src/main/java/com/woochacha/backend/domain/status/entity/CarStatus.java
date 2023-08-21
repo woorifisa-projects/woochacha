@@ -3,7 +3,7 @@ package com.woochacha.backend.domain.status.entity;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -14,6 +14,6 @@ public class CarStatus {
     private short id;
 
     @Enumerated(value = EnumType.STRING)
-    @NotBlank
+    @NotNull
     private CarStatusList status;
 }

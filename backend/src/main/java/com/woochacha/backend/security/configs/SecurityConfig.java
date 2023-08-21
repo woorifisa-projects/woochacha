@@ -1,11 +1,5 @@
 package com.woochacha.backend.security.configs;
 
-import com.woochacha.backend.config.JwtSecurityConfig;
-import com.woochacha.backend.domain.jwt.JwtAccessDeniedHandler;
-import com.woochacha.backend.domain.jwt.JwtAuthenticationEntryPoint;
-import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
-import com.woochacha.backend.domain.jwt.JwtTokenProvider;
-import com.woochacha.backend.domain.member.service.impl.UserDetailsServiceImpl;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,36 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    private final JwtTokenProvider jwtTokenProvider;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-    private final UserDetailsServiceImpl customUserDetailsService;
-
-    public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter, JwtTokenProvider jwtTokenProvider,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            JwtAccessDeniedHandler jwtAccessDeniedHandler,
-            UserDetailsServiceImpl customUserDetailsService) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-        this.customUserDetailsService = customUserDetailsService;
-    }
-
-    @Bean
-    public JwtAuthenticationFilter authenticationJwtTokenFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService);
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -60,20 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http
-                .csrf().disable() // CSRF 보호 비활성화 (회원가입은 POST 요청이므로 필요하지 않음)
-                .httpBasic().disable()
-
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                )
-
+        http.csrf().disable() // CSRF 보호 비활성화 (회원가입은 POST 요청이므로 필요하지 않음)
                 .sessionManagement()
                 .sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS) // JWT Token 인증방식으로 세션은 필요 없으므로 비활성화
@@ -81,19 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-//                .antMatchers("/", "/users/register", "/users/login").permitAll()
-//                .antMatchers("/mypage/**").permitAll()
-//                .antMatchers("/products", "/products/details/**", "/products/filter", "/products/search").permitAll()
-//                .antMatchers("/users/**", "/products/**").hasRole("USER")
-//                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/", "/users/register", "/users/login").permitAll()
+                .antMatchers("/products", "/products/details/**", "/products/filter", "/products/search").permitAll()
+                .antMatchers("/users/**", "/products/**").hasRole("USER")
+                .antMatchers("/mypage/**").permitAll()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .anyRequest().authenticated();
 
-                .antMatchers("/**").permitAll()
-
-                .anyRequest().authenticated()
-
-                .and()
-                    .apply(new JwtSecurityConfig(jwtTokenProvider));
-
-        http.cors();
     }
 }

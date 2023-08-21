@@ -2,6 +2,7 @@ package com.woochacha.backend.domain.sale.entity;
 
 
 import com.woochacha.backend.domain.member.entity.Member;
+import com.woochacha.backend.domain.product.entity.Product;
 import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,9 +10,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,15 +26,15 @@ public class SaleForm {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     private String carNum;
 
     @CreationTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -3,7 +3,8 @@ package com.woochacha.backend.domain.car.type.entity;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -14,6 +15,6 @@ public class Color {
     private int id;
 
     @Enumerated(value = EnumType.STRING)
-    @NotBlank
+    @NotNull
     private ColorList name;
 }

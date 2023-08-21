@@ -6,7 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,7 +24,7 @@ public class CarExchangeInfo {
     private PartType partType;
 
     @CreationTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

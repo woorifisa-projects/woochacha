@@ -1,8 +1,16 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.14'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	//Querydsl
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.woochacha'
@@ -26,6 +34,8 @@ ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
 
+
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -35,12 +45,14 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper:2.3.0'
 
 	implementation 'org.slf4j:jcl-over-slf4j:'
+//querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+//	implementation 'com.querydsl:querydsl-core'
+//	implementation 'com.querydsl:querydsl-jpa'
+//	implementation 'com.querydsl:querydsl-apt'
 
-	implementation 'com.querydsl:querydsl-core'
-	implementation 'com.querydsl:querydsl-jpa'
-	implementation 'com.querydsl:querydsl-apt'
-
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+//	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
 	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 
@@ -65,15 +77,52 @@ tasks.named('asciidoctor') {
 }
 
 
-def querydslSrcDir = 'src/main/generated'
-sourceSets {
-	main {
-		java {
-			srcDirs += [ querydslSrcDir ]
-		}
-	}
-}
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
 
-clean {
-	delete file(querydslSrcDir)
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
 }
+sourceSets {
+	main.java.srcDir querydslDir
+}
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+//querydsl 추가 끝
+
+
+//def querydslSrcDir = 'src/main/generated'
+//sourceSets {
+//	main {
+//		java {
+//			srcDirs += [ querydslSrcDir ]
+//		}
+//	}
+//}
+//
+//// QueryDSL 설정 추가
+//querydsl {
+//	jpa = true
+//	querydslSourcesDir = querydslSrcDir
+//}
+//sourceSets {
+//	main.java.srcDir querydslSrcDir
+//}
+//configurations {
+//	querydsl.extendsFrom compileClasspath
+//}
+//compileQuerydsl {
+//	options.annotationProcessorPath = configurations.querydsl
+//}
+//
+//clean {
+//	delete file(querydslSrcDir)
+//}

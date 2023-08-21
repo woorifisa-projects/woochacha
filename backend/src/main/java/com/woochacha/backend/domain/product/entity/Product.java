@@ -11,13 +11,13 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @DynamicInsert
-@Table(name = "table")
+@Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 게시글 정보 관리 엔티티
 public class Product {
@@ -28,15 +28,15 @@ public class Product {
     @JoinColumn(name = "sale_id")
     private SaleForm saleForm;
 
-    @NotBlank
+    @NotNull
     private Integer price;
 
     @CreationTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

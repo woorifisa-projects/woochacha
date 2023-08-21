@@ -10,7 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,10 +32,10 @@ public class PurchaseForm {
     private Member member;
 
     @CreationTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime createdAt;
 
     @ColumnDefault("0")
-    @NotBlank
+    @NotNull
     private Boolean status;
 }

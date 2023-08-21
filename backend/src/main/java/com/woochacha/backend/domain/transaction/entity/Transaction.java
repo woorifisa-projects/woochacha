@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,6 +28,6 @@ public class Transaction {
     private PurchaseForm purchaseForm;
 
     @CreationTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime createdAt;
 }

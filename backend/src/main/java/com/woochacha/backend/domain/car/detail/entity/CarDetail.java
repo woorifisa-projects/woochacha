@@ -5,7 +5,8 @@ import com.woochacha.backend.domain.car.type.entity.*;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -16,19 +17,19 @@ public class CarDetail {
     @Column(name = "car_num", length = 50) // 컬럼 이름과 길이를 지정합니다.
     private String carNum;
 
-    @NotBlank
+    @NotNull
     private String owner;
 
-    @NotBlank
+    @NotNull
     private String phone;
 
-    @NotBlank
+    @NotNull
     private Integer distance;
 
-    @NotBlank
+    @NotNull
     private short year;
 
-    @NotBlank
+    @NotNull
     private short capacity;
 
     @OneToOne
