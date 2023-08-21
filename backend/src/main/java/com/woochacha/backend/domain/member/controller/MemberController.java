@@ -34,4 +34,10 @@ public class MemberController {
         return signService.login(loginRequestDto);
     }
 
+    @PostMapping("/logout")
+    public boolean logout() {
+        return signService.logout();
+    }
+
+
 }
