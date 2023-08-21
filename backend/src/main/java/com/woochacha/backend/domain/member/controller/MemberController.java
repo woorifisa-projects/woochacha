@@ -36,7 +36,8 @@ public class MemberController {
 
     @PostMapping("/logout")
     public boolean logout() {
-        return true;
+        return signService.logout();
     }
+
 
 }

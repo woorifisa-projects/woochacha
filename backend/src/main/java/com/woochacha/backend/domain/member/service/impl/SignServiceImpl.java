@@ -15,6 +15,7 @@ import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.exception.LoginException;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
+import com.woochacha.backend.domain.product.entity.QCarImage;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class SignServiceImpl implements SignService {
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-//    private final ModelMapper modelMapper = new ModelMapper();
+
 
     public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
                            PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder) {
@@ -54,7 +55,7 @@ public class SignServiceImpl implements SignService {
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-//        this.modelMapperInit(modelMapper);
+        this.modelMapperInit(modelMapper);
     }
 
     /*
@@ -119,6 +120,12 @@ public class SignServiceImpl implements SignService {
             return LoginException.exception(e);
         }
     }
+
+    public boolean logout() {
+
+        return true;
+    }
+
 
     public Member save(SignUpRequestDto signUpRequestDto) {
 
