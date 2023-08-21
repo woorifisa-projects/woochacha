@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @DynamicInsert
-@Table(name = "table")
+@Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 게시글 정보 관리 엔티티
 public class Product {
@@ -45,5 +45,6 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_num")
+//    @JoinColumn(referencedColumnName = "car_num")
     private CarDetail carDetail;
 }
