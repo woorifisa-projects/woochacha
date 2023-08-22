@@ -22,9 +22,12 @@ public class MypageController {
      */
     @GetMapping("/registered/{user_id}")
     public ResponseEntity<Page<ProductResponseDto>> registeredProduct(@PathVariable Long user_id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "5") int size) {
         Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByUserId(user_id, page, size);
         return ResponseEntity.ok(productsPage);
     }
+
+
+
 }

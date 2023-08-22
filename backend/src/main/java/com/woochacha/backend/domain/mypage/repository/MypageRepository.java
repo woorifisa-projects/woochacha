@@ -18,7 +18,7 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "JOIN p.carDetail cd " +
             "JOIN p.saleForm sf " +
             "JOIN sf.member m " +
-            "WHERE m.id= :userId")
+            "WHERE m.id= :userId AND p.status.id = 4 ")
     Page<Object[]> getRegisteredProductsByUserId(Long userId, Pageable pageable);
 }
 
