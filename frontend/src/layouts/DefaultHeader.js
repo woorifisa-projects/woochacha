@@ -16,7 +16,11 @@ import { HEADER_MENU } from '@/constants/string';
 import MenuAppbar from '@/components/common/MenuAppbar';
 import ProfileAppbar from '@/components/common/ProfileAppbar';
 
+import { useRecoilValue } from 'recoil';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
+
 function DefaultHeader() {
+  const userLoggedIn = useRecoilValue(userLoggedInState);
   const router = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -85,7 +89,7 @@ function DefaultHeader() {
               ))}
 
               {/* mini-menu app bar compo */}
-              <MenuAppbar size="0" />
+              {userLoggedIn ? <MenuAppbar size="0" /> : ''}
             </Menu>
           </Box>
           <Typography
@@ -115,7 +119,7 @@ function DefaultHeader() {
               </MenuItem>
             ))}
             {/* mini-menu app bar compo */}
-            <MenuAppbar size="2" />
+            {userLoggedIn ? <MenuAppbar size="2" /> : ''}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
