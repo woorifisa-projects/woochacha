@@ -4,6 +4,7 @@ import com.woochacha.backend.domain.car.detail.entity.CarDetail;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,11 +33,11 @@ public class Product {
     private Integer price;
 
     @CreationTimestamp
-    @NotBlank
+//    @NotBlank
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @NotBlank
+//    @NotBlank
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

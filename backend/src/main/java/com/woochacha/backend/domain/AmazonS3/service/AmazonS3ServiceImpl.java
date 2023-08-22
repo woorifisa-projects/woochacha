@@ -10,19 +10,18 @@ import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3ProductRequestDto;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
 import com.woochacha.backend.domain.car.detail.entity.QCarDetail;
 import com.woochacha.backend.domain.member.entity.QMember;
-import com.woochacha.backend.domain.product.entity.QCarImage;
+import com.woochacha.backend.domain.product.entity.CarImage;
+import com.woochacha.backend.domain.product.entity.Product;
 import com.woochacha.backend.domain.product.entity.QProduct;
+import com.woochacha.backend.domain.product.repository.CarImageRepository;
+import com.woochacha.backend.domain.product.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -33,19 +32,72 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
     private final Logger LOGGER = LoggerFactory.getLogger(AmazonS3ServiceImpl.class);
     private final AmazonS3 amazonS3;
 
+    private final ProductRepository productRepository;
+
+    private final CarImageRepository carImageRepository;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    private final String BASE_URL = "https://woochacha.s3.ap-northeast-2.amazonaws.com";
 
     private final JPAQueryFactory queryFactory;
 
-    public AmazonS3ServiceImpl(JPAQueryFactory queryFactory, AmazonS3 amazonS3) {
+    public AmazonS3ServiceImpl(JPAQueryFactory queryFactory, AmazonS3 amazonS3, ProductRepository productRepository, CarImageRepository carImageRepository) {
         this.amazonS3 = amazonS3;
         this.queryFactory = queryFactory;
+        this.productRepository = productRepository;
+        this.carImageRepository = carImageRepository;
     }
 
+    @Override
+    public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException {
+        String url = this.uploadToS3("/profile", amazonS3RequestDto.getEmail(), amazonS3RequestDto.getMultipartFile());
+        this.saveProfileImageToDB(amazonS3RequestDto.getEmail(), url);
+        return url;
+    }
 
-    public String upload(String folderName, String fileName, MultipartFile multipartFile) throws IOException {
+    @Override
+    public boolean uploadProductImage(AmazonS3ProductRequestDto amazonS3ProductRequestDto) throws IOException {
+        List<MultipartFile> multipartFileList = amazonS3ProductRequestDto.getMultipartFileList();
+        int count = 0;
+
+        String carNum = amazonS3ProductRequestDto.getCarNum();
+
+        try {
+            Long productId = queryFactory
+                    .select(QProduct.product.id)
+                    .from(QProduct.product)
+                    .join(QCarDetail.carDetail)
+                    .on(QProduct.product.carDetail.carNum.eq(QCarDetail.carDetail.carNum))
+                    .where(QCarDetail.carDetail.carNum.eq(carNum))
+                    .fetchOne();
+
+            if (productId == null) {
+                throw new Exception("찾는 차량 번호가 없습니다.");
+            }
+
+            for (MultipartFile multipartFile : multipartFileList) {
+                String url = this.uploadToS3("/product/" + carNum, String.valueOf(++count), multipartFile);
+                LOGGER.info("[url] : " + url);
+                this.saveProductImageToDB(productId, url);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public String removeFile(Long id) throws IOException {
+        return null;
+    }
+
+    public String uploadToS3(String folderName, String fileName, MultipartFile multipartFile) throws IOException {
         InputStream file = multipartFile.getInputStream();
 
         try {
@@ -56,9 +108,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
                     .withCannedAcl(CannedAccessControlList.PublicRead);
             amazonS3.putObject(request);
 
-            String url = "s3://" + bucket + folderName + "/" + fileName;
-
-            return url;
+            return BASE_URL + folderName + "/" + fileName;
 
         } catch (AmazonClientException e) {
             e.printStackTrace();
@@ -66,7 +116,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         }
     }
 
-    public ResponseEntity<Boolean> saveProfileImage(String email, String url) {
+    public ResponseEntity<Boolean> saveProfileImageToDB(String email, String url) {
         try {
             long clause = queryFactory
                     .update(QMember.member)
@@ -79,12 +129,25 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         }
     }
 
+    // [JPQL]
+//    @Transactional
+//    @Modifying
+//    @Query(value = "insert into car_image (product_id, image_url) values (:productId, :url)", nativeQuery = true)
+//    public void saveProductImageToDB(@Param("product_id") Long productId, @Param("url") String url) {
+    public void saveProductImageToDB(Long productId, String url) {
+        LOGGER.info("[in saveProductImageToDB]");
 
-//    public void saveProductImage(@Param("productId") Long productId, @Param("url") String url) {
-    @Modifying
-    @Query(value = "insert into car_image (product_id, image_url) values (:productId, :url)", nativeQuery = true)
-    public void saveProductImage(Long productId, String url) {
-        try {
+            Product product = productRepository.getReferenceById(productId);
+
+            CarImage carImage =  CarImage.builder()
+                    .product(product)
+                    .imageUrl(url)
+                    .build();
+
+            carImageRepository.save(carImage);
+
+            // [QueryDSL]
+
 //            queryFactory
 //                    .insert(QCarImage.carImage)
 //                    .columns(QCarImage.carImage.product.id, QCarImage.carImage.imageUrl)
@@ -92,54 +155,6 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 //                    .execute();
 
 //            return ResponseEntity.ok(true);
-        } catch (Exception e) {
-//            return ResponseEntity.ok(false);
-        }
 
-
-    }
-
-    public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException {
-        String url = this.upload("/profile", amazonS3RequestDto.getEmail(), amazonS3RequestDto.getMultipartFile());
-        this.saveProfileImage(amazonS3RequestDto.getEmail(), url);
-        return url;
-    }
-
-    public boolean uploadProductImage(AmazonS3ProductRequestDto amazonS3ProductRequestDto) throws IOException {
-        List<MultipartFile> multipartFileList = amazonS3ProductRequestDto.getMultipartFileList();
-        int count = 0;
-
-        String carNum = amazonS3ProductRequestDto.getCarNum();
-
-        Long productId = null;
-
-        try {
-            productId = queryFactory
-                    .select(QProduct.product.id)
-                    .from(QProduct.product)
-                    .join(QCarDetail.carDetail)
-                    .on(QProduct.product.carDetail.carNum.eq(QCarDetail.carDetail.carNum))
-                    .where(QCarDetail.carDetail.carNum.eq(carNum))
-                    .fetchOne();
-
-            LOGGER.info("[product id] " + productId);
-
-            if (productId == null) {
-                throw new Exception("찾는 차량 번호가 없습니다.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        for (MultipartFile multipartFile : multipartFileList) {
-            String url = this.upload("/product/" + carNum, String.valueOf(++count), multipartFile);
-            this.saveProductImage(productId, url);
-        }
-        return true;
-    }
-
-    @Override
-    public String removeFile(Long id) throws IOException {
-        return null;
     }
 }
