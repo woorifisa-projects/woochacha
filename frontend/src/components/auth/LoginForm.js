@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { checkLoginValidate, handleSignupBlur } from '@/hooks/useChecks';
 import { loginApi } from '@/services/authApi';
+import { useRecoilState } from 'recoil';
+import { userInfoState, userLoggedInState } from '@/atoms/userInfoAtoms';
+import { useRouter } from 'next/router';
 
 import {
   Button,
@@ -19,6 +22,10 @@ import {
 import theme from '@/styles/theme';
 
 export default function LoginForm() {
+  const [loginToken, setLoginToken] = useRecoilState(userLoggedInState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const router = useRouter();
+
   const [clickSubmit, setClickSubmit] = useState(true);
   const [loginData, setLoginData] = useState({
     email: '',
@@ -47,7 +54,7 @@ export default function LoginForm() {
   // TODO: 데이터 넘기기
   useEffect(() => {
     if (!Object.values(formValid).includes(true) && !Object.values(loginData).includes('')) {
-      loginApi(loginData);
+      loginApi(loginData, setLoginToken, setUserInfo, router);
     }
   }, [clickSubmit]);
 
