@@ -27,7 +27,4 @@ public class MypageController {
         Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByUserId(user_id, page, size);
         return ResponseEntity.ok(productsPage);
     }
-
-
-
 }
