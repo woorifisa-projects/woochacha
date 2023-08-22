@@ -4,6 +4,7 @@ import com.woochacha.backend.domain.car.detail.entity.CarName;
 import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
+import com.woochacha.backend.domain.sale.entity.Branch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,7 @@ public class MypageServiceImpl implements MypageService {
                 (Integer) array[2],
                 (Short) array[3],
                 (Integer) array[4],
-                (Long) array[5],
+                (Branch) array[5],
                 (LocalDateTime) array[6]
         );
     }
