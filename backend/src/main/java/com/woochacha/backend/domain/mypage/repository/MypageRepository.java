@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MypageRepository extends JpaRepository<SaleForm, Long> {
 
-    // 마이페이지 - 등록한 매물 조회
+    // 마이페이지 - 등록한 매물 조회 (product.id가 같은 행은 하나만(첫 번째 행) 출력)
     @Query("SELECT cd.carName, ci.imageUrl, p.price, cd.year, cd.distance, sf.branch, p.createdAt " +
             "FROM CarImage ci " +
             "JOIN ci.product p " +
