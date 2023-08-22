@@ -1,4 +1,5 @@
 import axios from 'axios';
+import LocalStorage from './localStorage';
 
 const BASE_URL = 'http://localhost:8080';
 const HEADER_JSON = {
@@ -20,10 +21,10 @@ const axiosApi = (url, options) => {
 
 // 인증 필요 O 경우
 const axiosAuthApi = (url, options) => {
-  // const token = '토큰 값';
+  const token = LocalStorage.getItem('loginToken');
   const instance = axios.create({
     baseURL: url,
-    // headers: { Authorization: 'Bearer ' + token },
+    headers: { Authorization: 'Bearer ' + token },
     ...options,
   });
   return instance;

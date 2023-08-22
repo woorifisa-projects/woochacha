@@ -37,7 +37,7 @@ export const HEADER_MINI_MENU = {
   ],
 };
 
-export const HEADER_USER_MENU = {
+export const HEADER_UNLOGIN_USER_MENU = {
   CONTENTS: [
     {
       pageName: '로그인',
@@ -46,6 +46,19 @@ export const HEADER_USER_MENU = {
     {
       pageName: '회원가입',
       pageUrl: `/users/signup`,
+    },
+  ],
+};
+
+export const HEADER_LOGIN_USER_MENU = {
+  CONTENTS: [
+    {
+      pageName: '마이페이지',
+      pageUrl: `/mypage`,
+    },
+    {
+      pageName: '로그아웃',
+      pageUrl: `/users/logout`,
     },
     {
       pageName: '탈퇴하기',
