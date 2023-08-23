@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.woochacha.backend.domain.car.detail.entity.CarDetail;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.status.entity.CarStatus;
@@ -14,6 +15,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,9 +39,6 @@ public class Product {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,4 +48,8 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_num")
     private CarDetail carDetail;
+
+    @OneToMany(mappedBy = "product") // Transaction 엔티티와의 양방향 관계 설정
+    @JsonIgnore
+    private List<CarImage> transactionList = new ArrayList<>();
 }
