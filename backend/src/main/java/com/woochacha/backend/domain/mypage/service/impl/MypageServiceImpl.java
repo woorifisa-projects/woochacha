@@ -22,15 +22,6 @@ public class MypageServiceImpl implements MypageService {
         this.mypageRepository = mypageRepository;
     }
 
-    // 페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
-    @Transactional
-    public Page<ProductResponseDto> getRegisteredProductsByUserId(Long userId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
-        Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByUserId(userId, pageable);
-
-        return productsPage.map(this::arrayToProductResponseDto);
-    }
-
     // JPQL로 조회한 결과 ProductResponseDto로 변환해서 전달
     private ProductResponseDto arrayToProductResponseDto(Object[] array) {
         CarName carName = (CarName) array[0];
@@ -43,6 +34,24 @@ public class MypageServiceImpl implements MypageService {
                 (Branch) array[5],
                 (LocalDateTime) array[6]
         );
+    }
+
+    // 등록한 매물 조회 (최신 등록 순)
+    @Transactional
+    public Page<ProductResponseDto> getRegisteredProductsByUserId(Long userId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+        Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByUserId(userId, pageable);
+
+        return productsPage.map(this::arrayToProductResponseDto);
+    }
+
+    // 판매 이력 조회 (최신 판매 순)
+    @Transactional
+    public Page<ProductResponseDto> getSoldProductsByMemberId(Long userId, int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+        Page<Object[]> productsPage = mypageRepository.getSoldProductsByMemberId(userId, pageable);
+
+        return productsPage.map(this::arrayToProductResponseDto);
     }
 }
 
