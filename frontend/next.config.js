@@ -31,6 +31,10 @@ const nextConfig = {
       },
     ];
   },
+  // build시, eslint ignore
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig;

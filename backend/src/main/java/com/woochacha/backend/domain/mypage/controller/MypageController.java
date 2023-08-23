@@ -17,9 +17,10 @@ public class MypageController {
     }
 
     /*
-     [마이페이지 - 등록한 매물 조회]
-     반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branchId", "createdAt"
-     */
+    [마이페이지 - 등록한 매물 조회]
+    반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
+    페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
+    */
     @GetMapping("/registered/{user_id}")
     public ResponseEntity<Page<ProductResponseDto>> registeredProduct(@PathVariable Long user_id,
                                                                       @RequestParam(defaultValue = "0") int page,
