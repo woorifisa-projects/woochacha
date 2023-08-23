@@ -41,4 +41,17 @@ public class MypageController {
         Page<ProductResponseDto> productsPage = mypageService.getSoldProductsByMemberId(user_id, page, size);
         return ResponseEntity.ok(productsPage);
     }
+
+    /*
+     [마이페이지 - 구매 이력 조회]
+     반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
+     페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
+     */
+    @GetMapping("/purchase/{user_id}")
+    public ResponseEntity<Page<ProductResponseDto>> purchaseProduct(@PathVariable Long user_id,
+                                                                    @RequestParam(defaultValue = "0") int page,
+                                                                    @RequestParam(defaultValue = "5") int size) {
+        Page<ProductResponseDto> productsPage = mypageService.getPurchaseProductsByMemberId(user_id, page, size);
+        return ResponseEntity.ok(productsPage);
+    }
 }

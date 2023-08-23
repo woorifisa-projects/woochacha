@@ -53,5 +53,14 @@ public class MypageServiceImpl implements MypageService {
 
         return productsPage.map(this::arrayToProductResponseDto);
     }
+
+    // 구매 이력 조회 (최신 구매 순)
+    @Transactional
+    public Page<ProductResponseDto> getPurchaseProductsByMemberId(Long userId, int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+        Page<Object[]> productsPage = mypageRepository.getPurchaseProductsByMemberId(userId, pageable);
+
+        return productsPage.map(this::arrayToProductResponseDto);
+    }
 }
 
