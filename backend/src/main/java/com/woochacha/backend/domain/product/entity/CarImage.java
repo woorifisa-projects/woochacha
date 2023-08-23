@@ -1,6 +1,6 @@
 package com.woochacha.backend.domain.product.entity;
 
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @DynamicInsert
+@Builder
+@AllArgsConstructor
 @Table(name = "car_image")
 // 차량 이미지 URL 데이터 저장 엔티티
 public class CarImage {
@@ -27,4 +29,8 @@ public class CarImage {
     @CreationTimestamp
     @NotNull
     private LocalDateTime createdAt;
+
+    public CarImage() {
+
+    }
 }

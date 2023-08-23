@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { checkFormValidate, handleSignupBlur } from '@/hooks/useChecks';
+import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
+import { userInfoState, userLoggedInState } from '@/atoms/userInfoAtoms';
 import { signupApi } from '@/services/authApi';
 
 import {
@@ -19,6 +22,10 @@ import {
 import theme from '@/styles/theme';
 
 export default function SignupForm() {
+  const [loginToken, setLoginToken] = useRecoilState(userLoggedInState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const router = useRouter();
+
   const [clickSubmit, setClickSubmit] = useState(true);
   const [signupData, setSignupData] = useState({
     email: '',
@@ -56,7 +63,8 @@ export default function SignupForm() {
   // TODO: 데이터 넘기기
   useEffect(() => {
     if (!Object.values(formValid).includes(true) && !Object.values(signupData).includes('')) {
-      signupApi(signupData);
+      console.log(signupData);
+      signupApi(signupData, setLoginToken, setUserInfo, router);
     }
   }, [clickSubmit]);
 
