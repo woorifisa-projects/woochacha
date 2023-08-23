@@ -37,5 +37,5 @@ public class PurchaseForm {
 
     @ColumnDefault("0")
     @NotNull
-    private Boolean status;
+    private Byte status;
 }

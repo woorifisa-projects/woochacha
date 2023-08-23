@@ -31,8 +31,7 @@ public class Member implements UserDetails {
     private Long id;
 
     @ColumnDefault("1")
-//    @NotNull
-    private Boolean role;
+    private Byte role;
 
     @NotNull
     private String email;
@@ -53,10 +52,10 @@ public class Member implements UserDetails {
     private LocalDateTime updatedAt;
 
     @ColumnDefault("1")
-    private Boolean isAvailable;
+    private Byte isAvailable;
 
     @ColumnDefault("1")
-    private Boolean status;
+    private Byte status;
 
     private String profileImage;
 
