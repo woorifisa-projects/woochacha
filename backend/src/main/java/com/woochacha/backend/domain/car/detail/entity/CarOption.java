@@ -4,7 +4,6 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,26 +18,26 @@ public class CarOption {
     private CarDetail carDetail;
 
     @NotNull
-    private Boolean heatedSeat;
+    private Byte heatedSeat;
 
     @NotNull
-    private Boolean smartKey;
+    private Byte smartKey;
 
     @NotNull
-    private Boolean blackbox;
+    private Byte blackbox;
 
     @NotNull
-    private Boolean navigation;
+    private Byte navigation;
 
     @NotNull
-    private Boolean airbag;
+    private Byte airbag;
 
     @NotNull
-    private Boolean sunroof;
+    private Byte sunroof;
 
     @NotNull
-    private Boolean highPass;
+    private Byte highPass;
 
     @NotNull
-    private Boolean rearviewCamera;
+    private Byte rearviewCamera;
 }
