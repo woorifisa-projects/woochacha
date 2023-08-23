@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,15 +29,16 @@ public class Product {
     @JoinColumn(name = "sale_id")
     private SaleForm saleForm;
 
-    @NotBlank
+    @NotNull
     private Integer price;
 
     @CreationTimestamp
-//    @NotBlank
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-//    @NotBlank
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,6 +47,5 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_num")
-//    @JoinColumn(referencedColumnName = "car_num")
     private CarDetail carDetail;
 }

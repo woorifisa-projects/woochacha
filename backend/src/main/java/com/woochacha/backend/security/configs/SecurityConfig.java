@@ -91,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
 
                 .and()
-                    .apply(new JwtSecurityConfig(jwtTokenProvider));
+                .apply(new JwtSecurityConfig(jwtTokenProvider));
 
         http.cors();
     }

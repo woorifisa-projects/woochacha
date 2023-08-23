@@ -3,7 +3,8 @@ package com.woochacha.backend.domain.car.detail.entity;
 import lombok.Getter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -17,27 +18,27 @@ public class CarOption {
     @JoinColumn(name = "car_num")
     private CarDetail carDetail;
 
-    @NotBlank
+    @NotNull
     private Boolean heatedSeat;
 
-    @NotBlank
+    @NotNull
     private Boolean smartKey;
 
-    @NotBlank
+    @NotNull
     private Boolean blackbox;
 
-    @NotBlank
+    @NotNull
     private Boolean navigation;
 
-    @NotBlank
+    @NotNull
     private Boolean airbag;
 
-    @NotBlank
+    @NotNull
     private Boolean sunroof;
 
-    @NotBlank
+    @NotNull
     private Boolean highPass;
 
-    @NotBlank
+    @NotNull
     private Boolean rearviewCamera;
 }

@@ -5,7 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,11 +23,11 @@ public class CarImage {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @NotBlank
+    @NotNull
     private String imageUrl;
 
     @CreationTimestamp
-//    @NotBlank
+    @NotNull
     private LocalDateTime createdAt;
 
     public CarImage() {

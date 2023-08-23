@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,19 +31,19 @@ public class Member implements UserDetails {
     private Long id;
 
     @ColumnDefault("1")
-//    @NotBlank
+//    @NotNull
     private Boolean role;
 
-    @NotBlank
+    @NotNull
     private String email;
 
-    @NotBlank
+    @NotNull
     private String password;
 
-    @NotBlank
+    @NotNull
     private String name;
 
-    @NotBlank
+    @NotNull
     private String phone;
 
     @CreationTimestamp

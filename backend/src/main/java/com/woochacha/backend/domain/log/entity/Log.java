@@ -5,7 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,17 +19,17 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotNull
     private String email;
 
-    @NotBlank
+    @NotNull
     private String username;
 
     @CreationTimestamp
-    @NotBlank
+    @NotNull
     private LocalDateTime date;
 
-    @NotBlank
+    @NotNull
     private String type;
 
     private String etc;
