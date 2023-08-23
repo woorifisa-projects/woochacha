@@ -36,9 +36,6 @@ public class Product {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
