@@ -1,8 +1,12 @@
 package com.woochacha.backend.domain.qldb.service;
 
+import org.springframework.data.util.Pair;
+
 public interface QldbService {
-    void inquiryCarOwnerInfo(String carNum);
+    Pair<String, String> inquiryCarOwnerInfo(String carNum);
 
 
-    void getMetaIdValue(String carNum, String tableName);
+    String getMetaIdValue(String carNum, String tableName);
+
+    int accidentHistoryInfo(String carNum, String metaId, String accidentType, String accidentDesc);
 }
