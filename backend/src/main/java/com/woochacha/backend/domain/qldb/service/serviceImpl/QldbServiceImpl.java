@@ -36,4 +36,19 @@ public class QldbServiceImpl implements QldbService {
             throw new RuntimeException(e);
         }
     }
+    @Override
+    public void getMetaIdValue(String carNum,String tableName) {
+        IonSystem ionSys = IonSystemBuilder.standard().build();
+        try {
+            qldbDriver.QldbDriver().execute(txn -> {
+                Result result = txn.execute(
+                        "SELECT r_id FROM " + tableName + " AS r BY r_id WHERE r.car_num=?", ionSys.newString(carNum));
+                IonStruct carOwner = (IonStruct) result.iterator().next();
+                IonString carMetaId = (IonString) carOwner.get("r_id");
+                metaId = carMetaId.stringValue();
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -4,4 +4,5 @@ public interface QldbService {
     void inquiryCarOwnerInfo(String carNum);
 
 
+    void getMetaIdValue(String carNum, String tableName);
 }
