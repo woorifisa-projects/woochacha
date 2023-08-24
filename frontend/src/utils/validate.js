@@ -1,4 +1,4 @@
-import { REGEXP } from '@/constants/RegExp';
+import { REGEXP } from '@/constants/regExp';
 
 // 형식에 맞는 경우 true 리턴
 

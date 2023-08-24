@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { Avatar, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
-import { HEADER_LOGIN_USER_MENU, HEADER_UNLOGIN_USER_MENU } from '@/constants/String';
+import { HEADER_LOGIN_USER_MENU, HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
 import LocalStorage from '@/utils/localStorage';
 
 export default function ProfileAppbar() {
