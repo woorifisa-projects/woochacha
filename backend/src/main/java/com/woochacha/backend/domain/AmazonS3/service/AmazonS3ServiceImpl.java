@@ -102,7 +102,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
         try {
             ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setCacheControl("no-cached, no-store, must-revalidate"); // 60*60*24*7 일주일
+            metadata.setCacheControl("no-cached, no-store, must-revalidate");
             metadata.setContentType("image/png");
             PutObjectRequest request = new PutObjectRequest(bucket + folderName, fileName, file, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead);
