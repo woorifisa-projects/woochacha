@@ -1,10 +1,5 @@
 package com.woochacha.backend.domain.product.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,9 +12,6 @@ import com.woochacha.backend.domain.product.entity.QProduct;
 import com.woochacha.backend.domain.product.service.ProductService;
 import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
-import com.woochacha.backend.domain.status.entity.QCarStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
