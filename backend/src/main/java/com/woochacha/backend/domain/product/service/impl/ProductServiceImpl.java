@@ -29,22 +29,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final JPAQueryFactory queryFactory;
 
-    private final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
-
     public ProductServiceImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 
     @Override
     public List<ProdcutResponseDto> findAllProduct() {
-        /*
-            product.price
-            product.status = 4
-            product.car_num = car_detail.car_num
-            car_detail.year
-            car_detail.distance
-            product.id = car_image.product_id
-         */
 
         QProduct p = QProduct.product;
         QCarDetail cd = QCarDetail.carDetail;
@@ -53,10 +43,9 @@ public class ProductServiceImpl implements ProductService {
         QSaleForm sf = QSaleForm.saleForm;
         QModel m = QModel.model;
         QCarName cn = QCarName.carName;
-        QCarStatus cs = QCarStatus.carStatus;
 
 
-        List<ProdcutResponseDto> carAllList = queryFactory
+        return queryFactory
                   .select(Projections.fields(
                           ProdcutResponseDto.class,
                           Expressions.asString(
@@ -69,8 +58,7 @@ public class ProductServiceImpl implements ProductService {
                   .join(m).on(m.id.eq(cd.model.id))
                   .join(cn).on(cn.name.eq(cd.carName.name))
                   .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1"))
+                  .orderBy(p.createdAt.asc())
                   .fetch();
-
-        return carAllList;
     }
 }
