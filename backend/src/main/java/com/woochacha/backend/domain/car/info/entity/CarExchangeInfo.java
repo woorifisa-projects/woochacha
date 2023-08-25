@@ -20,8 +20,8 @@ public class CarExchangeInfo {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "part_id")
-    private PartType partType;
+    @JoinColumn(name = "exchange_id")
+    private ExchangeType exchangeType;
 
     @CreationTimestamp
     @NotNull

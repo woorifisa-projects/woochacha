@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.car.type.entity;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import lombok.Getter;
 
 import javax.persistence.*;
