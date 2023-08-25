@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.mypage.controller;
 
 import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
+import com.woochacha.backend.domain.mypage.dto.ProfileDto;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +54,15 @@ public class MypageController {
                                                                     @RequestParam(defaultValue = "5") int size) {
         Page<ProductResponseDto> productsPage = mypageService.getPurchaseProductsByMemberId(user_id, page, size);
         return ResponseEntity.ok(productsPage);
+    }
+
+    /*
+    [마이페이지 프로필 조회]
+    반환 데이터 : "profileImage", "name", "phone", "email"
+     */
+    @GetMapping("/{user_id}")
+    public ResponseEntity<ProfileDto> mapage(@PathVariable Long user_id){
+        ProfileDto profileDto = mypageService.getProfileByMemberId(user_id);
+        return ResponseEntity.ok(profileDto);
     }
 }
