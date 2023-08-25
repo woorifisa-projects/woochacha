@@ -69,8 +69,12 @@ export default function Capitals() {
                         gutterBottom>
                         {item.capitalSubTitle}
                       </Typography>
-                      <Typography sx={{ mb: '10rem' }}>{item.capitalSubContent}</Typography>
-                      <Button href={item.wonCarUrl} variant="contained" fullWidth>
+                      <Typography sx={{ mb: '5rem' }}>{item.capitalSubContent}</Typography>
+                      <Button
+                        href={item.wonCarUrl}
+                        variant="contained"
+                        fullWidth
+                        sx={{ fontSize: '1.3rem' }}>
                         보러가기
                       </Button>
                     </Box>
