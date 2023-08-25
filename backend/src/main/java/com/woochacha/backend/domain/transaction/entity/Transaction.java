@@ -20,11 +20,11 @@ public class Transaction {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
+    @JoinColumn(name = "sale_id")
     private SaleForm saleForm;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id")
+    @JoinColumn(name = "purchase_id")
     private PurchaseForm purchaseForm;
 
     @CreationTimestamp
