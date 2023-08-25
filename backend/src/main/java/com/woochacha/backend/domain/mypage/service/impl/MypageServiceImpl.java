@@ -8,18 +8,20 @@ import com.woochacha.backend.domain.mypage.dto.ProfileDto;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
 import com.woochacha.backend.domain.sale.entity.Branch;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MypageServiceImpl implements MypageService {
 
     private final MypageRepository mypageRepository;
@@ -40,7 +42,6 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 등록한 매물 조회 (최신 등록 순)
-    @Transactional
     public Page<ProductResponseDto> getRegisteredProductsByUserId(Long userId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByUserId(userId, pageable);
@@ -49,7 +50,6 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 판매 이력 조회 (최신 판매 순)
-    @Transactional
     public Page<ProductResponseDto> getSoldProductsByMemberId(Long userId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> productsPage = mypageRepository.getSoldProductsByMemberId(userId, pageable);
@@ -58,7 +58,6 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 구매 이력 조회 (최신 구매 순)
-    @Transactional
     public Page<ProductResponseDto> getPurchaseProductsByMemberId(Long userId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> productsPage = mypageRepository.getPurchaseProductsByMemberId(userId, pageable);
