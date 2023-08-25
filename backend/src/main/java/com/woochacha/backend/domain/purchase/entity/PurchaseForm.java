@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,10 +33,10 @@ public class PurchaseForm {
     private Member member;
 
     @CreationTimestamp
-    @NotNull
     private LocalDateTime createdAt;
 
+    private LocalDate meetingDate;
+
     @ColumnDefault("0")
-    @NotNull
     private Byte status;
 }
