@@ -34,6 +34,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'org.modelmapper:modelmapper:2.3.0'
 
+	implementation 'com.amazonaws:aws-java-sdk-qldb:1.12.7'
+	implementation 'software.amazon.ion:ion-java:1.5.1'
+	implementation 'software.amazon.qldb:amazon-qldb-driver-java:2.3.1'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-ion:2.12.1'
+
 	implementation 'org.slf4j:jcl-over-slf4j:'
 
 	implementation 'com.querydsl:querydsl-core'

@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.mypage.controller;
 
 import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
+import com.woochacha.backend.domain.mypage.dto.ProfileDto;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ public class MypageController {
 
     private final MypageServiceImpl mypageService;
 
-    public MypageController(MypageServiceImpl mypageService) {
+    private MypageController(MypageServiceImpl mypageService) {
         this.mypageService = mypageService;
     }
 
@@ -21,11 +22,11 @@ public class MypageController {
     반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
     페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
     */
-    @GetMapping("/registered/{user_id}")
-    public ResponseEntity<Page<ProductResponseDto>> registeredProduct(@PathVariable Long user_id,
+    @GetMapping("/registered/{memberId}")
+    private ResponseEntity<Page<ProductResponseDto>> registeredProduct(@PathVariable Long memberId,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "5") int size) {
-        Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByUserId(user_id, page, size);
+        Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByUserId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
     }
 
@@ -34,11 +35,11 @@ public class MypageController {
      반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
      페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
      */
-    @GetMapping("/sale/{user_id}")
-    public ResponseEntity<Page<ProductResponseDto>> soldProduct(@PathVariable Long user_id,
+    @GetMapping("/sale/{memberId}")
+    private ResponseEntity<Page<ProductResponseDto>> soldProduct(@PathVariable Long memberId,
                                                                 @RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "5") int size){
-        Page<ProductResponseDto> productsPage = mypageService.getSoldProductsByMemberId(user_id, page, size);
+        Page<ProductResponseDto> productsPage = mypageService.getSoldProductsByMemberId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
     }
 
@@ -47,11 +48,21 @@ public class MypageController {
      반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
      페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
      */
-    @GetMapping("/purchase/{user_id}")
-    public ResponseEntity<Page<ProductResponseDto>> purchaseProduct(@PathVariable Long user_id,
+    @GetMapping("/purchase/{memberId}")
+    private ResponseEntity<Page<ProductResponseDto>> purchaseProduct(@PathVariable Long memberId,
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "5") int size) {
-        Page<ProductResponseDto> productsPage = mypageService.getPurchaseProductsByMemberId(user_id, page, size);
+        Page<ProductResponseDto> productsPage = mypageService.getPurchaseProductsByMemberId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
+    }
+
+    /*
+    [마이페이지 프로필 조회]
+    반환 데이터 : "profileImage", "name", "phone", "email"
+     */
+    @GetMapping("/{memberId}")
+    private ResponseEntity<ProfileDto> mapage(@PathVariable Long memberId){
+        ProfileDto profileDto = mypageService.getProfileByMemberId(memberId);
+        return ResponseEntity.ok(profileDto);
     }
 }

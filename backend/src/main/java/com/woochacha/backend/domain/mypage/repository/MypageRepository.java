@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MypageRepository extends JpaRepository<SaleForm, Long> {
 
+    // TODO: 이미지 하나 가져오는 부분 리팩토링
     // 마이페이지 - 등록한 매물 조회
     @Query("SELECT cd.carName, ci.imageUrl, p.price, cd.year, cd.distance, sf.branch, p.createdAt "  +
             "FROM CarImage ci " +
@@ -26,6 +27,7 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "GROUP BY cd.carName, cd.year, cd.distance, sf.branch.id, p.createdAt, p.id")
     Page<Object[]> getRegisteredProductsByUserId(@Param("userId") Long userId, Pageable pageable);
 
+    // TODO: 이미지 하나 가져오는 부분 리팩토링
     // TODO: createAt을 게시글 등록일이 아닌 판매일로 수정 (transaction 테이블) -> 양방향 매핑으로 수정
     // 마이페이지 - 판매 이력 조회 (product.id가 같은 행은 하나만(첫 번째 행) 출력)
     @Query("SELECT cd.carName, ci.imageUrl, p.price, cd.year, cd.distance, sf.branch, p.createdAt "  +
@@ -41,6 +43,7 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "GROUP BY cd.carName, cd.year, cd.distance, sf.branch.id, p.createdAt, p.id")
     Page<Object[]> getSoldProductsByMemberId(@Param("userId") Long userId, Pageable pageable);
 
+    // TODO: 이미지 하나 가져오는 부분 리팩토링
     // TODO: dummy data 추가로 넣어서 확인
     // 마이페이지 - 구매 이력 조회
     @Query("SELECT cd.carName, ci.imageUrl, p.price, cd.year, cd.distance, sf.branch, tr.createdAt " +
