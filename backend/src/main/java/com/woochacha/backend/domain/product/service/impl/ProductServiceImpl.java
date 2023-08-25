@@ -14,14 +14,13 @@ import com.woochacha.backend.domain.car.type.entity.QTransmission;
 import com.woochacha.backend.domain.car.type.entity.QType;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.product.dto.ProdcutResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
 import com.woochacha.backend.domain.product.dto.detail.*;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import com.woochacha.backend.domain.product.entity.QProduct;
 import com.woochacha.backend.domain.product.service.ProductService;
 import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

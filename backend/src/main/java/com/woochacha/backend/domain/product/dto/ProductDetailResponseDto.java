@@ -1,5 +1,9 @@
-package com.woochacha.backend.domain.product.dto.detail;
+package com.woochacha.backend.domain.product.dto;
 
+import com.woochacha.backend.domain.product.dto.detail.ProductBasicInfo;
+import com.woochacha.backend.domain.product.dto.detail.ProductDetailInfo;
+import com.woochacha.backend.domain.product.dto.detail.ProductOptionInfo;
+import com.woochacha.backend.domain.product.dto.detail.ProductOwnerInfo;
 import lombok.Data;
 
 import java.util.List;

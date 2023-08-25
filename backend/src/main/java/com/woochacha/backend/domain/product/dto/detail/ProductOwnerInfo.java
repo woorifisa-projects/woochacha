@@ -1,8 +1,6 @@
 package com.woochacha.backend.domain.product.dto.detail;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 public class ProductOwnerInfo {

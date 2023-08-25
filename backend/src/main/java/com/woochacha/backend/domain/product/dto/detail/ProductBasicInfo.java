@@ -1,11 +1,6 @@
 package com.woochacha.backend.domain.product.dto.detail;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import org.springframework.context.annotation.Bean;
-
-import java.util.List;
 
 @Data
 public class ProductBasicInfo {

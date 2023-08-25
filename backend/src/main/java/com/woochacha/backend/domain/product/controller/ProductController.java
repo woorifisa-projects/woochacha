@@ -1,7 +1,7 @@
 package com.woochacha.backend.domain.product.controller;
 
 import com.woochacha.backend.domain.product.dto.ProdcutResponseDto;
-import com.woochacha.backend.domain.product.dto.detail.ProductDetailResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
 import com.woochacha.backend.domain.product.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
