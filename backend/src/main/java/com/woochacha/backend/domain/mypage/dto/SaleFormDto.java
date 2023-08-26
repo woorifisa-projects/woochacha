@@ -1,11 +1,8 @@
 package com.woochacha.backend.domain.mypage.dto;
 
-import com.woochacha.backend.domain.sale.entity.Branch;
-import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Data

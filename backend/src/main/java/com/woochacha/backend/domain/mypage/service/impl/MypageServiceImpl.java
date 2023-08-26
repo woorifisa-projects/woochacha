@@ -81,7 +81,7 @@ public class MypageServiceImpl implements MypageService {
         return modelMapper.map(member, ProfileDto.class);
     }
 
-    // 판매 요청 폼 조회
+    // 판매 신청 폼 조회
     public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> saleFormsPage = mypageRepository.findAllByMemberId(memberId, pageable);
