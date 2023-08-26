@@ -50,7 +50,7 @@ public class MypageServiceImpl implements MypageService {
     // 등록한 매물 조회
     public Page<ProductResponseDto> getRegisteredProductsByMemberId(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
-        Page<Object[]> productsPage = mypageRepository.getRegisteredProductsBymemberId(memberId, pageable);
+        Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByMemberId(memberId, pageable);
 
         return productsPage.map(this::arrayToProductResponseDto);
     }

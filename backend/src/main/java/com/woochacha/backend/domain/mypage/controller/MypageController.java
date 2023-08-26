@@ -24,7 +24,7 @@ public class MypageController {
     private ResponseEntity<Page<ProductResponseDto>> registeredProduct(@PathVariable Long memberId,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "5") int size) {
-        Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsBymemberId(memberId, page, size);
+        Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByMemberId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
     }
 
@@ -58,5 +58,14 @@ public class MypageController {
     private ResponseEntity<ProfileDto> mypage(@PathVariable Long memberId){
         ProfileDto profileDto = mypageService.getProfileByMemberId(memberId);
         return ResponseEntity.ok(profileDto);
+    }
+
+//  마이페이지 구매 요청 내역 조회
+    @GetMapping("/purchase-request/{memberId}")
+    private ResponseEntity<Page<PurchaseReqeustListDto>> purchaseRequestList(@PathVariable Long memberId,
+                                                                             @RequestParam(defaultValue = "0") int page,
+                                                                             @RequestParam(defaultValue = "5") int size){
+        Page<PurchaseReqeustListDto> purchaseRequestPage = mypageService.getPurchaseRequestByMemberId(memberId, page, size);
+        return ResponseEntity.ok(purchaseRequestPage);
     }
 }
