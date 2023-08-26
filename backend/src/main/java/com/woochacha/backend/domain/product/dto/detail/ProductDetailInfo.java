@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 public class ProductDetailInfo {
     private short capacity; // 승자 정원
 
