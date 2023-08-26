@@ -34,7 +34,10 @@ export default function Capitals() {
         {CAPITAL_CONTENTS.map((item) => {
           return (
             <>
-              <MiniCard colorVal={item.miniCardColor} shadowVal={item.miniCardShadow}>
+              <MiniCard
+                colorVal={item.miniCardColor}
+                shadowVal={item.miniCardShadow}
+                marginVal={item.miniCardMarginY}>
                 <Typography
                   mb={10}
                   component="h4"
