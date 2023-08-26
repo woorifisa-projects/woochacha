@@ -37,7 +37,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-//@Transactional
+@Transactional(readOnly = true)
 public class SignServiceImpl implements SignService {
 
     private final JPAQueryFactory queryFactory;
@@ -67,6 +67,7 @@ public class SignServiceImpl implements SignService {
         [회원가입]
         @Params : signUpRequestDto - email, name, phone, password
      */
+    @Transactional
     public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDto) {
 
         SignUpResponseDto signUpResponseDto = new SignUpResponseDto();
@@ -105,7 +106,7 @@ public class SignServiceImpl implements SignService {
         return signUpResponseDto;
     }
 
-//    @Transactional
+    @Transactional
     public LoginResponseDto login(LoginRequestDto loginRequestDto) throws BadCredentialsException {
         try {
             Member member = memberRepository.findMemberByEmail(loginRequestDto.getEmail())
@@ -124,7 +125,7 @@ public class SignServiceImpl implements SignService {
             // Authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
             String jwt = jwtTokenProvider.createToken(authentication);
 
-            return new LoginResponseDto(1, "성공", jwt, member.getName());
+            return new LoginResponseDto(1, "성공", jwt, member.getId(), member.getName());
         } catch (Exception e) {
             return LoginException.exception(e);
         }
@@ -137,7 +138,6 @@ public class SignServiceImpl implements SignService {
 
 
     public Member save(SignUpRequestDto signUpRequestDto) {
-
         LOGGER.info(modelMapper.toString());
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);

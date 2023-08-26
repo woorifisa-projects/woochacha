@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+
     private final MemberRepository memberRepository;
 
     // 유효한 사용자인지 확인
