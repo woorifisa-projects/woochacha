@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
 
     private final JPAQueryFactory queryFactory;
@@ -74,7 +75,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public ProductDetailResponseDto findDetailProduct(Long productId) {
         // 기본 정보 조회
         ProductBasicInfo basicInfo = getProductBasicInfo(productId);
