@@ -2,6 +2,7 @@ package com.woochacha.backend.domain.mypage.controller;
 
 import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
 import com.woochacha.backend.domain.mypage.dto.ProfileDto;
+import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,13 +18,13 @@ public class MypageController {
 
     /*
     마이페이지 - 등록한 매물 조회
-    페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
+    페이지네이션 : 한 페이지당 5개
     */
     @GetMapping("/registered/{memberId}")
     private ResponseEntity<Page<ProductResponseDto>> registeredProduct(@PathVariable Long memberId,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "5") int size) {
-        Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByUserId(memberId, page, size);
+        Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsBymemberId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
     }
 
@@ -51,9 +52,8 @@ public class MypageController {
         return ResponseEntity.ok(productsPage);
     }
 
-    /*
-    마이페이지 프로필 조회
-     */
+
+//  마이페이지 프로필 조회
     @GetMapping("/{memberId}")
     private ResponseEntity<ProfileDto> mypage(@PathVariable Long memberId){
         ProfileDto profileDto = mypageService.getProfileByMemberId(memberId);

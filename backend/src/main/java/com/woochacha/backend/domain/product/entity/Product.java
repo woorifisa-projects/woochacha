@@ -49,6 +49,6 @@ public class Product {
     @JoinColumn(name = "car_num")
     private CarDetail carDetail;
 
-    @OneToMany(mappedBy = "product") // Transaction 엔티티와의 양방향 관계 설정
-    private List<CarImage> transactionList = new ArrayList<>();
+    @OneToMany(mappedBy = "product") // carImage 엔티티와의 양방향 관계 설정
+    private List<CarImage> carImages = new ArrayList<>();
 }

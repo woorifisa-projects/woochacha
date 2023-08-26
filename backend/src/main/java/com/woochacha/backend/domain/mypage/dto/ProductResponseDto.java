@@ -2,10 +2,8 @@ package com.woochacha.backend.domain.mypage.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @Builder
 public class ProductResponseDto {
     private String title; // 제목 : 모델+차량명+연식
