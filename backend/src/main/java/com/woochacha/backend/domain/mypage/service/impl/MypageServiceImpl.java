@@ -34,6 +34,7 @@ public class MypageServiceImpl implements MypageService {
                 .branch((String) array[2])
                 .price((Integer) array[3])
                 .imageUrl((String) array[4])
+                .productId((Long) array[5])
                 .build();
     }
 
@@ -44,6 +45,7 @@ public class MypageServiceImpl implements MypageService {
                 .price((Integer) array[1])
                 .branch((String) array[2])
                 .distance((Integer) array[3])
+                .productId((Long) array[4])
                 .build();
     }
 

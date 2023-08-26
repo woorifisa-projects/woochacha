@@ -16,12 +16,15 @@ public class ProductResponseDto {
 
     private String imageUrl; // 사진
 
-    public ProductResponseDto(String title, Integer distance, String branch, Integer price, String imageUrl) {
+    private Long productId; // 게시글 id (상세페이지로 이동할떄 사용)
+
+    public ProductResponseDto(String title, Integer distance, String branch, Integer price, String imageUrl, Long productId) {
         this.title = title;
         this.distance = distance;
         this.branch = branch;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.productId = productId;
     }
 
 }

@@ -18,7 +18,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "cd.distance, " +
             "CAST(sf.branch.name AS string) AS branch, " +
             "p.price, " +
-            "ci.imageUrl " +
+            "ci.imageUrl, " +
+            "p.id " +
             "FROM CarImage ci " +
             "JOIN ci.product p " +
             "JOIN p.carDetail cd " +
@@ -35,7 +36,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "cd.distance, " +
             "CAST(sf.branch.name AS string) AS branch, " +
             "p.price, " +
-            "ci.imageUrl " +
+            "ci.imageUrl, " +
+            "p.id " +
             "FROM CarImage ci " +
             "JOIN ci.product p " +
             "JOIN p.carDetail cd " +
@@ -52,7 +54,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "cd.distance, " +
             "CAST(sf.branch.name AS string) AS branch, " +
             "p.price, " +
-            "ci.imageUrl " +
+            "ci.imageUrl, " +
+            "p.id " +
             "FROM Transaction tr " +
             "JOIN tr.purchaseForm pf " +
             "JOIN tr.saleForm sf " +
@@ -68,7 +71,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "CONCAT(CAST(cd.model.name AS string), ' ', cd.carName.name, ' ', CAST(cd.year AS string), '년형') AS title, " +
             "p.price, " +
             "CAST(sf.branch.name AS string) AS branch, " +
-            "cd.distance " +
+            "cd.distance, " +
+            "p.id " +
             "FROM PurchaseForm pf " +
             "JOIN pf.product p " +
             "JOIN p.saleForm sf " +
