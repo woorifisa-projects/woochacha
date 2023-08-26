@@ -5,8 +5,11 @@ import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
 import com.woochacha.backend.domain.mypage.dto.ProfileDto;
+import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
+import com.woochacha.backend.domain.sale.entity.SaleForm;
+import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -23,6 +29,7 @@ public class MypageServiceImpl implements MypageService {
 
     private final MypageRepository mypageRepository;
     private final MemberRepository memberRepository;
+    private final SaleFormRepository saleFormRepository;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환해서 전달
@@ -64,6 +71,15 @@ public class MypageServiceImpl implements MypageService {
     public ProfileDto getProfileByMemberId(Long userId) {
         Member member = memberRepository.findById(userId).orElseThrow(() -> new RuntimeException("Member not found"));
         return modelMapper.map(member, ProfileDto.class);
+    }
+
+    // 판매 요청 폼 조회
+    public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<SaleForm> saleFormsPage = saleFormRepository.findAllById(memberId, pageable);
+        // SaleForm 엔티티를 SaleFormDto로 매핑
+        Page<SaleFormDto> saleFormDtosPage = saleFormsPage.map(saleForm -> modelMapper.map(saleForm, SaleFormDto.class));
+        return saleFormDtosPage;
     }
 }
 
