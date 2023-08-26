@@ -21,7 +21,7 @@ public class MypageController {
     페이지네이션 : 한 페이지당 5개
     */
     @GetMapping("/registered/{memberId}")
-    private ResponseEntity<Page<ProductResponseDto>> registeredProduct(@PathVariable Long memberId,
+    private ResponseEntity<Page<ProductResponseDto>> registeredProductList(@PathVariable Long memberId,
                                                                       @RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "5") int size) {
         Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByMemberId(memberId, page, size);
@@ -33,7 +33,7 @@ public class MypageController {
      페이지네이션 : 한 페이지당 5개
      */
     @GetMapping("/sale/{memberId}")
-    private ResponseEntity<Page<ProductResponseDto>> soldProduct(@PathVariable Long memberId,
+    private ResponseEntity<Page<ProductResponseDto>> soldProductList(@PathVariable Long memberId,
                                                                 @RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "5") int size){
         Page<ProductResponseDto> productsPage = mypageService.getSoldProductsByMemberId(memberId, page, size);
@@ -45,7 +45,7 @@ public class MypageController {
      페이지네이션 : 한 페이지당 5개
      */
     @GetMapping("/purchase/{memberId}")
-    private ResponseEntity<Page<ProductResponseDto>> purchaseProduct(@PathVariable Long memberId,
+    private ResponseEntity<Page<ProductResponseDto>> purchasedProductList(@PathVariable Long memberId,
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "5") int size) {
         Page<ProductResponseDto> productsPage = mypageService.getPurchaseProductsByMemberId(memberId, page, size);
