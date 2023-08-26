@@ -1,5 +1,5 @@
 export const HEADER_MENU = {
-  LOGO: '우차차',
+  LOGO: 'LOGO',
   CONTENTS: [
     {
       pageName: '구매',
