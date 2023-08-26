@@ -8,8 +8,8 @@ import com.woochacha.backend.domain.mypage.dto.ProfileDto;
 import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
-import com.woochacha.backend.domain.sale.entity.SaleForm;
-import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
+import com.woochacha.backend.domain.sale.entity.Branch;
+import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -19,8 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,7 +28,6 @@ public class MypageServiceImpl implements MypageService {
 
     private final MypageRepository mypageRepository;
     private final MemberRepository memberRepository;
-    private final SaleFormRepository saleFormRepository;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환해서 전달
@@ -40,6 +38,16 @@ public class MypageServiceImpl implements MypageService {
                 .branch((String) array[2])
                 .price((Integer) array[3])
                 .imageUrl((String) array[4])
+                .build();
+    }
+
+    // JPQL로 조회한 결과 SaleFormDto로 변환해서 전달
+    private SaleFormDto arrayToSaleFormDto(Object[] array) {
+        return SaleFormDto.builder()
+                .carNum((String) array[0])
+                .createdAt((LocalDateTime) array[1])
+                .branch((String) array[2])
+                .carStatus((String) array[3])
                 .build();
     }
 
@@ -76,9 +84,8 @@ public class MypageServiceImpl implements MypageService {
     // 판매 요청 폼 조회
     public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<SaleForm> saleFormsPage = saleFormRepository.findAllById(memberId, pageable);
-        // SaleForm 엔티티를 SaleFormDto로 매핑
-        Page<SaleFormDto> saleFormDtosPage = saleFormsPage.map(saleForm -> modelMapper.map(saleForm, SaleFormDto.class));
+        Page<Object[]> saleFormsPage = mypageRepository.findAllByMemberId(memberId, pageable);
+        Page<SaleFormDto> saleFormDtosPage = saleFormsPage.map(this::arrayToSaleFormDto);
         return saleFormDtosPage;
     }
 }

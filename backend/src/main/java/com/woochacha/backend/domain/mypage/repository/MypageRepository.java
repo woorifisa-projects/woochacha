@@ -63,6 +63,13 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "AND ci.imageUrl LIKE '%/1' " +
             "ORDER BY tr.createdAt ASC ")
     Page<Object[]> getPurchaseProductsByMemberId(@Param("memberId") Long memberId, Pageable pageable);
+
+    // 판매 신청폼 조회
+    @Query("SELECT sf.carNum, sf.createdAt, CAST(sf.branch.name AS string), CAST(sf.carStatus.status AS string) " +
+            "FROM SaleForm AS sf " +
+            "WHERE sf.member.id = :memberId " +
+            "ORDER BY sf.createdAt ASC ")
+    Page<Object[]> findAllByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 }
 
 
