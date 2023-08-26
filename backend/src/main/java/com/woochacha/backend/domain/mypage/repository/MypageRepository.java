@@ -72,7 +72,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "p.price, " +
             "CAST(sf.branch.name AS string) AS branch, " +
             "cd.distance, " +
-            "p.id " +
+            "p.id, " +
+            "pf.status " +
             "FROM PurchaseForm pf " +
             "JOIN pf.product p " +
             "JOIN p.saleForm sf " +

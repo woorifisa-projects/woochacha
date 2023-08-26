@@ -40,12 +40,19 @@ public class MypageServiceImpl implements MypageService {
 
     // JPQL로 조회한 결과 PurchaseReqeustListDto로 변환
     private PurchaseReqeustListDto arrayToPurchaseReqeustListDto(Object[] array){
+        String status;
+        if (array[5].equals(0)){
+            status = "미검토";
+        }else{
+            status = "검토";
+        }
         return PurchaseReqeustListDto.builder()
                 .title((String) array[0])
                 .price((Integer) array[1])
                 .branch((String) array[2])
                 .distance((Integer) array[3])
                 .productId((Long) array[4])
+                .status(status)
                 .build();
     }
 
