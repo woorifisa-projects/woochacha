@@ -16,8 +16,7 @@ public class MypageController {
     private final MypageServiceImpl mypageService;
 
     /*
-    [마이페이지 - 등록한 매물 조회]
-    반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
+    마이페이지 - 등록한 매물 조회
     페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
     */
     @GetMapping("/registered/{memberId}")
@@ -28,11 +27,10 @@ public class MypageController {
         return ResponseEntity.ok(productsPage);
     }
 
-//    /*
-//     [마이페이지 - 판매 이력 조회]
-//     반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
-//     페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
-//     */
+    /*
+     마이페이지 - 판매 이력 조회
+     페이지네이션 : 한 페이지당 5개
+     */
     @GetMapping("/sale/{memberId}")
     private ResponseEntity<Page<ProductResponseDto>> soldProduct(@PathVariable Long memberId,
                                                                 @RequestParam(defaultValue = "0") int page,
@@ -41,11 +39,10 @@ public class MypageController {
         return ResponseEntity.ok(productsPage);
     }
 
-//    /*
-//     [마이페이지 - 구매 이력 조회]
-//     반환 데이터 : "carName", "imageUrl", "price", "year", "distance", "branch", "createdAt"
-//     페이지네이션 : 한 페이지당 5개, 게시글 작성일 최신순으로 정렬
-//     */
+    /*
+     마이페이지 구매 이력 조회
+     페이지네이션 : 한 페이지당 5개
+     */
     @GetMapping("/purchase/{memberId}")
     private ResponseEntity<Page<ProductResponseDto>> purchaseProduct(@PathVariable Long memberId,
                                                                     @RequestParam(defaultValue = "0") int page,
@@ -55,8 +52,7 @@ public class MypageController {
     }
 
     /*
-    [마이페이지 프로필 조회]
-    반환 데이터 : "profileImage", "name", "phone", "email"
+    마이페이지 프로필 조회
      */
     @GetMapping("/{memberId}")
     private ResponseEntity<ProfileDto> mypage(@PathVariable Long memberId){

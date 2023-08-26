@@ -23,7 +23,6 @@ public class MypageServiceImpl implements MypageService {
 
     private final MypageRepository mypageRepository;
     private final MemberRepository memberRepository;
-
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환해서 전달
@@ -37,7 +36,7 @@ public class MypageServiceImpl implements MypageService {
                 .build();
     }
 
-    // 등록한 매물 조회 (최신 등록 순)
+    // 등록한 매물 조회
     public Page<ProductResponseDto> getRegisteredProductsByUserId(Long userId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByUserId(userId, pageable);
@@ -45,15 +44,15 @@ public class MypageServiceImpl implements MypageService {
         return productsPage.map(this::arrayToProductResponseDto);
     }
 
-    // 판매 이력 조회 (최신 판매 순)
+    // 판매 이력 조회
     public Page<ProductResponseDto> getSoldProductsByMemberId(Long userId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> productsPage = mypageRepository.getSoldProductsByMemberId(userId, pageable);
 
         return productsPage.map(this::arrayToProductResponseDto);
     }
-//
-//    // 구매 이력 조회 (최신 구매 순)
+
+    // 구매 이력 조회
     public Page<ProductResponseDto> getPurchaseProductsByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> productsPage = mypageRepository.getPurchaseProductsByMemberId(memberId, pageable);

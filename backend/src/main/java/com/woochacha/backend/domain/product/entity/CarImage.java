@@ -22,7 +22,6 @@ public class CarImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    @JsonIgnore
     private Product product;
 
     @NotNull

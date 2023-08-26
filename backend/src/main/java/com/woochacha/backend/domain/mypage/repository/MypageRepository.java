@@ -29,8 +29,7 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "ORDER BY p.createdAt ASC ")
     Page<Object[]> getRegisteredProductsByUserId(@Param("memberId") Long memberId, Pageable pageable);
 
-//    // TODO: createAt을 게시글 등록일이 아닌 판매일로 수정 (transaction 테이블) -> 양방향 매핑으로 수정
-    // 마이페이지 - 판매 이력 조회 (product.id가 같은 행은 하나만(첫 번째 행) 출력)
+//  마이페이지 - 판매 이력 조회
     @Query("SELECT " +
             "CONCAT(CAST(cd.model.name AS string), ' ', cd.carName.name, ' ', CAST(cd.year AS string), '년형') AS title, " +
             "cd.distance, " +
@@ -47,9 +46,7 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "ORDER BY p.createdAt ASC ")
     Page<Object[]> getSoldProductsByMemberId(@Param("memberId") Long userId, Pageable pageable);
 
-//    // TODO: 이미지 하나 가져오는 부분 리팩토링
-//    // TODO: dummy data 추가로 넣어서 확인
-//    // 마이페이지 - 구매 이력 조회
+    // 마이페이지 - 구매 이력 조회
     @Query("SELECT " +
             "CONCAT(CAST(cd.model.name AS string), ' ', cd.carName.name, ' ', CAST(cd.year AS string), '년형') AS title, " +
             "cd.distance, " +

@@ -50,6 +50,5 @@ public class Product {
     private CarDetail carDetail;
 
     @OneToMany(mappedBy = "product") // Transaction 엔티티와의 양방향 관계 설정
-    @JsonIgnore
     private List<CarImage> transactionList = new ArrayList<>();
 }

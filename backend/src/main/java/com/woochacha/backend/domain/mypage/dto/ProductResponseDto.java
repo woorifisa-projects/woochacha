@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProductResponseDto {
-    private String title; // 제목(model + car_name + year)
+    private String title; // 제목 : 모델+차량명+연식
 
     private Integer distance; // 주행 거리
 
