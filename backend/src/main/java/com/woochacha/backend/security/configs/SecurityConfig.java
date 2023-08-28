@@ -9,6 +9,7 @@ import com.woochacha.backend.domain.member.service.impl.UserDetailsServiceImpl;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -89,6 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
 //                .antMatchers("/", "/users/register", "/users/login").permitAll()
 //                .antMatchers("/products", "/products/details/**", "/products/filter", "/products/search").permitAll()
 //                .antMatchers("/users/**", "/products/**").hasRole("USER")
