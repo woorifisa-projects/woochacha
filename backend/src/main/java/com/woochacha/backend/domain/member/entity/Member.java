@@ -30,7 +30,7 @@ public class Member implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ColumnDefault("1")
+    @ColumnDefault("0")
     private Byte role;
 
     @NotNull
@@ -57,6 +57,7 @@ public class Member implements UserDetails {
     @ColumnDefault("1")
     private Byte status;
 
+    @NotNull
     private String profileImage;
 
 

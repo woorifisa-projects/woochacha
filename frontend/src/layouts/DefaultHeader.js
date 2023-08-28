@@ -34,28 +34,55 @@ function DefaultHeader() {
     setAnchorElNav(null);
   };
 
+  const defaultHeaderCss = {
+    headerContainer: {
+      backgroundColor: '#fff',
+      py: 1.5,
+    },
+    xsHeaderLogo: {
+      mr: 2,
+      display: { xs: 'flex', md: 'none' },
+      flexGrow: 1,
+      fontWeight: 800,
+      letterSpacing: '.3rem',
+      color: 'inherit',
+      textDecoration: 'none',
+    },
+    mdHeaderLogo: {
+      mr: 2,
+      display: { xs: 'none', md: 'flex' },
+      fontWeight: 800,
+      letterSpacing: '.3rem',
+      color: 'inherit',
+      textDecoration: 'none',
+    },
+    xsHeaderBox: { flexGrow: 1, display: { xs: 'flex', md: 'none' } },
+    mdHeaderBox: {
+      flexGrow: 1,
+      display: { xs: 'none', md: 'flex', justifyContent: 'center' },
+    },
+    xsHeaderMenuItem: {
+      display: { xs: 'block', md: 'none' },
+    },
+    mdHeaderMenuItem: {
+      my: 2,
+      mx: 2,
+      color: 'black',
+      display: 'block',
+      fontWeight: 500,
+      fontSize: '1.1rem',
+    },
+  };
+
   return (
     <AppBar color="default" position="sticky">
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={defaultHeaderCss.headerContainer}>
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}>
+          <Typography variant="h5" noWrap component="a" href="/" sx={defaultHeaderCss.mdHeaderLogo}>
             {HEADER_MENU.LOGO}
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={defaultHeaderCss.xsHeaderBox}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -79,9 +106,7 @@ function DefaultHeader() {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}>
+              sx={defaultHeaderCss.xsHeaderMenuItem}>
               {HEADER_MENU.CONTENTS.map((page) => (
                 <MenuItem key={page.pageName} onClick={() => handleCloseNavMenu(page.pageUrl)}>
                   <Typography textAlign="center">{page.pageName}</Typography>
@@ -92,29 +117,15 @@ function DefaultHeader() {
               {userLoggedIn ? <MenuAppbar size="0" /> : ''}
             </Menu>
           </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}>
+          <Typography variant="h5" noWrap component="a" href="/" sx={defaultHeaderCss.xsHeaderLogo}>
             {HEADER_MENU.LOGO}
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={defaultHeaderCss.mdHeaderBox}>
             {HEADER_MENU.CONTENTS.map((page) => (
               <MenuItem
                 key={page.pageName}
                 onClick={() => handleCloseNavMenu(page.pageUrl)}
-                sx={{ my: 2, color: 'black', display: 'block' }}>
+                sx={defaultHeaderCss.mdHeaderMenuItem}>
                 {page.pageName}
               </MenuItem>
             ))}
