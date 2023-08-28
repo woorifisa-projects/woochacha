@@ -74,4 +74,10 @@ public class MypageController {
         Page<PurchaseReqeustListDto> purchaseRequestPage = mypageService.getPurchaseRequestByMemberId(memberId, page, size);
         return ResponseEntity.ok(purchaseRequestPage);
     }
+
+    // 상품 수정 신청폼 조회
+//    @GetMapping("/registered/edit")
+//    private ResponseEntity<ProductEditRequestDto> getProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId"){
+//        ProductEditRequestDto productEditRequestDto = mypageService.
+//    }
 }
