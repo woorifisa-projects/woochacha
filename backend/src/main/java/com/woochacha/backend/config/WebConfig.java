@@ -12,6 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "https://15.165.239.79:80", "https://13.125.32.208:8080") // 허용할 출처
                 .allowedMethods("GET", "POST", "PATCH") // 허용할 HTTP method
                 .allowCredentials(true) // 쿠키 인증 요청 허용
-                .maxAge(3000);
+                .maxAge(3000)
+                .exposedHeaders("Authorization");
     }
 }
