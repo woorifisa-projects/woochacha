@@ -1,16 +1,18 @@
 package com.woochacha.backend.domain.admin.service;
 
+import com.amazon.ion.IonInt;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
+import com.woochacha.backend.domain.admin.dto.CarInspectionInfoDto;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import software.amazon.qldb.Result;
 
 
 @Service
@@ -40,5 +42,4 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
 
         return results;
     }
-
 }
