@@ -13,6 +13,9 @@ const HEADER_FORM = {
   },
 };
 
+// 1. axios 전역 설정
+axios.defaults.withCredentials = true; // withCredentials 전역 설정
+
 // 인증 필요 X 경우
 const axiosApi = (url, options) => {
   const instance = axios.create({ baseURL: url, ...options });
