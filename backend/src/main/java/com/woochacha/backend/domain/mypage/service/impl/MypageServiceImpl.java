@@ -31,6 +31,17 @@ public class MypageServiceImpl implements MypageService {
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환
     private ProductResponseDto arrayToProductResponseDto(Object[] array) {
+        // 향후 switch문으로 리팩토링 예정
+        String status;
+        if (array[6].toString().equals("4")){
+            status = "판매중";
+        } else if (array[6].toString().equals("6")) {
+            status = "삭제신청완료";
+        } else if (array[6].toString().equals("5")){
+            status = "판매완료";
+        } else {
+            status = "수정신청완료";
+        }
         return ProductResponseDto.builder()
                 .title((String) array[0])
                 .distance((Integer) array[1])
@@ -38,13 +49,14 @@ public class MypageServiceImpl implements MypageService {
                 .price((Integer) array[3])
                 .imageUrl((String) array[4])
                 .productId((Long) array[5])
+                .status(status)
                 .build();
     }
 
     // JPQL로 조회한 결과 PurchaseReqeustListDto로 변환
     private PurchaseReqeustListDto arrayToPurchaseReqeustListDto(Object[] array){
         String status;
-        if (array[5].equals(0)){
+        if (array[5].toString().equals("0")){
             status = "미검토";
         }else{
             status = "검토";
