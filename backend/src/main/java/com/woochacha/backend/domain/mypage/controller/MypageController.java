@@ -88,10 +88,10 @@ public class MypageController {
     private ResponseEntity<String> patchProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId,
                                                         @RequestBody @Valid UpdatePriceDto updatePriceDto){
         EditProductDto editProductDto = mypageService.getProductEditRequestInfo(memberId, productId);
-        if (updatePriceDto.getUpdatePrice() < editProductDto.getPrice()) {
-            return ResponseEntity.badRequest().body("변경된 가격은 기존 가격보다 작을 수 없습니다.");
+        if (updatePriceDto.getUpdatePrice() > editProductDto.getPrice()) {
+            return ResponseEntity.badRequest().body("변경된 가격은 기존 가격보다 높을 수 없습니다.");
         }
-        mypageService.updatePrice(memberId, updatePriceDto.getUpdatePrice());
+        mypageService.updatePrice(productId, updatePriceDto.getUpdatePrice());
         return ResponseEntity.ok("가격 변경 요청이 완료되었습니다.");
     }
 }

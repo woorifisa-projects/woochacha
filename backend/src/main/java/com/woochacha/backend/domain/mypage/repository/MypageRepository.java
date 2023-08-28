@@ -5,6 +5,7 @@ import com.woochacha.backend.domain.sale.entity.SaleForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -102,6 +103,11 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "AND p.id = :productId " +
             "AND ci.imageUrl LIKE '%/1' ")
     EditProductDto getProductEditRequestInfo(@Param("memberId") Long memberId, @Param("productId") Long productId);
+
+    // 상품 수정 신청시 수정 가격 저장, status 변경
+    @Modifying
+    @Query("UPDATE Product p SET p.updatePrice = :updatePrice, p.status = 9 WHERE p.id = :productId")
+    void updatePrice(@Param("productId") Long productId, @Param("updatePrice") int updatePrice);
 }
 
 
