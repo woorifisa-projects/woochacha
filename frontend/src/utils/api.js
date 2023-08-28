@@ -1,7 +1,7 @@
 import axios from 'axios';
 import LocalStorage from './localStorage';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://13.125.32.208:8080';
 const HEADER_JSON = {
   headers: {
     'Content-Type': 'application/json',
@@ -12,6 +12,9 @@ const HEADER_FORM = {
     'Content-Type': 'multipart/form-data',
   },
 };
+
+// 1. axios 전역 설정
+axios.defaults.withCredentials = true; // withCredentials 전역 설정
 
 // 인증 필요 X 경우
 const axiosApi = (url, options) => {
