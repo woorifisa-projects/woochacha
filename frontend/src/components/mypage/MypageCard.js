@@ -9,94 +9,52 @@ export default function MypageCard() {
   // TODO: API 조회 후 수정할 dummy data입니다.
   const itemDummyArr = [
     {
-      productImgUrl: 'https://source.unsplash.com/random?car',
-      carName: '멋쟁이 자동차1 게시글',
-      price: '300',
-      createdDate: '2023-07',
-      distance: '58,972',
-      carWhere: '인천',
-      productUrl: '/products/detail/1',
+      id: 14,
+      title: '기아 올 뉴 카니발 2018년형',
+      distance: 110000,
+      branch: '서울',
+      price: 2690,
+      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
     },
     {
-      productImgUrl: 'https://source.unsplash.com/random?bmw',
-      carName: '멋쟁이 자동차2',
-      price: '3000',
-      createdDate: '2023-05',
-      distance: '58,999',
-      carWhere: '대전',
-      productUrl: '/products/detail/2',
+      id: 15,
+      title: '기아 모닝 2010년형',
+      distance: 100000,
+      branch: '서울',
+      price: 270,
+      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
     },
     {
-      productImgUrl: 'https://source.unsplash.com/random?benz',
-      carName: '멋쟁이 자동차3',
-      price: '5000',
-      createdDate: '2023-02',
-      distance: '38,972',
-      carWhere: '부산',
-      productUrl: '/products/detail/3',
+      id: 16,
+      title: '기아 올 뉴 카니발 2018년형',
+      distance: 110000,
+      branch: '서울',
+      price: 2690,
+      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
     },
     {
-      productImgUrl: 'https://source.unsplash.com/random?car',
-      carName: '멋쟁이 자동차4',
-      price: '300',
-      createdDate: '2023-07',
-      distance: '58,972',
-      carWhere: '인천',
-      productUrl: '/products/detail/4',
+      id: 17,
+      title: '기아 모닝 2010년형',
+      distance: 100000,
+      branch: '서울',
+      price: 270,
+      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
     },
     {
-      productImgUrl: 'https://source.unsplash.com/random?bmw',
-      carName: '멋쟁이 자동차5',
-      price: '3000',
-      createdDate: '2023-05',
-      distance: '58,999',
-      carWhere: '대전',
-      productUrl: '/products/detail/5',
+      id: 18,
+      title: '기아 올 뉴 카니발 2018년형',
+      distance: 110000,
+      branch: '서울',
+      price: 2690,
+      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
     },
     {
-      productImgUrl: 'https://source.unsplash.com/random?benz',
-      carName: '멋쟁이 자동차6',
-      price: '5000',
-      createdDate: '2023-02',
-      distance: '38,972',
-      carWhere: '부산',
-      productUrl: '/products/detail/6',
-    },
-    {
-      productImgUrl: 'https://source.unsplash.com/random?car',
-      carName: '멋쟁이 자동차7',
-      price: '300',
-      createdDate: '2023-07',
-      distance: '58,972',
-      carWhere: '인천',
-      productUrl: '/products/detail/7',
-    },
-    {
-      productImgUrl: 'https://source.unsplash.com/random?bmw',
-      carName: '멋쟁이 자동차8',
-      price: '3000',
-      createdDate: '2023-05',
-      distance: '58,999',
-      carWhere: '대전',
-      productUrl: '/products/detail/8',
-    },
-    {
-      productImgUrl: 'https://source.unsplash.com/random?benz',
-      carName: '멋쟁이 자동차9',
-      price: '5000',
-      createdDate: '2023-02',
-      distance: '38,972',
-      carWhere: '부산',
-      productUrl: '/products/detail/9',
-    },
-    {
-      productImgUrl: 'https://source.unsplash.com/random?benz',
-      carName: '멋쟁이 자동차10',
-      price: '5000',
-      createdDate: '2023-02',
-      distance: '38,972',
-      carWhere: '부산',
-      productUrl: '/products/detail/10',
+      id: 19,
+      title: '기아 모닝 2010년형',
+      distance: 100000,
+      branch: '서울',
+      price: 270,
+      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
     },
   ];
 
@@ -115,7 +73,7 @@ export default function MypageCard() {
         transform: 'scale(1.03)',
       },
     },
-    cardMedia: { width: '30%' },
+    cardMedia: { width: '20%', height: '100%' },
     cardContent: { flexGrow: 1 },
   };
 
@@ -133,18 +91,16 @@ export default function MypageCard() {
       <Grid container spacing={3} sx={mypageCardCss.container}>
         {itemDummyArr.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
-            <Card sx={mypageCardCss.card} onClick={() => handleMoveDetail(item.productUrl)}>
-              <CardMedia component="div" sx={mypageCardCss.cardMedia} image={item.productImgUrl} />
+            <Card sx={mypageCardCss.card} onClick={() => handleMoveDetail(item.id)}>
+              <CardMedia component="div" sx={mypageCardCss.cardMedia} image={item.imageUrl} />
               <CardContent sx={mypageCardCss.cardContent}>
                 <Typography gutterBottom variant="h5" component="h5">
-                  {item.carName}
+                  {item.title}
                 </Typography>
                 <Grid container my={1} gap={1}>
-                  <Chip size="small" label={`연식 : ${item.createdDate}`} />
                   <Chip size="small" label={`주행거리 : ${item.distance} km`} />
                   <Chip size="small" label={`가격 : ${item.price} 만원`} />
-                  <Chip size="small" label={`지점 : ${item.carWhere}`} />
-                  <Chip size="small" label={`작성일 : ${item.createdDate}`} />
+                  <Chip size="small" label={`지점 : ${item.branch}`} />
                 </Grid>
               </CardContent>
             </Card>
