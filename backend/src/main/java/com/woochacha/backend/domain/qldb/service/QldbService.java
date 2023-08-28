@@ -14,4 +14,8 @@ public interface QldbService {
     int accidentHistoryInfo(String metaId, String accidentType, String accidentDesc);
 
     List<CarInspectionInfoDto> getQldbCarInfoList(String carMetaId, String accidentMetaId, String exchangeMetaId);
+
+//    CarInspectionInfoDto getQldbCarInfo(String carNum);
+
+    int getCarDistance(String carNum);
 }

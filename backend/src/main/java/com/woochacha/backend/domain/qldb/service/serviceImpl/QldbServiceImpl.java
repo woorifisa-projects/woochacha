@@ -23,6 +23,8 @@ public class QldbServiceImpl implements QldbService {
     private String ownerPhone;
     private String metaId;
     private int countAccidentHistory;
+    private CarInspectionInfoDto inspectionInfo;
+    int carDistance;
 
 
     // QLDB에 저장된 차량 번호와 같은 차량 소유주의 이름과 전화번호를 찾아준다.
@@ -110,4 +112,47 @@ public class QldbServiceImpl implements QldbService {
         return inspectionInfoList;
     }
 
+
+//    public CarInspectionInfoDto updateQldbCarInfo(String carNum) {
+//        try {
+//            qldbDriver.QldbDriver().execute(txn -> {
+//                Result result = txn.execute(
+//                        "SELECT c.car_distance, ca.accident_type, ca.accident_desc, ca.accident_date, ce.data.exchange_type, ce.data.exchange_desc, ce.data.exchange_date " +
+//                                "FROM car AS c, car_accident AS ca, car_exchange AS ce " +
+//                                "WHERE c.car_num='?', ca.car_num='?', ce.car_num='?'",
+//                        ionSys.newString(carNum), ionSys.newString(carNum), ionSys.newString(carNum));
+//                IonStruct ionStruct = (IonStruct) result.iterator().next();
+//
+//                inspectionInfo = CarInspectionInfoDto.builder()
+//                        .distance(ionStruct.get("car_distance").toInt())
+//                        .accidentType(ionStruct.get("accident_type").toString())
+//                        .accidentDesc(ionStruct.get("accident_desc").toString())
+//                        .accidentDate(ionStruct.get("accident_date").toString())
+//                        .exchangeType(ionStruct.get("exchange_type").toString())
+//                        .exchangeDesc(ionStruct.get("exchange_desc").toString())
+//                        .exchangeDate(ionStruct.get("exchange_date").toString())
+//                        .build();
+//            });
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        return inspectionInfo;
+//    }
+    @Override
+    public int getCarDistance(String carNum) {
+        try {
+            qldbDriver.QldbDriver().execute(txn -> {
+                Result result = txn.execute(
+                        "SELECT c.car_distance " +
+                                "FROM car AS c "+
+                                "WHERE c.car_num='?'",
+                        ionSys.newString(carNum));
+                IonInt distance = (IonInt) result.iterator().next();
+                carDistance = distance.intValue();
+            });
+            return carDistance;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
