@@ -1,7 +1,7 @@
 import axios from 'axios';
 import LocalStorage from './localStorage';
 
-const BASE_URL = 'http://13.125.32.208';
+const BASE_URL = 'http://13.125.32.208:8080';
 const HEADER_JSON = {
   headers: {
     'Content-Type': 'application/json',
