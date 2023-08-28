@@ -1,6 +1,9 @@
 package com.woochacha.backend.domain.product.service.impl;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.domain.car.detail.dto.CarNameDto;
@@ -14,11 +17,14 @@ import com.woochacha.backend.domain.car.type.entity.*;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.product.dto.ProdcutAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductFilterResponseDto;
 import com.woochacha.backend.domain.product.dto.all.ProductFilterInfo;
 import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.dto.detail.*;
+import com.woochacha.backend.domain.product.entity.Product;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import com.woochacha.backend.domain.product.entity.QProduct;
+import com.woochacha.backend.domain.product.repository.ProductRepository;
 import com.woochacha.backend.domain.product.service.ProductService;
 import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.QBranch;
@@ -28,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +42,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
     private final JPAQueryFactory queryFactory;
+    private final ProductRepository productRepository;
+
+    private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     private final QProduct p = QProduct.product;
     private final QCarDetail cd = QCarDetail.carDetail;
     private final QCarImage ci = QCarImage.carImage;
@@ -53,8 +63,9 @@ public class ProductServiceImpl implements ProductService {
     private final QCarOption co = QCarOption.carOption;
     private final QMember m = QMember.member;
 
-    public ProductServiceImpl(JPAQueryFactory queryFactory) {
+    public ProductServiceImpl(JPAQueryFactory queryFactory, ProductRepository productRepository) {
         this.queryFactory = queryFactory;
+        this.productRepository = productRepository;
     }
 
     /*
@@ -227,4 +238,100 @@ public class ProductServiceImpl implements ProductService {
                 .where(sf.carNum.eq(carNum))
                 .fetch();
     }
+
+    @Override
+    public List<ProductFilterResponseDto> findFilteredProduct(ProductFilterInfo productFilterInfo) {
+        // productFilterInfo 전체 순회
+        List<Long> typeIdList = null;
+        List<Long> modelIdList;
+        List<Long> carNameList;
+        List<Long> fuelList;
+        List<Long> colorList;
+        List<Long> transmissionList;
+        List<Long> bracnList;
+
+
+
+
+        logger.info("#############");
+
+            List<ProductFilterResponseDto> productInfoList = queryFactory.select(Projections.fields(ProductFilterResponseDto.class, p.id,Expressions.asString(
+                                    model.name.stringValue()).concat(" ").concat(cn.name).concat(" ").concat(cd.year.stringValue()).concat("년형").as("title"),
+                            p.price, b.name.stringValue().as("branch"), cd.distance, ci.imageUrl, type.id, model.id))
+                    .from(p).join(cd).on(p.carDetail.carNum.eq(cd.carNum))
+                    .join(sf).on(p.saleForm.id.eq(sf.id))
+                    .join(ci).on(ci.product.id.eq(p.id))
+                    .join(b).on(b.id.eq(sf.branch.id))
+                    .join(model).on(model.id.eq(cd.model.id))
+                    .join(cn).on(cn.name.eq(cd.carName.name))
+                    .join(type).on(type.id.eq(p.carDetail.type.id))
+                    .where(p.status.id.eq((short) 4).and(ci.imageUrl.like("%/1")).and(dynamicSearch(productFilterInfo)))
+                    .orderBy(p.createdAt.asc())
+                    .fetch();
+
+
+
+
+//        logger.info("####### size is : " + Objects.requireNonNull(typeIdList).size());
+
+        // null이 아니면 해당 info의 조건 갯수만큼 쿼리문 여러번 실행해서 순회
+
+
+
+
+//        return null;
+        return productInfoList;
+    }
+
+
+    private BooleanBuilder dynamicSearch(ProductFilterInfo p) {
+        BooleanBuilder b = new BooleanBuilder();
+
+        b.or(dynamicSearchType(p, b)).or(dynamicSearchModel(p, b));
+
+
+
+        return b;
+    }
+
+
+    private BooleanBuilder dynamicSearchType(ProductFilterInfo productFilterInfo, BooleanBuilder builder) {
+        if (productFilterInfo.getTypeList() != null) {
+            BooleanExpression typeWhere = null;
+            for (int i = 0; i < productFilterInfo.getTypeList().size(); i++) {
+                int typeId = productFilterInfo.getTypeList().get(i).getId();
+                BooleanExpression typeExpression = p.carDetail.type.id.eq(typeId);
+                logger.info("[type id] : " + typeId);
+                if (typeWhere == null) {
+                    typeWhere = typeExpression;
+                } else {
+                    typeWhere = typeWhere.or(typeExpression);
+                }
+            }
+            builder.or(typeWhere);
+        }
+        logger.info(builder.toString());
+        return builder;
+    }
+
+    private BooleanBuilder dynamicSearchModel(ProductFilterInfo productFilterInfo, BooleanBuilder builder) {
+        if (productFilterInfo.getModelList() != null) {
+            BooleanExpression modelWhere = null;
+            for (int i = 0; i < productFilterInfo.getModelList().size(); i++) {
+                int modelId = productFilterInfo.getModelList().get(i).getId();
+                BooleanExpression modelExpression = p.carDetail.model.id.eq(modelId);
+                logger.info("[model id] : " + modelId);
+                builder.or(modelExpression);
+                if (modelWhere == null) {
+                    modelWhere = modelExpression;
+                } else {
+                    modelWhere = modelWhere.or(modelExpression);
+                }
+                builder.or(modelWhere);
+            }
+        }
+        logger.info(builder.toString());
+        return builder;
+    }
+
 }
