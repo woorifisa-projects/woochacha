@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @Builder
 public class SaleFormDto {
 
