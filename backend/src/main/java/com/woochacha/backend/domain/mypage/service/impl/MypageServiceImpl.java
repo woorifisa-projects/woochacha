@@ -5,9 +5,12 @@ import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
 import com.woochacha.backend.domain.mypage.dto.ProfileDto;
+import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
 import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
+import com.woochacha.backend.domain.sale.entity.Branch;
+import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @Transactional(readOnly = true)
@@ -56,6 +61,16 @@ public class MypageServiceImpl implements MypageService {
                 .build();
     }
 
+    // JPQL로 조회한 결과 SaleFormDto로 변환해서 전달
+    private SaleFormDto arrayToSaleFormDto(Object[] array) {
+        return SaleFormDto.builder()
+                .carNum((String) array[0])
+                .createdAt((LocalDateTime) array[1])
+                .branch((String) array[2])
+                .carStatus((String) array[3])
+                .build();
+    }
+
     // 등록한 매물 조회
     public Page<ProductResponseDto> getRegisteredProductsByMemberId(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
@@ -86,11 +101,17 @@ public class MypageServiceImpl implements MypageService {
         return modelMapper.map(member, ProfileDto.class);
     }
 
-    // 구매 신청 내역 조회
+    // 판매 신청 폼 조회
+    public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Object[]> saleFormsPage = mypageRepository.findAllByMemberId(memberId, pageable);
+        Page<SaleFormDto> saleFormDtosPage = saleFormsPage.map(this::arrayToSaleFormDto);
+        return saleFormDtosPage;
+
+    // 구매 신청 폼 조회
     public Page<PurchaseReqeustListDto> getPurchaseRequestByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
-
         return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
     }
 }
