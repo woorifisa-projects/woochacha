@@ -61,12 +61,12 @@ public class QldbServiceImpl implements QldbService {
 
     // QLDB에 저장된 history를 차량 번호에 따른 차량 사고 종류와 사고 내역에 대해서 일치하는 history의 개수를 count한다.
     @Override
-    public int accidentHistoryInfo(String carNum, String metaId, String accidentType, String accidentDesc) {
+    public int accidentHistoryInfo(String metaId, String accidentType, String accidentDesc) {
         try {
             qldbDriver.QldbDriver().execute(txn -> {
                 Result result = txn.execute(
-                        "SELECT COUNT(*) FROM history(car_accident) AS r WHERE r.car_num=? AND r.accident_type=? AND r.accident_desc =? AND r.metadata.id =?",
-                        ionSys.newString(carNum), ionSys.newString(accidentType), ionSys.newString(accidentDesc), ionSys.newString(metaId));
+                        "SELECT COUNT(*) FROM history(car_accident) AS r WHERE r.accident_type=? AND r.accident_desc =? AND r.metadata.id =?",
+                        ionSys.newString(accidentType), ionSys.newString(accidentDesc), ionSys.newString(metaId));
                 IonInt countHistory = (IonInt) result.iterator().next();
                 countAccidentHistory = countHistory.intValue();
             });
