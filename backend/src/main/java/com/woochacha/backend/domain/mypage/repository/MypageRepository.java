@@ -102,6 +102,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "AND p.id = :productId " +
             "AND ci.imageUrl LIKE '%/1' ")
     EditProductDto getProductEditRequestInfo(@Param("memberId") Long memberId, @Param("productId") Long productId);
+
+
 }
 
 

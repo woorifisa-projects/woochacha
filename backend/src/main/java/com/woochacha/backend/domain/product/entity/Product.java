@@ -1,17 +1,14 @@
 package com.woochacha.backend.domain.product.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.woochacha.backend.domain.car.detail.entity.CarDetail;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;

@@ -6,6 +6,7 @@ import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
+import com.woochacha.backend.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.DecimalMax;
 import java.time.LocalDateTime;
 
 @Service
@@ -24,6 +26,7 @@ public class MypageServiceImpl implements MypageService {
 
     private final MypageRepository mypageRepository;
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환
@@ -63,15 +66,6 @@ public class MypageServiceImpl implements MypageService {
                 .createdAt((LocalDateTime) array[1])
                 .branch((String) array[2])
                 .carStatus((String) array[3])
-                .build();
-    }
-
-    // JPQL로 조회한 결과 ProductEditRequestDto로 변환해엇 전달
-    private EditProductDto arrayToProductEditRequestDto(Object[] array){
-        return EditProductDto.builder()
-                .title((String) array[0])
-                .price((Integer) array[1])
-                .carImage((String) array[2])
                 .build();
     }
 
@@ -122,7 +116,13 @@ public class MypageServiceImpl implements MypageService {
 
     // 수정신청 폼 데이터 가져오기
     public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
-        return mypageRepository.getProductEditRequestInfo(memberId, productId);
+        EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
+        return editProductDto;
+    }
+
+    // 수정신청 폼 제출
+    public void updatePrice(Long productId, Integer updatePrice){
+        productRepository.updatePrice(productId, updatePrice);
     }
 }
 
