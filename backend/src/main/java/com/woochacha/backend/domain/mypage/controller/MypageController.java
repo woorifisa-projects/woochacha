@@ -1,9 +1,6 @@
 package com.woochacha.backend.domain.mypage.controller;
 
-import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
-import com.woochacha.backend.domain.mypage.dto.ProfileDto;
-import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
-import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
+import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -76,6 +73,5 @@ public class MypageController {
                                                                              @RequestParam(defaultValue = "5") int size){
         Page<PurchaseReqeustListDto> purchaseRequestPage = mypageService.getPurchaseRequestByMemberId(memberId, page, size);
         return ResponseEntity.ok(purchaseRequestPage);
-
     }
 }
