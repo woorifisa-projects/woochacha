@@ -17,8 +17,9 @@ import {
 } from '@mui/material';
 import theme from '@/styles/theme';
 import SearchBar from '@/components/product/SearchBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SelectBox from '@/components/common/SelectBox';
+import { allProductGetApi } from '@/services/productApi';
 
 // Dummy Data
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -32,7 +33,15 @@ const mainFeaturedPost = {
 
 export default function Home() {
   const router = useRouter();
+  const [allProducts, setAllProducts] = useState('');
   let responsiveFontTheme = responsiveFontSizes(theme);
+
+  // TODO: API 요청
+  useEffect(() => {
+    const resData = allProductGetApi();
+    console.log(resData);
+    setAllProducts(resData.productInfo);
+  }, []);
 
   // TODO: select menu에 맞게 fix 예정
   const [selectMenuValue, setSelectMenuValue] = useState('');
