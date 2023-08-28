@@ -20,6 +20,7 @@ import SearchBar from '@/components/product/SearchBar';
 import { useEffect, useState } from 'react';
 import SelectBox from '@/components/common/SelectBox';
 import { allProductGetApi } from '@/services/productApi';
+import axios from 'axios';
 
 // Dummy Data
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -38,9 +39,22 @@ export default function Home() {
 
   // TODO: API 요청
   useEffect(() => {
-    const resData = allProductGetApi();
-    console.log(resData);
-    setAllProducts(resData.productInfo);
+    axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+    // 서로 다른 도메인간 쿠키 전달 허용
+    axios.defaults.withCredentials = true;
+
+    axios
+      .get('http://13.125.32.208:8080/product')
+      .then((Response) => {
+        console.log(Response.data);
+      })
+      .catch((Error) => {
+        console.log(Error);
+      });
+
+    // const resData = allProductGetApi();
+    // console.log(resData);
+    // setAllProducts(resData.productInfo);
   }, []);
 
   // TODO: select menu에 맞게 fix 예정
