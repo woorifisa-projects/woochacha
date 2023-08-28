@@ -2,6 +2,8 @@ package com.woochacha.backend.domain.mypage.controller;
 
 import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
 import com.woochacha.backend.domain.mypage.dto.ProfileDto;
+import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
+import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -65,8 +67,9 @@ public class MypageController {
                                                            @RequestParam(defaultValue = "5") int size) {
         Page<SaleFormDto> saleFormsPage = mypageService.getSaleFormsByMemberId(memberId, page, size);
         return ResponseEntity.ok(saleFormsPage);
+    }
       
-    // 마이페이지 구매 요청 내역 조회
+    // 마이페이지 구매 신청폼 조회
     @GetMapping("/purchase-request/{memberId}")
     private ResponseEntity<Page<PurchaseReqeustListDto>> purchaseRequestList(@PathVariable Long memberId,
                                                                              @RequestParam(defaultValue = "0") int page,

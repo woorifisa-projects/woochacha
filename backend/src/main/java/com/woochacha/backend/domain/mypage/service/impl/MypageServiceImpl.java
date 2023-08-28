@@ -9,8 +9,6 @@ import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
 import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
-import com.woochacha.backend.domain.sale.entity.Branch;
-import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -102,11 +100,12 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 판매 신청 폼 조회
-    public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize){
+    public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Object[]> saleFormsPage = mypageRepository.findAllByMemberId(memberId, pageable);
+        Page<Object[]> saleFormsPage = mypageRepository.getSaleFormsByMemberId(memberId, pageable);
         Page<SaleFormDto> saleFormDtosPage = saleFormsPage.map(this::arrayToSaleFormDto);
         return saleFormDtosPage;
+    }
 
     // 구매 신청 폼 조회
     public Page<PurchaseReqeustListDto> getPurchaseRequestByMemberId(Long memberId, int pageNumber, int pageSize){

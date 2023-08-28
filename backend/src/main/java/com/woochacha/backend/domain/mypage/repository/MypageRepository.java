@@ -72,7 +72,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "FROM SaleForm AS sf " +
             "WHERE sf.member.id = :memberId " +
             "ORDER BY sf.createdAt ASC ")
-  
+    Page<Object[]> getSaleFormsByMemberId(@Param("memberId") Long memberId, Pageable pageable);
+
     // 구매 신청폼 조쇠
     @Query("SELECT " +
             "CONCAT(CAST(cd.model.name AS string), ' ', cd.carName.name, ' ', CAST(cd.year AS string), '년형') AS title, " +
