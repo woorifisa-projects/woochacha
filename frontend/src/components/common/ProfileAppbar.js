@@ -2,14 +2,22 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
-import { Avatar, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { Button, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 import { HEADER_LOGIN_USER_MENU, HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
 import LocalStorage from '@/utils/localStorage';
 
 export default function ProfileAppbar() {
-  const [userLoggedIn, setUserLoggedIn] = useRecoilState(userLoggedInState);
   const router = useRouter();
+  const [userLoggedIn, setUserLoggedIn] = useRecoilState(userLoggedInState);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const profileAppbarCss = {
+    btnColor: {
+      backgroundColor: '#000',
+      px: 3,
+      fontWeight: 800,
+      borderRadius: '22px',
+    },
+  };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -38,15 +46,15 @@ export default function ProfileAppbar() {
     <>
       {userLoggedIn ? (
         <Tooltip title="홍길동님">
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-          </IconButton>
+          <Button onClick={handleOpenUserMenu} variant="contained" sx={profileAppbarCss.btnColor}>
+            로그아웃
+          </Button>
         </Tooltip>
       ) : (
         <Tooltip title="로그인하기">
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-          </IconButton>
+          <Button onClick={handleOpenUserMenu} variant="contained" sx={profileAppbarCss.btnColor}>
+            로그인
+          </Button>
         </Tooltip>
       )}
 
