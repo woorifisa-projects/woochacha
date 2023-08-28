@@ -122,8 +122,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 수정신청 폼 데이터 가져오기
     public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
-        Object[] productEditRequestDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
-        return arrayToProductEditRequestDto(productEditRequestDto);
+        return mypageRepository.getProductEditRequestInfo(memberId, productId);
     }
 }
 
