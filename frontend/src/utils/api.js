@@ -13,8 +13,10 @@ const HEADER_FORM = {
   },
 };
 
-// 1. axios 전역 설정
-axios.defaults.withCredentials = true; // withCredentials 전역 설정
+// 리소스 접근 허용
+axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+// 서로 다른 도메인간 쿠키 전달 허용
+axios.defaults.withCredentials = true;
 
 // 인증 필요 X 경우
 const axiosApi = (url, options) => {
