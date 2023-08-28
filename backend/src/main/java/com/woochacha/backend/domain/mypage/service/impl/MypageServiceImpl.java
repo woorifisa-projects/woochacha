@@ -3,10 +3,7 @@ package com.woochacha.backend.domain.mypage.service.impl;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
-import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
-import com.woochacha.backend.domain.mypage.dto.ProfileDto;
-import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
-import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
+import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +66,15 @@ public class MypageServiceImpl implements MypageService {
                 .build();
     }
 
+    // JPQL로 조회한 결과 ProductEditRequestDto로 변환해엇 전달
+    private EditProductDto arrayToProductEditRequestDto(Object[] array){
+        return EditProductDto.builder()
+                .title((String) array[0])
+                .price((Integer) array[1])
+                .carImage((String) array[2])
+                .build();
+    }
+
     // 등록한 매물 조회
     public Page<ProductResponseDto> getRegisteredProductsByMemberId(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
@@ -112,6 +118,12 @@ public class MypageServiceImpl implements MypageService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
         return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
+    }
+
+    // 수정신청 폼 데이터 가져오기
+    public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
+        Object[] productEditRequestDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
+        return arrayToProductEditRequestDto(productEditRequestDto);
     }
 }
 

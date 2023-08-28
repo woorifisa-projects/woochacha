@@ -1,19 +1,19 @@
 package com.woochacha.backend.domain.mypage.dto;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@Builder
 public class EditProductDto {
 
-    private String title;
-    private String image;
-    private Integer price;
+    private String title; // 제목 (모델 + 차량명 + 년형)
+    private String carImage; // 매물 대표 이미지
+    private Integer price; // 현재 가격
 
-    public EditProductDto(String title, String image, Integer price) {
+    public EditProductDto(String title, String carImage, Integer price) {
         this.title = title;
-        this.image = image;
+        this.carImage = carImage;
         this.price = price;
     }
 }
