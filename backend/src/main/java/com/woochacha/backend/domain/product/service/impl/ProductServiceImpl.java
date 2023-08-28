@@ -3,24 +3,28 @@ package com.woochacha.backend.domain.product.service.impl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.woochacha.backend.domain.car.detail.dto.CarNameDto;
 import com.woochacha.backend.domain.car.detail.entity.*;
 import com.woochacha.backend.domain.car.info.entity.QAccidentType;
 import com.woochacha.backend.domain.car.info.entity.QCarAccidentInfo;
 import com.woochacha.backend.domain.car.info.entity.QCarExchangeInfo;
 import com.woochacha.backend.domain.car.info.entity.QExchangeType;
-import com.woochacha.backend.domain.car.type.entity.QFuel;
-import com.woochacha.backend.domain.car.type.entity.QModel;
-import com.woochacha.backend.domain.car.type.entity.QTransmission;
-import com.woochacha.backend.domain.car.type.entity.QType;
+import com.woochacha.backend.domain.car.type.dto.*;
+import com.woochacha.backend.domain.car.type.entity.*;
 import com.woochacha.backend.domain.member.entity.QMember;
-import com.woochacha.backend.domain.product.dto.ProdcutResponseDto;
+import com.woochacha.backend.domain.product.dto.ProdcutAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
+import com.woochacha.backend.domain.product.dto.all.ProductFilterInfo;
+import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.dto.detail.*;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import com.woochacha.backend.domain.product.entity.QProduct;
 import com.woochacha.backend.domain.product.service.ProductService;
+import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +34,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
-
     private final JPAQueryFactory queryFactory;
-
     private final QProduct p = QProduct.product;
     private final QCarDetail cd = QCarDetail.carDetail;
     private final QCarImage ci = QCarImage.carImage;
@@ -40,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
     private final QSaleForm sf = QSaleForm.saleForm;
     private final QModel model = QModel.model;
     private final QType type = QType.type;
+    private final QColor color = QColor.color;
     private final QFuel f = QFuel.fuel;
     private final QTransmission t = QTransmission.transmission;
     private final QCarName cn = QCarName.carName;
@@ -50,30 +53,70 @@ public class ProductServiceImpl implements ProductService {
     private final QCarOption co = QCarOption.carOption;
     private final QMember m = QMember.member;
 
-
     public ProductServiceImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 
+    /*
+        전체 매물 & 필터링 목록 조회
+     */
     @Override
-    public List<ProdcutResponseDto> findAllProduct() {
-        return queryFactory
-                  .select(Projections.fields(
-                          ProdcutResponseDto.class,
-                          Expressions.asString(
-                                  model.name.stringValue()).concat(" ").concat(cn.name).concat(" ").concat(cd.year.stringValue()).concat("년형").as("title"),
-                          p.price, b.name.stringValue().as("branch"), cd.distance, ci.imageUrl))
-                  .from(p).join(cd).on(p.carDetail.carNum.eq(cd.carNum))
-                  .join(sf).on(p.saleForm.id.eq(sf.id))
-                  .join(ci).on(ci.product.id.eq(p.id))
-                  .join(b).on(b.id.eq(sf.branch.id))
-                  .join(model).on(model.id.eq(cd.model.id))
-                  .join(cn).on(cn.name.eq(cd.carName.name))
-                  .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1"))
-                  .orderBy(p.createdAt.asc())
-                  .fetch();
+    public ProdcutAllResponseDto findAllProduct() {
+        List<ProductInfo> productInfoList = findAllProductInfoList();
+
+        ProductFilterInfo productFilterInfo = findAllProductFilterList();
+
+        return new ProdcutAllResponseDto(productInfoList, productFilterInfo);
     }
 
+    // 전체 매물 조회
+    private List<ProductInfo> findAllProductInfoList() {
+        return queryFactory
+                .select(Projections.fields(
+                        ProductInfo.class, p.id,
+                        Expressions.asString(
+                                model.name.stringValue()).concat(" ").concat(cn.name).concat(" ").concat(cd.year.stringValue()).concat("년형").as("title"),
+                        p.price, b.name.stringValue().as("branch"), cd.distance, ci.imageUrl))
+                .from(p).join(cd).on(p.carDetail.carNum.eq(cd.carNum))
+                .join(sf).on(p.saleForm.id.eq(sf.id))
+                .join(ci).on(ci.product.id.eq(p.id))
+                .join(b).on(b.id.eq(sf.branch.id))
+                .join(model).on(model.id.eq(cd.model.id))
+                .join(cn).on(cn.name.eq(cd.carName.name))
+                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1"))
+                .orderBy(p.createdAt.asc())
+                .fetch();
+    }
+
+    // 전체 필터링 목록 조회
+    private ProductFilterInfo findAllProductFilterList() {
+        List<TypeDto> typeList = queryFactory.select(Projections.fields(TypeDto.class,
+                type.id.as("id"), type.name.stringValue().as("name"))).from(type).fetch();
+
+        List<ModelDto> modelList = queryFactory.select(Projections.fields(ModelDto.class,
+                model.id.as("id"), model.name.stringValue().as("name"))).from(model).fetch();
+
+        List<CarNameDto> carNameList = queryFactory.select(Projections.fields(CarNameDto.class,
+                cn.id.as("id"), cn.name.stringValue().as("name"))).from(cn).fetch();
+
+        List<FuelDto> fuelList = queryFactory.select(Projections.fields(FuelDto.class,
+                f.id.as("id"), f.name.stringValue().as("name"))).from(f).fetch();
+
+        List<ColorDto> colorList = queryFactory.select(Projections.fields(ColorDto.class,
+                color.id.as("id"), color.name.stringValue().as("name"))).from(color).fetch();
+
+        List<TrasmissionDto> transmissionList = queryFactory.select(Projections.fields(TrasmissionDto.class,
+                t.id.as("id"), t.name.stringValue().as("name"))).from(t).fetch();
+
+        List<BranchDto> branchList = queryFactory.select(Projections.fields(BranchDto.class,
+                b.id.as("id"), b.name.stringValue().as("name"))).from(b).fetch();
+
+        return new ProductFilterInfo(typeList, modelList, carNameList, fuelList, colorList, transmissionList, branchList);
+    }
+
+    /*
+        매물 상세 조회
+     */
     @Override
     public ProductDetailResponseDto findDetailProduct(Long productId) {
         // 기본 정보 조회

@@ -1,12 +1,11 @@
-package com.woochacha.backend.domain.product.dto;
+package com.woochacha.backend.domain.product.dto.all;
 
-import com.woochacha.backend.domain.sale.entity.Branch;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-public class ProdcutResponseDto {
+public class ProductInfo {
+    private Long id;
+
     private String title; // 제목(model + car_name + year)
 
     private Integer distance; // 주행 거리
