@@ -1,10 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
 
   // rewrite
   async rewrites() {
     return [
+      {
+        source: '/:path*',
+        destination: 'http://13.125.32.208/:path*',
+      },
       {
         source: '/test1',
         destination: '/test1',
