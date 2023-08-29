@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
-    public void addCorsMappings(final CorsRegistry registry) {
+    public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
 //                .allowedOrigins("http://localhost:8080", "http://localhost:80", "https://web.postman.co/",
 //                        "http://15.165.239.79:80", "http://localhost:8080",
@@ -17,5 +17,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true) // 쿠키 인증 요청 허용
                 .maxAge(3000);
     }
-
 }
