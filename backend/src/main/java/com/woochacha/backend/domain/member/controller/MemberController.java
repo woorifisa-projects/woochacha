@@ -1,10 +1,14 @@
 package com.woochacha.backend.domain.member.controller;
 
+import com.woochacha.backend.domain.jwt.JwtFilter;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
 import com.woochacha.backend.domain.member.dto.LoginResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
 import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.service.SignService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,8 +34,13 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto) {
-        return signService.login(loginRequestDto);
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto loginResponseDto = signService.login(loginRequestDto);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, loginResponseDto.getToken());
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .body(loginResponseDto);
     }
 
     @PostMapping("/logout")

@@ -20,17 +20,24 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class SignServiceImpl implements SignService {
 
     private final JPAQueryFactory queryFactory;
@@ -60,6 +67,7 @@ public class SignServiceImpl implements SignService {
         [회원가입]
         @Params : signUpRequestDto - email, name, phone, password
      */
+    @Transactional
     public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDto) {
 
         SignUpResponseDto signUpResponseDto = new SignUpResponseDto();
@@ -83,6 +91,9 @@ public class SignServiceImpl implements SignService {
         } else if(!phoneSearch.isEmpty()) { // 핸드폰 번호 중복
             setFailResult(signUpResponseDto, CommonResponse.DUPLICATE_PHONE_EXCEPTION);
         } else {
+            // 회원가입 시 member의 기본 프로필 사진 설정
+            signUpRequestDto.setProfileImage("https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/default");
+
             // Member 테이블에 회원 정보 저장
             Member savedMember = save(signUpRequestDto);
 
@@ -95,8 +106,12 @@ public class SignServiceImpl implements SignService {
         return signUpResponseDto;
     }
 
+    @Transactional
     public LoginResponseDto login(LoginRequestDto loginRequestDto) throws BadCredentialsException {
         try {
+            Member member = memberRepository.findMemberByEmail(loginRequestDto.getEmail())
+                    .orElseThrow(NoSuchElementException::new);
+
             // Authentication 토큰 생성
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -110,10 +125,7 @@ public class SignServiceImpl implements SignService {
             // Authentication 객체를 createToken 메소드를 통해서 JWT Token을 생성
             String jwt = jwtTokenProvider.createToken(authentication);
 
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-            return new LoginResponseDto(1, "성공", jwt);
+            return new LoginResponseDto(1, "성공", jwt, member.getId(), member.getName());
         } catch (Exception e) {
             return LoginException.exception(e);
         }
@@ -126,7 +138,6 @@ public class SignServiceImpl implements SignService {
 
 
     public Member save(SignUpRequestDto signUpRequestDto) {
-
         LOGGER.info(modelMapper.toString());
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);

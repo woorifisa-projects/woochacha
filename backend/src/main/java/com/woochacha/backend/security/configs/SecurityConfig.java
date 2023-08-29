@@ -9,6 +9,7 @@ import com.woochacha.backend.domain.member.service.impl.UserDetailsServiceImpl;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,7 +17,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -83,6 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
 //                .antMatchers("/", "/users/register", "/users/login").permitAll()
 //                .antMatchers("/products", "/products/details/**", "/products/filter", "/products/search").permitAll()
 //                .antMatchers("/users/**", "/products/**").hasRole("USER")
@@ -94,5 +102,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(new JwtSecurityConfig(jwtTokenProvider));
 
         http.cors();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:80", "https://web.postman.co/",
+                "http://15.165.239.79:80", "http://13.125.32.208:8080",
+                "https://15.165.239.79:80", "https://13.125.32.208:8080"));
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

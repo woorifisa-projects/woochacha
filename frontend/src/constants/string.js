@@ -1,13 +1,13 @@
 export const HEADER_MENU = {
-  LOGO: '우차차',
+  LOGO: 'LOGO',
   CONTENTS: [
     {
       pageName: '구매',
-      pageUrl: `/products`,
+      pageUrl: `/product`,
     },
     {
       pageName: '판매',
-      pageUrl: `/products/sale`,
+      pageUrl: `/product/sale`,
     },
     {
       pageName: '대출',

@@ -17,8 +17,10 @@ import {
 } from '@mui/material';
 import theme from '@/styles/theme';
 import SearchBar from '@/components/product/SearchBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SelectBox from '@/components/common/SelectBox';
+import { allProductGetApi } from '@/services/productApi';
+import axios from 'axios';
 
 // Dummy Data
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -32,7 +34,28 @@ const mainFeaturedPost = {
 
 export default function Home() {
   const router = useRouter();
+  const [allProducts, setAllProducts] = useState('');
   let responsiveFontTheme = responsiveFontSizes(theme);
+
+  // TODO: API 요청
+  useEffect(() => {
+    axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+    // 서로 다른 도메인간 쿠키 전달 허용
+    axios.defaults.withCredentials = true;
+
+    axios
+      .get('http://13.125.32.208:8080/product')
+      .then((Response) => {
+        console.log(Response.data);
+      })
+      .catch((Error) => {
+        console.log(Error);
+      });
+
+    // const resData = allProductGetApi();
+    // console.log(resData);
+    // setAllProducts(resData.productInfo);
+  }, []);
 
   // TODO: select menu에 맞게 fix 예정
   const [selectMenuValue, setSelectMenuValue] = useState('');
