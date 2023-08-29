@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import withAuth from '@/hooks/withAuth';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import { Typography } from '@mui/material';
-import MypageProfile from '@/components/mypage/MypageProfile';
+import MypageProfileEdit from '@/components/mypage/MypageProfileEdit';
 
 function ProfileEdit() {
   const [mounted, setMounted] = useState(false);
@@ -26,7 +26,7 @@ function ProfileEdit() {
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           마이페이지 - 내 프로필 수정
         </Typography>
-        <MypageProfile />
+        <MypageProfileEdit />
       </>
     )
   );
