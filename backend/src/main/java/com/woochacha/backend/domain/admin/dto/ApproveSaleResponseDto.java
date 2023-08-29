@@ -4,7 +4,6 @@ import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.*;
 
 @Getter
-@AllArgsConstructor
 @Builder
 public class ApproveSaleResponseDto {
 
@@ -12,4 +11,9 @@ public class ApproveSaleResponseDto {
     private CarStatusList status;
     private String carNum;
 
+    public ApproveSaleResponseDto(String name, CarStatusList status, String carNum) {
+        this.name = name;
+        this.status = status;
+        this.carNum = carNum;
+    }
 }

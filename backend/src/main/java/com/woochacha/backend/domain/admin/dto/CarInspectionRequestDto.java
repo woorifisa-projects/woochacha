@@ -6,7 +6,6 @@ import lombok.Getter;
 
 
 @Getter
-@AllArgsConstructor
 @Builder
 public class CarInspectionRequestDto {
     private String carNum;

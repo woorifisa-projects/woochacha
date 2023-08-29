@@ -1,11 +1,9 @@
 package com.woochacha.backend.domain.admin.controller;
 
 import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
-import com.woochacha.backend.domain.admin.dto.CarInspectionInfoDto;
-import com.woochacha.backend.domain.admin.dto.CarInspectionRequestDto;
+import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
-import com.woochacha.backend.domain.sale.dto.SaleFormRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,12 +28,11 @@ public class ApproveSaleController {
     }
 
     @GetMapping("/approve/{carNum}")
-    public ResponseEntity<List<CarInspectionInfoDto>> qldbCarInfo(@PathVariable String carNum){
-        String carMetaId = qldbService.getMetaIdValue(carNum, "car");
+    public ResponseEntity<CarInspectionInfoResponseDto> qldbCarInfo(@PathVariable String carNum){
         String accidentMetaId = qldbService.getMetaIdValue(carNum, "car_accident");
         String exchangeMetaId = qldbService.getMetaIdValue(carNum, "car_exchange");
-        List<CarInspectionInfoDto> carInfo = qldbService.getQldbCarInfoList(carMetaId,accidentMetaId,exchangeMetaId);
-        return ResponseEntity.ok(carInfo);
+        CarInspectionInfoResponseDto carResponseInfo = approveSaleService.getQldbCarInfoList(carNum,accidentMetaId,exchangeMetaId);
+        return ResponseEntity.ok(carResponseInfo);
     }
 
     @PostMapping("/approve/{carNum}")
