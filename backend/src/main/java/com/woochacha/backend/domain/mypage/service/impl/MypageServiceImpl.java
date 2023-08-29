@@ -118,7 +118,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 수정신청 폼 제출
     @Transactional
-    public void updatePrice(Long productId, int updatePrice){
+    public void updatePrice(Long productId, Integer updatePrice){
         mypageRepository.updatePrice(productId, updatePrice);
     }
 }
