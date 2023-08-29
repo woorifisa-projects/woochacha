@@ -40,7 +40,10 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
                 .orElseThrow(() -> new RuntimeException("Member not found"));
         String memberName = member.getName();
         String memberPhone = member.getPhone();
+        System.out.println(memberName);
+        System.out.println(memberPhone);
         Pair<String, String> ownerInfo = qldbService.getCarOwnerInfo(carNum);
+        System.out.println(ownerInfo);
         String historyId = qldbService.getMetaIdValue(carNum, "car_accident");
         int countAccident = qldbService.accidentHistoryInfo(historyId, "침수사고","전손침수");
         String owner = ownerInfo.getFirst();
