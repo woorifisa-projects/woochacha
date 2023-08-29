@@ -36,10 +36,8 @@ public class QldbServiceImpl implements QldbService {
                 Result result = txn.execute(
                         "SELECT r.car_owner_name, r.car_owner_phone FROM car AS r WHERE r.car_num=?", ionSys.newString(carNum));
                 IonStruct ionStruct = (IonStruct) result.iterator().next();
-                IonString ionStringOwnerName = (IonString) ionStruct.get("car_owner_name");
-                IonString ionStringOwnerPhone = (IonString) ionStruct.get("car_owner_phone");
-                ownerName = ionStringOwnerName.stringValue();
-                ownerPhone = ionStringOwnerPhone.stringValue();
+                ownerName = ((IonString) ionStruct.get("car_owner_name")).stringValue();
+                ownerPhone = ((IonString) ionStruct.get("car_owner_phone")).stringValue();
             });
             return Pair.of(ownerName, ownerPhone);
         } catch (Exception e) {
@@ -55,8 +53,7 @@ public class QldbServiceImpl implements QldbService {
                 Result result = txn.execute(
                         "SELECT r_id FROM " + tableName + " AS r BY r_id WHERE r.car_num=?", ionSys.newString(carNum));
                 IonStruct ionStruct = (IonStruct) result.iterator().next();
-                IonString ionString = (IonString) ionStruct.get("r_id");
-                metaId = ionString.stringValue();
+                metaId = ((IonString) ionStruct.get("r_id")).stringValue();
             });
             return metaId;
         } catch (Exception e) {
@@ -73,8 +70,7 @@ public class QldbServiceImpl implements QldbService {
                         "SELECT COUNT(*) FROM history(car_accident) AS r WHERE r.metadata.id =? AND r.data.accident_desc =?",
                         ionSys.newString(metaId), ionSys.newString(accidentDesc));
                 IonStruct ionStruct = (IonStruct) result.iterator().next();
-                IonInt ionInt = (IonInt) ionStruct.get("_1");
-                countAccidentHistory = ionInt.intValue();
+                countAccidentHistory = ((IonInt) ionStruct.get("_1")).intValue();
             });
             return countAccidentHistory;
         } catch (Exception e) {
