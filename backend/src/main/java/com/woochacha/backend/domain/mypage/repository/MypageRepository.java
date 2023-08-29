@@ -20,12 +20,13 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "CAST(sf.branch.name AS string) AS branch, " +
             "p.price, " +
             "ci.imageUrl, " +
-            "p.id " +
+            "p.id, " +
+            "p.status.id " +
             "FROM CarImage ci " +
             "JOIN ci.product p " +
             "JOIN p.carDetail cd " +
             "JOIN p.saleForm sf " +
-            "WHERE p.status.id = 4 " +
+            "WHERE p.status.id = 4 OR p.status.id = 6 OR p.status.id = 9 " +
             "AND ci.imageUrl LIKE '%/1' " +
             "AND sf.member.id = :memberId " +
             "ORDER BY p.createdAt ASC ")
@@ -38,7 +39,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "CAST(sf.branch.name AS string) AS branch, " +
             "p.price, " +
             "ci.imageUrl, " +
-            "p.id " +
+            "p.id, " +
+            "p.status.id " +
             "FROM CarImage ci " +
             "JOIN ci.product p " +
             "JOIN p.carDetail cd " +
@@ -56,7 +58,8 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "CAST(sf.branch.name AS string) AS branch, " +
             "p.price, " +
             "ci.imageUrl, " +
-            "p.id " +
+            "p.id, " +
+            "p.status.id " +
             "FROM Transaction tr " +
             "JOIN tr.purchaseForm pf " +
             "JOIN tr.saleForm sf " +

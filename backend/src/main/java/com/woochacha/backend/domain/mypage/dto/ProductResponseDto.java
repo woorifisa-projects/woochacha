@@ -18,13 +18,16 @@ public class ProductResponseDto {
 
     private Long productId; // 게시글 id (상세페이지로 이동할떄 사용)
 
-    public ProductResponseDto(String title, Integer distance, String branch, Integer price, String imageUrl, Long productId) {
+    private String status;
+
+    public ProductResponseDto(String title, Integer distance, String branch, Integer price, String imageUrl, Long productId, String status) {
         this.title = title;
         this.distance = distance;
         this.branch = branch;
         this.price = price;
         this.imageUrl = imageUrl;
         this.productId = productId;
+        this.status = status;
     }
 
 }
