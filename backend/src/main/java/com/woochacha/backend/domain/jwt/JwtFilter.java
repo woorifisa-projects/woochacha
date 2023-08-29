@@ -17,11 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//public class JwtFilter extends GenericFilterBean {
-public class JwtFilter extends OncePerRequestFilter {
-
+public class JwtFilter extends GenericFilterBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtFilter.class);
-
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final JwtTokenProvider jwtTokenProvider;
@@ -31,8 +28,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     // JWT 토큰의 인증 정보를 해당 쓰레드의 SecurityContext에 저장
     @Override
-//    public void doFilter(HttpServletRequest  request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException, ServletException {
-    public void doFilterInternal(HttpServletRequest  request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
