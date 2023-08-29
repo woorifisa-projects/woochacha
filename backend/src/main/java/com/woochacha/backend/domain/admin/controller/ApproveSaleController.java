@@ -46,6 +46,5 @@ public class ApproveSaleController {
         }else {
             return ResponseEntity.ok(true);
         }
-
     }
 }
