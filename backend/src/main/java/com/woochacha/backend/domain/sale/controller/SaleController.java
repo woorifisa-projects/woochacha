@@ -1,15 +1,12 @@
 package com.woochacha.backend.domain.sale.controller;
 
 
-import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.sale.dto.SaleFormRequestDto;
 import com.woochacha.backend.domain.sale.entity.Branch;
-import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.sale.repository.BranchRepository;
 import com.woochacha.backend.domain.sale.service.SaleFormApplyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +36,7 @@ public class SaleController {
         Boolean match = saleFormApplyService.submitCarSaleForm(carNum, memberId, branchId);
 
         if(match){
-            saleFormApplyService.saveSaleForm(carNum, memberId, branchId);
+//            saleFormApplyService.saveSaleForm(carNum, memberId, branchId);
             return ResponseEntity.ok(true);
         }else{
             return ResponseEntity.ok(false);
