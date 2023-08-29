@@ -44,7 +44,7 @@ export default function Home() {
     axios.defaults.withCredentials = true;
 
     axios
-      .get('http://localhost:8080/product')
+      .get('http://13.125.32.208:8080/product')
       .then((Response) => {
         console.log(Response.data);
       })
