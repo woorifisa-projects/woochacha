@@ -38,9 +38,7 @@ public class QldbServiceImpl implements QldbService {
                 System.out.println(result);
                 for (IonValue carOwner : result) {
                     IonStruct carOwnerInfo = (IonStruct) carOwner;
-                    System.out.println(carOwnerInfo);
                     IonString carOwnerString = (IonString) carOwnerInfo.get("car_owner_name");
-                    System.out.println(carOwnerString);
                     owner = StringEscapeUtils.unescapeJava(carOwnerString.stringValue());
                     IonString carOwnerPhoneString = (IonString) carOwnerInfo.get("car_owner_phone");
                     ownerPhone = StringEscapeUtils.unescapeJava(carOwnerPhoneString.stringValue());

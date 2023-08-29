@@ -1,12 +1,9 @@
 package com.woochacha.backend.domain.admin.dto;
 
 import com.woochacha.backend.domain.status.entity.CarStatusList;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @AllArgsConstructor
 @Builder
 public class ApproveSaleResponseDto {
