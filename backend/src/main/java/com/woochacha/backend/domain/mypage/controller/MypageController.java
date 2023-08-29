@@ -1,14 +1,12 @@
 package com.woochacha.backend.domain.mypage.controller;
 
-import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
-import com.woochacha.backend.domain.mypage.dto.ProfileDto;
-import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
-import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
+import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -76,6 +74,24 @@ public class MypageController {
                                                                              @RequestParam(defaultValue = "5") int size){
         Page<PurchaseReqeustListDto> purchaseRequestPage = mypageService.getPurchaseRequestByMemberId(memberId, page, size);
         return ResponseEntity.ok(purchaseRequestPage);
+    }
 
+    // 상품 수정 신청폼 조회
+    @GetMapping("/registered/edit")
+    private ResponseEntity<EditProductDto> getProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId){
+        EditProductDto editProductDto = mypageService.getProductEditRequestInfo(memberId, productId);
+        return ResponseEntity.ok(editProductDto);
+    }
+
+    // 상품 수정 신청폼 제출
+    @PatchMapping("/registered/edit")
+    private ResponseEntity<String> patchProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId,
+                                                        @RequestBody @Valid UpdatePriceDto updatePriceDto){
+        EditProductDto editProductDto = mypageService.getProductEditRequestInfo(memberId, productId);
+        if (updatePriceDto.getUpdatePrice() > editProductDto.getPrice()) {
+            return ResponseEntity.badRequest().body("변경된 가격은 기존 가격보다 높을 수 없습니다.");
+        }
+        mypageService.updatePrice(productId, updatePriceDto.getUpdatePrice());
+        return ResponseEntity.ok("가격 변경 요청이 완료되었습니다.");
     }
 }

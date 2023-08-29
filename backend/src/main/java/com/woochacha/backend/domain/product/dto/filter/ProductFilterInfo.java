@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.product.dto.all;
+package com.woochacha.backend.domain.product.dto.filter;
 
 import com.woochacha.backend.domain.car.detail.dto.CarNameDto;
 import com.woochacha.backend.domain.car.type.dto.*;
@@ -18,6 +18,6 @@ public class ProductFilterInfo {
     List<CarNameDto> carNameList;
     List<FuelDto> fuelList;
     List<ColorDto> colorList;
-    List<TrasmissionDto> transmissionList;
+    List<TransmissionDto> transmissionList;
     List<BranchDto> branchList;
 }

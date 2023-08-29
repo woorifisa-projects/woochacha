@@ -3,11 +3,11 @@ export const HEADER_MENU = {
   CONTENTS: [
     {
       pageName: '구매',
-      pageUrl: `/products`,
+      pageUrl: `/product`,
     },
     {
       pageName: '판매',
-      pageUrl: `/products/sale`,
+      pageUrl: `/product/sale`,
     },
     {
       pageName: '대출',

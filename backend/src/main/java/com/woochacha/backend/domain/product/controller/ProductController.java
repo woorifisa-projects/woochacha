@@ -1,15 +1,12 @@
 package com.woochacha.backend.domain.product.controller;
 
-import com.querydsl.core.Tuple;
-import com.woochacha.backend.domain.product.dto.ProdcutAllResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
-import com.woochacha.backend.domain.product.dto.ProductFilterResponseDto;
-import com.woochacha.backend.domain.product.dto.all.ProductFilterInfo;
+import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
 import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,7 +20,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ProdcutAllResponseDto findAllProduct() {
+    public ProductAllResponseDto findAllProduct() {
         return productService.findAllProduct();
     }
 
@@ -33,7 +30,7 @@ public class ProductController {
     }
 
     @PostMapping("/filter")
-    public List<ProductFilterResponseDto> findFilteredProduct(@RequestBody ProductFilterInfo productFilterInfo) {
+    public List<ProductInfo> findFilteredProduct(@RequestBody ProductFilterInfo productFilterInfo) {
         return productService.findFilteredProduct(productFilterInfo);
     }
 }

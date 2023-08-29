@@ -4,6 +4,12 @@ import lombok.Data;
 
 @Data
 public class ModelDto {
-    private Integer id;
+    private int id;
     private String name;
+
+    public ModelDto() {}
+
+    public ModelDto(int id) {
+        this.id = id;
+    }
 }

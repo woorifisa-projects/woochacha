@@ -3,10 +3,7 @@ package com.woochacha.backend.domain.mypage.service.impl;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
-import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
-import com.woochacha.backend.domain.mypage.dto.ProfileDto;
-import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
-import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
+import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -31,6 +27,17 @@ public class MypageServiceImpl implements MypageService {
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환
     private ProductResponseDto arrayToProductResponseDto(Object[] array) {
+        // 향후 switch문으로 리팩토링 예정
+        String status;
+        if (array[6].toString().equals("4")){
+            status = "판매중";
+        } else if (array[6].toString().equals("6")) {
+            status = "삭제신청완료";
+        } else if (array[6].toString().equals("5")){
+            status = "판매완료";
+        } else {
+            status = "수정신청완료";
+        }
         return ProductResponseDto.builder()
                 .title((String) array[0])
                 .distance((Integer) array[1])
@@ -38,13 +45,14 @@ public class MypageServiceImpl implements MypageService {
                 .price((Integer) array[3])
                 .imageUrl((String) array[4])
                 .productId((Long) array[5])
+                .status(status)
                 .build();
     }
 
     // JPQL로 조회한 결과 PurchaseReqeustListDto로 변환
     private PurchaseReqeustListDto arrayToPurchaseReqeustListDto(Object[] array){
         String status;
-        if (array[5].equals(0)){
+        if (array[5].toString().equals("0")){
             status = "미검토";
         }else{
             status = "검토";
@@ -112,6 +120,18 @@ public class MypageServiceImpl implements MypageService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
         return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
+    }
+
+    // 수정신청 폼 데이터 가져오기
+    public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
+        EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
+        return editProductDto;
+    }
+
+    // 수정신청 폼 제출
+    @Transactional
+    public void updatePrice(Long productId, Integer updatePrice){
+        mypageRepository.updatePrice(productId, updatePrice);
     }
 }
 

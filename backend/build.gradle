@@ -38,6 +38,7 @@ dependencies {
 	implementation 'software.amazon.ion:ion-java:1.5.1'
 	implementation 'software.amazon.qldb:amazon-qldb-driver-java:2.3.1'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-ion:2.12.1'
+	implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
 
 	implementation 'org.slf4j:jcl-over-slf4j:'
 

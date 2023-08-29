@@ -21,7 +21,5 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException{
         super.doFilterInternal(request, response, chain);
         System.out.println("인증이나 권한이 필요한 주소가 요청됨");
-
-
     }
 }
