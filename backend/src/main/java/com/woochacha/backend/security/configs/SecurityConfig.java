@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@CrossOrigin(origins = "*")
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
