@@ -3,10 +3,7 @@ package com.woochacha.backend.domain.mypage.service.impl;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
-import com.woochacha.backend.domain.mypage.dto.ProductResponseDto;
-import com.woochacha.backend.domain.mypage.dto.ProfileDto;
-import com.woochacha.backend.domain.mypage.dto.SaleFormDto;
-import com.woochacha.backend.domain.mypage.dto.PurchaseReqeustListDto;
+import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 
 @Service
@@ -112,6 +108,18 @@ public class MypageServiceImpl implements MypageService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
         return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
+    }
+
+    // 수정신청 폼 데이터 가져오기
+    public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
+        EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
+        return editProductDto;
+    }
+
+    // 수정신청 폼 제출
+    @Transactional
+    public void updatePrice(Long productId, Integer updatePrice){
+        mypageRepository.updatePrice(productId, updatePrice);
     }
 }
 
