@@ -20,7 +20,7 @@ public class QldbServiceImpl implements QldbService {
 
     private final QldbConfig qldbDriver;
     private final IonSystem ionSys = IonSystemBuilder.standard().build();
-    private String owner;
+    private String ownerName;
     private String ownerPhone;
     private String metaId;
     private int countAccidentHistory;
@@ -35,16 +35,13 @@ public class QldbServiceImpl implements QldbService {
             qldbDriver.QldbDriver().execute(txn -> {
                 Result result = txn.execute(
                         "SELECT r.car_owner_name, r.car_owner_phone FROM car AS r WHERE r.car_num=?", ionSys.newString(carNum));
-                System.out.println(result);
-                for (IonValue carOwner : result) {
-                    IonStruct carOwnerInfo = (IonStruct) carOwner;
-                    IonString carOwnerString = (IonString) carOwnerInfo.get("car_owner_name");
-                    owner = StringEscapeUtils.unescapeJava(carOwnerString.stringValue());
-                    IonString carOwnerPhoneString = (IonString) carOwnerInfo.get("car_owner_phone");
-                    ownerPhone = StringEscapeUtils.unescapeJava(carOwnerPhoneString.stringValue());
-                }
+                IonStruct ionStruct = (IonStruct) result.iterator().next();
+                IonString ionStringOwnerName = (IonString) ionStruct.get("car_owner_name");
+                IonString ionStringOwnerPhone = (IonString) ionStruct.get("car_owner_phone");
+                ownerName = ionStringOwnerName.stringValue();
+                ownerPhone = ionStringOwnerPhone.stringValue();
             });
-            return Pair.of(owner, ownerPhone);
+            return Pair.of(ownerName, ownerPhone);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -57,8 +54,9 @@ public class QldbServiceImpl implements QldbService {
             qldbDriver.QldbDriver().execute(txn -> {
                 Result result = txn.execute(
                         "SELECT r_id FROM " + tableName + " AS r BY r_id WHERE r.car_num=?", ionSys.newString(carNum));
-                IonString carMetaId = (IonString) result.iterator().next();
-                metaId = carMetaId.stringValue();
+                IonStruct ionStruct = (IonStruct) result.iterator().next();
+                IonString ionString = (IonString) ionStruct.get("r_id");
+                metaId = ionString.stringValue();
             });
             return metaId;
         } catch (Exception e) {
@@ -68,14 +66,15 @@ public class QldbServiceImpl implements QldbService {
 
     // QLDB에 저장된 history를 차량 번호에 따른 차량 사고 종류와 사고 내역에 대해서 일치하는 history의 개수를 count한다.
     @Override
-    public int accidentHistoryInfo(String metaId, String accidentType, String accidentDesc) {
+    public int accidentHistoryInfo(String metaId, String accidentDesc) {
         try {
             qldbDriver.QldbDriver().execute(txn -> {
                 Result result = txn.execute(
-                        "SELECT COUNT(*) FROM history(car_accident) AS r WHERE r.accident_type=? AND r.accident_desc =? AND r.metadata.id =?",
-                        ionSys.newString(accidentType), ionSys.newString(accidentDesc), ionSys.newString(metaId));
-                IonInt countHistory = (IonInt) result.iterator().next();
-                countAccidentHistory = countHistory.intValue();
+                        "SELECT COUNT(*) FROM history(car_accident) AS r WHERE r.metadata.id =? AND r.data.accident_desc =?",
+                        ionSys.newString(metaId), ionSys.newString(accidentDesc));
+                IonStruct ionStruct = (IonStruct) result.iterator().next();
+                IonInt ionInt = (IonInt) ionStruct.get("_1");
+                countAccidentHistory = ionInt.intValue();
             });
             return countAccidentHistory;
         } catch (Exception e) {

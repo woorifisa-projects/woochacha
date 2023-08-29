@@ -42,7 +42,7 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
         String memberPhone = member.getPhone();
         Pair<String, String> ownerInfo = qldbService.getCarOwnerInfo(carNum);
         String historyId = qldbService.getMetaIdValue(carNum, "car_accident");
-        int countAccident = qldbService.accidentHistoryInfo(historyId, "침수사고","전손침수");
+        int countAccident = qldbService.accidentHistoryInfo(historyId, "전손침수");
         String owner = ownerInfo.getFirst();
         String ownerPhone = ownerInfo.getSecond();
         return memberName.equals(owner) && memberPhone.equals(ownerPhone) && countAccident == 0;
