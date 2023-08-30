@@ -6,4 +6,10 @@ import lombok.Data;
 public class ColorDto {
     private int id;
     private String name;
+
+    public ColorDto() {}
+
+    public ColorDto(int id) {
+        this.id = id;
+    }
 }
