@@ -33,4 +33,9 @@ public class ProductController {
     public List<ProductInfo> findFilteredProduct(@RequestBody ProductFilterInfo productFilterInfo) {
         return productService.findFilteredProduct(productFilterInfo);
     }
+
+    @GetMapping("/search")
+    public List<ProductInfo> findSearchedProduct(@RequestParam(value="keyword") String keyword) {
+        return productService.findSearchedProduct(keyword);
+    }
 }
