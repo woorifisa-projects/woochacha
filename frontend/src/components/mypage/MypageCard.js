@@ -66,6 +66,7 @@ export default function MypageCard() {
       height: '100%',
       display: 'flex',
       flexDirection: 'row',
+      borderRadius: '1rem',
       '&:hover': {
         boxShadow: 10,
         cursor: 'pointer',
@@ -91,7 +92,9 @@ export default function MypageCard() {
       <Grid container spacing={3} sx={mypageCardCss.container}>
         {itemDummyArr.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
-            <Card sx={mypageCardCss.card} onClick={() => handleMoveDetail(item.id)}>
+            <Card
+              sx={mypageCardCss.card}
+              onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
               <CardMedia component="div" sx={mypageCardCss.cardMedia} image={item.imageUrl} />
               <CardContent sx={mypageCardCss.cardContent}>
                 <Typography gutterBottom variant="h5" component="h5">
