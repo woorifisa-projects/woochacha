@@ -4,5 +4,5 @@ import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
 
 public interface RegisterProductService {
 
-    RegisterProductDto getRegisterProductInfo(Long saleFormId, String carNum);
+    RegisterProductDto getRegisterProductInfo(Long saleFormId);
 }

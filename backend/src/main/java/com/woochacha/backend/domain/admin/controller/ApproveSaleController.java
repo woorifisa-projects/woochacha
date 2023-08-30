@@ -2,6 +2,7 @@ package com.woochacha.backend.domain.admin.controller;
 
 import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
 import com.woochacha.backend.domain.admin.dto.CarInspectionInfoDto;
+import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
@@ -53,11 +54,8 @@ public class ApproveSaleController {
     }
 
     @GetMapping("/register/{saleFormId}")
-    public ResponseEntity<RegisterProductDtodelete> registerProductInfo(@PathVariable("saleFormId") Long saleFormId){
-        Optional<SaleForm> saleFormOptional = saleFormRepository.findById(saleFormId);
-        SaleForm saleForm = saleFormOptional.get();
-        String carNum = saleForm.getCarNum();
-        RegisterProductDtodelete registerProductDto = registerProductService.getRegisterProductInfo(saleFormId, carNum);
+    public ResponseEntity<RegisterProductDto> registerProductInfo(@PathVariable("saleFormId") Long saleFormId){
+        RegisterProductDto registerProductDto = registerProductService.getRegisterProductInfo(saleFormId);
         return ResponseEntity.ok(registerProductDto);
     }
 }

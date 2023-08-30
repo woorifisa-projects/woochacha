@@ -62,8 +62,9 @@ public class RegisterProductServiceImpl implements RegisterProductService {
 
     // 매물 등록 전 보여줄 데이터를 QLDB에서 조회한다.
     @Override
-    public RegisterProductDto getRegisterProductInfo(Long saleFormId, String carNum){
+    public RegisterProductDto getRegisterProductInfo(Long saleFormId){
         SaleForm saleForm = saleFormRepository.findById(saleFormId).get();
+        String carNum = saleForm.getCarNum();
         qldbDriver.QldbDriver().execute(txn -> {
                     // QLDB car 테이블 정보 조회
                     Result resultCar = txn.execute(
