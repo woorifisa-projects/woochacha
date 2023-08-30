@@ -52,7 +52,6 @@ public class ApproveSaleController {
             return ResponseEntity.ok(true);
         }
     }
-
     @GetMapping("/register/{saleFormId}")
     public ResponseEntity<RegisterProductDto> registerProductInfo(@PathVariable("saleFormId") Long saleFormId){
         RegisterProductDto registerProductDto = registerProductService.getRegisterProductInfo(saleFormId);
