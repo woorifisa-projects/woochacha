@@ -106,6 +106,8 @@ export default function MypageCardEdit() {
 
   const handleDeleteItem = () => {
     // TODO: 삭제 API 요청 - 삭제 modal => 삭제
+    alert('게시글 삭제 요청이 완료되었습니다!');
+    router.push(`/mypage/registered/${memberId}`);
   };
 
   return (

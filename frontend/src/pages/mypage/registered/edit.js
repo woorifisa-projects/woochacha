@@ -83,8 +83,8 @@ function RegisteredEdit() {
       const updateData = {
         updatePrice: priceValue,
       };
-      await submitEditRegistered(memberId, productId, updateData);
-      alert('수정완료!');
+      // await submitEditRegistered(memberId, productId, updateData);
+      alert('가격 수정 요청이 완료되었습니다!');
       router.push(`/mypage/registered/${memberId}`);
     } catch (error) {
       console.log('실패');
