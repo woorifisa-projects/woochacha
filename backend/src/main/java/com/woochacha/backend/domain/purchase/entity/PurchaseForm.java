@@ -38,7 +38,6 @@ public class PurchaseForm {
     private LocalDate meetingDate;
 
     @Column(name = "status")
-    @NotNull
     @ColumnDefault("0")
-    private Byte status;
+    private int status;
 }
