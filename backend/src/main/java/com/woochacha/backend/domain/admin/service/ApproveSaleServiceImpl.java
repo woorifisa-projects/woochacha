@@ -11,6 +11,7 @@ import com.woochacha.backend.domain.admin.dto.CarAccidentInfoDto;
 import com.woochacha.backend.domain.admin.dto.CarExchangeInfoDto;
 import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
+import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,8 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     private final QldbConfig qldbDriver;
     private final IonSystem ionSys = IonSystemBuilder.standard().build();
     private CarInspectionInfoResponseDto carInspectionInfoResponseDto;
+    private int carDistance;
+    private final SaleFormRepository saleFormRepository;
 
 
     @Override
@@ -106,4 +109,32 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         }
     }
 
+    // 차량의 distance를 받았을 때 제대로 된 값인지 나타내는 것
+    @Override
+    public int getCarDistance(String carNum) {
+        try {
+            qldbDriver.QldbDriver().execute(txn -> {
+                Result result = txn.execute(
+                        "SELECT c.car_distance " +
+                                "FROM car AS c "+
+                                "WHERE c.car_num=?",
+                        ionSys.newString(carNum));
+                IonStruct ionStruct = (IonStruct) result.iterator().next();
+                carDistance = ((IonInt) ionStruct.get("car_distance")).intValue();
+            });
+            return carDistance;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void updateSaleFormStatus(Long saleFormId){
+        saleFormRepository.updateStatus(saleFormId);
+    }
+
+//    @Transactional
+//    @Override
+//    public void updateQldbCarExchange()
 }

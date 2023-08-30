@@ -72,22 +72,4 @@ public class QldbServiceImpl implements QldbService {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public int getCarDistance(String carNum) {
-        try {
-            qldbDriver.QldbDriver().execute(txn -> {
-                Result result = txn.execute(
-                        "SELECT c.car_distance " +
-                                "FROM car AS c "+
-                                "WHERE c.car_num='?'",
-                        ionSys.newString(carNum));
-                IonInt distance = (IonInt) result.iterator().next();
-                carDistance = distance.intValue();
-            });
-            return carDistance;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
