@@ -11,3 +11,22 @@ export const allProductGetApi = async () => {
     throw error;
   }
 };
+
+export const submitEditRegistered = async (memberId, productId, editedData) => {
+  try {
+    const response = await jsonInstance.patch(`/mypage/registered/edit`, {
+      params: {
+        // query string
+        memberId: memberId,
+        productId: productId,
+      },
+      data: editedData, // 데이터 전달
+    });
+
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};

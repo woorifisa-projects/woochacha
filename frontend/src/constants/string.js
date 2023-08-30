@@ -80,7 +80,7 @@ export const CAPITAL_CONTENTS = [
   {
     miniCardColor: '#DEF2FF',
     miniCardShadow: 0,
-    miniCardMarginY: 25,
+    miniCardMarginY: 15,
     capitalTitle: '리스/렌트 견적 비교',
     capitalImgUrl:
       'https://s7d1.scene7.com/is/image/hyundai/2023-ioniq-6-limited-rwd-transmission-blue-pearl-profile:Vehicle-Carousel?fmt=webp-alpha',
@@ -91,7 +91,7 @@ export const CAPITAL_CONTENTS = [
   {
     miniCardColor: '#EFFBFF',
     miniCardShadow: 0,
-    miniCardMarginY: 25,
+    miniCardMarginY: 15,
     capitalTitle: '나의 대출한도 확인하기',
     capitalImgUrl: 'https://www.wooriwoncar.com/webassets/img/pc/main-loan-img1.png',
     capitalSubTitle: '나의 대출한도를 \n 확인하고 싶다면?',
@@ -102,7 +102,7 @@ export const CAPITAL_CONTENTS = [
   {
     miniCardColor: '#FFF',
     miniCardShadow: 0,
-    miniCardMarginY: 25,
+    miniCardMarginY: 15,
     capitalTitle: '중고차 금융상품',
     capitalImgUrl: 'https://www.wooriwoncar.com/webassets/img/pc/sd-visual-new-bg.png',
     capitalSubTitle: '중고차 금융상품이 궁금하다면?',
@@ -110,3 +110,23 @@ export const CAPITAL_CONTENTS = [
     wonCarUrl: 'https://www.wooriwoncar.com/loangoods/loanGoods?loanType=20',
   },
 ];
+
+// MODAL
+export const EDIT_MODAL = {
+  CONTENTS: {
+    modalTitle: '수정하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '수정 관련 텍스트입니다!!!',
+  },
+};
+
+// MODAL
+export const DELETE_MODAL = {
+  CONTENTS: {
+    modalTitle: '삭제하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '삭제 관련 텍스트입니다!!!',
+  },
+};
