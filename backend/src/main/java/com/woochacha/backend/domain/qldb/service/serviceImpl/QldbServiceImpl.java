@@ -47,8 +47,12 @@ public class QldbServiceImpl implements QldbService {
             qldbDriver.QldbDriver().execute(txn -> {
                 Result result = txn.execute(
                         "SELECT r_id FROM " + tableName + " AS r BY r_id WHERE r.car_num=?", ionSys.newString(carNum));
-                IonStruct ionStruct = (IonStruct) result.iterator().next();
-                metaId = ((IonString) ionStruct.get("r_id")).stringValue();
+                if(result.isEmpty()){
+                    metaId = "";
+                }else {
+                    IonStruct ionStruct = (IonStruct) result.iterator().next();
+                    metaId = ((IonString) ionStruct.get("r_id")).stringValue();
+                }
             });
             return metaId;
         } catch (Exception e) {

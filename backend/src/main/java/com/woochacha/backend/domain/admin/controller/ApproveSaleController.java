@@ -28,12 +28,14 @@ public class ApproveSaleController {
     private final SaleFormApplyService saleFormApplyService;
 
     //url 뒷단에 ?page=?&size=?로 값을 정해서 보내줘야한다.
+    //관리자 페이지에서 모든 차량의 saleform 신청폼(점검 전)을 확인한다.
     @GetMapping
     public ResponseEntity<Page<ApproveSaleResponseDto>> allSaleForms(Pageable pageable) {
         List<ApproveSaleResponseDto> saleForms = approveSaleService.getApproveSaleForm(pageable).getResults();
         return ResponseEntity.ok(new PageImpl<>(saleForms, pageable, saleForms.size()));
     }
 
+    // 점검 후 해당 saleform에 해당하는 car의 정보와 distance,car accident, car exchange를 조회한다.
     @GetMapping("/approve/{saleFormId}")
     public ResponseEntity<CarInspectionInfoResponseDto> qldbCarInfo(@PathVariable Long saleFormId){
         String carNum = saleFormApplyService.findCarNum(saleFormId);
@@ -43,6 +45,7 @@ public class ApproveSaleController {
         return ResponseEntity.ok(carResponseInfo);
     }
 
+    // 차량이 점검 후 입력한 값이 등록 조건에 맞으면 saleForm의 status를 변환시킨다.
     @PostMapping("/approve/{saleFormId}")
     public ResponseEntity<Boolean> compareCarInfo(@RequestBody CompareRequestDto compareRequestDto, @PathVariable Long saleFormId){
         String carNum = saleFormApplyService.findCarNum(saleFormId);

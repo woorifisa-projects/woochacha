@@ -8,12 +8,16 @@ import lombok.*;
 public class ApproveSaleResponseDto {
 
     private String name;
-    private CarStatusList status;
     private String carNum;
+    private CarStatusList status;
 
-    public ApproveSaleResponseDto(String name, CarStatusList status, String carNum) {
+    public ApproveSaleResponseDto() {
+    }
+
+    public ApproveSaleResponseDto(String name, String carNum, CarStatusList status) {
         this.name = name;
-        this.status = status;
         this.carNum = carNum;
+        this.status = status;
+
     }
 }

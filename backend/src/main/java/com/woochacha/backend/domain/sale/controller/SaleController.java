@@ -28,15 +28,14 @@ public class SaleController {
 
     @PostMapping
     public ResponseEntity<Boolean> submitCarSaleForm(@RequestBody SaleFormRequestDto requestDto) {
-        System.out.println(requestDto.getCarNum());
         String carNum = requestDto.getCarNum();
         Long memberId = requestDto.getMemberId();
         Long branchId = requestDto.getBranchId();
 
-        Boolean match = saleFormApplyService.submitCarSaleForm(carNum, memberId, branchId);
+        Boolean match = saleFormApplyService.submitCarSaleForm(carNum, memberId);
 
         if(match){
-//            saleFormApplyService.saveSaleForm(carNum, memberId, branchId);
+            saleFormApplyService.saveSaleForm(carNum, memberId, branchId);
             return ResponseEntity.ok(true);
         }else{
             return ResponseEntity.ok(false);

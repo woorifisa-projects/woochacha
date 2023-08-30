@@ -35,7 +35,6 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     private int carDistance;
     private final SaleFormRepository saleFormRepository;
 
-
     @Override
     public QueryResults<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable) {
         QSaleForm sf = QSaleForm.saleForm;
@@ -52,7 +51,6 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
-
         return results;
     }
 
@@ -133,8 +131,4 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     public void updateSaleFormStatus(Long saleFormId){
         saleFormRepository.updateStatus(saleFormId);
     }
-
-//    @Transactional
-//    @Override
-//    public void updateQldbCarExchange()
 }
