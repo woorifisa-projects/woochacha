@@ -6,8 +6,6 @@ import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
-import com.woochacha.backend.domain.sale.entity.SaleForm;
-import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +23,6 @@ public class ApproveSaleController {
     private final ApproveSaleService approveSaleService;
     private final QldbService qldbService;
     private final RegisterProductService registerProductService;
-    private final SaleFormRepository saleFormRepository;
 
     @GetMapping
     public ResponseEntity<Page<ApproveSaleResponseDto>> allSaleForms(Pageable pageable) {
