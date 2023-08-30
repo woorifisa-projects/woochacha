@@ -28,16 +28,16 @@ public class RegisterProductDto {
     /*
     옵션 정보들
      */
-    boolean heatSeatQLDB;
-    boolean smartKeyQLDB;
-    boolean blackboxQLDB;
-    boolean navigationQLDB;
-    boolean airbagQLDB;
-    boolean sunroofQLDB;
-    boolean highPassQLDB;
-    boolean rearviewCameraQLDB;
+    boolean heatSeat;
+    boolean smartKey;
+    boolean blackbox;
+    boolean navigation;
+    boolean airbag;
+    boolean sunroof;
+    boolean highPass;
+    boolean rearviewCamera;
 
-    public RegisterProductDto(String title, String carNum, String ownerName, String ownerPhone, Integer distance, int year, int capacity, String type, String model, String fuel, String color, String transmission, String branch, List<String> accidentHistory, List<String> exchangeHistory, boolean heatSeatQLDB, boolean smartKeyQLDB, boolean blackboxQLDB, boolean naviagtionQLDB, boolean airbagQLDB, boolean sunroofQLDB, boolean highPassQLDB, boolean rearviewCameraQLDB) {
+    public RegisterProductDto(String title, String carNum, String ownerName, String ownerPhone, Integer distance, int year, int capacity, String type, String model, String fuel, String color, String transmission, String branch, List<String> accidentHistory, List<String> exchangeHistory, boolean heatSeat, boolean smartKey, boolean blackbox, boolean navigation, boolean airbag, boolean sunroof, boolean highPass, boolean rearviewCamera) {
         this.title = title;
         this.carNum = carNum;
         this.ownerName = ownerName;
@@ -53,13 +53,13 @@ public class RegisterProductDto {
         this.branch = branch;
         this.accidentHistory = accidentHistory;
         this.exchangeHistory = exchangeHistory;
-        this.heatSeatQLDB = heatSeatQLDB;
-        this.smartKeyQLDB = smartKeyQLDB;
-        this.blackboxQLDB = blackboxQLDB;
-        this.navigationQLDB = naviagtionQLDB;
-        this.airbagQLDB = airbagQLDB;
-        this.sunroofQLDB = sunroofQLDB;
-        this.highPassQLDB = highPassQLDB;
-        this.rearviewCameraQLDB = rearviewCameraQLDB;
+        this.heatSeat = heatSeat;
+        this.smartKey = smartKey;
+        this.blackbox = blackbox;
+        this.navigation = navigation;
+        this.airbag = airbag;
+        this.sunroof = sunroof;
+        this.highPass = highPass;
+        this.rearviewCamera = rearviewCamera;
     }
 }

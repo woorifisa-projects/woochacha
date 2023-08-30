@@ -130,14 +130,14 @@ public class RegisterProductServiceImpl implements RegisterProductService {
                 .branch(saleForm.getBranch().getName().name())
                 .accidentHistory(accidentHistoryQLDB)
                 .exchangeHistory(exchangeHistoryQLDB)
-                .heatSeatQLDB(heatSeatQLDB)
-                .smartKeyQLDB(smartKeyQLDB)
-                .blackboxQLDB(blackboxQLDB)
-                .navigationQLDB(navigationQLDB)
-                .airbagQLDB(airbagQLDB)
-                .sunroofQLDB(sunroofQLDB)
-                .highPassQLDB(highPassQLDB)
-                .rearviewCameraQLDB(rearviewCameraQLDB)
+                .heatSeat(heatSeatQLDB)
+                .smartKey(smartKeyQLDB)
+                .blackbox(blackboxQLDB)
+                .navigation(navigationQLDB)
+                .airbag(airbagQLDB)
+                .sunroof(sunroofQLDB)
+                .highPass(highPassQLDB)
+                .rearviewCamera(rearviewCameraQLDB)
                 .build();
     }
 }
