@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.purchase.entity;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.product.entity.Product;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
 @DynamicInsert
 @Table(name = "purchase_form")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,4 +42,13 @@ public class PurchaseForm {
     @Column(name = "status")
     @ColumnDefault("0")
     private int status;
+
+    public PurchaseForm(Long id, Product product, Member member, LocalDateTime createdAt, LocalDate meetingDate, int status) {
+        this.id = id;
+        this.product = product;
+        this.member = member;
+        this.createdAt = createdAt;
+        this.meetingDate = meetingDate;
+        this.status = status;
+    }
 }
