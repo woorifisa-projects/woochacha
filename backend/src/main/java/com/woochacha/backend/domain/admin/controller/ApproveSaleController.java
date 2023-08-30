@@ -3,9 +3,13 @@ package com.woochacha.backend.domain.admin.controller;
 import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
 import com.woochacha.backend.domain.admin.dto.CarInspectionInfoDto;
 import com.woochacha.backend.domain.admin.dto.CarInspectionRequestDto;
+import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
+import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
 import com.woochacha.backend.domain.sale.dto.SaleFormRequestDto;
+import com.woochacha.backend.domain.sale.entity.SaleForm;
+import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +27,8 @@ public class ApproveSaleController {
 
     private final ApproveSaleService approveSaleService;
     private final QldbService qldbService;
+    private final RegisterProductService registerProductService;
+    private final SaleFormRepository saleFormRepository;
 
     @GetMapping
     public ResponseEntity<Page<ApproveSaleResponseDto>> allSaleForms(Pageable pageable) {
@@ -46,5 +53,14 @@ public class ApproveSaleController {
         }else {
             return ResponseEntity.ok(true);
         }
+    }
+
+    @GetMapping("/register/{saleFormId}")
+    public ResponseEntity<RegisterProductDto> registerProductInfo(@PathVariable("saleFormId") Long saleFormId){
+        Optional<SaleForm> saleFormOptional = saleFormRepository.findById(saleFormId);
+        SaleForm saleForm = saleFormOptional.get();
+        String carNum = saleForm.getCarNum();
+        RegisterProductDto registerProductDto = registerProductService.getRegisterProductInfo(saleFormId, carNum);
+        return ResponseEntity.ok(registerProductDto);
     }
 }
