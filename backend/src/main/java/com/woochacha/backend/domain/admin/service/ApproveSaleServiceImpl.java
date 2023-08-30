@@ -6,11 +6,9 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.config.QldbConfig;
-import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
-import com.woochacha.backend.domain.admin.dto.CarAccidentInfoDto;
-import com.woochacha.backend.domain.admin.dto.CarExchangeInfoDto;
-import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
+import com.woochacha.backend.domain.admin.dto.*;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
+import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.RequiredArgsConstructor;
@@ -126,9 +124,73 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void updateSaleFormStatus(Long saleFormId){
         saleFormRepository.updateStatus(saleFormId);
+    }
+
+    @Override
+    @Transactional
+    public void updateQldbCarDistance(int carDistance, Long saleFormId){
+        SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));;
+        String carNum = saleForm.getCarNum();
+        try {
+            qldbDriver.QldbDriver().execute(txn -> {
+                Result result = txn.execute(
+                        "UPDATE car AS c SET c.car_distance=? WHERE c.car_num=?"
+                        ,ionSys.newInt(carDistance),ionSys.newString(carNum));
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateQldbAccidentInfo(CarAccidentInfoDto carAccidentInfoDto, Long saleFormId){
+        SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));;
+        String carNum = saleForm.getCarNum();
+        try {
+            qldbDriver.QldbDriver().execute(txn -> {
+                Result result1 = txn.execute(
+                        "UPDATE car_accident AS ca " +
+                                "SET ca.accident_desc = ?, " +
+                                "ca.accident_type=?, " +
+                                "ca.accident_date=?, " +
+                                "ca.accident_inspection_place='우차차 정비소'" +
+                                "WHERE ca.car_num=?"
+                        ,ionSys.newString(carAccidentInfoDto.getAccidentDesc())
+                        ,ionSys.newString(carAccidentInfoDto.getAccidentType())
+                        ,ionSys.newString(carAccidentInfoDto.getAccidentDate())
+                        ,ionSys.newString(carNum));
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateQldbExchangeInfo(CarExchangeInfoDto carExchangeInfoDto, Long saleFormId){
+        SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));;
+        String carNum = saleForm.getCarNum();
+        try {
+            qldbDriver.QldbDriver().execute(txn -> {
+                Result result2 = txn.execute(
+                        "UPDATE car_exchange AS ce " +
+                                "SET ce.exchange_info = ?, " +
+                                "ce.exchange_type=?, " +
+                                "ce.exchange_date=?, " +
+                                "ce.exchange_inspection_place='우차차 정비소'" +
+                                "WHERE ce.car_num=?"
+                        ,ionSys.newString(carExchangeInfoDto.getExchangeDesc())
+                        ,ionSys.newString(carExchangeInfoDto.getExchangeType())
+                        ,ionSys.newString(carExchangeInfoDto.getExchangeDate())
+                        ,ionSys.newString(carNum));
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

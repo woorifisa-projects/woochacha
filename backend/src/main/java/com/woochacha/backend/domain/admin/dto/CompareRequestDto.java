@@ -9,8 +9,8 @@ import java.util.List;
 @Getter
 @Builder
 public class CompareRequestDto {
+    // 차량 검사 후 비교하여 교체된 이력에 대해 저장하는 dto
     private int distance;
-    private Long saleFormId;
-    private List<CarAccidentInfoDto> carAccidentInfoDtoList;
-    private List<CarExchangeInfoDto> carExchangeInfoDtoList;
+    private CarAccidentInfoDto carAccidentInfoDto;
+    private CarExchangeInfoDto carExchangeInfoDto;
 }

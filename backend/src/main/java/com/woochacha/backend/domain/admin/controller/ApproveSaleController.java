@@ -1,12 +1,10 @@
 package com.woochacha.backend.domain.admin.controller;
 
-import com.amazon.ion.IonInt;
 import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
 import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.CompareRequestDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
-import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import com.woochacha.backend.domain.sale.service.SaleFormApplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import software.amazon.qldb.Result;
 
 import java.util.List;
 
@@ -53,7 +50,14 @@ public class ApproveSaleController {
         if(carDistance > compareRequestDto.getDistance()){
             return ResponseEntity.ok(false);
         }else {
-            approveSaleService.updateSaleFormStatus(compareRequestDto.getSaleFormId());
+            approveSaleService.updateSaleFormStatus(saleFormId);
+            approveSaleService.updateQldbCarDistance(compareRequestDto.getDistance(), saleFormId);
+            if(compareRequestDto.getCarAccidentInfoDto() != null){
+                approveSaleService.updateQldbAccidentInfo(compareRequestDto.getCarAccidentInfoDto(), saleFormId);
+            }
+            if(compareRequestDto.getCarExchangeInfoDto() != null){
+                approveSaleService.updateQldbExchangeInfo(compareRequestDto.getCarExchangeInfoDto(), saleFormId);
+            }
             return ResponseEntity.ok(true);
         }
     }
