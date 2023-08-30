@@ -1,8 +1,10 @@
 package com.woochacha.backend.domain.sale.service;
 
+import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.qldb.service.QldbService;
+import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.Branch;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.sale.repository.BranchRepository;
@@ -10,11 +12,13 @@ import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import com.woochacha.backend.domain.status.entity.CarStatus;
 import com.woochacha.backend.domain.status.repository.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +30,17 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
     private final QldbService qldbService;
     private final MemberRepository memberRepository;
     private final BranchRepository branchRepository;
+    private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     //차량 신청 폼을 요청할 때, 전체 branch 리스트를 넘겨줌 (Get)
     @Override
-    public List<Branch> getBranchList() {
-        return branchRepository.findAll();
+    public List<BranchDto> getBranchList() {
+        List<Branch> branchList = branchRepository.findAll();
+        return branchList.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    private BranchDto convertToDto(Branch branch) {
+        return modelMapper.map(branch, BranchDto.class);
     }
 
     // 차량 신청 폼을 작성하고 제출 했을 때 데이터가 맞는지 유효성 검사를 한다.(Post)
