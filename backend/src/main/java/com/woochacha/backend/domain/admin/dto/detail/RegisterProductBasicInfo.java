@@ -1,9 +1,9 @@
 package com.woochacha.backend.domain.admin.dto.detail;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class RegisterProductBasicInfo {
     private String title; // 제목 : 모델+차명+연식

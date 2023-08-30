@@ -5,11 +5,11 @@ import com.woochacha.backend.domain.admin.dto.detail.RegisterProductBasicInfo;
 import com.woochacha.backend.domain.admin.dto.detail.RegisterProductDetailInfo;
 import com.woochacha.backend.domain.admin.dto.detail.RegisterProductOptionInfo;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 public class RegisterProductDto {
 

@@ -1,8 +1,9 @@
 package com.woochacha.backend.domain.admin.dto.detail;
 
 import lombok.Builder;
-import lombok.Data;
-@Data
+import lombok.Getter;
+
+@Getter
 @Builder
 public class RegisterProductExchangeInfo {
     private String type;

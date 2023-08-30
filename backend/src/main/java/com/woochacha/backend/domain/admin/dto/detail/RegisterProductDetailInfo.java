@@ -3,11 +3,11 @@ package com.woochacha.backend.domain.admin.dto.detail;
 import com.woochacha.backend.domain.product.dto.detail.ProductAccidentInfo;
 import com.woochacha.backend.domain.product.dto.detail.ProductExchangeInfo;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 public class RegisterProductDetailInfo {
     private int capacity; // 승자 정원

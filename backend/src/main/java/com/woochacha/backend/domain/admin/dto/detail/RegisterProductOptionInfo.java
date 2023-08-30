@@ -1,9 +1,9 @@
 package com.woochacha.backend.domain.admin.dto.detail;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class RegisterProductOptionInfo {
     private String option;
