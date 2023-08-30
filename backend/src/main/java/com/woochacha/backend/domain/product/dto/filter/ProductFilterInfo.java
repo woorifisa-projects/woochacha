@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductFilterInfo {
     List<TypeDto> typeList;
@@ -20,4 +19,14 @@ public class ProductFilterInfo {
     List<ColorDto> colorList;
     List<TransmissionDto> transmissionList;
     List<BranchDto> branchList;
+
+    public ProductFilterInfo(List<TypeDto> typeList, List<ModelDto> modelList, List<CarNameDto> carNameList, List<FuelDto> fuelList, List<ColorDto> colorList, List<TransmissionDto> transmissionList, List<BranchDto> branchList) {
+        this.typeList = typeList;
+        this.modelList = modelList;
+        this.carNameList = carNameList;
+        this.fuelList = fuelList;
+        this.colorList = colorList;
+        this.transmissionList = transmissionList;
+        this.branchList = branchList;
+    }
 }
