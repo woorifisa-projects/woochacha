@@ -1,7 +1,9 @@
 package com.woochacha.backend.domain.product.controller;
 
-import com.woochacha.backend.domain.product.dto.ProdcutAllResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
+import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
+import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +20,17 @@ public class ProductController {
     }
 
     @GetMapping
-    public ProdcutAllResponseDto findAllProduct() {
+    public ProductAllResponseDto findAllProduct() {
         return productService.findAllProduct();
     }
 
     @GetMapping("/{productId}")
     public ProductDetailResponseDto findDetailProduct(@PathVariable Long productId) {
         return productService.findDetailProduct(productId);
+    }
+
+    @PostMapping("/filter")
+    public List<ProductInfo> findFilteredProduct(@RequestBody ProductFilterInfo productFilterInfo) {
+        return productService.findFilteredProduct(productFilterInfo);
     }
 }

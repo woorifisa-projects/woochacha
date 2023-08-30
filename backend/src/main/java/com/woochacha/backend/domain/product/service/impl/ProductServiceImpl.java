@@ -1,6 +1,8 @@
 package com.woochacha.backend.domain.product.service.impl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.domain.car.detail.dto.CarNameDto;
@@ -12,9 +14,9 @@ import com.woochacha.backend.domain.car.info.entity.QExchangeType;
 import com.woochacha.backend.domain.car.type.dto.*;
 import com.woochacha.backend.domain.car.type.entity.*;
 import com.woochacha.backend.domain.member.entity.QMember;
-import com.woochacha.backend.domain.product.dto.ProdcutAllResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
-import com.woochacha.backend.domain.product.dto.all.ProductFilterInfo;
+import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
 import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.dto.detail.*;
 import com.woochacha.backend.domain.product.entity.QCarImage;
@@ -23,8 +25,6 @@ import com.woochacha.backend.domain.product.service.ProductService;
 import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,16 +61,15 @@ public class ProductServiceImpl implements ProductService {
         전체 매물 & 필터링 목록 조회
      */
     @Override
-    public ProdcutAllResponseDto findAllProduct() {
+    public ProductAllResponseDto findAllProduct() {
         List<ProductInfo> productInfoList = findAllProductInfoList();
 
         ProductFilterInfo productFilterInfo = findAllProductFilterList();
 
-        return new ProdcutAllResponseDto(productInfoList, productFilterInfo);
+        return new ProductAllResponseDto(productInfoList, productFilterInfo);
     }
 
-    // 전체 매물 조회
-    private List<ProductInfo> findAllProductInfoList() {
+    private List<ProductInfo> findProductInfoList(BooleanBuilder builder) {
         return queryFactory
                 .select(Projections.fields(
                         ProductInfo.class, p.id,
@@ -83,9 +82,15 @@ public class ProductServiceImpl implements ProductService {
                 .join(b).on(b.id.eq(sf.branch.id))
                 .join(model).on(model.id.eq(cd.model.id))
                 .join(cn).on(cn.name.eq(cd.carName.name))
-                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1"))
+                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1").and(builder))
                 .orderBy(p.createdAt.asc())
                 .fetch();
+    }
+
+
+    // 전체 매물 조회
+    private List<ProductInfo> findAllProductInfoList() {
+        return findProductInfoList(null);
     }
 
     // 전체 필터링 목록 조회
@@ -105,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
         List<ColorDto> colorList = queryFactory.select(Projections.fields(ColorDto.class,
                 color.id.as("id"), color.name.stringValue().as("name"))).from(color).fetch();
 
-        List<TrasmissionDto> transmissionList = queryFactory.select(Projections.fields(TrasmissionDto.class,
+        List<TransmissionDto> transmissionList = queryFactory.select(Projections.fields(TransmissionDto.class,
                 t.id.as("id"), t.name.stringValue().as("name"))).from(t).fetch();
 
         List<BranchDto> branchList = queryFactory.select(Projections.fields(BranchDto.class,
@@ -226,5 +231,88 @@ public class ProductServiceImpl implements ProductService {
                 .join(sf).on(sf.id.eq(p.saleForm.id))
                 .where(sf.carNum.eq(carNum))
                 .fetch();
+    }
+
+    @Override
+    public List<ProductInfo> findFilteredProduct(ProductFilterInfo productFilterInfo) {
+        return findProductInfoList(dynamicSearch(productFilterInfo));
+    }
+
+    // 동적 where 조건절 쿼리 작성
+    private BooleanBuilder dynamicSearch(ProductFilterInfo productFilterInfo) {
+        List<List<?>> productFilterInfoList = makeProductFilterInfoList(productFilterInfo);
+
+        BooleanBuilder builder = new BooleanBuilder();
+        BooleanExpression optionWhere;
+
+        for (List<?> productOptionList : productFilterInfoList) { // 카테고리
+            if (productOptionList != null) {
+                optionWhere = null;
+                for (Object o : productOptionList) { // 카테고리 내 id 조건
+                    optionWhere = dynamicSearchFields(o, optionWhere);
+                }
+            } else continue;
+            builder.and(optionWhere); // 각 카테고리끼리 and 조건 적용
+        }
+        return builder;
+    }
+
+    private List<List<?>> makeProductFilterInfoList(ProductFilterInfo productFilterInfo) {
+        List<List<?>> productFilterInfoList = new ArrayList<>();
+        productFilterInfoList.add(productFilterInfo.getTypeList());
+        productFilterInfoList.add(productFilterInfo.getModelList());
+        productFilterInfoList.add(productFilterInfo.getFuelList());
+        productFilterInfoList.add(productFilterInfo.getColorList());
+        productFilterInfoList.add(productFilterInfo.getTransmissionList());
+        productFilterInfoList.add(productFilterInfo.getCarNameList());
+        productFilterInfoList.add(productFilterInfo.getBranchList());
+        return productFilterInfoList;
+    }
+
+    // TODO: 객체지향적으로 수정
+    private BooleanExpression dynamicSearchFields(Object o, BooleanExpression optionWhere) {
+        BooleanExpression optionExpression = null;
+
+        String[] classNamePath = o.getClass().getName().split("\\.");
+        String className = classNamePath[classNamePath.length - 1];
+
+        switch (className) {
+            case "TypeDto" :
+                TypeDto typeDto = new TypeDto(((TypeDto) o).getId());
+                optionExpression = p.carDetail.type.id.eq(typeDto.getId());
+                break;
+            case "ModelDto" :
+                ModelDto modelDto = new ModelDto(((ModelDto) o).getId());
+                optionExpression = p.carDetail.model.id.eq(modelDto.getId());
+                break;
+            case "FuelDto" :
+                FuelDto fuelDto = new FuelDto(((FuelDto) o).getId());
+                optionExpression = p.carDetail.fuel.id.eq(fuelDto.getId());
+                break;
+            case "ColorDto" :
+                ColorDto colorDto = new ColorDto(((ColorDto) o).getId());
+                optionExpression = p.carDetail.color.id.eq(colorDto.getId());
+                break;
+            case "TransmissionDto" :
+                TransmissionDto transmissionDto = new TransmissionDto(((TransmissionDto) o).getId());
+                optionExpression = p.carDetail.transmission.id.eq(transmissionDto.getId());
+                break;
+            case "CarNameDto" :
+                CarNameDto carNameDto = new CarNameDto(((CarNameDto) o).getId());
+                optionExpression = p.carDetail.carName.id.eq(carNameDto.getId());
+                break;
+            case "BranchDto" :
+                BranchDto branchDto = new BranchDto(((BranchDto) o).getId());
+                optionExpression = sf.branch.id.eq(branchDto.getId());
+                break;
+        }
+        return addOrExpression(optionWhere, optionExpression);
+    }
+
+    // 같은 카테고리 내 옵션끼리는 or 조건 적용
+    private BooleanExpression addOrExpression(BooleanExpression optionWhere, BooleanExpression optionExpression) {
+        if (optionWhere == null) optionWhere = optionExpression;
+        else optionWhere = optionWhere.or(optionExpression);
+        return optionWhere;
     }
 }

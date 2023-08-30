@@ -3,13 +3,13 @@ package com.woochacha.backend.domain.car.type.dto;
 import lombok.Data;
 
 @Data
-public class ModelDto {
+public class TransmissionDto {
     private int id;
     private String name;
 
-    public ModelDto() {}
+    public TransmissionDto() {}
 
-    public ModelDto(int id) {
+    public TransmissionDto(int id) {
         this.id = id;
     }
 }
