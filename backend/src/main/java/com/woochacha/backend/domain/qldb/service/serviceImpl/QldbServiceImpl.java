@@ -6,7 +6,6 @@ import com.woochacha.backend.config.QldbConfig;
 import com.woochacha.backend.domain.admin.dto.CarInspectionInfoDto;
 import com.woochacha.backend.domain.qldb.service.QldbService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import software.amazon.qldb.Result;
