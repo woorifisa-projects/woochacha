@@ -12,18 +12,26 @@ import com.woochacha.backend.domain.car.info.entity.QCarExchangeInfo;
 import com.woochacha.backend.domain.car.info.entity.QExchangeType;
 import com.woochacha.backend.domain.car.type.dto.*;
 import com.woochacha.backend.domain.car.type.entity.*;
+import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.entity.QMember;
+import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductPurchaseRequestDto;
+import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
 import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.dto.detail.*;
-import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
+import com.woochacha.backend.domain.product.entity.Product;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import com.woochacha.backend.domain.product.entity.QProduct;
+import com.woochacha.backend.domain.product.repository.ProductRepository;
 import com.woochacha.backend.domain.product.service.ProductService;
+import com.woochacha.backend.domain.purchase.entity.PurchaseForm;
+import com.woochacha.backend.domain.purchase.repository.PurchaseFormRepository;
 import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
     private final JPAQueryFactory queryFactory;
@@ -51,10 +60,11 @@ public class ProductServiceImpl implements ProductService {
     private final QCarExchangeInfo ce = QCarExchangeInfo.carExchangeInfo;
     private final QCarOption co = QCarOption.carOption;
     private final QMember m = QMember.member;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
+    private final PurchaseFormRepository purchaseFormRepository;
 
-    public ProductServiceImpl(JPAQueryFactory queryFactory) {
-        this.queryFactory = queryFactory;
-    }
+
 
     /*
         전체 매물 & 필터링 목록 조회
@@ -314,6 +324,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
+    public void applyPurchaseForm(ProductPurchaseRequestDto productPurchaseRequestDto) {
+        Member member = memberRepository.findById(productPurchaseRequestDto.getMemberId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
+        Product product = productRepository.findById(productPurchaseRequestDto.getProductId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
+        PurchaseForm purchaseForm = PurchaseForm.builder().member(member).product(product).build();
+        purchaseFormRepository.save(purchaseForm);
+    }
+
     public List<ProductInfo> findSearchedProduct(String keyword) {
         BooleanExpression expression = dynamicSearchWholeModelKeyword(keyword); // 모델명 검색 동적 쿼리 생성
         List<ProductInfo> keywordSearchedByModelName = findProductInfoList(expression); // 모델명 동적 쿼리 실행

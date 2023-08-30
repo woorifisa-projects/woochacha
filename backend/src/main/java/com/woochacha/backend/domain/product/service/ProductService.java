@@ -10,6 +10,7 @@ public interface ProductService {
     ProductAllResponseDto findAllProduct();
     ProductDetailResponseDto findDetailProduct(Long productId);
     List<ProductInfo> findFilteredProduct(ProductFilterInfo productFilterInfo);
+    void applyPurchaseForm(ProductPurchaseRequestDto productPurchaseRequestDto);
 
     List<ProductInfo> findSearchedProduct(String keyword);
 }
