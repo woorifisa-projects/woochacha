@@ -6,6 +6,6 @@ import java.util.List;
 public interface SaleFormApplyService {
     List<Branch> getBranchList();
     Boolean submitCarSaleForm(String carNum, Long memberId, Long branchId);
-
+    String findCarNum(Long saleFormId);
     void saveSaleForm(String carNum, Long memberId, Long branchId);
 }

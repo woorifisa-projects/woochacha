@@ -48,6 +48,12 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
         return memberName.equals(owner) && memberPhone.equals(ownerPhone) && countAccident == 0;
     }
 
+    @Override
+    public String findCarNum(Long saleFormId) {
+        SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));
+        return saleForm.getCarNum();
+    }
+
     // 차량 등록을 위한 sale 폼을 작성한다.
     @Override
     public void saveSaleForm(String carNum, Long memberId, Long branchId) {
