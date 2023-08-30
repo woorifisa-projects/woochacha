@@ -37,8 +37,13 @@ public class ProductController {
     }
 
     @PostMapping("/purchase")
-    public ResponseEntity<Boolean> applyProductPurchase(@RequestBody ProductPurchaseRequestDto productPurchaseRequestDto){
+    public ResponseEntity<Boolean> applyProductPurchase(@RequestBody ProductPurchaseRequestDto productPurchaseRequestDto) {
         productService.applyPurchaseForm(productPurchaseRequestDto);
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/search")
+    public List<ProductInfo> findSearchedProduct(@RequestParam(value="keyword") String keyword) {
+        return productService.findSearchedProduct(keyword);
     }
 }

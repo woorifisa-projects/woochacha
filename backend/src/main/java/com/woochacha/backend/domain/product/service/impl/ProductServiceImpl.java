@@ -1,6 +1,5 @@
 package com.woochacha.backend.domain.product.service.impl;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -79,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
         return new ProductAllResponseDto(productInfoList, productFilterInfo);
     }
 
-    private List<ProductInfo> findProductInfoList(BooleanBuilder builder) {
+    private List<ProductInfo> findProductInfoList(BooleanExpression expression) {
         return queryFactory
                 .select(Projections.fields(
                         ProductInfo.class, p.id,
@@ -92,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
                 .join(b).on(b.id.eq(sf.branch.id))
                 .join(model).on(model.id.eq(cd.model.id))
                 .join(cn).on(cn.name.eq(cd.carName.name))
-                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1").and(builder))
+                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1").and(expression))
                 .orderBy(p.createdAt.asc())
                 .fetch();
     }
@@ -249,22 +248,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // 동적 where 조건절 쿼리 작성
-    private BooleanBuilder dynamicSearch(ProductFilterInfo productFilterInfo) {
+    private BooleanExpression dynamicSearch(ProductFilterInfo productFilterInfo) {
         List<List<?>> productFilterInfoList = makeProductFilterInfoList(productFilterInfo);
 
-        BooleanBuilder builder = new BooleanBuilder();
-        BooleanExpression optionWhere;
+        BooleanExpression optionWhere = null;
 
         for (List<?> productOptionList : productFilterInfoList) { // 카테고리
             if (productOptionList != null) {
                 optionWhere = null;
                 for (Object o : productOptionList) { // 카테고리 내 id 조건
-                    optionWhere = dynamicSearchFields(o, optionWhere);
+                    optionWhere = addOrExpression(optionWhere, dynamicSearchFields(o, optionWhere));
                 }
-            } else continue;
-            builder.and(optionWhere); // 각 카테고리끼리 and 조건 적용
+            }
         }
-        return builder;
+        return optionWhere;
     }
 
     private List<List<?>> makeProductFilterInfoList(ProductFilterInfo productFilterInfo) {
@@ -328,10 +325,49 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void applyPurchaseForm(ProductPurchaseRequestDto productPurchaseRequestDto){
+    public void applyPurchaseForm(ProductPurchaseRequestDto productPurchaseRequestDto) {
         Member member = memberRepository.findById(productPurchaseRequestDto.getMemberId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         Product product = productRepository.findById(productPurchaseRequestDto.getProductId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         PurchaseForm purchaseForm = PurchaseForm.builder().member(member).product(product).build();
         purchaseFormRepository.save(purchaseForm);
+    }
+
+    public List<ProductInfo> findSearchedProduct(String keyword) {
+        BooleanExpression expression = dynamicSearchWholeModelKeyword(keyword); // 모델명 검색 동적 쿼리 생성
+        List<ProductInfo> keywordSearchedByModelName = findProductInfoList(expression); // 모델명 동적 쿼리 실행
+
+        // 모델명 검색 결과가 없으면 차량명 검색 동작
+        if(keywordSearchedByModelName.isEmpty())
+            return findProductInfoList(dynamicSearchPartKeyword(keyword));
+
+        // 모델명 검색 결과가 있다면 모델명 검색 결과 리턴
+        else
+            return keywordSearchedByModelName;
+    }
+
+    private BooleanExpression dynamicSearchWholeModelKeyword(String keyword) {
+        BooleanExpression expression = null;
+        String[] keywordSplitToSpace = keyword.split(" ");
+
+        for(String eachKeyword : keywordSplitToSpace) {
+            BooleanExpression eachKeyWordModelName = cd.model.name.stringValue().eq(String.valueOf(eachKeyword));
+            expression = addOrExpression(expression, eachKeyWordModelName);
+        }
+        return expression;
+    }
+
+    private BooleanExpression dynamicSearchPartKeyword(String keyword) {
+        BooleanExpression expression = null;
+        String removeKeywordSpace = keyword.replaceAll(" ", ""); // 입력 값 공백 제거
+        char[] eachKeyWordArray = removeKeywordSpace.toCharArray(); // 입력 값의 각 문자를 배열로 저장
+
+        for(char eachKeyWord : eachKeyWordArray) { // 각 문자를 순회하며 문자마다 쿼리 조건절을 추가
+            BooleanExpression eachKeyWordModel = cd.model.name.stringValue().contains(String.valueOf(eachKeyWord));
+            expression = addOrExpression(expression, eachKeyWordModel);
+
+            BooleanExpression eachKeyWordCarName = cd.carName.name.contains(String.valueOf(eachKeyWord));
+            expression = addOrExpression(expression, eachKeyWordCarName);
+        }
+        return expression;
     }
 }
