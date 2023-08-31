@@ -28,7 +28,6 @@ public class CarImage {
     private String imageUrl;
 
     @CreationTimestamp
-    @NotNull
     private LocalDateTime createdAt;
 
     public CarImage() {

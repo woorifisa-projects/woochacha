@@ -14,6 +14,7 @@ export default function MiniCard({ children, colorVal, shadowVal, marginVal }) {
         height: '100%',
         width: '80%',
         display: 'flex',
+        borderRadius: '3rem',
         flexDirection: 'column',
       }}>
       {children}

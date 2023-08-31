@@ -1,12 +1,16 @@
 package com.woochacha.backend.domain.product.service;
 
-import com.woochacha.backend.domain.product.dto.ProdcutAllResponseDto;
-import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
+import com.woochacha.backend.domain.product.dto.*;
+import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
+import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 
 import java.util.List;
 
 public interface ProductService {
-    ProdcutAllResponseDto findAllProduct();
-
+    ProductAllResponseDto findAllProduct();
     ProductDetailResponseDto findDetailProduct(Long productId);
+    List<ProductInfo> findFilteredProduct(ProductFilterInfo productFilterInfo);
+    void applyPurchaseForm(ProductPurchaseRequestDto productPurchaseRequestDto);
+
+    List<ProductInfo> findSearchedProduct(String keyword);
 }

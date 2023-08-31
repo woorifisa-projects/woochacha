@@ -1,10 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardMedia, Typography, Grid, Chip } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, Grid, Chip, Button } from '@mui/material';
 import { useRouter } from 'next/router';
+import BasicModal from '../common/BasicModal';
+import { DELETE_MODAL } from '@/constants/string';
 
-export default function MypageCard() {
+export default function MypageCardEdit() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  // Modal 버튼 클릭 유무
+  const [showModal, setShowModal] = useState(false);
+  const handleClickModal = () => setShowModal(!showModal);
+
+  // DUMMY_DATA
+  const memberId = 1;
+  const productId = 1;
 
   // TODO: API 조회 후 수정할 dummy data입니다.
   const itemDummyArr = [
@@ -87,28 +97,70 @@ export default function MypageCard() {
     router.push(url);
   };
 
+  const handleMoveEdit = (url) => {
+    router.push({
+      pathname: url,
+      query: { memberId, productId },
+    });
+  };
+
+  const handleDeleteItem = () => {
+    // TODO: 삭제 API 요청 - 삭제 modal => 삭제
+    alert('게시글 삭제 요청이 완료되었습니다!');
+    router.push(`/mypage/registered/${memberId}`);
+  };
+
   return (
     mounted && (
       <Grid container spacing={3} sx={mypageCardCss.container}>
         {itemDummyArr.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
-            <Card
-              sx={mypageCardCss.card}
-              onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
-              <CardMedia component="div" sx={mypageCardCss.cardMedia} image={item.imageUrl} />
+            <Card sx={mypageCardCss.card}>
+              <CardMedia
+                component="div"
+                sx={mypageCardCss.cardMedia}
+                image={item.imageUrl}
+                onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}
+              />
               <CardContent sx={mypageCardCss.cardContent}>
-                <Typography gutterBottom variant="h5" component="h5">
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h5"
+                  onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
                   {item.title}
                 </Typography>
-                <Grid container my={1} gap={1}>
-                  <Chip size="small" label={`주행거리 : ${item.distance} km`} />
-                  <Chip size="small" label={`가격 : ${item.price} 만원`} />
-                  <Chip size="small" label={`지점 : ${item.branch}`} />
+                <Grid container spacing={2}>
+                  <Grid
+                    item
+                    xs={9}
+                    container
+                    my={1}
+                    gap={1}
+                    onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
+                    <Chip size="small" label={`주행거리 : ${item.distance} km`} />
+                    <Chip size="small" label={`가격 : ${item.price} 만원`} />
+                    <Chip size="small" label={`지점 : ${item.branch}`} />
+                  </Grid>
+                  <Grid item xs={3} container my={1} gap={1}>
+                    <Button onClick={() => handleMoveEdit(`/mypage/registered/edit`)}>
+                      수정요청
+                    </Button>
+                    <Button onClick={handleClickModal}>삭제요청</Button>
+                  </Grid>
                 </Grid>
               </CardContent>
             </Card>
           </Grid>
         ))}
+        {showModal && (
+          <BasicModal
+            onClickModal={handleClickModal}
+            isOpen={showModal}
+            modalContent={DELETE_MODAL.CONTENTS}
+            callBackFunc={handleDeleteItem}
+          />
+        )}
       </Grid>
     )
   );

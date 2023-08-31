@@ -2,6 +2,7 @@ package com.woochacha.backend.domain.sale.controller;
 
 
 import com.woochacha.backend.domain.member.repository.MemberRepository;
+import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.dto.SaleFormRequestDto;
 import com.woochacha.backend.domain.sale.entity.Branch;
 import com.woochacha.backend.domain.sale.repository.BranchRepository;
@@ -21,22 +22,21 @@ public class SaleController {
     private final SaleFormApplyService saleFormApplyService;
 
     @GetMapping
-    public ResponseEntity<List<Branch>> carSaleForm() {
-        List<Branch> branchList = saleFormApplyService.getBranchList();
+    public ResponseEntity<List<BranchDto>> carSaleForm() {
+        List<BranchDto> branchList = saleFormApplyService.getBranchList();
         return ResponseEntity.ok(branchList);
     }
 
     @PostMapping
     public ResponseEntity<Boolean> submitCarSaleForm(@RequestBody SaleFormRequestDto requestDto) {
-        System.out.println(requestDto.getCarNum());
         String carNum = requestDto.getCarNum();
         Long memberId = requestDto.getMemberId();
         Long branchId = requestDto.getBranchId();
 
-        Boolean match = saleFormApplyService.submitCarSaleForm(carNum, memberId, branchId);
+        Boolean match = saleFormApplyService.submitCarSaleForm(carNum, memberId);
 
         if(match){
-//            saleFormApplyService.saveSaleForm(carNum, memberId, branchId);
+            saleFormApplyService.saveSaleForm(carNum, memberId, branchId);
             return ResponseEntity.ok(true);
         }else{
             return ResponseEntity.ok(false);

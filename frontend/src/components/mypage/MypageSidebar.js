@@ -15,7 +15,7 @@ export default function MypageSidebar() {
     },
     mypageMenuPaper: {
       backgroundColor: '#D6E6F5',
-      borderRadius: '0px',
+      borderRadius: '1rem',
       minWidth: '150px',
       maxWidth: '200px',
     },
