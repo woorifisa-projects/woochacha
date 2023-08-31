@@ -7,6 +7,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.config.QldbConfig;
 import com.woochacha.backend.domain.admin.dto.*;
+import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
+import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.sale.repository.SaleFormRepository;

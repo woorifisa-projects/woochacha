@@ -1,15 +1,16 @@
-package com.woochacha.backend.domain.product.dto.detail;
+package com.woochacha.backend.domain.admin.dto.detail;
 
+import com.woochacha.backend.domain.product.dto.detail.ProductAccidentInfo;
+import com.woochacha.backend.domain.product.dto.detail.ProductExchangeInfo;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 @Builder
-public class ProductDetailInfo {
-    private short capacity; // 승자 정원
+public class RegisterProductDetailInfo {
+    private int capacity; // 승자 정원
 
     private Integer distance; // 주행 거리
 
