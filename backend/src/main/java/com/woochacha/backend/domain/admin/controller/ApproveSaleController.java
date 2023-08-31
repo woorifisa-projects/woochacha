@@ -3,7 +3,9 @@ package com.woochacha.backend.domain.admin.controller;
 import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
 import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.CompareRequestDto;
+import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
+import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
 import com.woochacha.backend.domain.sale.service.SaleFormApplyService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class ApproveSaleController {
     private final ApproveSaleService approveSaleService;
     private final QldbService qldbService;
     private final SaleFormApplyService saleFormApplyService;
+    private final RegisterProductService registerProductService;
 
     //url 뒷단에 ?page=?&size=?로 값을 정해서 보내줘야한다.
     //관리자 페이지에서 모든 차량의 saleform 신청폼(점검 전)을 확인한다.
@@ -60,5 +63,10 @@ public class ApproveSaleController {
             }
             return ResponseEntity.ok(true);
         }
+    }
+    @GetMapping("/register/{saleFormId}")
+    public ResponseEntity<RegisterProductDto> registerProductInfo(@PathVariable("saleFormId") Long saleFormId){
+        RegisterProductDto registerProductDto = registerProductService.getRegisterProductInfo(saleFormId);
+        return ResponseEntity.ok(registerProductDto);
     }
 }
