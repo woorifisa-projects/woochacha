@@ -3,7 +3,7 @@ package com.woochacha.backend.domain.admin.service.impl;
 import com.amazon.ion.*;
 import com.amazon.ion.system.IonSystemBuilder;
 import com.woochacha.backend.config.QldbConfig;
-import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
+import com.woochacha.backend.domain.admin.dto.approve.RegisterProductDto;
 import com.woochacha.backend.domain.admin.dto.detail.*;
 import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.car.detail.entity.CarOptionList;

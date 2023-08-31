@@ -1,6 +1,5 @@
-package com.woochacha.backend.domain.admin.dto;
+package com.woochacha.backend.domain.admin.dto.approve;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
