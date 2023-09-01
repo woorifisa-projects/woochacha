@@ -46,7 +46,7 @@ public class ApproveSaleController {
     }
 
     // 차량이 점검 후 입력한 값이 등록 조건에 맞으면 saleForm의 status를 변환시킨다.
-    @PostMapping("/approve/{saleFormId}")
+    @PatchMapping("/approve/{saleFormId}")
     public ResponseEntity<Boolean> compareCarInfo(@RequestBody CompareRequestDto compareRequestDto, @PathVariable Long saleFormId){
         String carNum = saleFormApplyService.findCarNum(saleFormId);
         int carDistance = approveSaleService.getCarDistance(carNum);
