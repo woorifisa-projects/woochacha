@@ -1,9 +1,9 @@
 package com.woochacha.backend.domain.admin.controller;
 
-import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
-import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
-import com.woochacha.backend.domain.admin.dto.CompareRequestDto;
-import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
+import com.woochacha.backend.domain.admin.dto.approve.ApproveSaleResponseDto;
+import com.woochacha.backend.domain.admin.dto.approve.CarInspectionInfoResponseDto;
+import com.woochacha.backend.domain.admin.dto.approve.CompareRequestDto;
+import com.woochacha.backend.domain.admin.dto.approve.RegisterProductDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
@@ -46,7 +46,7 @@ public class ApproveSaleController {
     }
 
     // 차량이 점검 후 입력한 값이 등록 조건에 맞으면 saleForm의 status를 변환시킨다.
-    @PostMapping("/approve/{saleFormId}")
+    @PatchMapping("/approve/{saleFormId}")
     public ResponseEntity<Boolean> compareCarInfo(@RequestBody CompareRequestDto compareRequestDto, @PathVariable Long saleFormId){
         String carNum = saleFormApplyService.findCarNum(saleFormId);
         int carDistance = approveSaleService.getCarDistance(carNum);

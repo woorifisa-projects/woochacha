@@ -1,9 +1,7 @@
-package com.woochacha.backend.domain.admin.dto;
+package com.woochacha.backend.domain.admin.dto.approve;
 
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.List;
 
 
 @Getter

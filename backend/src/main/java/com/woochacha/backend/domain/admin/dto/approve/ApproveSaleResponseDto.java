@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.admin.dto;
+package com.woochacha.backend.domain.admin.dto.approve;
 
 import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.*;
