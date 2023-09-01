@@ -37,6 +37,27 @@ export const HEADER_MINI_MENU = {
   ],
 };
 
+export const HEADER_ADMIN_MINI_MENU = {
+  CONTENTS: [
+    {
+      pageName: '사용자 관리',
+      pageUrl: `/admin/members`,
+    },
+    {
+      pageName: '매물관리',
+      pageUrl: `/admin/product`,
+    },
+    {
+      pageName: '판매 신청 관리',
+      pageUrl: `/admin/sales`,
+    },
+    {
+      pageName: '거래 관리',
+      pageUrl: `/admin/purchase`,
+    },
+  ],
+};
+
 export const HEADER_UNLOGIN_USER_MENU = {
   CONTENTS: [
     {
