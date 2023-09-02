@@ -140,7 +140,17 @@ public class MypageServiceImpl implements MypageService {
         mypageRepository.updatePrice(productId, updatePrice);
     }
 
-    // 프로필 수정
+    // 프로필 수정 (GET요청 시 데이터 보여주기)
+    public EditProdileDto getProfileForEdit(Long memberId){
+        Member member = memberRepository.findById(memberId).get();
+        EditProdileDto editProdileDto = EditProdileDto.builder()
+                .name(member.getName())
+                .imageUrl(member.getProfileImage())
+                .build();
+        return editProdileDto;
+    }
+
+    // 프로필 수정 (PATCH요청 시 데이터 수정)
     @Transactional
     public String editProfile(Long memberId, AmazonS3RequestDto amazonS3RequestDto) throws IOException {
         String email = memberRepository.findById(memberId).get().getEmail();

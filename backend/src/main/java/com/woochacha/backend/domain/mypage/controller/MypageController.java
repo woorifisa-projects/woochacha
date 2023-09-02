@@ -101,7 +101,14 @@ public class MypageController {
         return ResponseEntity.ok("가격 변경 요청이 완료되었습니다.");
     }
 
-    // 프로필 이미지 수정
+    // 프로필 이미지 수정 (데이터 조회 Get)
+    @GetMapping("/profile/edit/{memberId}")
+    private ResponseEntity<EditProdileDto> getProfileForEdit(@PathVariable("memberId") Long memberId){
+        EditProdileDto editProdileDto = mypageService.getProfileForEdit(memberId);
+        return ResponseEntity.ok(editProdileDto);
+    }
+
+    // 프로필 이미지 수정 (데이터 수정 Patch)
     @PatchMapping("/profile/edit/{memberId}")
     private ResponseEntity<String> editProfile(@PathVariable("memberId") Long memberId, @ModelAttribute AmazonS3RequestDto amazonS3RequestDto ) throws IOException {
         String newProfileImage = mypageService.editProfile(memberId, amazonS3RequestDto);
