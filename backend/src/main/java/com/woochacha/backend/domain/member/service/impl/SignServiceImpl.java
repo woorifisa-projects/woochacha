@@ -129,7 +129,6 @@ public class SignServiceImpl implements SignService {
 
 
     public Member save(SignUpRequestDto signUpRequestDto) {
-        LOGGER.info(modelMapper.toString());
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);
         savedMember.getRoles().add("USER");
