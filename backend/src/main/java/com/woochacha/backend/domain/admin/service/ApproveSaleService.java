@@ -5,6 +5,7 @@ import com.woochacha.backend.domain.admin.dto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Service;
 
 public interface ApproveSaleService {
     QueryResults<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable);

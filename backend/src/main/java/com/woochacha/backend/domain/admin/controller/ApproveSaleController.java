@@ -1,9 +1,6 @@
 package com.woochacha.backend.domain.admin.controller;
 
-import com.woochacha.backend.domain.admin.dto.ApproveSaleResponseDto;
-import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
-import com.woochacha.backend.domain.admin.dto.CompareRequestDto;
-import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
+import com.woochacha.backend.domain.admin.dto.*;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
@@ -14,7 +11,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -64,9 +62,18 @@ public class ApproveSaleController {
             return ResponseEntity.ok(true);
         }
     }
+
+    // 차량 게시글 등록을위한 폼 데이터를 QLDB에서 조회한다.
     @GetMapping("/register/{saleFormId}")
     public ResponseEntity<RegisterProductDto> registerProductInfo(@PathVariable("saleFormId") Long saleFormId){
         RegisterProductDto registerProductDto = registerProductService.getRegisterProductInfo(saleFormId);
         return ResponseEntity.ok(registerProductDto);
+    }
+
+    // 차량 게시글을 등록하는 Post요청
+    @PostMapping("/register/{saleFormId}")
+    public ResponseEntity<String> registerProduct(@PathVariable("saleFormId") Long saleFormId, @ModelAttribute RegisterInputDto registerInputDto) throws IOException, ParseException {
+        registerProductService.registerProduct(saleFormId, registerInputDto);
+        return ResponseEntity.ok("Success");
     }
 }

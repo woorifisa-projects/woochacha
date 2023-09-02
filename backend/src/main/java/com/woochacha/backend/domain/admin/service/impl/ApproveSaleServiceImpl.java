@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.admin.service;
+package com.woochacha.backend.domain.admin.service.impl;
 
 import com.amazon.ion.*;
 import com.amazon.ion.system.IonSystemBuilder;
