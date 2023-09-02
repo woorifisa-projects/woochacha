@@ -54,7 +54,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
     }
 
     @Override
-    public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException {
+    public String uploadProfile( AmazonS3RequestDto amazonS3RequestDto) throws IOException {
         String url = this.uploadToS3("/profile", amazonS3RequestDto.getEmail(), amazonS3RequestDto.getMultipartFile());
         this.saveProfileImageToDB(amazonS3RequestDto.getEmail(), url);
         return url;

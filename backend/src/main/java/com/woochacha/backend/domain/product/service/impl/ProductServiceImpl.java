@@ -24,6 +24,8 @@ import com.woochacha.backend.domain.product.service.ProductService;
 import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -244,7 +246,7 @@ public class ProductServiceImpl implements ProductService {
         BooleanExpression optionWhere = null;
 
         for (List<?> productOptionList : productFilterInfoList) { // 카테고리
-            if (productOptionList != null) {
+            if (productOptionList != null && !productOptionList.isEmpty()) {
                 optionWhere = null;
                 for (Object o : productOptionList) { // 카테고리 내 id 조건
                     optionWhere = addOrExpression(optionWhere, dynamicSearchFields(o, optionWhere));
