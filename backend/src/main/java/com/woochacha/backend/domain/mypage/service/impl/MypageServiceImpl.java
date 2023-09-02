@@ -133,5 +133,11 @@ public class MypageServiceImpl implements MypageService {
     public void updatePrice(Long productId, Integer updatePrice){
         mypageRepository.updatePrice(productId, updatePrice);
     }
+
+    // 등록한 매물 삭제 신청
+    @Transactional
+    public void productDeleteRequest(Long productId){
+        mypageRepository.requestProductDelete(productId);
+    }
 }
 
