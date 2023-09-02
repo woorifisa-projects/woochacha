@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.admin.service.impl;
 
+import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseMemberInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseFormListResponseDto;
 import com.woochacha.backend.domain.admin.service.ManageTransactionService;
 import com.woochacha.backend.domain.purchase.repository.PurchaseFormRepository;
@@ -22,7 +23,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
     private final PurchaseFormRepository purchaseFormRepository;
     private final TransactionRepository transactionRepository;
     @Override
-    public Page<PurchaseFormListResponseDto> findAllPurchaseFormInfo(Pageable pageable) {
+    public Page<PurchaseFormListResponseDto> getAllPurchaseFormInfo(Pageable pageable) {
         Page<Object[]> purchaseFormDataList = purchaseFormRepository.findAllPurchaseFormInfo(pageable);
         List<PurchaseFormListResponseDto> purchaseFormDtoList = new ArrayList<>();
 
@@ -44,5 +45,10 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
             purchaseFormDtoList.add(dto);
         }
         return new PageImpl<>(purchaseFormDtoList,pageable,purchaseFormDataList.getTotalElements());
+    }
+
+    @Override
+    public PurchaseMemberInfoResponseDto getPurchaseMemberInfo(Long purchaseId){
+        return purchaseFormRepository.findPurchaseMemberInfo(purchaseId);
     }
 }
