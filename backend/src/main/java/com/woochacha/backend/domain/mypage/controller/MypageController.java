@@ -94,4 +94,12 @@ public class MypageController {
         mypageService.updatePrice(productId, updatePriceDto.getUpdatePrice());
         return ResponseEntity.ok("가격 변경 요청이 완료되었습니다.");
     }
+
+    // 등록한 매물 삭제 요청
+    @PatchMapping("/registered/delete/{productId}")
+    private ResponseEntity<String> productDeleteRequest(@PathVariable Long productId){
+        mypageService.productDeleteRequest(productId);
+        return ResponseEntity.ok("삭제 신청이 완료되었습니다.");
+    }
+
 }
