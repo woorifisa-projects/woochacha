@@ -3,7 +3,7 @@ package com.woochacha.backend.domain.admin.controller;
 import com.woochacha.backend.domain.admin.dto.approve.ApproveSaleResponseDto;
 import com.woochacha.backend.domain.admin.dto.approve.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.approve.CompareRequestDto;
-import com.woochacha.backend.domain.admin.dto.approve.RegisterProductDto;
+import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
 import com.woochacha.backend.domain.admin.dto.*;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.admin.service.RegisterProductService;
