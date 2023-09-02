@@ -30,9 +30,6 @@ public class Member implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ColumnDefault("0")
-    private Byte role;
-
     @NotNull
     private String email;
 
