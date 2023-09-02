@@ -12,15 +12,22 @@ import com.woochacha.backend.domain.car.info.entity.QCarExchangeInfo;
 import com.woochacha.backend.domain.car.info.entity.QExchangeType;
 import com.woochacha.backend.domain.car.type.dto.*;
 import com.woochacha.backend.domain.car.type.entity.*;
+import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.entity.QMember;
+import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
+import com.woochacha.backend.domain.product.dto.ProductPurchaseRequestDto;
 import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.dto.detail.*;
 import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
+import com.woochacha.backend.domain.product.entity.Product;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import com.woochacha.backend.domain.product.entity.QProduct;
+import com.woochacha.backend.domain.product.repository.ProductRepository;
 import com.woochacha.backend.domain.product.service.ProductService;
+import com.woochacha.backend.domain.purchase.entity.PurchaseForm;
+import com.woochacha.backend.domain.purchase.repository.PurchaseFormRepository;
 import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
@@ -33,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+//@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
     private final JPAQueryFactory queryFactory;
@@ -53,9 +61,15 @@ public class ProductServiceImpl implements ProductService {
     private final QCarExchangeInfo ce = QCarExchangeInfo.carExchangeInfo;
     private final QCarOption co = QCarOption.carOption;
     private final QMember m = QMember.member;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
+    private final PurchaseFormRepository purchaseFormRepository;
 
-    public ProductServiceImpl(JPAQueryFactory queryFactory) {
+    public ProductServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, ProductRepository productRepository, PurchaseFormRepository purchaseFormRepository) {
         this.queryFactory = queryFactory;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
+        this.purchaseFormRepository = purchaseFormRepository;
     }
 
     /*
@@ -160,6 +174,8 @@ public class ProductServiceImpl implements ProductService {
                 .where(p.id.eq(productId))
                 .fetchOne();
     }
+
+    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private ProductDetailInfo getProductDetailInfo(String carNum) {
         return queryFactory
@@ -276,31 +292,31 @@ public class ProductServiceImpl implements ProductService {
         String className = classNamePath[classNamePath.length - 1];
 
         switch (className) {
-            case "TypeDto" :
+            case "TypeDto":
                 TypeDto typeDto = new TypeDto(((TypeDto) o).getId());
                 optionExpression = p.carDetail.type.id.eq(typeDto.getId());
                 break;
-            case "ModelDto" :
+            case "ModelDto":
                 ModelDto modelDto = new ModelDto(((ModelDto) o).getId());
                 optionExpression = p.carDetail.model.id.eq(modelDto.getId());
                 break;
-            case "FuelDto" :
+            case "FuelDto":
                 FuelDto fuelDto = new FuelDto(((FuelDto) o).getId());
                 optionExpression = p.carDetail.fuel.id.eq(fuelDto.getId());
                 break;
-            case "ColorDto" :
+            case "ColorDto":
                 ColorDto colorDto = new ColorDto(((ColorDto) o).getId());
                 optionExpression = p.carDetail.color.id.eq(colorDto.getId());
                 break;
-            case "TransmissionDto" :
+            case "TransmissionDto":
                 TransmissionDto transmissionDto = new TransmissionDto(((TransmissionDto) o).getId());
                 optionExpression = p.carDetail.transmission.id.eq(transmissionDto.getId());
                 break;
-            case "CarNameDto" :
+            case "CarNameDto":
                 CarNameDto carNameDto = new CarNameDto(((CarNameDto) o).getId());
                 optionExpression = p.carDetail.carName.id.eq(carNameDto.getId());
                 break;
-            case "BranchDto" :
+            case "BranchDto":
                 BranchDto branchDto = new BranchDto(((BranchDto) o).getId());
                 optionExpression = sf.branch.id.eq(branchDto.getId());
                 break;
@@ -316,15 +332,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
+    public void applyPurchaseForm(ProductPurchaseRequestDto productPurchaseRequestDto) {
+        Member member = memberRepository.findById(productPurchaseRequestDto.getMemberId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
+        Product product = productRepository.findById(productPurchaseRequestDto.getProductId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
+        PurchaseForm purchaseForm = PurchaseForm.builder().member(member).product(product).build();
+        purchaseFormRepository.save(purchaseForm);
+    }
+
     public List<ProductInfo> findSearchedProduct(String keyword) {
         BooleanExpression expression = dynamicSearchWholeModelKeyword(keyword); // 모델명 검색 동적 쿼리 생성
         List<ProductInfo> keywordSearchedByModelName = findProductInfoList(expression); // 모델명 동적 쿼리 실행
 
         // 모델명 검색 결과가 없으면 차량명 검색 동작
-        if(keywordSearchedByModelName.isEmpty())
+        if (keywordSearchedByModelName.isEmpty())
             return findProductInfoList(dynamicSearchPartKeyword(keyword));
 
-        // 모델명 검색 결과가 있다면 모델명 검색 결과 리턴
+            // 모델명 검색 결과가 있다면 모델명 검색 결과 리턴
         else
             return keywordSearchedByModelName;
     }
@@ -333,7 +357,7 @@ public class ProductServiceImpl implements ProductService {
         BooleanExpression expression = null;
         String[] keywordSplitToSpace = keyword.split(" ");
 
-        for(String eachKeyword : keywordSplitToSpace) {
+        for (String eachKeyword : keywordSplitToSpace) {
             BooleanExpression eachKeyWordModelName = cd.model.name.stringValue().eq(String.valueOf(eachKeyword));
             expression = addOrExpression(expression, eachKeyWordModelName);
         }
@@ -345,7 +369,7 @@ public class ProductServiceImpl implements ProductService {
         String removeKeywordSpace = keyword.replaceAll(" ", ""); // 입력 값 공백 제거
         char[] eachKeyWordArray = removeKeywordSpace.toCharArray(); // 입력 값의 각 문자를 배열로 저장
 
-        for(char eachKeyWord : eachKeyWordArray) { // 각 문자를 순회하며 문자마다 쿼리 조건절을 추가
+        for (char eachKeyWord : eachKeyWordArray) { // 각 문자를 순회하며 문자마다 쿼리 조건절을 추가
             BooleanExpression eachKeyWordModel = cd.model.name.stringValue().contains(String.valueOf(eachKeyWord));
             expression = addOrExpression(expression, eachKeyWordModel);
 

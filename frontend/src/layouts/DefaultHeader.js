@@ -18,6 +18,7 @@ import ProfileAppbar from '@/components/common/ProfileAppbar';
 
 import { useRecoilValue } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import AdminMenuAppbar from '@/components/admin/AdminMenuAppbar';
 
 function DefaultHeader() {
   const userLoggedIn = useRecoilValue(userLoggedInState);
@@ -115,6 +116,9 @@ function DefaultHeader() {
 
               {/* mini-menu app bar compo */}
               {userLoggedIn ? <MenuAppbar size="0" /> : ''}
+
+              {/* TODO: login - admin 처리 이후 리팩토링 */}
+              {userLoggedIn ? <AdminMenuAppbar size="0" /> : ''}
             </Menu>
           </Box>
           <Typography variant="h5" noWrap component="a" href="/" sx={defaultHeaderCss.xsHeaderLogo}>
@@ -131,6 +135,9 @@ function DefaultHeader() {
             ))}
             {/* mini-menu app bar compo */}
             {userLoggedIn ? <MenuAppbar size="2" /> : ''}
+
+            {/* TODO: login - admin 처리 이후 리팩토링 */}
+            {userLoggedIn ? <AdminMenuAppbar size="2" /> : ''}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

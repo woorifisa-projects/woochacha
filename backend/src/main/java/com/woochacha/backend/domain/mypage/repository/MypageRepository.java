@@ -108,7 +108,6 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
     EditProductDto getProductEditRequestInfo(@Param("memberId") Long memberId, @Param("productId") Long productId);
 
     // 상품 수정 신청시 수정 가격 저장, status 변경
-    @Modifying
     @Query("UPDATE Product p SET p.updatePrice = :updatePrice, p.status = 9 WHERE p.id = :productId")
     void updatePrice(@Param("productId") Long productId, @Param("updatePrice") Integer updatePrice);
 }
