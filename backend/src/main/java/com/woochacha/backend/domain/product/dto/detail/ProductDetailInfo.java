@@ -1,11 +1,13 @@
 package com.woochacha.backend.domain.product.dto.detail;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
 public class ProductDetailInfo {
     private short capacity; // 승자 정원
 

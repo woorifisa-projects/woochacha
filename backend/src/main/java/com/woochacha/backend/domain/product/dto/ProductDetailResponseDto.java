@@ -27,6 +27,4 @@ public class ProductDetailResponseDto {
         this.productOwnerInfo = productOwnerInfo;
         this.carImageList = carImageList;
     }
-
-
 }

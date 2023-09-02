@@ -1,6 +1,5 @@
 package com.woochacha.backend.domain.qldb.service;
 
-import com.woochacha.backend.domain.admin.dto.CarInspectionInfoResponseDto;
 import org.springframework.data.util.Pair;
 
 public interface QldbService {

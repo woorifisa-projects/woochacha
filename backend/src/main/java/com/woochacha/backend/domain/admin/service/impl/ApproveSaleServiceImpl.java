@@ -6,7 +6,10 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.config.QldbConfig;
-import com.woochacha.backend.domain.admin.dto.*;
+import com.woochacha.backend.domain.admin.dto.approve.ApproveSaleResponseDto;
+import com.woochacha.backend.domain.admin.dto.approve.CarAccidentInfoDto;
+import com.woochacha.backend.domain.admin.dto.approve.CarExchangeInfoDto;
+import com.woochacha.backend.domain.admin.dto.approve.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
@@ -38,7 +41,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     public QueryResults<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable) {
         QSaleForm sf = QSaleForm.saleForm;
 
-        QueryResults<ApproveSaleResponseDto> results = jpaQueryFactory
+        return jpaQueryFactory
                 .select(Projections.fields(ApproveSaleResponseDto.class,
                         sf.member.name.as("name"),
                         sf.carNum,
@@ -50,7 +53,6 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
-        return results;
     }
 
     // qldb에서 차량 번호에 따른 필요한 차량 정보를 가지고 온다.
