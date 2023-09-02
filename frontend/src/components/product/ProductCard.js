@@ -11,7 +11,8 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 
-export default function ProductCard({ cardItems }) {
+export default function ProductCard(props) {
+  const { productItems } = props;
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const productCardCss = {
@@ -26,7 +27,7 @@ export default function ProductCard({ cardItems }) {
         transform: 'scale(1.03)',
       },
     },
-    cardMedia: { pt: '100%' },
+    cardMedia: { pt: '56.25%' },
     cardContent: { flexGrow: 1 },
   };
 
@@ -36,25 +37,24 @@ export default function ProductCard({ cardItems }) {
   }, []);
 
   const handleMoveDetail = (url) => {
-    router.push(url);
+    router.push(`/product/detail/${url}`);
   };
 
   return (
     mounted && (
-      <Grid container spacing={3}>
-        {cardItems.map((item) => (
+      <>
+        {productItems.map((item) => (
           <Grid item key={item.id} xs={12} sm={6} md={3}>
-            <Card sx={productCardCss.card} onClick={() => handleMoveDetail(item.productUrl)}>
-              <CardMedia component="div" sx={productCardCss.cardMedia} image={item.productImgUrl} />
+            <Card sx={productCardCss.card} onClick={() => handleMoveDetail(item.id)}>
+              <CardMedia component="div" sx={productCardCss.cardMedia} image={item.imageUrl} />
               <CardContent sx={productCardCss.cardContent}>
-                <Typography gutterBottom variant="h5" component="h5">
-                  {item.carName}
+                <Typography gutterBottom variant="h6" component="h6">
+                  {item.title}
                 </Typography>
                 <Grid container my={1} gap={1}>
-                  <Chip variant="outlined" label={`${item.price} 만원`} />
-                  <Chip variant="outlined" label={`${item.createdDate}`} />
-                  <Chip variant="outlined" label={`${item.distance} km`} />
-                  <Chip variant="outlined" label={`${item.carWhere} 차고지`} />
+                  <Chip size="small" label={`${item.distance} km`} />
+                  <Chip size="small" label={`${item.price} 만원`} />
+                  <Chip size="small" label={`${item.branch}`} />
                 </Grid>
               </CardContent>
               <CardActions>
@@ -63,7 +63,7 @@ export default function ProductCard({ cardItems }) {
             </Card>
           </Grid>
         ))}
-      </Grid>
+      </>
     )
   );
 }

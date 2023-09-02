@@ -254,7 +254,7 @@ public class ProductServiceImpl implements ProductService {
         BooleanExpression optionWhere = null;
 
         for (List<?> productOptionList : productFilterInfoList) { // 카테고리
-            if (productOptionList != null) {
+            if (productOptionList != null && !productOptionList.isEmpty()) {
                 optionWhere = null;
                 for (Object o : productOptionList) { // 카테고리 내 id 조건
                     optionWhere = addOrExpression(optionWhere, dynamicSearchFields(o, optionWhere));
