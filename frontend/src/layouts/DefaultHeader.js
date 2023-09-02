@@ -21,7 +21,7 @@ import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import AdminMenuAppbar from '@/components/admin/AdminMenuAppbar';
 
 function DefaultHeader() {
-  const userLoggedIn = useRecoilValue(userLoggedInState);
+  const userLoginState = useRecoilValue(userLoggedInState);
   const router = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -115,10 +115,15 @@ function DefaultHeader() {
               ))}
 
               {/* mini-menu app bar compo */}
-              {userLoggedIn ? <MenuAppbar size="0" /> : ''}
-
-              {/* TODO: login - admin 처리 이후 리팩토링 */}
-              {userLoggedIn ? <AdminMenuAppbar size="0" /> : ''}
+              {userLoginState.loginStatus ? (
+                userLoginState.userName === '관리자' ? (
+                  <AdminMenuAppbar size="0" />
+                ) : (
+                  <MenuAppbar size="0" />
+                )
+              ) : (
+                ''
+              )}
             </Menu>
           </Box>
           <Typography variant="h5" noWrap component="a" href="/" sx={defaultHeaderCss.xsHeaderLogo}>
@@ -133,11 +138,17 @@ function DefaultHeader() {
                 {page.pageName}
               </MenuItem>
             ))}
-            {/* mini-menu app bar compo */}
-            {userLoggedIn ? <MenuAppbar size="2" /> : ''}
 
-            {/* TODO: login - admin 처리 이후 리팩토링 */}
-            {userLoggedIn ? <AdminMenuAppbar size="2" /> : ''}
+            {/* mini-menu app bar compo */}
+            {userLoginState.loginStatus ? (
+              userLoginState.userName === '관리자' ? (
+                <AdminMenuAppbar size="2" />
+              ) : (
+                <MenuAppbar size="2" />
+              )
+            ) : (
+              ''
+            )}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

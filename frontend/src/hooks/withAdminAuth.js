@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 
-const withAuth = (WrappedComponent) => {
+const withAdminAuth = (WrappedComponent) => {
   return (props) => {
     // 클라이언트(브라우저) 또는 서버에 있는지 확인
     if (typeof window !== 'undefined') {
@@ -17,10 +17,13 @@ const withAuth = (WrappedComponent) => {
         return null;
       }
 
-      // TODO: 토큰은 있는데, 검증이 안된 경우, 로컬 스토리지 삭제 후, 로그인 페이지로 이동
-      // authInstance
+      // TODO: 관리자가 아닌 사람이 접근하는 경우
+      if (loginToken && !userLoginState.userName === '관리자') {
+        Router.replace('/');
+        return null;
+      }
 
-      // 토큰 O 경우
+      // 토큰 O 경우 & 관리자인 경우
       return <WrappedComponent {...props} />;
     }
 
@@ -29,4 +32,4 @@ const withAuth = (WrappedComponent) => {
   };
 };
 
-export default withAuth;
+export default withAdminAuth;
