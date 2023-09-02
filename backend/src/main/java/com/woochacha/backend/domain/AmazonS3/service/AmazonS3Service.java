@@ -2,7 +2,7 @@ package com.woochacha.backend.domain.AmazonS3.service;
 
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3ProductRequestDto;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
-import org.springframework.web.multipart.MultipartFile;
+import com.woochacha.backend.domain.admin.dto.RegisterInputDto;
 
 import java.io.IOException;
 
@@ -11,4 +11,9 @@ public interface AmazonS3Service {
 
     public boolean uploadProductImage(AmazonS3ProductRequestDto amazonS3ProductRequestDto) throws IOException;
     public String removeFile(Long id) throws IOException;
+
+    // 매물 등록시 차량 이미지, 가격을 저장할 DTO
+    public boolean uploadProductImage(RegisterInputDto registerInputDto) throws IOException;
+
+
 }
