@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { checkFormValidate, handleSignupBlur } from '@/hooks/useChecks';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
-import { userInfoState, userLoggedInState } from '@/atoms/userInfoAtoms';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { signupApi } from '@/services/authApi';
 
 import {
@@ -22,8 +22,8 @@ import {
 import theme from '@/styles/theme';
 
 export default function SignupForm() {
-  const [loginToken, setLoginToken] = useRecoilState(userLoggedInState);
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+  // const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const router = useRouter();
 
   const [clickSubmit, setClickSubmit] = useState(true);
@@ -64,7 +64,7 @@ export default function SignupForm() {
   useEffect(() => {
     if (!Object.values(formValid).includes(true) && !Object.values(signupData).includes('')) {
       console.log(signupData);
-      signupApi(signupData, setLoginToken, setUserInfo, router);
+      signupApi(signupData, setUserLoginState, router);
     }
   }, [clickSubmit]);
 
