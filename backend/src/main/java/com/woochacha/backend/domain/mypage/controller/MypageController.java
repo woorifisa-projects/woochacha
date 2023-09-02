@@ -1,12 +1,17 @@
 package com.woochacha.backend.domain.mypage.controller;
 
+import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
+import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +19,7 @@ import javax.validation.Valid;
 public class MypageController {
 
     private final MypageServiceImpl mypageService;
+    private final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     /*
     마이페이지 - 등록한 매물 조회
@@ -85,7 +91,7 @@ public class MypageController {
 
     // 상품 수정 신청폼 제출
     @PatchMapping("/registered/edit")
-    private ResponseEntity<String> patchProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId,
+    private ResponseEntity<String> editProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId,
                                                         @RequestBody @Valid UpdatePriceDto updatePriceDto){
         EditProductDto editProductDto = mypageService.getProductEditRequestInfo(memberId, productId);
         if (updatePriceDto.getUpdatePrice() > editProductDto.getPrice()) {
@@ -93,5 +99,12 @@ public class MypageController {
         }
         mypageService.updatePrice(productId, updatePriceDto.getUpdatePrice());
         return ResponseEntity.ok("가격 변경 요청이 완료되었습니다.");
+    }
+
+    // 프로필 이미지 수정
+    @PatchMapping("/profile/edit/{memberId}")
+    private ResponseEntity<String> editProfile(@PathVariable("memberId") Long memberId, @ModelAttribute AmazonS3RequestDto amazonS3RequestDto ) throws IOException {
+        String newProfileImage = mypageService.editProfile(memberId, amazonS3RequestDto);
+        return ResponseEntity.ok("프로필 수정이 완료되었습니다.");
     }
 }
