@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.admin.controller;
 
+import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseDateRequestDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseMemberInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseFormListResponseDto;
 import com.woochacha.backend.domain.admin.service.ManageTransactionService;
@@ -24,5 +25,9 @@ public class ManageTransactionController {
     @GetMapping("/{purchaseId}")
     public ResponseEntity<PurchaseMemberInfoResponseDto> matchPurchaseInfo(@PathVariable Long purchaseId){
         return ResponseEntity.ok(manageTransactionService.getPurchaseMemberInfo(purchaseId));
+    }
+    @PatchMapping ("/{purchaseId}")
+    public ResponseEntity<String> matchPurchaseDate(@PathVariable Long purchaseId, @RequestBody PurchaseDateRequestDto purchaseDateRequestDto){
+        return ResponseEntity.ok(manageTransactionService.matchPurchaseDate(purchaseId, purchaseDateRequestDto));
     }
 }

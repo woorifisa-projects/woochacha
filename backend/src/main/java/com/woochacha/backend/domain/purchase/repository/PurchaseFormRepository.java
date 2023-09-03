@@ -5,9 +5,13 @@ import com.woochacha.backend.domain.purchase.entity.PurchaseForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 
 
 @Repository
@@ -28,4 +32,16 @@ public interface PurchaseFormRepository extends JpaRepository<PurchaseForm, Long
             "JOIN sf.member m " +
             "WHERE pf.id = :purchaseId")
     PurchaseMemberInfoResponseDto findPurchaseMemberInfo(@Param("purchaseId") Long purchaseId);
+
+
+    @Modifying
+    @Query("UPDATE PurchaseForm AS pf SET pf.meetingDate = :meetingDate, pf.status = 0 WHERE pf.id = :purchaseFormId")
+    void updatePurchaseDateANDStatus(@Param("purchaseFormId") Long purchaseFormId, @Param("meetingDate") LocalDate meetingDate);
+
+    @Query("SELECT pf.product.saleForm.id " +
+            "FROM PurchaseForm pf " +
+            "JOIN pf.product p " +
+            "JOIN p.saleForm sf " +
+            "WHERE pf.id = :purchaseId")
+    Long getSaleFormId(@Param("purchaseId") Long purchaseId);
 }

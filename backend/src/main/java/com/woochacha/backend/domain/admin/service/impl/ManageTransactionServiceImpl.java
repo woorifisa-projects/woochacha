@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.admin.service.impl;
 
+import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseDateRequestDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseMemberInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseFormListResponseDto;
 import com.woochacha.backend.domain.admin.service.ManageTransactionService;
@@ -50,5 +51,15 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
     @Override
     public PurchaseMemberInfoResponseDto getPurchaseMemberInfo(Long purchaseId){
         return purchaseFormRepository.findPurchaseMemberInfo(purchaseId);
+    }
+
+
+    @Override
+    @Transactional
+    public String matchPurchaseDate(Long purchaseId, PurchaseDateRequestDto purchaseDateRequestDto){
+        purchaseFormRepository.updatePurchaseDateANDStatus(purchaseId, purchaseDateRequestDto.getMeetingDate());
+        Long saleFormId = purchaseFormRepository.getSaleFormId(purchaseId);
+        transactionRepository.insertTransaction(saleFormId,purchaseId);
+        return "날짜 매칭에 성공하였습니다.";
     }
 }
