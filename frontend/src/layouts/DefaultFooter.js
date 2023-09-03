@@ -14,14 +14,20 @@ import {
 import theme from '@/styles/theme';
 import CopyRight from '@/components/common/CopyRight';
 import { HEADER_MINI_MENU, HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
+import { useEffect, useState } from 'react';
 
 export default function DefaultFooter() {
+  const [mounted, setMouted] = useState(false);
   const router = useRouter();
   const userLoginState = useRecoilValue(userLoggedInState);
 
   const handleMovePage = (url) => {
     router.push(url);
   };
+
+  useEffect(() => {
+    setMouted(true);
+  }, []);
 
   const defaultFooter = {
     footerBox: {
@@ -56,66 +62,68 @@ export default function DefaultFooter() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box component="footer" sx={defaultFooter.footerBox}>
-        <Grid container spacing={4} columns={16} mb={5}>
-          <Grid item xs={4}>
-            <Grid sx={defaultFooter.gridItems}>
-              <Typography
-                sx={defaultFooter.listItemText}
-                onClick={() => handleMovePage('/products')}>
-                구매
-              </Typography>
+    mounted && (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box component="footer" sx={defaultFooter.footerBox}>
+          <Grid container spacing={4} columns={16} mb={5}>
+            <Grid item xs={4}>
+              <Grid sx={defaultFooter.gridItems}>
+                <Typography
+                  sx={defaultFooter.listItemText}
+                  onClick={() => handleMovePage('/products')}>
+                  구매
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+              <Grid sx={defaultFooter.gridItems}>
+                <Typography sx={defaultFooter.listItemText}>판매</Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+              <Grid sx={defaultFooter.gridItems}>
+                <Typography
+                  sx={defaultFooter.listItemText}
+                  onClick={() => handleMovePage('/capitals')}>
+                  대출
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={4}>
+              <Grid sx={defaultFooter.gridItems}>
+                <Typography>마이페이지</Typography>
+                {userLoginState.loginStatus && userLoginState.userName !== '관리자'
+                  ? HEADER_MINI_MENU.CONTENTS.map((menuItem, idx) => {
+                      return (
+                        <ListItem key={idx} sx={defaultFooter.listItem}>
+                          <ListItemText
+                            sx={defaultFooter.listItemText}
+                            primary={menuItem.pageName}
+                            onClick={() => handleMovePage(menuItem.pageUrl)}
+                          />
+                        </ListItem>
+                      );
+                    })
+                  : HEADER_UNLOGIN_USER_MENU.CONTENTS.map((menuItem, idx) => {
+                      return (
+                        <ListItem key={idx} sx={defaultFooter.listItem}>
+                          <ListItemText
+                            sx={defaultFooter.listItemText}
+                            primary={menuItem.pageName}
+                            onClick={() => handleMovePage(menuItem.pageUrl)}
+                          />
+                        </ListItem>
+                      );
+                    })}
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <Grid sx={defaultFooter.gridItems}>
-              <Typography sx={defaultFooter.listItemText}>판매</Typography>
-            </Grid>
+          <Grid sx={defaultFooter.gridItems}>
+            <CopyRight />
           </Grid>
-          <Grid item xs={4}>
-            <Grid sx={defaultFooter.gridItems}>
-              <Typography
-                sx={defaultFooter.listItemText}
-                onClick={() => handleMovePage('/capitals')}>
-                대출
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={4}>
-            <Grid sx={defaultFooter.gridItems}>
-              <Typography>마이페이지</Typography>
-              {userLoginState.loginStatus && userLoginState.userName !== '관리자'
-                ? HEADER_MINI_MENU.CONTENTS.map((menuItem, idx) => {
-                    return (
-                      <ListItem key={idx} sx={defaultFooter.listItem}>
-                        <ListItemText
-                          sx={defaultFooter.listItemText}
-                          primary={menuItem.pageName}
-                          onClick={() => handleMovePage(menuItem.pageUrl)}
-                        />
-                      </ListItem>
-                    );
-                  })
-                : HEADER_UNLOGIN_USER_MENU.CONTENTS.map((menuItem, idx) => {
-                    return (
-                      <ListItem key={idx} sx={defaultFooter.listItem}>
-                        <ListItemText
-                          sx={defaultFooter.listItemText}
-                          primary={menuItem.pageName}
-                          onClick={() => handleMovePage(menuItem.pageUrl)}
-                        />
-                      </ListItem>
-                    );
-                  })}
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid sx={defaultFooter.gridItems}>
-          <CopyRight />
-        </Grid>
-      </Box>
-    </ThemeProvider>
+        </Box>
+      </ThemeProvider>
+    )
   );
 }
