@@ -9,6 +9,7 @@ import lombok.Getter;
 
 import java.util.List;
 
+// 매물 등록 전 QLDB에서 데이터를 조회하기 위한 Dto
 @Getter
 @Builder
 public class RegisterProductDto {

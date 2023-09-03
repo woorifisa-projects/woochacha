@@ -4,6 +4,7 @@ import com.woochacha.backend.domain.car.detail.entity.CarDetail;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.status.entity.CarStatus;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Getter
 @DynamicInsert
+@Builder
 @Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 게시글 정보 관리 엔티티
@@ -50,4 +52,16 @@ public class Product {
 
     @OneToMany(mappedBy = "product") // carImage 엔티티와의 양방향 관계 설정
     private List<CarImage> carImages = new ArrayList<>();
+
+    public Product(Long id, SaleForm saleForm, Integer price, LocalDateTime createdAt, LocalDateTime updatedAt, CarStatus status, CarDetail carDetail, Integer updatePrice, List<CarImage> carImages) {
+        this.id = id;
+        this.saleForm = saleForm;
+        this.price = price;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.status = status;
+        this.carDetail = carDetail;
+        this.updatePrice = updatePrice;
+        this.carImages = carImages;
+    }
 }
