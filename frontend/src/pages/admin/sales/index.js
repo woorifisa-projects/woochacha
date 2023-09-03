@@ -1,11 +1,32 @@
 import { useEffect, useState } from 'react';
-import withAuth from '@/hooks/withAuth';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Typography } from '@mui/material';
-import BasicTable from '@/components/common/BasicTable';
+import withAdminAuth from '@/hooks/withAdminAuth';
+import { useRouter } from 'next/router';
+import { ADMIN_DENY_MODAL } from '@/constants/string';
+import SaleTable from '@/components/admin/SaleTable';
+import BasicModal from '@/components/common/BasicModal';
 
 function AdminSalesList() {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+
+  // Modal 버튼 클릭 유무
+  const [showModal, setShowModal] = useState(false);
+  const handleClickModal = () => setShowModal(!showModal);
+
+  /**
+   * 수정 form 제출
+   */
+  const handleDeny = async () => {
+    try {
+      // await adminDeleteProduct(memberId, productId, updateData);
+      alert('반려 완료');
+      router.push(`/admin/sales`);
+    } catch (error) {
+      console.log('실패');
+    }
+  };
 
   const mypageCss = {
     mypageTitle: {
@@ -17,20 +38,24 @@ function AdminSalesList() {
 
   const table_cell_data = [
     {
-      headerLabel: '이메일',
-      contentCell: 'email',
+      headerLabel: '판매요청자',
+      contentCell: 'seller',
     },
     {
-      headerLabel: '이름',
-      contentCell: 'name',
+      headerLabel: '차량번호',
+      contentCell: 'carNum',
     },
     {
-      headerLabel: '전화번호',
-      contentCell: 'phone',
+      headerLabel: '차고지',
+      contentCell: 'branch',
     },
     {
       headerLabel: '상태',
-      contentCell: 'isAvailable',
+      contentCell: 'status',
+    },
+    {
+      headerLabel: '등록여부',
+      contentCell: 'isApproved',
     },
   ];
 
@@ -38,25 +63,25 @@ function AdminSalesList() {
   const dummy_content_data = {
     content: [
       {
-        id: 'aaa',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
+        seller: '홍속초',
+        carNum: '11가1234',
+        branch: '서울',
+        status: '상태?내용',
+        isApproved: 1,
       },
       {
-        id: 'aaa',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
+        seller: '김속초',
+        carNum: '11가1234',
+        branch: '서울',
+        status: '상태?내용',
+        isApproved: 0,
       },
       {
-        id: 'aaa',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
+        seller: '박속초',
+        carNum: '11가1234',
+        branch: '서울',
+        status: '상태?내용',
+        isApproved: 1,
       },
     ],
   };
@@ -72,12 +97,25 @@ function AdminSalesList() {
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           관리자 페이지 - 판매 신청 리스트
         </Typography>
-        <BasicTable headerData={table_cell_data} contentData={dummy_content_data.content} />
+        <SaleTable
+          headerData={table_cell_data}
+          contentData={dummy_content_data.content}
+          moveUrl={`/admin/sales/approve/`}
+          callbackFunc={handleClickModal}
+        />
+        {showModal && (
+          <BasicModal
+            onClickModal={handleClickModal}
+            isOpen={showModal}
+            modalContent={ADMIN_DENY_MODAL.CONTENTS}
+            callBackFunc={handleDeny}
+          />
+        )}
       </>
     )
   );
 }
 
 // side menu 레이아웃
-AdminSalesList.Layout = withAuth(AdminPageLayout);
+AdminSalesList.Layout = withAdminAuth(AdminPageLayout);
 export default AdminSalesList;

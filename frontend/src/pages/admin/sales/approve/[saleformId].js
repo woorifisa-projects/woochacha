@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import withAuth from '@/hooks/withAuth';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Typography } from '@mui/material';
+import withAdminAuth from '@/hooks/withAdminAuth';
 
 function AdminSalesApproveForm() {
   const [mounted, setMounted] = useState(false);
@@ -31,5 +31,5 @@ function AdminSalesApproveForm() {
 }
 
 // side menu 레이아웃
-AdminSalesApproveForm.Layout = withAuth(AdminPageLayout);
+AdminSalesApproveForm.Layout = withAdminAuth(AdminPageLayout);
 export default AdminSalesApproveForm;

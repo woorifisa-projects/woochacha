@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import withAuth from '@/hooks/withAuth';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Typography } from '@mui/material';
-import BasicTable from '@/components/common/BasicTable';
+import withAdminAuth from '@/hooks/withAdminAuth';
+import BasicTable from '@/components/admin/MemberTable';
 
 function AdminUserList() {
   const [mounted, setMounted] = useState(false);
@@ -38,21 +38,21 @@ function AdminUserList() {
   const dummy_content_data = {
     content: [
       {
-        id: 'aaa',
+        id: '1',
         email: 'aaa@naver.com',
         name: '김김김',
         phone: '01011113333',
         isAvailable: 1,
       },
       {
-        id: 'aaa',
+        id: '2',
         email: 'aaa@naver.com',
         name: '김김김',
         phone: '01011113333',
         isAvailable: 1,
       },
       {
-        id: 'aaa',
+        id: '3',
         email: 'aaa@naver.com',
         name: '김김김',
         phone: '01011113333',
@@ -72,12 +72,16 @@ function AdminUserList() {
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           관리자 페이지 - 유저 리스트
         </Typography>
-        <BasicTable headerData={table_cell_data} contentData={dummy_content_data.content} />
+        <BasicTable
+          headerData={table_cell_data}
+          contentData={dummy_content_data.content}
+          moveUrl={`/admin/members/`}
+        />
       </>
     )
   );
 }
 
 // side menu 레이아웃
-AdminUserList.Layout = withAuth(AdminPageLayout);
+AdminUserList.Layout = withAdminAuth(AdminPageLayout);
 export default AdminUserList;
