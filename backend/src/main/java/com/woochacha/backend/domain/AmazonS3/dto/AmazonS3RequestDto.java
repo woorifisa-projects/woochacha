@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@Setter
 public class AmazonS3RequestDto {
     MultipartFile multipartFile;
     String email;

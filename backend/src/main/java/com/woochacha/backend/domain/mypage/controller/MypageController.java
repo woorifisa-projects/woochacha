@@ -1,17 +1,14 @@
 package com.woochacha.backend.domain.mypage.controller;
 
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
-import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +16,6 @@ import java.util.logging.Logger;
 public class MypageController {
 
     private final MypageServiceImpl mypageService;
-    private final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     /*
     마이페이지 - 등록한 매물 조회
