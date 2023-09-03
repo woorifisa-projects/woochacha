@@ -84,7 +84,6 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
             for (MultipartFile multipartFile : multipartFileList) {
                 String url = this.uploadToS3("/product/" + carNum, String.valueOf(++count), multipartFile);
-                LOGGER.info("[url] : " + url);
                 this.saveProductImageToDB(productId, url);
             }
             return true;
@@ -169,18 +168,16 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 //    @Query(value = "insert into car_image (product_id, image_url) values (:productId, :url)", nativeQuery = true)
 //    public void saveProductImageToDB(@Param("product_id") Long productId, @Param("url") String url) {
     public void saveProductImageToDB(Long productId, String url) {
-        LOGGER.info("[in saveProductImageToDB]");
+        Product product = productRepository.getReferenceById(productId);
 
-            Product product = productRepository.getReferenceById(productId);
+        CarImage carImage = CarImage.builder()
+                .product(product)
+                .imageUrl(url)
+                .build();
 
-            CarImage carImage =  CarImage.builder()
-                    .product(product)
-                    .imageUrl(url)
-                    .build();
+        carImageRepository.save(carImage);
 
-            carImageRepository.save(carImage);
-
-            // [QueryDSL]
+        // [QueryDSL]
 
 //            queryFactory
 //                    .insert(QCarImage.carImage)

@@ -52,3 +52,15 @@ export const productDetailGetApi = async (productId) => {
     throw error;
   }
 };
+
+export const purchaseRequest = async (purchaseForm) => {
+  // userId,
+  try {
+    const response = await jsonInstance.post(`/product/purchase`, purchaseForm);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};

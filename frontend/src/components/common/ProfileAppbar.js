@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
@@ -8,8 +8,8 @@ import LocalStorage from '@/utils/localStorage';
 
 export default function ProfileAppbar() {
   const router = useRouter();
-  const [userLoggedIn, setUserLoggedIn] = useRecoilState(userLoggedInState);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const profileAppbarCss = {
     btnColor: {
       backgroundColor: '#000',
@@ -30,7 +30,11 @@ export default function ProfileAppbar() {
   const handleCloseMiniMenu = (url) => {
     if (url.includes('logout')) {
       LocalStorage.removeItem('loginToken');
-      setUserLoggedIn(false);
+      setUserLoginState({
+        loginStatus: false,
+        userId: null,
+        userName: null,
+      });
 
       // TODO: 로그아웃 modal 처리
       alert('로그아웃 완료!');
@@ -44,8 +48,8 @@ export default function ProfileAppbar() {
 
   return (
     <>
-      {userLoggedIn ? (
-        <Tooltip title="홍길동님">
+      {userLoginState.loginStatus ? (
+        <Tooltip title={userLoginState.userName}>
           <Button onClick={handleOpenUserMenu} variant="contained" sx={profileAppbarCss.btnColor}>
             로그아웃
           </Button>
@@ -73,7 +77,7 @@ export default function ProfileAppbar() {
         }}
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}>
-        {userLoggedIn
+        {userLoginState.loginStatus
           ? HEADER_LOGIN_USER_MENU.CONTENTS.map((userMenu) => (
               <MenuItem
                 key={userMenu.pageName}

@@ -7,6 +7,7 @@ import com.woochacha.backend.domain.admin.dto.RegisterInputDto;
 import java.io.IOException;
 
 public interface AmazonS3Service {
+//    public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException;
     public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException;
 
     public boolean uploadProductImage(AmazonS3ProductRequestDto amazonS3ProductRequestDto) throws IOException;
