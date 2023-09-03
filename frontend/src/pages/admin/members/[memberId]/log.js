@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import withAuth from '@/hooks/withAuth';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Typography } from '@mui/material';
-import BasicTable from '@/components/common/BasicTable';
+import withAdminAuth from '@/hooks/withAdminAuth';
+import BasicTable from '@/components/admin/MemberTable';
 
 function AdminUserLogList() {
   const [mounted, setMounted] = useState(false);
@@ -79,5 +79,5 @@ function AdminUserLogList() {
 }
 
 // side menu 레이아웃
-AdminUserLogList.Layout = withAuth(AdminPageLayout);
+AdminUserLogList.Layout = withAdminAuth(AdminPageLayout);
 export default AdminUserLogList;

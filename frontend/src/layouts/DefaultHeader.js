@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   AppBar,
   Box,
@@ -19,12 +18,14 @@ import ProfileAppbar from '@/components/common/ProfileAppbar';
 import { useRecoilValue } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import AdminMenuAppbar from '@/components/admin/AdminMenuAppbar';
+import { useEffect, useState } from 'react';
 
 function DefaultHeader() {
+  const [mounted, setMounted] = useState(false);
   const userLoginState = useRecoilValue(userLoggedInState);
   const router = useRouter();
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -34,6 +35,10 @@ function DefaultHeader() {
     router.push(url);
     setAnchorElNav(null);
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const defaultHeaderCss = {
     headerContainer: {
@@ -76,88 +81,100 @@ function DefaultHeader() {
   };
 
   return (
-    <AppBar color="default" position="sticky">
-      <Container maxWidth="xl" sx={defaultHeaderCss.headerContainer}>
-        <Toolbar disableGutters>
-          <Typography variant="h5" noWrap component="a" href="/" sx={defaultHeaderCss.mdHeaderLogo}>
-            {HEADER_MENU.LOGO}
-          </Typography>
+    mounted && (
+      <AppBar color="default" position="sticky">
+        <Container maxWidth="xl" sx={defaultHeaderCss.headerContainer}>
+          <Toolbar disableGutters>
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={defaultHeaderCss.mdHeaderLogo}>
+              {HEADER_MENU.LOGO}
+            </Typography>
 
-          <Box sx={defaultHeaderCss.xsHeaderBox}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit">
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={defaultHeaderCss.xsHeaderMenuItem}>
+            <Box sx={defaultHeaderCss.xsHeaderBox}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit">
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={defaultHeaderCss.xsHeaderMenuItem}>
+                {HEADER_MENU.CONTENTS.map((page) => (
+                  <MenuItem key={page.pageName} onClick={() => handleCloseNavMenu(page.pageUrl)}>
+                    <Typography textAlign="center">{page.pageName}</Typography>
+                  </MenuItem>
+                ))}
+
+                {/* mini-menu app bar compo */}
+                {userLoginState.loginStatus ? (
+                  userLoginState.userName === '관리자' ? (
+                    <AdminMenuAppbar size="0" />
+                  ) : (
+                    <MenuAppbar size="0" />
+                  )
+                ) : (
+                  ''
+                )}
+              </Menu>
+            </Box>
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={defaultHeaderCss.xsHeaderLogo}>
+              {HEADER_MENU.LOGO}
+            </Typography>
+            <Box sx={defaultHeaderCss.mdHeaderBox}>
               {HEADER_MENU.CONTENTS.map((page) => (
-                <MenuItem key={page.pageName} onClick={() => handleCloseNavMenu(page.pageUrl)}>
-                  <Typography textAlign="center">{page.pageName}</Typography>
+                <MenuItem
+                  key={page.pageName}
+                  onClick={() => handleCloseNavMenu(page.pageUrl)}
+                  sx={defaultHeaderCss.mdHeaderMenuItem}>
+                  {page.pageName}
                 </MenuItem>
               ))}
 
               {/* mini-menu app bar compo */}
               {userLoginState.loginStatus ? (
                 userLoginState.userName === '관리자' ? (
-                  <AdminMenuAppbar size="0" />
+                  <AdminMenuAppbar size="2" />
                 ) : (
-                  <MenuAppbar size="0" />
+                  <MenuAppbar size="2" />
                 )
               ) : (
                 ''
               )}
-            </Menu>
-          </Box>
-          <Typography variant="h5" noWrap component="a" href="/" sx={defaultHeaderCss.xsHeaderLogo}>
-            {HEADER_MENU.LOGO}
-          </Typography>
-          <Box sx={defaultHeaderCss.mdHeaderBox}>
-            {HEADER_MENU.CONTENTS.map((page) => (
-              <MenuItem
-                key={page.pageName}
-                onClick={() => handleCloseNavMenu(page.pageUrl)}
-                sx={defaultHeaderCss.mdHeaderMenuItem}>
-                {page.pageName}
-              </MenuItem>
-            ))}
+            </Box>
 
-            {/* mini-menu app bar compo */}
-            {userLoginState.loginStatus ? (
-              userLoginState.userName === '관리자' ? (
-                <AdminMenuAppbar size="2" />
-              ) : (
-                <MenuAppbar size="2" />
-              )
-            ) : (
-              ''
-            )}
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            {/* profile app bar compo */}
-            <ProfileAppbar />
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            <Box sx={{ flexGrow: 0 }}>
+              {/* profile app bar compo */}
+              <ProfileAppbar />
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    )
   );
 }
 export default DefaultHeader;
