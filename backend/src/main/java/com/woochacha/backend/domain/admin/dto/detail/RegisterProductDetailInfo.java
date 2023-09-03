@@ -10,7 +10,14 @@ import java.util.List;
 @Getter
 @Builder
 public class RegisterProductDetailInfo {
-    private int capacity; // 승자 정원
+
+    private String model; // 브랜드명
+
+    private String color; // 색상
+
+    private short year; // 연식
+
+    private short capacity; // 승자 정원
 
     private Integer distance; // 주행 거리
 
@@ -20,8 +27,8 @@ public class RegisterProductDetailInfo {
 
     private String transmissionName; // 변속기
 
-    private List<ProductAccidentInfo> produdctAccidentInfoList; // 사고 종류
+    private List<RegisterProductAccidentInfo> produdctAccidentInfoList; // 사고 종류
 
-    private List<ProductExchangeInfo> productExchangeInfoList; // 교체 부위
+    private List<RegisterProductExchangeInfo> productExchangeInfoList; // 교체 부위
 
 }
