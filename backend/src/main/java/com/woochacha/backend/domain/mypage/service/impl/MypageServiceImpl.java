@@ -139,6 +139,12 @@ public class MypageServiceImpl implements MypageService {
         mypageRepository.updatePrice(productId, updatePrice);
     }
 
+    // 등록한 매물 삭제 신청
+    @Transactional
+    public void productDeleteRequest(Long productId){
+        mypageRepository.requestProductDelete(productId);
+    }
+
     // 프로필 수정 (GET요청 시 데이터 보여주기)
     public EditProdileDto getProfileForEdit(Long memberId){
         Member member = memberRepository.findById(memberId).get();

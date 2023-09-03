@@ -97,6 +97,14 @@ public class MypageController {
         return ResponseEntity.ok("가격 변경 요청이 완료되었습니다.");
     }
 
+    // 등록한 매물 삭제 요청
+    @PatchMapping("/registered/delete/{productId}")
+    private ResponseEntity<String> productDeleteRequest(@PathVariable Long productId){
+        mypageService.productDeleteRequest(productId);
+        return ResponseEntity.ok("삭제 신청이 완료되었습니다.");
+    }
+
+
     // 프로필 이미지 수정 (데이터 조회 Get)
     @GetMapping("/profile/edit/{memberId}")
     private ResponseEntity<EditProdileDto> getProfileForEdit(@PathVariable("memberId") Long memberId){
