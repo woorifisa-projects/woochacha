@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional <Member> findByEmail(String email);
 
+    Member findByPhone(String phone);
+
     @Modifying
     @Query("UPDATE Member m SET m.status = :status WHERE m.id = :memberId")
     int updateMemberStatus(@Param("memberId") Long memberId, @Param("status") Byte status);

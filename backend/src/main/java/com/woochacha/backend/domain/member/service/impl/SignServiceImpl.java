@@ -1,7 +1,7 @@
 package com.woochacha.backend.domain.member.service.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.woochacha.backend.common.CommonResponse;
+import com.woochacha.backend.domain.member.exception.SignResultCode;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
@@ -10,7 +10,6 @@ import com.woochacha.backend.domain.member.dto.LoginResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
 import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.entity.Member;
-import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.exception.LoginException;
 import com.woochacha.backend.domain.member.exception.SignUpException;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
@@ -27,7 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 //@Transactional(readOnly = true)
@@ -61,44 +60,34 @@ public class SignServiceImpl implements SignService {
     @Transactional
     @Override
     public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDto) {
-//         TODO : 회원가입 조건 추가
-//        회원가입을 할 때, 정지된 이용자는 재가입 불가
-//        하지만 일반적으로 탈퇴한 회원은 재가입 가능
-//        회원 가입시 is_available을 먼저 검토해서 0이면 가입 불가
-//        is_available은 1인데 status가 1이면 이미 가입된 회원
-//        기본적으로 회원 가입을 할 때 비교하는건 phone number로 진행
-
         // 이메일 중복 체크
-        List<String> emailSearch = queryFactory
-                .select(QMember.member.email)
-                .from(QMember.member)
-                .where(QMember.member.email.eq(signUpRequestDto.getEmail()))
-                .fetch();
+        Optional<Member> emailSearch = memberRepository.findByEmail(signUpRequestDto.getEmail());
 
         // 핸드폰 번호 중복 체크
-        List<String> phoneSearch = queryFactory
-                .select(QMember.member.phone)
-                .from(QMember.member)
-                .where(QMember.member.phone.eq(signUpRequestDto.getPhone()))
-                .fetch();
+        Member phoneSearch = memberRepository.findByPhone(signUpRequestDto.getPhone());
 
-        if (!emailSearch.isEmpty()) { // 이메일 중복
-            return SignUpException.exception(CommonResponse.DUPLICATE_EMAIL_EXCEPTION);
-        } else if (!phoneSearch.isEmpty()) { // 핸드폰 번호 중복
-            return SignUpException.exception(CommonResponse.DUPLICATE_PHONE_EXCEPTION);
-        } else {
-            // 회원가입 시 member의 기본 프로필 사진 설정
-            signUpRequestDto.setProfileImage("https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/default");
+        //         TODO : 회원가입 조건 추가
+//        회원 가입시 phone number을 비교하여 is_available을 먼저 검토하여 0이면 가입 불가
+//        (is_available == 1)&&(status == 1)인 회원은 이미 가입된 회원이라는 코드 전달
 
-            // Member 테이블에 회원 정보 저장
-            Member savedMember = save(signUpRequestDto);
-
-            if (!savedMember.getName().isEmpty()) {
-                return SignUpException.exception(CommonResponse.SUCCESS);
-            } else {
-                return SignUpException.exception(CommonResponse.FAIL);
-            }
+        if (emailSearch.isPresent()) { // 이메일 중복
+            return SignUpException.exception(SignResultCode.DUPLICATE_EMAIL_EXCEPTION);
+        } else if (phoneSearch != null) { // 핸드폰 번호 중복
+            return SignUpException.exception(SignResultCode.DUPLICATE_PHONE_EXCEPTION);
         }
+
+        // 회원가입 시 member의 기본 프로필 사진 설정
+        signUpRequestDto.setProfileImage("https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/default");
+
+        // Member 테이블에 회원 정보 저장
+        Member savedMember = save(signUpRequestDto);
+
+        if (!savedMember.getName().isEmpty()) {
+            return SignUpException.exception(SignResultCode.SUCCESS);
+        } else {
+            return SignUpException.exception(SignResultCode.FAIL);
+        }
+
     }
 
     @Transactional
@@ -121,6 +110,7 @@ public class SignServiceImpl implements SignService {
             return LoginException.exception(e);
         }
     }
+
 
     public boolean logout() {
 
