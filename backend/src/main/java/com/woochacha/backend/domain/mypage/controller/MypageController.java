@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.mypage.controller;
 
+import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
 import com.woochacha.backend.domain.mypage.dto.*;
 import com.woochacha.backend.domain.mypage.service.impl.MypageServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,7 +87,7 @@ public class MypageController {
 
     // 상품 수정 신청폼 제출
     @PatchMapping("/registered/edit")
-    private ResponseEntity<String> patchProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId,
+    private ResponseEntity<String> editProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId,
                                                         @RequestBody @Valid UpdatePriceDto updatePriceDto){
         EditProductDto editProductDto = mypageService.getProductEditRequestInfo(memberId, productId);
         if (updatePriceDto.getUpdatePrice() > editProductDto.getPrice()) {
@@ -102,4 +104,18 @@ public class MypageController {
         return ResponseEntity.ok("삭제 신청이 완료되었습니다.");
     }
 
+
+    // 프로필 이미지 수정 (데이터 조회 Get)
+    @GetMapping("/profile/edit/{memberId}")
+    private ResponseEntity<EditProdileDto> getProfileForEdit(@PathVariable("memberId") Long memberId){
+        EditProdileDto editProdileDto = mypageService.getProfileForEdit(memberId);
+        return ResponseEntity.ok(editProdileDto);
+    }
+
+    // 프로필 이미지 수정 (데이터 수정 Patch)
+    @PatchMapping("/profile/edit/{memberId}")
+    private ResponseEntity<String> editProfile(@PathVariable("memberId") Long memberId, @ModelAttribute AmazonS3RequestDto amazonS3RequestDto ) throws IOException {
+        String newProfileImage = mypageService.editProfile(memberId, amazonS3RequestDto);
+        return ResponseEntity.ok("프로필 수정이 완료되었습니다.");
+    }
 }

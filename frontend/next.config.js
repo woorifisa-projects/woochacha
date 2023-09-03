@@ -6,18 +6,18 @@ const nextConfig = {
   // rewrite
   async rewrites() {
     return [
-      {
-        source: '/:path*',
-        destination: 'http://13.125.32.208:8080/:path*',
-      },
-      {
-        source: '/test1',
-        destination: '/test1',
-      },
-      {
-        source: '/test2',
-        destination: '/test2',
-      },
+      // {
+      //   source: '/:path*',
+      //   destination: 'http://13.125.32.208:8080/:path*',
+      // },
+      // {
+      //   source: '/test1',
+      //   destination: '/test1',
+      // },
+      // {
+      //   source: '/test2',
+      //   destination: '/test2',
+      // },
     ];
   },
 

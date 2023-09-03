@@ -12,11 +12,13 @@ import {
   TableRow,
   Paper,
   IconButton,
+  Button,
 } from '@mui/material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import { useRouter } from 'next/router';
 
 /**
  * 페이지네이션 관련 함수
@@ -68,12 +70,14 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function BasicTable(props) {
-  const { headerData, contentData } = props;
+// basic component
+export default function PurchaseTable(props) {
+  const { headerData, contentData, moveDetailUrl, moveMatchUrl, moveDealUrl } = props;
   const rows = contentData;
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const router = useRouter();
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -87,9 +91,25 @@ export default function BasicTable(props) {
     setPage(0);
   };
 
+  const handleMove = (baseUrl, purchaseId) => {
+    router.push(`${baseUrl}${purchaseId}`);
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const basicButtonTableCss = {
+    button: {
+      mx: 1,
+      '&:hover': {
+        boxShadow: 10,
+        cursor: 'pointer',
+        transition: '0.3s',
+        transform: 'scale(1.01)',
+      },
+    },
+  };
 
   return (
     mounted && (
@@ -107,15 +127,53 @@ export default function BasicTable(props) {
             </TableRow>
           </TableHead>
           <TableBody>
+            {/* data map으로 반복 */}
             {(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
             ).map((row) => (
-              <TableRow key={row.id}>
-                <TableCell align="center">{row[`${headerData[0].contentCell}`]}</TableCell>
+              <TableRow sx={basicButtonTableCss.tableRow} key={row.productId}>
+                <TableCell
+                  sx={basicButtonTableCss.button}
+                  onClick={() => handleMove(moveDetailUrl, row.productId)}
+                  align="center">
+                  {row[`${headerData[0].contentCell}`]}
+                </TableCell>
                 <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[3].contentCell}`]}</TableCell>
+                <TableCell align="center">
+                  {row[`${headerData[3].contentCell}`] === 1 ? (
+                    <Button sx={basicButtonTableCss.button} variant="outlined" disabled>
+                      확인
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleMove(moveMatchUrl, row.productId)}
+                      sx={basicButtonTableCss.button}
+                      variant="outlined"
+                      color="error">
+                      미확인
+                    </Button>
+                  )}
+                </TableCell>
+                <TableCell align="center">
+                  {row[`${headerData[3].contentCell}`] === 1 ? (
+                    <Button
+                      onClick={() => handleMove(moveDealUrl, row.productId)}
+                      sx={basicButtonTableCss.button}
+                      variant="outlined">
+                      성사
+                    </Button>
+                  ) : (
+                    <Button
+                      sx={basicButtonTableCss.button}
+                      variant="outlined"
+                      color="error"
+                      disabled>
+                      미성사
+                    </Button>
+                  )}
+                </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (

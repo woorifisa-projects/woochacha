@@ -18,7 +18,7 @@ const withAdminAuth = (WrappedComponent) => {
       }
 
       // TODO: 관리자가 아닌 사람이 접근하는 경우
-      if (loginToken && !userLoginState.userName === '관리자') {
+      if (loginToken && userLoginState.userName !== '관리자') {
         Router.replace('/');
         return null;
       }

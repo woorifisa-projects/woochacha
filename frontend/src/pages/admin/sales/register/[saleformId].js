@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import withAuth from '@/hooks/withAuth';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Typography } from '@mui/material';
+import withAdminAuth from '@/hooks/withAdminAuth';
 
 function AdminSalesRegisterForm() {
   const [mounted, setMounted] = useState(false);
@@ -31,5 +31,5 @@ function AdminSalesRegisterForm() {
 }
 
 // side menu 레이아웃
-AdminSalesRegisterForm.Layout = withAuth(AdminPageLayout);
+AdminSalesRegisterForm.Layout = withAdminAuth(AdminPageLayout);
 export default AdminSalesRegisterForm;
