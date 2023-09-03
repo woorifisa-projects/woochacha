@@ -1,9 +1,6 @@
 package com.woochacha.backend.domain.admin.dto;
 
-import jdk.jfr.StackTrace;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
@@ -13,7 +10,6 @@ import java.util.List;
 
 // 매물 등록시 등록 폼에서 차량 가격, 차량 이미지 데이터를 입력받기 위한 Dto
 @Data
-@Setter
 public class RegisterInputDto {
 
     @Size(min = 4, max = 4, message = "사진은 4개 입력되어야 합니다.") // min, max 모두 4로 설정하여 4개의 요소가 입력되어야 함

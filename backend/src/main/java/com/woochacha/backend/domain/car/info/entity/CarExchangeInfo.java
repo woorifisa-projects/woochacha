@@ -28,7 +28,6 @@ public class CarExchangeInfo {
     private ExchangeType exchangeType;
 
     @CreationTimestamp
-    @NotNull
     private Date createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
