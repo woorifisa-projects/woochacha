@@ -1,6 +1,9 @@
 package com.woochacha.backend.domain.mypage.service.impl;
 
 import com.woochacha.backend.common.ModelMapping;
+import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3ProductRequestDto;
+import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
+import com.woochacha.backend.domain.AmazonS3.service.AmazonS3Service;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.mypage.dto.*;
@@ -13,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Service
@@ -22,6 +27,7 @@ public class MypageServiceImpl implements MypageService {
 
     private final MypageRepository mypageRepository;
     private final MemberRepository memberRepository;
+    private final AmazonS3Service amazonS3Service;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환
@@ -131,6 +137,25 @@ public class MypageServiceImpl implements MypageService {
     @Transactional
     public void updatePrice(Long productId, Integer updatePrice){
         mypageRepository.updatePrice(productId, updatePrice);
+    }
+
+    // 프로필 수정 (GET요청 시 데이터 보여주기)
+    public EditProdileDto getProfileForEdit(Long memberId){
+        Member member = memberRepository.findById(memberId).get();
+        EditProdileDto editProdileDto = EditProdileDto.builder()
+                .name(member.getName())
+                .imageUrl(member.getProfileImage())
+                .build();
+        return editProdileDto;
+    }
+
+    // 프로필 수정 (PATCH요청 시 데이터 수정)
+    @Transactional
+    public String editProfile(Long memberId, AmazonS3RequestDto amazonS3RequestDto) throws IOException {
+        String email = memberRepository.findById(memberId).get().getEmail();
+        amazonS3RequestDto.setEmail(email);
+        String newProfileIamge = amazonS3Service.uploadProfile(amazonS3RequestDto);
+        return newProfileIamge;
     }
 }
 
