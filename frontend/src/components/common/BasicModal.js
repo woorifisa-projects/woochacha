@@ -10,7 +10,7 @@ import {
 
 export default function BasicModal(props) {
   const [mounted, setMounted] = useState(false);
-  const { onClickModal, isOpen, modalContent, callBackFunc } = props;
+  const { onClickModal, isOpen, modalContent, callBackFunc, children } = props;
 
   const handleClickNo = () => {
     onClickModal(false);
@@ -40,6 +40,7 @@ export default function BasicModal(props) {
             <DialogContentText id="alert-dialog-description">
               {modalContent.modalContents}
             </DialogContentText>
+            {children}
           </DialogContent>
           <DialogActions>
             <Button variant="contained" onClick={handleClickNo} color="error">
