@@ -17,7 +17,7 @@ import { HEADER_MINI_MENU, HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
 
 export default function DefaultFooter() {
   const router = useRouter();
-  const userLoggedIn = useRecoilValue(userLoggedInState);
+  const userLoginState = useRecoilValue(userLoggedInState);
 
   const handleMovePage = (url) => {
     router.push(url);
@@ -86,7 +86,7 @@ export default function DefaultFooter() {
           <Grid item xs={4}>
             <Grid sx={defaultFooter.gridItems}>
               <Typography>마이페이지</Typography>
-              {userLoggedIn
+              {userLoginState.loginStatus && userLoginState.userName !== '관리자'
                 ? HEADER_MINI_MENU.CONTENTS.map((menuItem, idx) => {
                     return (
                       <ListItem key={idx} sx={defaultFooter.listItem}>
