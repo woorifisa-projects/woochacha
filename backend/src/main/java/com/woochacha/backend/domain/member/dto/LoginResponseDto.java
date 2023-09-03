@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.member.dto;
 import lombok.*;
 
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Builder
 @Getter
 @Setter

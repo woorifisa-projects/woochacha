@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface AmazonS3Service {
+//    public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException;
     public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException;
 
     public boolean uploadProductImage(AmazonS3ProductRequestDto amazonS3ProductRequestDto) throws IOException;

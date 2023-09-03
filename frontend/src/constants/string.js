@@ -151,3 +151,13 @@ export const DELETE_MODAL = {
     modalContents: '삭제 관련 텍스트입니다!!!',
   },
 };
+
+// MODAL
+export const PURCHASE_MODAL = {
+  CONTENTS: {
+    modalTitle: '구매를 요청하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '구매 약속일을 선택해주세요.',
+  },
+};

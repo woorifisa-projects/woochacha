@@ -1,12 +1,12 @@
 package com.woochacha.backend.security.configs;
 
-import com.woochacha.backend.config.JwtSecurityConfig;
-import com.woochacha.backend.domain.jwt.*;
-import com.woochacha.backend.domain.member.service.impl.UserDetailsServiceImpl;
+import com.woochacha.backend.domain.jwt.JwtAccessDeniedHandler;
+import com.woochacha.backend.domain.jwt.JwtAuthenticationEntryPoint;
+import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
+import com.woochacha.backend.domain.jwt.JwtTokenProvider;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,12 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -29,39 +26,28 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    private final UserDetailsServiceImpl customUserDetailsService;
-
     public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter, JwtTokenProvider jwtTokenProvider,
+            JwtTokenProvider jwtTokenProvider,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            JwtAccessDeniedHandler jwtAccessDeniedHandler,
-            UserDetailsServiceImpl customUserDetailsService) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+            JwtAccessDeniedHandler jwtAccessDeniedHandler) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-        this.customUserDetailsService = customUserDetailsService;
     }
 
-    @Bean
-    public JwtAuthenticationFilter authenticationJwtTokenFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService);
-    }
-
+    // 비밀번호 암호화
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // img, js, css 파일 등 보안 필터를 적용할 필요가 없는 리소스를 설정
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // img, js, css 파일 등 보안 필터를 적용할 필요가 없는 리소스를 설정
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
@@ -73,29 +59,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
 
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 )
 
                 .sessionManagement()
-                .sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS) // JWT Token 인증방식으로 세션은 필요 없으므로 비활성화
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT Token 인증방식으로 세션은 필요 없으므로 비활성화
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-
- //                .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
-//                .antMatchers("/", "/users/register", "/users/login").permitAll()
-//                .antMatchers("/products", "/products/details/**", "/products/filter", "/products/search").permitAll()
-//                .antMatchers("/users/**", "/products/**").hasRole("USER")
-//                .antMatchers("/admin").hasRole("ADMIN")
-//                .anyRequest().authenticated()
-
-                .and()
-                .apply(new JwtSecurityConfig(jwtTokenProvider));
+                .antMatchers("/", "/users/register", "/users/login", "/product/**").permitAll()
+                .antMatchers("/users/**", "/products/sale", "/s3/upload-profile", "/mypage/**").hasRole("USER")
+                .antMatchers("/admin/**", "/s3/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
     }
 
     @Bean
