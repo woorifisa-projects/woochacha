@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3ProductRequestDto;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
+import com.woochacha.backend.domain.admin.dto.RegisterInputDto;
 import com.woochacha.backend.domain.car.detail.entity.QCarDetail;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.product.entity.CarImage;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.PersistenceUnit;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -82,6 +84,38 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
             for (MultipartFile multipartFile : multipartFileList) {
                 String url = this.uploadToS3("/product/" + carNum, String.valueOf(++count), multipartFile);
+                this.saveProductImageToDB(productId, url);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean uploadProductImage(RegisterInputDto registerInputDto){
+        List<MultipartFile> multipartFileList = registerInputDto.getImageUrls();
+        int count = 0;
+
+        String carNum = registerInputDto.getCarNum();
+
+        try {
+            Long productId = queryFactory
+                    .select(QProduct.product.id)
+                    .from(QProduct.product)
+                    .join(QCarDetail.carDetail)
+                    .on(QProduct.product.carDetail.carNum.eq(QCarDetail.carDetail.carNum))
+                    .where(QCarDetail.carDetail.carNum.eq(carNum))
+                    .fetchOne();
+
+            if (productId == null) {
+                throw new Exception("찾는 차량 번호가 없습니다.");
+            }
+
+            for (MultipartFile multipartFile : multipartFileList) {
+                String url = this.uploadToS3("/product/" + carNum, String.valueOf(++count), multipartFile);
+                LOGGER.info("[url] : " + url);
                 this.saveProductImageToDB(productId, url);
             }
             return true;

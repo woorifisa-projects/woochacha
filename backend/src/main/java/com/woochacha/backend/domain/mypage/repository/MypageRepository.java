@@ -26,7 +26,7 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "JOIN ci.product p " +
             "JOIN p.carDetail cd " +
             "JOIN p.saleForm sf " +
-            "WHERE p.status.id = 4 OR p.status.id = 6 OR p.status.id = 9 " +
+            "WHERE p.status.id IN (4, 6, 9) " +
             "AND ci.imageUrl LIKE '%/1' " +
             "AND sf.member.id = :memberId " +
             "ORDER BY p.createdAt ASC ")
