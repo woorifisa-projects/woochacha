@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.admin.service.impl;
 
-import com.woochacha.backend.domain.admin.dto.ManageProductFormDto;
+import com.woochacha.backend.domain.admin.dto.magageProduct.EditProductDto;
+import com.woochacha.backend.domain.admin.dto.magageProduct.ManageProductFormDto;
 import com.woochacha.backend.domain.admin.repository.ManageProductFormRepository;
 import com.woochacha.backend.domain.admin.service.ManageProductFormService;
 import lombok.RequiredArgsConstructor;
@@ -44,5 +45,11 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
     @Override
     public void deleteProduct(Long productId){
         manageProductFormRepository.deleteProduct(productId);
+    }
+
+    @Override
+    public EditProductDto findEditForm(Long productId){
+        EditProductDto editProductDto = manageProductFormRepository.getEditForm(productId);
+        return editProductDto;
     }
 }
