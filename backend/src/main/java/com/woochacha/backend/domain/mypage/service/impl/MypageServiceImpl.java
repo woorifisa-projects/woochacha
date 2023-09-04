@@ -1,6 +1,9 @@
 package com.woochacha.backend.domain.mypage.service.impl;
 
 import com.woochacha.backend.common.ModelMapping;
+import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3ProductRequestDto;
+import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
+import com.woochacha.backend.domain.AmazonS3.service.AmazonS3Service;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.mypage.dto.*;
@@ -11,9 +14,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Service
@@ -23,6 +27,7 @@ public class MypageServiceImpl implements MypageService {
 
     private final MypageRepository mypageRepository;
     private final MemberRepository memberRepository;
+    private final AmazonS3Service amazonS3Service;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환
@@ -79,7 +84,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 등록한 매물 조회
     public Page<ProductResponseDto> getRegisteredProductsByMemberId(Long memberId, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByMemberId(memberId, pageable);
 
         return productsPage.map(this::arrayToProductResponseDto);
@@ -87,7 +92,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 판매 이력 조회
     public Page<ProductResponseDto> getSoldProductsByMemberId(Long memberId, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> productsPage = mypageRepository.getSoldProductsByMemberId(memberId, pageable);
 
         return productsPage.map(this::arrayToProductResponseDto);
@@ -95,7 +100,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 구매 이력 조회
     public Page<ProductResponseDto> getPurchaseProductsByMemberId(Long memberId, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> productsPage = mypageRepository.getPurchaseProductsByMemberId(memberId, pageable);
 
         return productsPage.map(this::arrayToProductResponseDto);
@@ -117,7 +122,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 구매 신청 폼 조회
     public Page<PurchaseReqeustListDto> getPurchaseRequestByMemberId(Long memberId, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
         return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
     }
@@ -132,6 +137,31 @@ public class MypageServiceImpl implements MypageService {
     @Transactional
     public void updatePrice(Long productId, Integer updatePrice){
         mypageRepository.updatePrice(productId, updatePrice);
+    }
+
+    // 등록한 매물 삭제 신청
+    @Transactional
+    public void productDeleteRequest(Long productId){
+        mypageRepository.requestProductDelete(productId);
+    }
+
+    // 프로필 수정 (GET요청 시 데이터 보여주기)
+    public EditProdileDto getProfileForEdit(Long memberId){
+        Member member = memberRepository.findById(memberId).get();
+        EditProdileDto editProdileDto = EditProdileDto.builder()
+                .name(member.getName())
+                .imageUrl(member.getProfileImage())
+                .build();
+        return editProdileDto;
+    }
+
+    // 프로필 수정 (PATCH요청 시 데이터 수정)
+    @Transactional
+    public String editProfile(Long memberId, AmazonS3RequestDto amazonS3RequestDto) throws IOException {
+        String email = memberRepository.findById(memberId).get().getEmail();
+        amazonS3RequestDto.setEmail(email);
+        String newProfileIamge = amazonS3Service.uploadProfile(amazonS3RequestDto);
+        return newProfileIamge;
     }
 }
 

@@ -37,6 +37,27 @@ export const HEADER_MINI_MENU = {
   ],
 };
 
+export const HEADER_ADMIN_MINI_MENU = {
+  CONTENTS: [
+    {
+      pageName: '사용자 관리',
+      pageUrl: `/admin/members`,
+    },
+    {
+      pageName: '매물관리',
+      pageUrl: `/admin/product`,
+    },
+    {
+      pageName: '판매 신청 관리',
+      pageUrl: `/admin/sales`,
+    },
+    {
+      pageName: '거래 관리',
+      pageUrl: `/admin/purchase`,
+    },
+  ],
+};
+
 export const HEADER_UNLOGIN_USER_MENU = {
   CONTENTS: [
     {
@@ -128,5 +149,25 @@ export const DELETE_MODAL = {
     modalYesBtn: '네',
     modalNoBtn: '아니요',
     modalContents: '삭제 관련 텍스트입니다!!!',
+  },
+};
+
+// MODAL
+export const PURCHASE_MODAL = {
+  CONTENTS: {
+    modalTitle: '구매를 요청하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '구매 약속일을 선택해주세요.',
+  },
+};
+
+// MODAL
+export const ADMIN_DENY_MODAL = {
+  CONTENTS: {
+    modalTitle: '승인을 반려하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '승인 반려 관련 텍스트입니다!!!',
   },
 };
