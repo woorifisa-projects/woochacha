@@ -11,4 +11,8 @@ public interface ManageProductFormService {
     void deleteProduct(Long productId);
 
     EditProductDto findEditForm(Long productId);
+
+    void denyEditRequest(Long productId);
+
+    public void permitEditRequest(Long productId);
 }

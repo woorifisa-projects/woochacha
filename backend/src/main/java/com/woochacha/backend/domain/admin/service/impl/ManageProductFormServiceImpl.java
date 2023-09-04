@@ -52,4 +52,17 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
         EditProductDto editProductDto = manageProductFormRepository.getEditForm(productId);
         return editProductDto;
     }
+
+    @Transactional
+    @Override
+    public void denyEditRequest(Long productId){
+        manageProductFormRepository.denyEditRequest(productId);
+    }
+
+    @Transactional
+    @Override
+    public void permitEditRequest(Long productId){
+        manageProductFormRepository.permitEditRequest(productId);
+    }
+
 }
