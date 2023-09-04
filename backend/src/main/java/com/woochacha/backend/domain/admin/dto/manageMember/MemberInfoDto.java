@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class GetMemberDto {
+public class MemberInfoDto {
     private Byte isAvailable;
     private String name;
     private String email;
@@ -15,7 +15,7 @@ public class GetMemberDto {
     private LocalDateTime createdAt;
     private String profileImage;
 
-    public GetMemberDto(Byte isAvailable, String name, String email, String phone, LocalDateTime createdAt, String profileImage) {
+    public MemberInfoDto(Byte isAvailable, String name, String email, String phone, LocalDateTime createdAt, String profileImage) {
         this.isAvailable = isAvailable;
         this.name = name;
         this.email = email;

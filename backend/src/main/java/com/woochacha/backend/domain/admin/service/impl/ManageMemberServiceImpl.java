@@ -4,7 +4,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.domain.admin.dto.manageMember.EditMemberRequestDto;
-import com.woochacha.backend.domain.admin.dto.manageMember.GetMemberDto;
+import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoListResponseDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoResponseDto;
 import com.woochacha.backend.domain.admin.service.ManageMemberService;
@@ -55,14 +55,14 @@ public class ManageMemberServiceImpl implements ManageMemberService {
 
     @Override
     public MemberInfoResponseDto getMemberInfo(Long memberId){
-        GetMemberDto memberInfo = memberRepository.getMemberInfo(memberId);
+        MemberInfoDto memberInfo = memberRepository.getMemberInfo(memberId);
         int countOnSale = productRepository.countSale(memberId, (short) 4);
         int countCompleteSale = productRepository.countSale(memberId, (short) 5);
         int countOnPurchase = purchaseFormRepository.countPurchaseFormId(memberId);
         int countCompletePurchase = transactionRepository.countCompletePurchase(memberId);
         System.out.println(memberInfo.toString());
         return MemberInfoResponseDto.builder()
-                .getMemberDto(memberInfo)
+                .memberInfoDto(memberInfo)
                 .onSale(countOnSale)
                 .completeSale(countCompleteSale)
                 .onPurchase(countOnPurchase)
