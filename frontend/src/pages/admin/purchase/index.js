@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import withAuth from '@/hooks/withAuth';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Typography } from '@mui/material';
-import BasicTable from '@/components/common/BasicTable';
+import withAdminAuth from '@/hooks/withAdminAuth';
+import PurchaseTable from '@/components/admin/PurchaseTable';
 
 function AdminPurchaseList() {
   const [mounted, setMounted] = useState(false);
@@ -17,20 +17,24 @@ function AdminPurchaseList() {
 
   const table_cell_data = [
     {
-      headerLabel: '이메일',
-      contentCell: 'email',
+      headerLabel: '게시글',
+      contentCell: 'productId',
     },
     {
-      headerLabel: '이름',
-      contentCell: 'name',
+      headerLabel: '구매자',
+      contentCell: 'buyer',
     },
     {
-      headerLabel: '전화번호',
-      contentCell: 'phone',
+      headerLabel: '판매자',
+      contentCell: 'seller',
     },
     {
-      headerLabel: '상태',
-      contentCell: 'isAvailable',
+      headerLabel: '검토여부',
+      contentCell: 'isConfirm',
+    },
+    {
+      headerLabel: '거래여부',
+      contentCell: 'transactionStatus',
     },
   ];
 
@@ -38,25 +42,25 @@ function AdminPurchaseList() {
   const dummy_content_data = {
     content: [
       {
-        id: 'aaa',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
+        productId: '12',
+        buyer: '김구매',
+        seller: '김판매',
+        isConfirm: 0,
+        transactionStatus: 0,
       },
       {
-        id: 'aaa',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
+        productId: '13',
+        buyer: '박구매',
+        seller: '박판매',
+        isConfirm: 1,
+        transactionStatus: 1,
       },
       {
-        id: 'aaa',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
+        productId: '14',
+        buyer: '이구매',
+        seller: '이판매',
+        isConfirm: 0,
+        transactionStatus: 0,
       },
     ],
   };
@@ -72,12 +76,18 @@ function AdminPurchaseList() {
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           관리자 페이지 - [거래관리] 구매 요청 리스트
         </Typography>
-        <BasicTable headerData={table_cell_data} contentData={dummy_content_data.content} />
+        <PurchaseTable
+          headerData={table_cell_data}
+          contentData={dummy_content_data.content}
+          moveDetailUrl={`/product/detail/`}
+          moveMatchUrl={`/admin/purchase/`}
+          moveDealUrl={`/admin/purchase/`}
+        />
       </>
     )
   );
 }
 
 // side menu 레이아웃
-AdminPurchaseList.Layout = withAuth(AdminPageLayout);
+AdminPurchaseList.Layout = withAdminAuth(AdminPageLayout);
 export default AdminPurchaseList;

@@ -26,7 +26,7 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
             "JOIN ci.product p " +
             "JOIN p.carDetail cd " +
             "JOIN p.saleForm sf " +
-            "WHERE p.status.id = 4 OR p.status.id = 6 OR p.status.id = 9 " +
+            "WHERE p.status.id IN (4, 6, 9) " +
             "AND ci.imageUrl LIKE '%/1' " +
             "AND sf.member.id = :memberId " +
             "ORDER BY p.createdAt ASC ")
@@ -108,8 +108,14 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
     EditProductDto getProductEditRequestInfo(@Param("memberId") Long memberId, @Param("productId") Long productId);
 
     // 상품 수정 신청시 수정 가격 저장, status 변경
+    @Modifying
     @Query("UPDATE Product p SET p.updatePrice = :updatePrice, p.status = 9 WHERE p.id = :productId")
     void updatePrice(@Param("productId") Long productId, @Param("updatePrice") Integer updatePrice);
+
+    // 등록한 매물 삭제 신청 (product 테이블 칼럼 중 status를 6(삭제신청완료)으로 변경
+    @Modifying
+    @Query("UPDATE Product p SET p.status = 6 WHERE p.id = :productId")
+    void requestProductDelete(@Param("productId") Long productId);
 }
 
 

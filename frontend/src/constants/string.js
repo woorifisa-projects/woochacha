@@ -161,3 +161,13 @@ export const PURCHASE_MODAL = {
     modalContents: '구매 약속일을 선택해주세요.',
   },
 };
+
+// MODAL
+export const ADMIN_DENY_MODAL = {
+  CONTENTS: {
+    modalTitle: '승인을 반려하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '승인 반려 관련 텍스트입니다!!!',
+  },
+};
