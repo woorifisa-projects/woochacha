@@ -52,8 +52,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
     // 매물 수정 처리를 위한 팝업창 데이터 가져오기
     @Override
     public EditProductDto findEditForm(Long productId){
-        EditProductDto editProductDto = manageProductFormRepository.getEditForm(productId);
-        return editProductDto;
+        return manageProductFormRepository.getEditForm(productId);
     }
 
     // 매물 수정 반려
