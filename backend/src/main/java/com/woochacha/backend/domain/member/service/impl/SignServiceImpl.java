@@ -1,6 +1,9 @@
 package com.woochacha.backend.domain.member.service.impl;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.exception.SignResultCode;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
@@ -21,11 +24,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +42,8 @@ public class SignServiceImpl implements SignService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final QMember m = QMember.member;
 
     private final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
@@ -60,20 +67,51 @@ public class SignServiceImpl implements SignService {
     @Transactional
     @Override
     public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDto) {
-        // 이메일 중복 체크
-        Optional<Member> emailSearch = memberRepository.findByEmail(signUpRequestDto.getEmail());
-
         // 핸드폰 번호 중복 체크
-        Member phoneSearch = memberRepository.findByPhone(signUpRequestDto.getPhone());
+        List<Member> phoneSearchList = queryFactory
+                .selectFrom(m)
+                .where(m.phone.eq(signUpRequestDto.getPhone()))
+                .fetch();
 
-        //         TODO : 회원가입 조건 추가
-//        회원 가입시 phone number을 비교하여 is_available을 먼저 검토하여 0이면 가입 불가
-//        (is_available == 1)&&(status == 1)인 회원은 이미 가입된 회원이라는 코드 전달
+        // 이메일 중복 체크
+        List<Member> emailSearchList = queryFactory
+                .selectFrom(m)
+                .where(m.email.eq(signUpRequestDto.getEmail()))
+                .fetch();
 
-        if (emailSearch.isPresent()) { // 이메일 중복
-            return SignUpException.exception(SignResultCode.DUPLICATE_EMAIL_EXCEPTION);
-        } else if (phoneSearch != null) { // 핸드폰 번호 중복
-            return SignUpException.exception(SignResultCode.DUPLICATE_PHONE_EXCEPTION);
+
+        // 핸드폰 번호 중복인 회원 리스트
+        if (!phoneSearchList.isEmpty()) {
+            // 이용 정지를 당한 같은 핸드폰 번호를 가진 회원이 탈퇴 후 재가입하는 경우 실패
+            for(Member phoneSearch : phoneSearchList) {
+                if(!phoneSearch.isAccountNonLocked()) {
+                    return SignUpException.exception(SignResultCode.SUSPENDED_ACCOUNT);
+                }
+            }
+
+            // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
+            for(Member phoneSearch : phoneSearchList) {
+                if(phoneSearch.isEnabled()) {
+                    return SignUpException.exception(SignResultCode.DUPLICATE_PHONE);
+                }
+            }
+        }
+
+        // 이메일 중복인 회원 리스트
+        else if (!emailSearchList.isEmpty()) {
+            // 이용 정지를 당한 같은 이메일을 가진 회원이 탈퇴 후 재가입하는 경우 실패
+            for(Member emailSearch : emailSearchList) {
+                if(!emailSearch.isAccountNonLocked()) {
+                    return SignUpException.exception(SignResultCode.SUSPENDED_ACCOUNT);
+                }
+            }
+
+            // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
+            for(Member emailSearch : emailSearchList) {
+                if(emailSearch.isEnabled()) {
+                    return SignUpException.exception(SignResultCode.DUPLICATE_EMAIL);
+                }
+            }
         }
 
         // 회원가입 시 member의 기본 프로필 사진 설정
@@ -94,8 +132,13 @@ public class SignServiceImpl implements SignService {
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto) throws BadCredentialsException {
         try {
-            Member member = memberRepository.findByEmail(loginRequestDto.getEmail())
-                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+            Optional<Member> memberOptional = Optional.ofNullable(queryFactory
+                    .selectFrom(m)
+                    .where(m.email.eq(loginRequestDto.getEmail()), m.id.eq(JPAExpressions.select(m.id.max()).from(m)))
+                    .fetchOne());
+            if(memberOptional.isEmpty()) throw new BadCredentialsException("사용자 없음");
+
+            Member member = memberOptional.get();
 
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(member.getEmail(), loginRequestDto.getPassword());

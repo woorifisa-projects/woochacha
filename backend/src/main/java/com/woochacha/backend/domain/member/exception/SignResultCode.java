@@ -2,8 +2,12 @@ package com.woochacha.backend.domain.member.exception;
 
 public enum SignResultCode {
 
-    SUCCESS(0, "Success"), FAIL(-1, "Fail"),
-    DUPLICATE_EMAIL_EXCEPTION(1, "Duplicate Email Exception"), DUPLICATE_PHONE_EXCEPTION(2, "Duplicate Phone Exception");
+    SUCCESS(0, "Success"),
+    FAIL(-1, "Fail"),
+    DUPLICATE_PHONE(1, "Duplicate Phone Exception"),
+    DUPLICATE_EMAIL(2, "Duplicate Email Exception"),
+    SUSPENDED_ACCOUNT(3, "Suspended Account")
+    ;
 
     int code;
     String msg;
