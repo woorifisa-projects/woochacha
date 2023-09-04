@@ -16,4 +16,5 @@ public interface ManageTransactionService {
     Page<PurchaseFormListResponseDto> getAllPurchaseFormInfo(Pageable pageable);
     PurchaseMemberInfoResponseDto getPurchaseMemberInfo(Long purchaseId);
     String matchPurchaseDate(Long purchaseId, PurchaseDateRequestDto purchaseDateRequestDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException;
+    String insertNewTransaction(Long purchaseId);
 }

@@ -36,4 +36,8 @@ public class ManageTransactionController {
     public ResponseEntity<String> matchPurchaseDate(@PathVariable Long purchaseId, @RequestBody PurchaseDateRequestDto purchaseDateRequestDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
         return ResponseEntity.ok(manageTransactionService.matchPurchaseDate(purchaseId, purchaseDateRequestDto));
     }
+    @PostMapping("/success/{purchaseId}")
+    public ResponseEntity<String> insertTransaction(@PathVariable Long purchaseId){
+        return ResponseEntity.ok(manageTransactionService.insertNewTransaction(purchaseId));
+    }
 }

@@ -9,6 +9,8 @@ import com.woochacha.backend.domain.admin.dto.sendMessage.MessageDto;
 import com.woochacha.backend.domain.admin.dto.sendMessage.SmsRequestDto;
 import com.woochacha.backend.domain.admin.dto.sendMessage.SmsResponseDto;
 import com.woochacha.backend.domain.admin.service.ManageTransactionService;
+import com.woochacha.backend.domain.product.repository.ProductRepository;
+import com.woochacha.backend.domain.purchase.entity.PurchaseForm;
 import com.woochacha.backend.domain.purchase.repository.PurchaseFormRepository;
 import com.woochacha.backend.domain.transaction.entity.Transaction;
 import com.woochacha.backend.domain.transaction.repository.TransactionRepository;
@@ -55,6 +57,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
 
     private final PurchaseFormRepository purchaseFormRepository;
     private final TransactionRepository transactionRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public Page<PurchaseFormListResponseDto> getAllPurchaseFormInfo(Pageable pageable) {
@@ -91,8 +94,6 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
     @Transactional
     public String matchPurchaseDate(Long purchaseId, PurchaseDateRequestDto purchaseDateRequestDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
         purchaseFormRepository.updatePurchaseDateANDStatus(purchaseId, purchaseDateRequestDto.getMeetingDate());
-        Long saleFormId = purchaseFormRepository.getSaleFormId(purchaseId);
-        transactionRepository.insertTransaction(saleFormId,purchaseId);
         setMessage(purchaseFormRepository.getCarNumByPurchaseId(purchaseId), getPurchaseMemberInfo(purchaseId), String.valueOf(purchaseDateRequestDto.getMeetingDate()), purchaseFormRepository.getBranchByPurchaseId(purchaseId).name() );
         return "날짜 매칭에 성공하였습니다.";
     }
@@ -172,4 +173,15 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
         return Base64.encodeBase64String(rawHmac);
     }
 
+
+    @Override
+    @Transactional
+    public String insertNewTransaction(Long purchaseId){
+        Long saleFormId = purchaseFormRepository.getSaleFormId(purchaseId);
+        transactionRepository.insertTransaction(saleFormId,purchaseId);
+        PurchaseForm purchaseForm = purchaseFormRepository.findById(purchaseId).orElseThrow(() -> new RuntimeException("SaleForm not found"));
+        Long productId = purchaseForm.getProduct().getId();
+        productRepository.updateProductSuccessStatus(productId);
+        return "거래가 성사되었습니다.";
+    }
 }

@@ -58,4 +58,6 @@ public interface PurchaseFormRepository extends JpaRepository<PurchaseForm, Long
             "JOIN p.saleForm sf " +
             "WHERE pf.id = :purchaseId")
     Long getSaleFormId(@Param("purchaseId") Long purchaseId);
+
+
 }
