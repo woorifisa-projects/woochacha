@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.admin.controller;
 
 import com.woochacha.backend.domain.admin.dto.manageMember.EditMemberRequestDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoListResponseDto;
+import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoResponseDto;
 import com.woochacha.backend.domain.admin.service.ManageMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,12 @@ public class ManageMemberController {
     public ResponseEntity<Page<MemberInfoListResponseDto>> getMemberInfoList(Pageable pageable){
         List<MemberInfoListResponseDto> memberInfo = manageMemberService.getAllMemberInfo(pageable).getResults();
         return ResponseEntity.ok(new PageImpl<>(memberInfo, pageable, memberInfo.size()));
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberInfoResponseDto> getMemberInfo(@PathVariable Long memberId){
+        MemberInfoResponseDto memberInfoResponseDto = manageMemberService.getMemberInfo(memberId);
+        return ResponseEntity.ok(memberInfoResponseDto);
     }
 
     @PatchMapping("/edit/{memberId}")
