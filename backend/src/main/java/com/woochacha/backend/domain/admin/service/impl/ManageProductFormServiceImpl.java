@@ -40,5 +40,9 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
         return deleteEditForms.map(this::arrayToManageProductFormDto);
     }
 
-
+    @Transactional
+    @Override
+    public void deleteProduct(Long productId){
+        manageProductFormRepository.deleteProduct(productId);
+    }
 }
