@@ -176,7 +176,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     @Override
     @Transactional
     public void updateQldbExchangeInfo(CarExchangeInfoDto carExchangeInfoDto, Long saleFormId){
-        SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));;
+        SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         String carNum = saleForm.getCarNum();
         try {
             qldbDriver.QldbDriver().execute(txn -> {

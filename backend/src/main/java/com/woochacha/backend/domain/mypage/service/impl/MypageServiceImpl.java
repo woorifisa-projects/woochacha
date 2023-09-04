@@ -1,7 +1,6 @@
 package com.woochacha.backend.domain.mypage.service.impl;
 
 import com.woochacha.backend.common.ModelMapping;
-import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3ProductRequestDto;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
 import com.woochacha.backend.domain.AmazonS3.service.AmazonS3Service;
 import com.woochacha.backend.domain.member.entity.Member;

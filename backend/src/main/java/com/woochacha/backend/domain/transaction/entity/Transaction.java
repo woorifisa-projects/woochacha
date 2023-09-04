@@ -28,6 +28,5 @@ public class Transaction {
     private PurchaseForm purchaseForm;
 
     @CreationTimestamp
-    @NotNull
     private LocalDateTime createdAt;
 }
