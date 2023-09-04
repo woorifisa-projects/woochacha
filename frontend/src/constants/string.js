@@ -171,3 +171,51 @@ export const ADMIN_DENY_MODAL = {
     modalContents: '승인 반려 관련 텍스트입니다!!!',
   },
 };
+
+// MODAL
+export const ADMIN_APPROVE_MODAL = {
+  CONTENTS: {
+    modalTitle: '승인이 완료되었습니다',
+    modalYesBtn: '등록하기',
+    modalContents: '점검 정보가 승인되었습니다. 게시글을 등록해주세요.',
+  },
+};
+
+// MODAL
+export const ADMIN_REGISTER_MODAL = {
+  CONTENTS: {
+    modalTitle: '등록이 완료되었습니다',
+    modalYesBtn: '닫기',
+    modalContents: '등록이 완료되었습니다. 게시글을 확인해주세요.',
+  },
+};
+
+// MODAL
+export const ADMIN_EDIT_MODAL = {
+  CONTENTS: {
+    modalTitle: '수정을 승인하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '',
+  },
+};
+
+// MODAL
+export const ADMIN_PURCHASE_CONFIRM_MODAL = {
+  CONTENTS: {
+    modalTitle: '구매 약속일을 선택하시겠습니까?',
+    modalYesBtn: '판매자 및 구매자에게 문자 전송',
+    modalNoBtn: '신청폼 무효화',
+    modalContents: '구매 약속일을 선택해주세요.',
+  },
+};
+
+// MODAL
+export const ADMIN_PURCHASE_MODAL = {
+  CONTENTS: {
+    modalTitle: '거래를 성사를 완료하겠습니까?',
+    modalYesBtn: '거래 성사',
+    modalNoBtn: '거래 미성사',
+    modalContents: '',
+  },
+};
