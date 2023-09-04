@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.admin.dto;
+package com.woochacha.backend.domain.admin.dto.magageProduct;
 
 
 import lombok.Builder;
