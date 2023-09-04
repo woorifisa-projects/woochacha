@@ -20,4 +20,10 @@ public class ManageProductController {
         Page<ManageProductFormDto> productFormsPage = manageProductFormService.findDeleteEditForm(page, size);
         return ResponseEntity.ok(productFormsPage);
     }
+
+    @PatchMapping("/{productId}")
+    public ResponseEntity<String> permitDeleteRequest(@PathVariable("productId") Long productId){
+        manageProductFormService.deleteProduct(productId);
+        return ResponseEntity.ok("삭제가 완료되었습니다.");
+    }
 }
