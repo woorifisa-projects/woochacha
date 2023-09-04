@@ -21,7 +21,7 @@ public class ManageProductController {
         return ResponseEntity.ok(productFormsPage);
     }
 
-    @PatchMapping("/{productId}")
+    @PatchMapping("/delete/{productId}")
     public ResponseEntity<String> permitDeleteRequest(@PathVariable("productId") Long productId){
         manageProductFormService.deleteProduct(productId);
         return ResponseEntity.ok("삭제가 완료되었습니다.");
