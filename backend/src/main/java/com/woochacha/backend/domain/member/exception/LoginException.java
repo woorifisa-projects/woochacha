@@ -19,7 +19,7 @@ public class LoginException {
         } else if (e instanceof AuthenticationException) {
             return new LoginResponseDto(7, "시스템 에러");
         } else {
-            return new LoginResponseDto(8, "찾을 수 없는 계정");
+            return new LoginResponseDto(8, e.toString());
         }
     }
 }
