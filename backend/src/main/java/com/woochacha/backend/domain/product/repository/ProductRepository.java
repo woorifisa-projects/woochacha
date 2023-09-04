@@ -13,7 +13,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("UPDATE Product AS p SET p.status = 5 WHERE p.id = :productId")
     void updateProductSuccessStatus(@Param("productId") Long productId);
 
-    @Query("SELECT COUNT(p) FROM Product p " +
+    @Query("SELECT COUNT(*) FROM Product p " +
             "JOIN p.saleForm sf " +
             "WHERE p.saleForm.member.id = :memberId AND p.status.id = :carStatusId")
     int countSale(@Param("memberId") Long memberId, @Param("carStatusId") short carStatusId);

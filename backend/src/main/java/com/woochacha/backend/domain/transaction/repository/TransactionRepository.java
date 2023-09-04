@@ -13,7 +13,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t WHERE t.saleForm.id = :saleId AND t.purchaseForm.id = :purchaseId")
     Transaction findBySaleIdAndPurchaseId(@Param("saleId") Long saleId, @Param("purchaseId") Long purchaseId);
 
-    @Query("SELECT COUNT(t) FROM Transaction t " +
+    @Query("SELECT COUNT(*) FROM Transaction t " +
             "JOIN t.purchaseForm pf " +
             "JOIN pf.member m WHERE t.purchaseForm.member.id = :memberId")
     int countCompletePurchase(@Param("memberId") Long memberId);

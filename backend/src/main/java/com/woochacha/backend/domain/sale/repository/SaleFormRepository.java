@@ -13,7 +13,7 @@ public interface SaleFormRepository extends JpaRepository<SaleForm, Long> {
     @Query("UPDATE SaleForm AS sf SET sf.carStatus = 3 WHERE sf.id = :saleFormId")
     void updateStatus(@Param("saleFormId") Long saleFormId);
 
-    @Query("SELECT COUNT(sf) FROM SaleForm sf WHERE sf.member.id = :memberId AND sf.carStatus.id = :carStatusId")
+    @Query("SELECT COUNT(*) FROM SaleForm sf WHERE sf.member.id = :memberId AND sf.carStatus.id = :carStatusId")
     int countSale(@Param("memberId") Long memberId, @Param("carStatusId") short carStatusId);
 
 }
