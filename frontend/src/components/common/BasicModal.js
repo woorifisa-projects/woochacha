@@ -29,7 +29,7 @@ export default function BasicModal(props) {
     mounted && (
       <div>
         <Dialog
-          maxWidth="xs"
+          maxWidth="sm"
           fullWidth
           open={isOpen}
           onClose={handleClickNo}
