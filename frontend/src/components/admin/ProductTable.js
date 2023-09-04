@@ -72,7 +72,7 @@ function TablePaginationActions(props) {
 
 // basic component
 export default function BasicButtonTable(props) {
-  const { headerData, contentData, moveUrl, callbackFunc } = props;
+  const { headerData, contentData, deleteFunc, editFunc, setEditFlag, moveUrl } = props;
   const rows = contentData;
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(0);
@@ -91,8 +91,18 @@ export default function BasicButtonTable(props) {
     setPage(0);
   };
 
-  const handleMove = (memberId) => {
-    router.push(`${moveUrl}${memberId}`);
+  const handleMove = (id) => {
+    router.push(`${moveUrl}${id}`);
+  };
+
+  const handleEditProduct = () => {
+    editFunc();
+    setEditFlag(true);
+  };
+
+  const handleDeleteProduct = () => {
+    deleteFunc();
+    setEditFlag(false);
   };
 
   useEffect(() => {
@@ -131,22 +141,26 @@ export default function BasicButtonTable(props) {
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
             ).map((row) => (
-              // TODO: button 처리 (수정 / 삭제)
-              <TableRow sx={basicButtonTableCss.tableRow} key={row.id}>
-                <TableCell align="center">{row[`${headerData[0].contentCell}`]}</TableCell>
+              <TableRow sx={basicButtonTableCss.tableRow} key={row.productId}>
+                <TableCell
+                  align="center"
+                  onClick={() => handleMove(`${row.productId}`)}
+                  sx={basicButtonTableCss.button}>
+                  {row[`${headerData[0].contentCell}`]}
+                </TableCell>
                 <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
                 <TableCell align="center">
                   {row[`${headerData[3].contentCell}`] === 1 ? (
                     <Button
-                      onClick={() => handleMove(row.id)}
+                      onClick={handleEditProduct}
                       sx={basicButtonTableCss.button}
                       variant="contained">
                       수정
                     </Button>
                   ) : (
                     <Button
-                      onClick={callbackFunc}
+                      onClick={handleDeleteProduct}
                       sx={basicButtonTableCss.button}
                       variant="contained"
                       color="error">
