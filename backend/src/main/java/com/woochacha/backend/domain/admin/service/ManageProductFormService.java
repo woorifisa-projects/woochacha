@@ -14,5 +14,5 @@ public interface ManageProductFormService {
 
     void denyEditRequest(Long productId);
 
-    public void permitEditRequest(Long productId);
+    void permitEditRequest(Long productId);
 }
