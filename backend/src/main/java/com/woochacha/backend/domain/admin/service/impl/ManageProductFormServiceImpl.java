@@ -34,6 +34,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
                 .build();
     }
 
+    // 매물 관리 리스트 조회
     @Override
     public Page<ManageProductFormDto> findDeleteEditForm(int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -41,24 +42,28 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
         return deleteEditForms.map(this::arrayToManageProductFormDto);
     }
 
+    // 매물 삭제 처리
     @Transactional
     @Override
     public void deleteProduct(Long productId){
         manageProductFormRepository.deleteProduct(productId);
     }
 
+    // 매물 수정 처리를 위한 팝업창 데이터 가져오기
     @Override
     public EditProductDto findEditForm(Long productId){
         EditProductDto editProductDto = manageProductFormRepository.getEditForm(productId);
         return editProductDto;
     }
 
+    // 매물 수정 반려
     @Transactional
     @Override
     public void denyEditRequest(Long productId){
         manageProductFormRepository.denyEditRequest(productId);
     }
 
+    // 매물 수정 승인
     @Transactional
     @Override
     public void permitEditRequest(Long productId){
