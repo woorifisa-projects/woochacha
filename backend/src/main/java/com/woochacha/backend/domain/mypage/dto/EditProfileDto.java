@@ -1,12 +1,11 @@
 package com.woochacha.backend.domain.mypage.dto;
 
 import lombok.Builder;
-import lombok.Data;
-
-// 프로필 수정시 GET요청에서 사용할 Dto
+import lombok.Getter;
 
 @Builder
-public class EditProdileDto {
+@Getter
+public class EditProfileDto {
     private String imageUrl; // 프로필 사진
     private String name; // 사용자 이름
 }
