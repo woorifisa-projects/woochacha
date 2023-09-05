@@ -11,5 +11,5 @@ function Login() {
 }
 
 // login한 유저는 login page 접근 불가
-Login.Layout = withNoAuth();
-export default Login;
+// Login.Layout = withNoAuth();
+export default withNoAuth(Login);

@@ -10,5 +10,5 @@ function Signup() {
 }
 
 // login한 유저는 Signup page 접근 불가
-Signup.Layout = withNoAuth();
-export default Signup;
+// Signup.Layout = withNoAuth();
+export default withNoAuth(Signup);
