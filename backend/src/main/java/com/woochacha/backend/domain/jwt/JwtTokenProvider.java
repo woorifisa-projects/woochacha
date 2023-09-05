@@ -58,17 +58,24 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // JWT 토큰으로 인증 정보 조회
-    public Authentication getAuthentication(String token) {
+    public UserDetails getUserDetails(String token) {
         // 토큰 복호화
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
 
+        return userDetailsService.loadUserByUsername(claims.getSubject());
+    }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-
+    // JWT 토큰으로 인증 정보 조회
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = getUserDetails(token);
         return new UsernamePasswordAuthenticationToken(userDetails, "",
                 userDetails.getAuthorities());
+    }
+
+    public String getUserName(String token) {
+        UserDetails userDetails = getUserDetails(token);
+        return userDetails.getUsername();
     }
 
     // 토큰의 유효성 + 만료일자 확인

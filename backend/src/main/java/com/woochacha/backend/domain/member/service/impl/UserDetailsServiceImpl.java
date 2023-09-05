@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throws UsernameNotFoundException {
         Optional<Member> memberOptional = Optional.ofNullable(queryFactory
                 .selectFrom(m)
-                .where(m.email.eq(email), m.id.eq(JPAExpressions.select(m.id.max()).from(m)))
+                .where(m.id.eq(JPAExpressions.select(m.id.max()).from(m).where(m.email.eq(email))))
                 .fetchOne());
 
         if(memberOptional.isEmpty())

@@ -1,10 +1,9 @@
 package com.woochacha.backend.domain.member.controller;
 
-import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
 import com.woochacha.backend.domain.member.dto.LoginResponseDto;
+import com.woochacha.backend.domain.member.dto.SignResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
-import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.service.SignService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +18,17 @@ public class MemberController {
 
     private final SignService signService;
 
-    private final LogService logService;
-
-    public MemberController(SignService signService, LogService logService) {
+    public MemberController(SignService signService) {
         this.signService = signService;
-        this.logService = logService;
     }
 
     @PostMapping("/register")
-    public SignUpResponseDto registerUser(@Valid @RequestBody SignUpRequestDto memberRequestDto){
+    public SignResponseDto registerUser(@Valid @RequestBody SignUpRequestDto memberRequestDto){
         return signService.signUp(memberRequestDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         LoginResponseDto loginResponseDto = signService.login(loginRequestDto);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", loginResponseDto.getToken());
@@ -46,5 +42,11 @@ public class MemberController {
     public ResponseEntity<Boolean> logout(@RequestParam("memberId") Long memberId) {
         if (signService.logout(memberId)) return ResponseEntity.ok(true);
         return ResponseEntity.ok(false);
+    }
+
+    @PatchMapping("/signout")
+    public ResponseEntity<SignResponseDto> signOut(@RequestParam("memberId") Long memberId, HttpServletRequest request) {
+        SignResponseDto signResponseDto = signService.signOut(memberId, request);
+        return ResponseEntity.ok().body(signResponseDto);
     }
 }
