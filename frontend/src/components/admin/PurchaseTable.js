@@ -72,7 +72,15 @@ function TablePaginationActions(props) {
 
 // basic component
 export default function PurchaseTable(props) {
-  const { headerData, contentData, moveDetailUrl, moveMatchUrl, moveDealUrl } = props;
+  const {
+    headerData,
+    contentData,
+    callbackFunc,
+    getConfirmData,
+    getPurchaseData,
+    setConfirmFlag,
+    moveDetailUrl,
+  } = props;
   const rows = contentData;
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(0);
@@ -93,6 +101,18 @@ export default function PurchaseTable(props) {
 
   const handleMove = (baseUrl, purchaseId) => {
     router.push(`${baseUrl}${purchaseId}`);
+  };
+
+  const handleConfirmProduct = () => {
+    callbackFunc();
+    getConfirmData(); // TODO: 검토여부 get
+    setConfirmFlag(true);
+  };
+
+  const handlePurchaseProduct = () => {
+    callbackFunc();
+    getPurchaseData(); // TODO: 거래여부 get
+    setConfirmFlag(false);
   };
 
   useEffect(() => {
@@ -148,7 +168,7 @@ export default function PurchaseTable(props) {
                     </Button>
                   ) : (
                     <Button
-                      onClick={() => handleMove(moveMatchUrl, row.productId)}
+                      onClick={handleConfirmProduct}
                       sx={basicButtonTableCss.button}
                       variant="outlined"
                       color="error">
@@ -159,7 +179,7 @@ export default function PurchaseTable(props) {
                 <TableCell align="center">
                   {row[`${headerData[3].contentCell}`] === 1 ? (
                     <Button
-                      onClick={() => handleMove(moveDealUrl, row.productId)}
+                      onClick={handlePurchaseProduct}
                       sx={basicButtonTableCss.button}
                       variant="outlined">
                       성사

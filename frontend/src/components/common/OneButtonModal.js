@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@mui/material';
 
-export default function BasicModal(props) {
+export default function OneButtonModal(props) {
   const [mounted, setMounted] = useState(false);
   const { onClickModal, isOpen, modalContent, callBackFunc, children } = props;
 
@@ -29,7 +29,7 @@ export default function BasicModal(props) {
     mounted && (
       <div>
         <Dialog
-          maxWidth="sm"
+          maxWidth="xs"
           fullWidth
           open={isOpen}
           onClose={handleClickNo}
@@ -43,9 +43,6 @@ export default function BasicModal(props) {
             {children}
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" onClick={handleClickNo} color="error">
-              {modalContent.modalNoBtn}
-            </Button>
             <Button variant="contained" onClick={handleClickYes} color="primary">
               {modalContent.modalYesBtn}
             </Button>

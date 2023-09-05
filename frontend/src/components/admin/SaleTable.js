@@ -142,14 +142,14 @@ export default function SaleTable(props) {
                     onClick={() => handleMove(row.id)}
                     sx={basicButtonTableCss.button}
                     variant="contained">
-                    수정
+                    매물등록
                   </Button>
                   <Button
                     onClick={callbackFunc}
                     sx={basicButtonTableCss.button}
                     variant="contained"
                     color="error">
-                    반려
+                    반려하기
                   </Button>
                 </TableCell>
               </TableRow>
