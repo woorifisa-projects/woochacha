@@ -8,13 +8,13 @@ import com.woochacha.backend.domain.jwt.JwtTokenProvider;
 import com.woochacha.backend.domain.log.service.impl.LogServiceImpl;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
 import com.woochacha.backend.domain.member.dto.LoginResponseDto;
+import com.woochacha.backend.domain.member.dto.SignResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
-import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.exception.LoginException;
+import com.woochacha.backend.domain.member.exception.SignException;
 import com.woochacha.backend.domain.member.exception.SignResultCode;
-import com.woochacha.backend.domain.member.exception.SignUpException;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
 import com.woochacha.backend.domain.product.entity.QProduct;
@@ -27,7 +27,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +77,7 @@ public class SignServiceImpl implements SignService {
      */
     @Transactional
     @Override
-    public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDto) {
+    public SignResponseDto signUp(SignUpRequestDto signUpRequestDto) {
         // 핸드폰 번호 중복 체크
         List<Member> phoneSearchList = queryFactory
                 .selectFrom(m)
@@ -97,14 +96,14 @@ public class SignServiceImpl implements SignService {
             // 이용 정지를 당한 같은 핸드폰 번호를 가진 회원이 탈퇴 후 재가입하는 경우 실패
             for(Member phoneSearch : phoneSearchList) {
                 if(!phoneSearch.isAccountNonLocked()) {
-                    return SignUpException.exception(SignResultCode.SUSPENDED_ACCOUNT);
+                    return SignException.exception(SignResultCode.SUSPENDED_ACCOUNT);
                 }
             }
 
             // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
             for(Member phoneSearch : phoneSearchList) {
                 if(phoneSearch.isEnabled()) {
-                    return SignUpException.exception(SignResultCode.DUPLICATE_PHONE);
+                    return SignException.exception(SignResultCode.DUPLICATE_PHONE);
                 }
             }
         }
@@ -114,14 +113,14 @@ public class SignServiceImpl implements SignService {
             // 이용 정지를 당한 같은 이메일을 가진 회원이 탈퇴 후 재가입하는 경우 실패
             for(Member emailSearch : emailSearchList) {
                 if(!emailSearch.isAccountNonLocked()) {
-                    return SignUpException.exception(SignResultCode.SUSPENDED_ACCOUNT);
+                    return SignException.exception(SignResultCode.SUSPENDED_ACCOUNT);
                 }
             }
 
             // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
             for(Member emailSearch : emailSearchList) {
                 if(emailSearch.isEnabled()) {
-                    return SignUpException.exception(SignResultCode.DUPLICATE_EMAIL);
+                    return SignException.exception(SignResultCode.DUPLICATE_EMAIL);
                 }
             }
         }
@@ -133,9 +132,9 @@ public class SignServiceImpl implements SignService {
         Member savedMember = save(signUpRequestDto);
 
         if (!savedMember.getName().isEmpty()) {
-            return SignUpException.exception(SignResultCode.SUCCESS);
+            return SignException.exception(SignResultCode.SUCCESS);
         } else {
-            return SignUpException.exception(SignResultCode.FAIL);
+            return SignException.exception(SignResultCode.FAIL);
         }
 
     }
@@ -179,22 +178,23 @@ public class SignServiceImpl implements SignService {
 
     @Override
     @Transactional
-    public boolean signOut(Long memberId, HttpServletRequest request) {
+    public SignResponseDto signOut(Long memberId, HttpServletRequest request) {
         // header의 token에서 member id를 꺼냄
         // 탈퇴를 요청한 member id와 입력 받은 member id가 동일하면 탈퇴 승인. 다르면 403 에러.
-        String token = parseJwt(request);
-        UserDetails userDetails = jwtTokenProvider.getUserName(token);
+        String memberName = jwtTokenProvider.getUserName(parseJwt(request));
 
         Long findMemberId = queryFactory
                 .select(m.id)
                 .from(m)
-                .where(m.email.eq(userDetails.getUsername()), m.status.eq((byte) 1))
+                .where(m.email.eq(memberName), m.status.eq((byte) 1))
                 .fetchOne();
+
+        if(findMemberId == null) SignException.exception(SignResultCode.FAIL, "탈퇴할 회원이 없음");
 
         if(!Objects.equals(findMemberId, memberId))
             throw new AuthorizationServiceException("탈퇴 요청 권한 없음"); // access denied
 
-        long updatedCount = queryFactory
+        queryFactory
                 .update(m)
                 .set(m.status, (byte) 0)
                 .where(m.id.eq(memberId))
@@ -212,7 +212,7 @@ public class SignServiceImpl implements SignService {
 
         // 회원 탈퇴 로그 저장
         logService.savedMemberLogWithType(memberId, "회원 탈퇴");
-        return true;
+        return SignException.exception(SignResultCode.SUCCESS);
     }
 
     private Member save(SignUpRequestDto signUpRequestDto) {

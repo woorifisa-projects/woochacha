@@ -2,8 +2,8 @@ package com.woochacha.backend.domain.member.controller;
 
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
 import com.woochacha.backend.domain.member.dto.LoginResponseDto;
+import com.woochacha.backend.domain.member.dto.SignResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
-import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.service.SignService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public SignUpResponseDto registerUser(@Valid @RequestBody SignUpRequestDto memberRequestDto){
+    public SignResponseDto registerUser(@Valid @RequestBody SignUpRequestDto memberRequestDto){
         return signService.signUp(memberRequestDto);
     }
 
@@ -45,10 +45,8 @@ public class MemberController {
     }
 
     @PatchMapping("/signout")
-    public ResponseEntity<Boolean> signOut(@RequestParam("memberId") Long memberId, HttpServletRequest request) {
-        if (signService.signOut(memberId, request)) return ResponseEntity.ok(true);
-        return ResponseEntity.ok(false);
-
-
+    public ResponseEntity<SignResponseDto> signOut(@RequestParam("memberId") Long memberId, HttpServletRequest request) {
+        SignResponseDto signResponseDto = signService.signOut(memberId, request);
+        return ResponseEntity.ok().body(signResponseDto);
     }
 }
