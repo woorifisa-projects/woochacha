@@ -38,7 +38,7 @@ public class MemberController {
                 .body(loginResponseDto);
     }
 
-    @PostMapping("/logout") // TODO: get mapping으로 수정
+    @PostMapping("/logout")
     public ResponseEntity<Boolean> logout(@RequestParam("memberId") Long memberId) {
         if (signService.logout(memberId)) return ResponseEntity.ok(true);
         return ResponseEntity.ok(false);
