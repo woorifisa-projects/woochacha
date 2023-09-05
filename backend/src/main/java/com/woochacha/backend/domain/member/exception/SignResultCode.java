@@ -6,7 +6,8 @@ public enum SignResultCode {
     FAIL(-1, "Fail"),
     DUPLICATE_PHONE(1, "Duplicate Phone Exception"),
     DUPLICATE_EMAIL(2, "Duplicate Email Exception"),
-    SUSPENDED_ACCOUNT(3, "Suspended Account")
+    SUSPENDED_ACCOUNT(3, "Suspended Account"),
+    ACCESS_DENIED(403, "Access Denied")
     ;
 
     int code;

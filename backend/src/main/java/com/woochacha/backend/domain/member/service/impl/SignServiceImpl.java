@@ -22,7 +22,6 @@ import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -189,16 +188,16 @@ public class SignServiceImpl implements SignService {
                 .where(m.email.eq(memberName), m.status.eq((byte) 1))
                 .fetchOne();
 
-        if(findMemberId == null) SignException.exception(SignResultCode.FAIL, "탈퇴할 회원이 없음");
 
         if(!Objects.equals(findMemberId, memberId))
-            throw new AuthorizationServiceException("탈퇴 요청 권한 없음"); // access denied
+            return SignException.exception(SignResultCode.ACCESS_DENIED,"탈퇴 요청 권한 없음"); // access denied
 
         queryFactory
                 .update(m)
                 .set(m.status, (byte) 0)
                 .where(m.id.eq(memberId))
                 .execute();
+
 
         List<Long> productIdList = queryFactory
                 .select(p.id)
