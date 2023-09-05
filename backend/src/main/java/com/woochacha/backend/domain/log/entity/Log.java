@@ -23,7 +23,7 @@ public class Log {
     private String email;
 
     @NotNull
-    private String username;
+    private String name;
 
     @CreationTimestamp
     @NotNull
