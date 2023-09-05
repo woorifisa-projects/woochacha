@@ -4,6 +4,7 @@ package com.woochacha.backend.domain.admin.controller;
 import com.woochacha.backend.domain.admin.dto.manageMember.EditMemberRequestDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoListResponseDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoResponseDto;
+import com.woochacha.backend.domain.admin.dto.manageMember.MemberLogDto;
 import com.woochacha.backend.domain.admin.service.ManageMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,5 +44,12 @@ public class ManageMemberController {
     public ResponseEntity<String> deleteMemberInfo(@PathVariable Long memberId){
         String result = manageMemberService.deleteMember(memberId);
         return ResponseEntity.ok(result);
+    }
+
+    // 로그 정보 조회
+    @GetMapping("/log/{memberId}")
+    public ResponseEntity<List<MemberLogDto>> memberLogInfoLis(@PathVariable("memberId") Long memberId){
+        List<MemberLogDto> memberLogDtos = manageMemberService.getMemberLog(memberId);
+        return ResponseEntity.ok(memberLogDtos);
     }
 }

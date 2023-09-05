@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.admin.repository;
 
 import com.woochacha.backend.domain.admin.dto.magageProduct.EditProductDto;
+import com.woochacha.backend.domain.admin.dto.manageMember.MemberLogDto;
 import com.woochacha.backend.domain.product.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ManageProductFormRepository extends JpaRepository<Product, Long> {
@@ -47,4 +50,9 @@ public interface ManageProductFormRepository extends JpaRepository<Product, Long
     @Modifying
     @Query("UPDATE Product p SET p.status = 4, p.price = p.updatePrice WHERE p.id = :productId")
     void permitEditRequest(@Param("productId") Long productId);
+
+    @Query("SELECT new com.woochacha.backend.domain.admin.dto.manageMember.MemberLogDto(l.email, l.name, l.date, l.type, l.etc) " +
+            "FROM Log l, Member m " +
+            "WHERE l.email = m.email AND m.id = :memberId ")
+    List<MemberLogDto> findAllMemberLog(@Param("memberId") Long memberId);
 }

@@ -3,10 +3,8 @@ package com.woochacha.backend.domain.admin.service.impl;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.woochacha.backend.domain.admin.dto.manageMember.EditMemberRequestDto;
-import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoDto;
-import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoListResponseDto;
-import com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoResponseDto;
+import com.woochacha.backend.domain.admin.dto.manageMember.*;
+import com.woochacha.backend.domain.admin.repository.ManageProductFormRepository;
 import com.woochacha.backend.domain.admin.service.ManageMemberService;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
@@ -17,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -29,6 +29,7 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     private final ProductRepository productRepository;
     private final PurchaseFormRepository purchaseFormRepository;
     private final TransactionRepository transactionRepository;
+    private final ManageProductFormRepository manageProductFormRepository;
 
     @Override
     public QueryResults<MemberInfoListResponseDto> getAllMemberInfo(Pageable pageable) {
@@ -102,5 +103,8 @@ public class ManageMemberServiceImpl implements ManageMemberService {
         }
     }
 
-
+    @Override
+    public List<MemberLogDto> getMemberLog(Long memberId){
+        return manageProductFormRepository.findAllMemberLog(memberId);
+    }
 }
