@@ -1,19 +1,19 @@
 package com.woochacha.backend.domain.member.service.impl;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.woochacha.backend.domain.member.entity.QMember;
-import com.woochacha.backend.domain.member.exception.SignResultCode;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
+import com.woochacha.backend.domain.log.service.impl.LogServiceImpl;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
 import com.woochacha.backend.domain.member.dto.LoginResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
 import com.woochacha.backend.domain.member.dto.SignUpResponseDto;
 import com.woochacha.backend.domain.member.entity.Member;
+import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.exception.LoginException;
+import com.woochacha.backend.domain.member.exception.SignResultCode;
 import com.woochacha.backend.domain.member.exception.SignUpException;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
@@ -24,8 +24,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,13 +49,16 @@ public class SignServiceImpl implements SignService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
+    private final LogServiceImpl logService;
+
     public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
-                           PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder) {
+                           PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, LogServiceImpl logService) {
         this.queryFactory = queryFactory;
         this.memberRepository = memberRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.logService = logService;
     }
 
     /*
@@ -148,6 +149,7 @@ public class SignServiceImpl implements SignService {
 
             // Authentication 객체를 createToken 메서드를 통해서 JWT Token 생성
             String jwt = jwtTokenProvider.createToken(authentication);
+
             return new LoginResponseDto(1, "성공", jwt, member.getId(), member.getName());
         } catch (Exception e) {
             return LoginException.exception(e);
@@ -155,8 +157,9 @@ public class SignServiceImpl implements SignService {
     }
 
 
-    public boolean logout() {
-
+    public boolean logout(Long memberId) {
+        // 로그아웃 로그 저장
+        logService.savedMemberLogWithType(memberId, "로그아웃");
         return true;
     }
 
