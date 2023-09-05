@@ -55,5 +55,5 @@ public interface ManageProductFormRepository extends JpaRepository<Product, Long
             "FROM Log l, Member m " +
             "WHERE l.email = m.email AND m.id = :memberId " +
             "ORDER BY l.date ASC ")
-    List<MemberLogDto> findAllMemberLog(@Param("memberId") Long memberId);
+    Page<MemberLogDto> findAllMemberLog(@Param("memberId") Long memberId, Pageable pageable);
 }

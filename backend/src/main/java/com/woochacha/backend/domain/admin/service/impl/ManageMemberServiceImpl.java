@@ -12,6 +12,8 @@ import com.woochacha.backend.domain.product.repository.ProductRepository;
 import com.woochacha.backend.domain.purchase.repository.PurchaseFormRepository;
 import com.woochacha.backend.domain.transaction.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,7 +106,8 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     }
 
     @Override
-    public List<MemberLogDto> getMemberLog(Long memberId){
-        return manageProductFormRepository.findAllMemberLog(memberId);
+    public Page<MemberLogDto> getMemberLog(Long memberId, int pageNumber, int pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return manageProductFormRepository.findAllMemberLog(memberId, pageable);
     }
 }

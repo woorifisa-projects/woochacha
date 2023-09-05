@@ -48,8 +48,10 @@ public class ManageMemberController {
 
     // 로그 정보 조회
     @GetMapping("/log/{memberId}")
-    public ResponseEntity<List<MemberLogDto>> memberLogInfoLis(@PathVariable("memberId") Long memberId){
-        List<MemberLogDto> memberLogDtos = manageMemberService.getMemberLog(memberId);
+    public ResponseEntity<Page<MemberLogDto>> memberLogInfoLis(@PathVariable("memberId") Long memberId,
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "5") int size){
+        Page<MemberLogDto> memberLogDtos = manageMemberService.getMemberLog(memberId, page, size);
         return ResponseEntity.ok(memberLogDtos);
     }
 }
