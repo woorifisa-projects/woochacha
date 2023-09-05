@@ -15,13 +15,13 @@ import java.io.IOException;
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
-        sendErrorResponse(response, "Access Denied");
+        sendErrorResponse(response);
     }
 
-    private void sendErrorResponse(HttpServletResponse response, String message) throws IOException {
+    private void sendErrorResponse(HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json");
-        LoginResponseDto errorResponse = new LoginResponseDto(HttpStatus.FORBIDDEN.value(), message);
+        LoginResponseDto errorResponse = new LoginResponseDto(HttpStatus.FORBIDDEN.value(), "Access Denied");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getWriter(), errorResponse);
     }

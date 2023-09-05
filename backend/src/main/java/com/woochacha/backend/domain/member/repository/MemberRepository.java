@@ -26,4 +26,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "FROM Member m  WHERE m.id = :memberId")
     MemberInfoDto getMemberInfo(@Param("memberId") Long memberId);
 
+    @Modifying
+    @Query("UPDATE Product AS p SET p.status = 8 WHERE p.id = :productId")
+    void updateProductSuccessStatus(@Param("productId") Long productId);
 }

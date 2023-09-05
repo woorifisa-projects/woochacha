@@ -36,7 +36,7 @@ public class LogServiceImpl implements LogService {
 
         Log log = Log.builder()
                 .email(member.getEmail())
-                .name(member.getUsername())
+                .name(member.getName())
                 .type(type)
                 .build();
 
