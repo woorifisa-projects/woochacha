@@ -1,6 +1,9 @@
 package com.woochacha.backend.domain.log.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -9,6 +12,9 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @DynamicInsert
 @Table(name = "log")
@@ -26,11 +32,18 @@ public class Log {
     private String name;
 
     @CreationTimestamp
-    @NotNull
     private LocalDateTime date;
 
     @NotNull
     private String type;
 
     private String etc;
+
+    public Log(Long id, String email, String name, String type, String etc) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.type = type;
+        this.etc = etc;
+    }
 }
