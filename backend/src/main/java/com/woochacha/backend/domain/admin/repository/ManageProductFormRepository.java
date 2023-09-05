@@ -53,6 +53,7 @@ public interface ManageProductFormRepository extends JpaRepository<Product, Long
 
     @Query("SELECT new com.woochacha.backend.domain.admin.dto.manageMember.MemberLogDto(l.email, l.name, l.date, l.type, l.etc) " +
             "FROM Log l, Member m " +
-            "WHERE l.email = m.email AND m.id = :memberId ")
+            "WHERE l.email = m.email AND m.id = :memberId " +
+            "ORDER BY l.date ASC ")
     List<MemberLogDto> findAllMemberLog(@Param("memberId") Long memberId);
 }
