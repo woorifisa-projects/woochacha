@@ -138,7 +138,11 @@ export default function ProductDetail() {
       },
     ],
     productOwnerInfo: null,
-    carImageList: null,
+    carImageList: [
+      'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/00%EA%B0%800000/1',
+      'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/00%EA%B0%800000/1',
+      'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/00%EA%B0%800000/1',
+    ],
   };
 
   const productDetailCss = {
@@ -198,7 +202,7 @@ export default function ProductDetail() {
             </Typography>
             <Grid container spacing={2} alignItems="flex-start" justifyContent="center" mb={2}>
               <Grid item xs={12} sm={12} md={6}>
-                <ImageSlider sx={productDetailCss.cardMedia} />
+                <ImageSlider image={dummy_data.carImageList} />
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
                 <Grid container spacing={2} alignItems="flex-start" justifyContent="center" mb={2}>

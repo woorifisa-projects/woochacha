@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
-import { Typography } from '@mui/material';
+import { CssBaseline, ThemeProvider, Typography, responsiveFontSizes } from '@mui/material';
+import theme from '@/styles/theme';
 import withAdminAuth from '@/hooks/withAdminAuth';
 import { useRouter } from 'next/router';
 import { ADMIN_DENY_MODAL } from '@/constants/string';
@@ -10,6 +11,7 @@ import BasicModal from '@/components/common/BasicModal';
 function AdminSalesList() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  let responsiveFontTheme = responsiveFontSizes(theme);
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
@@ -63,24 +65,27 @@ function AdminSalesList() {
   const dummy_content_data = {
     content: [
       {
+        id: 1,
         seller: '홍속초',
         carNum: '11가1234',
         branch: '서울',
-        status: '상태?내용',
+        status: '상태내용',
         isApproved: 1,
       },
       {
+        id: 2,
         seller: '김속초',
         carNum: '11가1234',
         branch: '서울',
-        status: '상태?내용',
+        status: '상태내용',
         isApproved: 0,
       },
       {
+        id: 3,
         seller: '박속초',
         carNum: '11가1234',
         branch: '서울',
-        status: '상태?내용',
+        status: '상태내용',
         isApproved: 1,
       },
     ],
@@ -93,9 +98,10 @@ function AdminSalesList() {
 
   return (
     mounted && (
-      <>
+      <ThemeProvider theme={responsiveFontTheme}>
+        <CssBaseline />
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          관리자 페이지 - 판매 신청 리스트
+          관리자 페이지 - 판매 신청 목록
         </Typography>
         <SaleTable
           headerData={table_cell_data}
@@ -111,7 +117,7 @@ function AdminSalesList() {
             callBackFunc={handleDeny}
           />
         )}
-      </>
+      </ThemeProvider>
     )
   );
 }
