@@ -1,6 +1,5 @@
 package com.woochacha.backend.domain.member.controller;
 
-import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.dto.LoginRequestDto;
 import com.woochacha.backend.domain.member.dto.LoginResponseDto;
 import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
@@ -19,11 +18,8 @@ public class MemberController {
 
     private final SignService signService;
 
-    private final LogService logService;
-
-    public MemberController(SignService signService, LogService logService) {
+    public MemberController(SignService signService) {
         this.signService = signService;
-        this.logService = logService;
     }
 
     @PostMapping("/register")
@@ -32,7 +28,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         LoginResponseDto loginResponseDto = signService.login(loginRequestDto);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", loginResponseDto.getToken());
@@ -42,9 +38,17 @@ public class MemberController {
                 .body(loginResponseDto);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/logout") // TODO: get mapping으로 수정
     public ResponseEntity<Boolean> logout(@RequestParam("memberId") Long memberId) {
         if (signService.logout(memberId)) return ResponseEntity.ok(true);
         return ResponseEntity.ok(false);
+    }
+
+    @PatchMapping("/signout")
+    public ResponseEntity<Boolean> signOut(@RequestParam("memberId") Long memberId, HttpServletRequest request) {
+        if (signService.signOut(memberId, request)) return ResponseEntity.ok(true);
+        return ResponseEntity.ok(false);
+
+
     }
 }

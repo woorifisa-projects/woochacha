@@ -17,22 +17,29 @@ import com.woochacha.backend.domain.member.exception.SignResultCode;
 import com.woochacha.backend.domain.member.exception.SignUpException;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
+import com.woochacha.backend.domain.product.entity.QProduct;
+import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public class SignServiceImpl implements SignService {
 
     private final JPAQueryFactory queryFactory;
@@ -43,7 +50,11 @@ public class SignServiceImpl implements SignService {
 
     private final QMember m = QMember.member;
 
-    private final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private final QProduct p = QProduct.product;
+
+    private final QSaleForm sf = QSaleForm.saleForm;
+
+    private final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
@@ -135,7 +146,7 @@ public class SignServiceImpl implements SignService {
         try {
             Optional<Member> memberOptional = Optional.ofNullable(queryFactory
                     .selectFrom(m)
-                    .where(m.email.eq(loginRequestDto.getEmail()), m.id.eq(JPAExpressions.select(m.id.max()).from(m)))
+                    .where(m.id.eq(JPAExpressions.select(m.id.max()).from(m).where(m.email.eq(loginRequestDto.getEmail()))))
                     .fetchOne());
             if(memberOptional.isEmpty()) throw new BadCredentialsException("사용자 없음");
 
@@ -158,19 +169,65 @@ public class SignServiceImpl implements SignService {
         }
     }
 
-
+    @Override
+    @Transactional
     public boolean logout(Long memberId) {
         // 로그아웃 로그 저장
         logService.savedMemberLogWithType(memberId, "로그아웃");
         return true;
     }
 
+    @Override
+    @Transactional
+    public boolean signOut(Long memberId, HttpServletRequest request) {
+        // header의 token에서 member id를 꺼냄
+        // 탈퇴를 요청한 member id와 입력 받은 member id가 동일하면 탈퇴 승인. 다르면 403 에러.
+        String token = parseJwt(request);
+        UserDetails userDetails = jwtTokenProvider.getUserName(token);
 
-    public Member save(SignUpRequestDto signUpRequestDto) {
+        Long findMemberId = queryFactory
+                .select(m.id)
+                .from(m)
+                .where(m.email.eq(userDetails.getUsername()), m.status.eq((byte) 1))
+                .fetchOne();
+
+        if(!Objects.equals(findMemberId, memberId))
+            throw new AuthorizationServiceException("탈퇴 요청 권한 없음"); // access denied
+
+        long updatedCount = queryFactory
+                .update(m)
+                .set(m.status, (byte) 0)
+                .where(m.id.eq(memberId))
+                .execute();
+
+        List<Long> productIdList = queryFactory
+                .select(p.id)
+                .from(p).join(sf).on(p.saleForm.id.eq(sf.id))
+                .where(sf.member.id.eq(memberId))
+                .fetch();
+
+        for(Long productId : productIdList) {
+            memberRepository.updateProductSuccessStatus(productId);
+        }
+
+        // 회원 탈퇴 로그 저장
+        logService.savedMemberLogWithType(memberId, "회원 탈퇴");
+        return true;
+    }
+
+    private Member save(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);
         savedMember.getRoles().add("USER");
         memberRepository.save(savedMember);
         return savedMember;
+    }
+
+    private String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+        return null;
     }
 }

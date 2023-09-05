@@ -64,11 +64,19 @@ public class JwtTokenProvider {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
 
-
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
 
         return new UsernamePasswordAuthenticationToken(userDetails, "",
                 userDetails.getAuthorities());
+    }
+
+    public UserDetails getUserName(String token) {
+        // 토큰 복호화
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+
+        return userDetailsService.loadUserByUsername(claims.getSubject());
+
     }
 
     // 토큰의 유효성 + 만료일자 확인
