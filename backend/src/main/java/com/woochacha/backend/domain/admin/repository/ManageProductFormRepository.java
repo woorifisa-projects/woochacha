@@ -20,7 +20,8 @@ public interface ManageProductFormRepository extends JpaRepository<Product, Long
             "JOIN p.carDetail cd " +
             "JOIN p.saleForm sf " +
             "JOIN sf.member m " +
-            "WHERE p.status.id IN (6, 9) " +
+            "WHERE p.status.id IN (6, 9) AND " +
+            "m.status = 1 " +
             "ORDER BY p.updatedAt ASC ")
     Page<Object[]> getDeleteEditForm(Pageable pageable);
 
