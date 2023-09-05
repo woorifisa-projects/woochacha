@@ -12,6 +12,7 @@ import com.woochacha.backend.domain.car.info.entity.QCarExchangeInfo;
 import com.woochacha.backend.domain.car.info.entity.QExchangeType;
 import com.woochacha.backend.domain.car.type.dto.*;
 import com.woochacha.backend.domain.car.type.entity.*;
+import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
@@ -64,12 +65,15 @@ public class ProductServiceImpl implements ProductService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final PurchaseFormRepository purchaseFormRepository;
+    private final LogService logService;
 
-    public ProductServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, ProductRepository productRepository, PurchaseFormRepository purchaseFormRepository) {
+    private final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+    public ProductServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, ProductRepository productRepository, PurchaseFormRepository purchaseFormRepository, LogService logService) {
         this.queryFactory = queryFactory;
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
         this.purchaseFormRepository = purchaseFormRepository;
+        this.logService = logService;
     }
 
     /*
@@ -174,8 +178,6 @@ public class ProductServiceImpl implements ProductService {
                 .where(p.id.eq(productId))
                 .fetchOne();
     }
-
-    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private ProductDetailInfo getProductDetailInfo(String carNum) {
         return queryFactory
@@ -338,6 +340,11 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productPurchaseRequestDto.getProductId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         PurchaseForm purchaseForm = PurchaseForm.builder().member(member).product(product).build();
         purchaseFormRepository.save(purchaseForm);
+        try {
+            logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/" + productPurchaseRequestDto.getProductId());
+        } catch (Exception e) {
+            logger.info("########### " + e.toString());
+        }
     }
 
     public List<ProductInfo> findSearchedProduct(String keyword) {

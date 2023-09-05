@@ -150,6 +150,8 @@ public class SignServiceImpl implements SignService {
             // Authentication 객체를 createToken 메서드를 통해서 JWT Token 생성
             String jwt = jwtTokenProvider.createToken(authentication);
 
+            logService.savedMemberLogWithType(member.getId(), "로그인");
+
             return new LoginResponseDto(1, "성공", jwt, member.getId(), member.getName());
         } catch (Exception e) {
             return LoginException.exception(e);

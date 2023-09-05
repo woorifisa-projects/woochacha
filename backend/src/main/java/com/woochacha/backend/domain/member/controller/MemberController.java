@@ -37,8 +37,6 @@ public class MemberController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", loginResponseDto.getToken());
 
-        logService.savedMemberLogWithType(loginResponseDto.getId(), "로그인");
-
         return ResponseEntity.ok()
                 .headers(httpHeaders)
                 .body(loginResponseDto);

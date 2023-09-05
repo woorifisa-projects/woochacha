@@ -43,7 +43,6 @@ public class ProductController {
     @PostMapping("/purchase")
     public ResponseEntity<Boolean> applyProductPurchase(@RequestBody ProductPurchaseRequestDto productPurchaseRequestDto) {
         productService.applyPurchaseForm(productPurchaseRequestDto);
-        logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/" + productPurchaseRequestDto.getProductId());
         return ResponseEntity.ok(true);
     }
 
