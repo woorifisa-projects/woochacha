@@ -1,25 +1,88 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
-import { Box, Button, Card, CardMedia, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardMedia,
+  Stack,
+  Typography,
+  Checkbox,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+} from '@mui/material';
 import withAdminAuth from '@/hooks/withAdminAuth';
-import { TextField, InputLabel } from '@mui/material';
-import { Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import { useRouter } from 'next/router';
+import { oneUserEditPatchApi, oneUserGetApi } from '@/services/adminpageApi';
 
 function AdminUserEdit() {
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const currentPath = router.query; // 현재 경로 읽어오기
 
   const [editProfileValue, setEditProfileValue] = useState({
     imageUrl: null,
     nameValue: '',
-    isDefaultImage: false, // 기본 이미지로 변경 체크 상태
+    status: '', // 일반유저 or 제한유저
+    isChecked: false, // 기본 이미지로 변경 체크 상태
   });
-  const fileInput = useRef(null);
+
+  /**
+   * 수정 form 제출
+   */
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    oneUserEditPatchApi(editProfileValue, currentPath.memberId).then((res) => {
+      if (res.status === 200) {
+        alert('수정이 완료되었습니다.');
+        router.push('/admin/members');
+      }
+    });
+  };
+
+  /**
+   * radio change 함수
+   */
+  const handleRadioChange = (e) => {
+    // 선택된 값을 상태에 업데이트
+    setEditProfileValue({
+      ...editProfileValue,
+      status: e.target.value,
+    });
+  };
+
+  /**
+   * 체크박스 change 함수
+   */
+  const handleChangeCheckbox = (event) => {
+    setEditProfileValue({
+      ...editProfileValue,
+      isChecked: event.target.checked, // 기본 이미지로 변경 체크 상태
+    });
+  };
+
+  // data 불러온 이후 필터링 data에 맞게 렌더링
+  useEffect(() => {
+    currentPath.memberId &&
+      oneUserGetApi(currentPath.memberId).then((data) => {
+        setEditProfileValue({
+          imageUrl: data.memberInfoDto.profileImage,
+          nameValue: data.memberInfoDto.name,
+          status: data.memberInfoDto.isAvailable,
+          isChecked: false, // 기본 이미지로 변경 체크 상태
+        });
+      });
+    setMounted(true);
+  }, []);
 
   const adminUserProfileEditCss = {
     mypageTitle: {
       my: 4,
       color: '#1490ef',
       fontWeight: 'bold',
+      borderBottom: '1.5px solid #1490ef',
+      paddingBottom: '10px',
     },
     card: {
       maxWidth: '90rem',
@@ -39,176 +102,103 @@ function AdminUserEdit() {
       height: '180px',
       borderRadius: '50%',
     },
-    button: { mt: 3, mb: 2 },
+    subTitle: {
+      fontWeight: 'bold',
+      fontSize: '1rem',
+      mt: 2,
+      textAlign: 'left',
+      color: 'gray',
+    },
+    subContent: {
+      fontWeight: 'bold',
+      fontSize: '1rem',
+      mt: 2,
+      textAlign: 'left',
+      color: 'black',
+    },
+    buttonBox: { display: 'flex', justifyContent: 'center', mt: 0.5 },
+    button: { mt: 3, mb: 2, marginRight: '10px' },
+    radioBox: { mt: 1, justifyContent: 'center' },
+    radioLeft: { marginRight: '70px' },
   };
-
-  // DUMMY_DATA
-  const dummyData = {
-    profileImage: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/user1%40woorifisa.com',
-    name: '홍길동',
-    phone: '01022223333',
-    email: 'user@woorifisa.com',
-  };
-  const userId = 1;
-
-  /**
-   * 수정 form 제출
-   */
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // submitEditProfile(event, imagefile, editProfileValue, userId);
-  };
-
-  /**
-   * "기본 이미지로 변경 체크박스 로직"
-   */
-  const handleFileUpload = (
-    event,
-    dummyData,
-    setImageFile,
-    setEditProfileValue,
-    editProfileValue,
-  ) => {
-    const selectedFile = event.target.files[0];
-
-    if (selectedFile) {
-      // "기본 이미지로 변경" 체크 여부에 따라 다르게 처리
-      if (editProfileValue.isDefaultImage) {
-        // 기본 이미지로 변경하는 로직 추가
-        setEditProfileValue({
-          ...editProfileValue,
-          imageUrl: dummyData.profileImage,
-        });
-      } else {
-        // 선택한 이미지 사용
-        setImageFile(selectedFile);
-        const imageUrl = URL.createObjectURL(selectedFile);
-        setEditProfileValue({
-          ...editProfileValue,
-          imageUrl,
-        });
-      }
-    }
-  };
-
-  // data 불러온 이후 필터링 data에 맞게 렌더링
-  useEffect(() => {
-    setMounted(true);
-    setEditProfileValue({
-      imageUrl: dummyData.profileImage,
-      nameValue: dummyData.name,
-    });
-  }, []);
 
   return (
-    mounted && (
+    mounted &&
+    editProfileValue.imageUrl && (
       <>
         <Card sx={{ ...adminUserProfileEditCss.card, marginTop: '25px' }}>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <Typography
-              sx={{
-                ...adminUserProfileEditCss.mypageTitle,
-                borderBottom: '1.5px solid #1490ef', // 파란색 밑줄 추가
-                paddingBottom: '10px', // 파란색 밑줄 위에 공백 추가
-              }}
+              sx={adminUserProfileEditCss.mypageTitle}
               component="h4"
               variant="h5"
               gutterBottom>
               수정하기
             </Typography>
             <Stack direction="column" alignItems="center" spacing={2} mb={1}>
-              {editProfileValue.imageUrl && (
+              {
                 <CardMedia
                   sx={adminUserProfileEditCss.cardMedia}
                   image={editProfileValue.imageUrl}
-                  title="이미지 업로드"
+                  title="사용자 이미지"
                 />
-              )}
-              <label htmlFor="upload-image">
-                <input id="upload-image" hidden accept="image/*" type="file" ref={fileInput} />
-              </label>
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={editProfileValue.isDefaultImage}
-                  onChange={(e) =>
-                    setEditProfileValue({
-                      ...editProfileValue,
-                      isDefaultImage: e.target.checked,
-                    })
-                  }
+              }
+              <label>
+                <Checkbox
+                  checked={editProfileValue.isChecked}
+                  onChange={handleChangeCheckbox}
+                  inputProps={{ 'aria-label': 'controlled' }}
                 />
-                기본 이미지로 변경
+                기본이미지로 수정
               </label>
             </Stack>
-            <InputLabel
-              htmlFor="nameValue"
-              sx={{ fontWeight: 'bold', fontSize: '1rem', mt: 0, mr: 24.5, color: 'gray' }}>
-              회원 이름
-            </InputLabel>
-            <TextField
-              variant="outlined"
-              fullWidth
-              disabled
-              value={editProfileValue.nameValue}
-              sx={{
-                width: 'calc(100% - 0px)',
-                height: '40px',
-                margin: '0 0px',
-                marginBottom: '10px',
-              }}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                fontWeight: 'bold',
-                fontSize: '1rem',
-                mt: 2,
-                textAlign: 'left',
-                color: 'gray',
-              }}>
+            <Typography variant="body1" sx={adminUserProfileEditCss.subTitle}>
+              회원이름
+            </Typography>
+            <Typography sx={adminUserProfileEditCss.subContent}>
+              {editProfileValue.nameValue}
+            </Typography>
+
+            <Typography variant="body1" sx={adminUserProfileEditCss.subTitle}>
               상태
             </Typography>
 
             <RadioGroup
-              row // 이 부분이 라디오 박스를 가로로 표시하도록 합니다.
+              row
               aria-label="회원 상태"
               name="userStatus"
               value={editProfileValue.userStatus} // 선택된 값
-              onChange={(e) => {
-                // 선택된 값을 상태에 업데이트
-                setEditProfileValue({
-                  ...editProfileValue,
-                  userStatus: e.target.value,
-                });
-              }}
-              sx={{ mt: 1, justifyContent: 'center', mt: 0 }} // 라디오 박스들을 중앙 정렬
+              defaultValue={editProfileValue.status}
+              onChange={handleRadioChange}
+              sx={adminUserProfileEditCss.radioBox} // 라디오 박스들을 중앙 정렬
             >
               <FormControlLabel
-                value="normal" // "일반"
+                value={1} // "일반"
                 control={<Radio />} // 라디오 버튼
                 label="일반" // 라벨 텍스트
-                sx={{ marginRight: '70px' }}
+                sx={adminUserProfileEditCss.radioLeft}
               />
               <FormControlLabel
-                value="restricted" // "이용제한" 값
+                value={0} // 이용제한 값
                 control={<Radio />} // 라디오 버튼
                 label="이용제한" // 라벨 텍스트
               />
             </RadioGroup>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 0.5 }}>
+            <Box sx={adminUserProfileEditCss.buttonBox}>
               <Button
+                onClick={handleSubmit}
                 type="button"
                 size="large"
                 variant="contained"
-                sx={{ ...adminUserProfileEditCss.button, marginRight: '10px' }}>
+                sx={adminUserProfileEditCss.button}>
                 수정
               </Button>
               <Button
                 type="button"
                 size="large"
                 variant="contained"
-                sx={{ ...adminUserProfileEditCss.button, backgroundColor: 'navy' }}>
+                sx={adminUserProfileEditCss.button}
+                color="error">
                 취소
               </Button>
             </Box>
