@@ -145,9 +145,9 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 프로필 수정 (GET요청 시 데이터 보여주기)
-    public EditProdileDto getProfileForEdit(Long memberId){
+    public EditProfileDto getProfileForEdit(Long memberId){
         Member member = memberRepository.findById(memberId).get();
-        EditProdileDto editProdileDto = EditProdileDto.builder()
+        EditProfileDto editProdileDto = EditProfileDto.builder()
                 .name(member.getName())
                 .imageUrl(member.getProfileImage())
                 .build();

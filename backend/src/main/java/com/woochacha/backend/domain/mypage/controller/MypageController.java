@@ -107,9 +107,9 @@ public class MypageController {
 
     // 프로필 이미지 수정 (데이터 조회 Get)
     @GetMapping("/profile/edit/{memberId}")
-    private ResponseEntity<EditProdileDto> getProfileForEdit(@PathVariable("memberId") Long memberId){
-        EditProdileDto editProdileDto = mypageService.getProfileForEdit(memberId);
-        return ResponseEntity.ok(editProdileDto);
+    private ResponseEntity<EditProfileDto> getProfileForEdit(@PathVariable("memberId") Long memberId){
+        EditProfileDto editProfileDto = mypageService.getProfileForEdit(memberId);
+        return ResponseEntity.ok(editProfileDto);
     }
 
     // 프로필 이미지 수정 (데이터 수정 Patch)
