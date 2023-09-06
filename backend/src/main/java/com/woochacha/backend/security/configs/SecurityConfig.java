@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT Token 인증방식으로 세션은 필요 없으므로 비활성화
 
-                .and()
+                .and() // TODO: 권한이 필요한 작업 전에 jwt principle과 email 비교해서 일치한 경우에만 진행되도록 리팩토링
                 .authorizeRequests()
                 .antMatchers("/", "/users/register", "/users/login", "/product/**").permitAll()
                 .antMatchers("/users/**", "/products/sale", "/s3/upload-profile", "/mypage/**").hasRole("USER")

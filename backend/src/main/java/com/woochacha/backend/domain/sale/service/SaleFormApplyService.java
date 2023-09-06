@@ -1,7 +1,7 @@
 package com.woochacha.backend.domain.sale.service;
 
 import com.woochacha.backend.domain.sale.dto.BranchDto;
-import com.woochacha.backend.domain.sale.entity.Branch;
+
 import java.util.List;
 
 public interface SaleFormApplyService {
