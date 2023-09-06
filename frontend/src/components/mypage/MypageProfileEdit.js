@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Button, Card, CardMedia, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, CardMedia, Grid, Stack, TextField, Typography } from '@mui/material';
 import { handleFileUpload } from '../common/FileUpload';
 import { submitEditProfile } from '@/services/profileApi';
 import { memberProfileEditGetApi } from '@/services/mypageApi';
@@ -17,8 +17,7 @@ export default function MypageProfileEdit() {
   });
   //PATCH
   const [editProfileValue, setEditProfileValue] = useState({
-    imageUrl: null,
-    name: '',
+    imageUrl: null, 
   });
   const [imagefile, setImageFile] = useState(null);
   const fileInput = useRef(null);
