@@ -71,10 +71,10 @@ public class MypageController {
       
     // 마이페이지 구매 신청폼 조회
     @GetMapping("/purchase-request/{memberId}")
-    private ResponseEntity<Page<PurchaseReqeustListDto>> purchaseRequestList(@PathVariable Long memberId,
+    private ResponseEntity<Page<ProductResponseDto>> purchaseRequestList(@PathVariable Long memberId,
                                                                              @RequestParam(defaultValue = "0") int page,
                                                                              @RequestParam(defaultValue = "5") int size){
-        Page<PurchaseReqeustListDto> purchaseRequestPage = mypageService.getPurchaseRequestByMemberId(memberId, page, size);
+        Page<ProductResponseDto> purchaseRequestPage = mypageService.getPurchaseRequestByMemberId(memberId, page, size);
         return ResponseEntity.ok(purchaseRequestPage);
     }
 
