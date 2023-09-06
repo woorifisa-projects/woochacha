@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.sale.service;
 
 import com.woochacha.backend.common.ModelMapping;
+import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.qldb.service.QldbService;
@@ -30,6 +31,7 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
     private final QldbService qldbService;
     private final MemberRepository memberRepository;
     private final BranchRepository branchRepository;
+    private final LogService logService;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     //차량 신청 폼을 요청할 때, 전체 branch 리스트를 넘겨줌 (Get)
@@ -86,5 +88,6 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
                 .carStatus(carStatus)
                 .build();
         saleFormRepository.save(saleForm);
+        logService.savedMemberLogWithTypeAndEtc(memberId, "판매 신청폼 제출", "/admin/sales/approve/" + saleForm.getId());
     }
 }

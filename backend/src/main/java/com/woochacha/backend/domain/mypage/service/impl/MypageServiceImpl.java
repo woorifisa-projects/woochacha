@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.mypage.service.impl;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
 import com.woochacha.backend.domain.AmazonS3.service.AmazonS3Service;
+import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.mypage.dto.*;
@@ -28,6 +29,8 @@ public class MypageServiceImpl implements MypageService {
     private final MemberRepository memberRepository;
     private final AmazonS3Service amazonS3Service;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
+
+    private final LogService logService;
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환
     private ProductResponseDto arrayToProductResponseDto(Object[] array) {
@@ -134,14 +137,16 @@ public class MypageServiceImpl implements MypageService {
 
     // 수정신청 폼 제출
     @Transactional
-    public void updatePrice(Long productId, Integer updatePrice){
+    public void updatePrice(Long productId, Integer updatePrice, Long memberId){
         mypageRepository.updatePrice(productId, updatePrice);
+        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 가격 수정 요청", "/product/" + productId);
     }
 
     // 등록한 매물 삭제 신청
     @Transactional
-    public void productDeleteRequest(Long productId){
+    public void productDeleteRequest(Long productId, Long memberId){
         mypageRepository.requestProductDelete(productId);
+        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 삭제 요청", "/product/" + productId);
     }
 
     // 프로필 수정 (GET요청 시 데이터 보여주기)
@@ -160,6 +165,9 @@ public class MypageServiceImpl implements MypageService {
         String email = memberRepository.findById(memberId).get().getEmail();
         amazonS3RequestDto.setEmail(email);
         String newProfileIamge = amazonS3Service.uploadProfile(amazonS3RequestDto);
+        // TODO: multipartfile null 해결
+
+        logService.savedMemberLogWithTypeAndEtc(memberId, "프로필 이미지 수정", newProfileIamge);
         return newProfileIamge;
     }
 }

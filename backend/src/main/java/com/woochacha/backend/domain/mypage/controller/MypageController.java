@@ -91,16 +91,18 @@ public class MypageController {
                                                         @RequestBody @Valid UpdatePriceDto updatePriceDto){
         EditProductDto editProductDto = mypageService.getProductEditRequestInfo(memberId, productId);
         if (updatePriceDto.getUpdatePrice() > editProductDto.getPrice()) {
+            // TODO: 리팩토링 후, 이 부분 코드가 서비스 구현체로 들어가면 그때 "가격 변경 요청 실패" 로그 추가
             return ResponseEntity.badRequest().body("변경된 가격은 기존 가격보다 높을 수 없습니다.");
         }
-        mypageService.updatePrice(productId, updatePriceDto.getUpdatePrice());
+        mypageService.updatePrice(productId, updatePriceDto.getUpdatePrice(), memberId);
         return ResponseEntity.ok("가격 변경 요청이 완료되었습니다.");
     }
 
     // 등록한 매물 삭제 요청
     @PatchMapping("/registered/delete/{productId}")
-    private ResponseEntity<String> productDeleteRequest(@PathVariable Long productId){
-        mypageService.productDeleteRequest(productId);
+    private ResponseEntity<String> productDeleteRequest(@PathVariable Long productId,
+                                                        @RequestHeader(value = "memberId") Long memberId) {
+        mypageService.productDeleteRequest(productId, memberId);
         return ResponseEntity.ok("삭제 신청이 완료되었습니다.");
     }
 
