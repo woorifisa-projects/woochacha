@@ -7,6 +7,7 @@ import { mypageSaleRequestListGetApi } from '@/services/mypageApi';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import MypageCardPurchase from '@/components/mypage/MypageCardPurchase';
 
 function SaleRequest() {
   const [mounted, setMounted] = useState(false);
@@ -40,7 +41,7 @@ function SaleRequest() {
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           마이페이지 - 판매요청이력
         </Typography>
-        <MypageCard content={mypageSaleRequestList.content} />
+        <MypageCardPurchase content={mypageSaleRequestList.content} />
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
           <Pagination count={10} />
