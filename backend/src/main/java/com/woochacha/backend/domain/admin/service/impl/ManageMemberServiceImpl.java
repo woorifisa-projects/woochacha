@@ -81,7 +81,7 @@ public class ManageMemberServiceImpl implements ManageMemberService {
         if(editMemberRequestDto.getIsChecked() == 1){
             updatedCount += memberRepository.updateMemberImage(memberId,baseUrl);
         }
-        updatedCount += memberRepository.updateMemberStatus(memberId,editMemberRequestDto.getStatus());
+        updatedCount += memberRepository.updateMemberStatus(memberId,editMemberRequestDto.getIsAvailable());
         if (updatedCount > 0) {
             // 업데이트가 성공적으로 이루어진 경우의 처리
             return "Member status updated successfully.";
