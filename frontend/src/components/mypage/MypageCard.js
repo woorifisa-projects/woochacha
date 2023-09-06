@@ -2,62 +2,10 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Grid, Chip } from '@mui/material';
 import { useRouter } from 'next/router';
 
+// TODO: 수정해야함 
 export default function MypageCard() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
-
-  // TODO: API 조회 후 수정할 dummy data입니다.
-  const itemDummyArr = [
-    {
-      id: 14,
-      title: '기아 올 뉴 카니발 2018년형',
-      distance: 110000,
-      branch: '서울',
-      price: 2690,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    },
-    {
-      id: 15,
-      title: '기아 모닝 2010년형',
-      distance: 100000,
-      branch: '서울',
-      price: 270,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
-    },
-    {
-      id: 16,
-      title: '기아 올 뉴 카니발 2018년형',
-      distance: 110000,
-      branch: '서울',
-      price: 2690,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    },
-    {
-      id: 17,
-      title: '기아 모닝 2010년형',
-      distance: 100000,
-      branch: '서울',
-      price: 270,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
-    },
-    {
-      id: 18,
-      title: '기아 올 뉴 카니발 2018년형',
-      distance: 110000,
-      branch: '서울',
-      price: 2690,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    },
-    {
-      id: 19,
-      title: '기아 모닝 2010년형',
-      distance: 100000,
-      branch: '서울',
-      price: 270,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
-    },
-  ];
-
   const mypageCardCss = {
     container: {
       mb: 10,
@@ -90,7 +38,7 @@ export default function MypageCard() {
   return (
     mounted && (
       <Grid container spacing={3} sx={mypageCardCss.container}>
-        {itemDummyArr.map((item) => (
+        {mypageRegisteredProducts.content.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
             <Card
               sx={mypageCardCss.card}

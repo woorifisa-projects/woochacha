@@ -4,11 +4,15 @@ import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import { Button, Grid, Pagination, Typography } from '@mui/material';
 import MypageCard from '@/components/mypage/MypageCard';
 import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
 
 function Purchase() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  const userId = 1; // DUMMY_DATA
+  const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+
+  const memberId = userLoginState.userId;
 
   const handleMove = (url) => {
     router.push(url);
@@ -36,7 +40,7 @@ function Purchase() {
         </Typography>
         <Button
           onClick={() => {
-            handleMove(`/mypage/purchase-request/${userId}`);
+            handleMove(`/mypage/purchase-request/${memberId}`);
           }}>
           구매요청이력
         </Button>
