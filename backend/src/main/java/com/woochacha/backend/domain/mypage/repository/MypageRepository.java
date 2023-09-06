@@ -81,10 +81,12 @@ public interface MypageRepository extends JpaRepository<SaleForm, Long> {
     // 구매 신청폼 조쇠
     @Query("SELECT " +
             "CONCAT(CAST(cd.model.name AS string), ' ', cd.carName.name, ' ', CAST(cd.year AS string), '년형') AS title, " +
-            "p.price, " +
-            "CAST(sf.branch.name AS string) AS branch, " +
             "cd.distance, " +
+            "CAST(sf.branch.name AS string) AS branch, " +
+            "p.price, " +
+            "ci.imageUrl, " +
             "p.id, " +
+            "p.status.id, " +
             "pf.status " +
             "FROM PurchaseForm pf " +
             "JOIN pf.product p " +
