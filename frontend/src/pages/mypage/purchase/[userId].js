@@ -6,11 +6,15 @@ import MypageCard from '@/components/mypage/MypageCard';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import { mypagePurchasedProductsGetApi } from '@/services/mypageApi';
+
 
 function Purchase() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+  const [mypagePurchasedProducts, setMypagePurchasedProducts] = useState();
+
 
   const memberId = userLoginState.userId;
 
@@ -29,11 +33,16 @@ function Purchase() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
+    mypagePurchasedProductsGetApi(memberId).then((data) => {
+      console.log(data);
+      setMypagePurchasedProducts(data);
+    });
     setMounted(true);
   }, []);
 
   return (
-    mounted && (
+    mounted && 
+    mypagePurchasedProducts && (
       <>
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           마이페이지 - 구매이력
@@ -44,7 +53,7 @@ function Purchase() {
           }}>
           구매요청이력
         </Button>
-        <MypageCard />
+        <MypageCard content={mypagePurchasedProducts.content} />
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
           <Pagination count={10} />

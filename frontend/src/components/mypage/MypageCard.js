@@ -52,6 +52,7 @@ export default function MypageCard(props) {
                   <Chip size="small" label={`주행거리 : ${item.distance} km`} />
                   <Chip size="small" label={`가격 : ${item.price} 만원`} />
                   <Chip size="small" label={`지점 : ${item.branch}`} />
+                  <Chip size="small" label={`상태 : ${item.status}`} />
                 </Grid>
               </CardContent>
             </Card>
