@@ -8,7 +8,6 @@ export default function MypageCardEdit(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const { content } = props;
-  console.log(content);
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);

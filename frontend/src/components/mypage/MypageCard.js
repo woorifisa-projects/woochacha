@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Grid, Chip } from '@mui/material';
 import { useRouter } from 'next/router';
 
-// TODO: 수정해야함 
-export default function MypageCard() {
+export default function MypageCard(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { content } = props;
   const mypageCardCss = {
     container: {
       mb: 10,
@@ -38,7 +38,7 @@ export default function MypageCard() {
   return (
     mounted && (
       <Grid container spacing={3} sx={mypageCardCss.container}>
-        {mypageRegisteredProducts.content.map((item) => (
+        {content.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
             <Card
               sx={mypageCardCss.card}
