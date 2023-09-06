@@ -1,28 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import withAuth from '@/hooks/withAuth';
-import { submitEditRegistered } from '@/services/productApi';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import { Box, Button, Card, CardMedia, Grid, Stack, TextField, Typography } from '@mui/material';
 import BasicModal from '@/components/common/BasicModal';
 import { EDIT_MODAL } from '@/constants/string';
+import { mypageProductEditRequestGetApi } from '@/services/mypageApi';
 
 function RegisteredEdit() {
   const router = useRouter();
   const { memberId, productId } = router.query; // query string
   const [mounted, setMounted] = useState(false);
   const [priceValue, setPriceValue] = useState();
+  const [mypageProductEditRequest, setMypageProductEditRequest] = useState({
+    title: '',
+    price: '',
+    carImage: '',
+  });
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
-  const handleClickModal = () => setShowModal(!showModal);
-
-  // DUMMY_DATA
-  const dummyData = {
-    title: '기아 모닝 2010년형',
-    imageURL: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    currentPrice: '3200',
-  };
+  const handleClickModal = () => setShowModal(showModal);
 
   const registeredEditCss = {
     mypageTitle: {
@@ -68,6 +66,15 @@ function RegisteredEdit() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
+    memberId &&
+      mypageProductEditRequestGetApi(memberId, productId).then((data) => {
+        console.log(data);
+        setMypageProductEditRequest({
+          title: data.title,
+          price: data.price,
+          carImage: data.carImage,
+        });
+      });
     setMounted(true);
   }, []);
 
@@ -92,7 +99,8 @@ function RegisteredEdit() {
   };
 
   return (
-    mounted && (
+    mounted &&
+    memberId && (
       <>
         <Typography sx={registeredEditCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           마이페이지 - 등록된 게시글 가격 수정요청
@@ -103,14 +111,14 @@ function RegisteredEdit() {
             component="h5"
             variant="h5"
             gutterBottom>
-            {dummyData.title}
+            {mypageProductEditRequest.title}
           </Typography>
           <Grid container spacing={2} noValidate justifyContent="center">
             <Grid item xs={12} md={6}>
               <Stack direction="column" alignItems="center" spacing={2} mb={5}>
                 <CardMedia
                   sx={registeredEditCss.cardMedia}
-                  image={dummyData.imageURL}
+                  image={mypageProductEditRequest.carImage}
                   title="게시글 이미지"
                 />
               </Stack>
@@ -121,7 +129,7 @@ function RegisteredEdit() {
                   <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
                     현재 가격
                   </Typography>
-                  <Typography textAlign="left">{`${dummyData.currentPrice} 만원`}</Typography>
+                  <Typography textAlign="left">{`${mypageProductEditRequest.price} 만원`}</Typography>
                 </Grid>
                 <Grid>
                   <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">

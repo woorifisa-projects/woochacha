@@ -40,7 +40,7 @@ function RegisteredItem() {
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           마이페이지 - 등록한 게시글(매물)정보 조회
         </Typography>
-        <MypageCardEdit content={mypageRegisteredProducts.content} />
+        <MypageCardEdit content={mypageRegisteredProducts.content} memberId={memberId}/>
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
           <Pagination count={10} />

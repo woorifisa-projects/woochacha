@@ -26,98 +26,105 @@ export const memberProfileEditGetApi = async (memberId) => {
 
 // 마이페이지 등록한 매물 조회 GET mypage/registered/{memberId}
 export const mypageRegisteredProductsGetApi = async (memberId) => {
-    try {
-        const response = await authInstance.get(`/mypage/registered/${memberId}`);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const response = await authInstance.get(`/mypage/registered/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };
 
 // 마이페이지 판매한 이력 조회 GET mypage/sale/{memberId}
 export const mypageSoldProductsGetApi = async (memberId) => {
-    try {
-        const response = await authInstance.get(`/mypage/sale/${memberId}`);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const response = await authInstance.get(`/mypage/sale/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };
 
 // 마이페이지 구매 이력 조회 GET mypage/purchase/{memberId}
 export const mypagePurchasedProductsGetApi = async (memberId) => {
-    try {
-        const response = await authInstance.get(`/mypage/purchase/${memberId}`);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const response = await authInstance.get(`/mypage/purchase/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };
 
 // 마이페이지 판매 신청 내역 조회 GET mypage/sale-request/{memberId}
 export const mypageSaleRequestListGetApi = async (memberId) => {
-    try {
-        const response = await authInstance.get(`/mypage/sale-request/${memberId}`);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const response = await authInstance.get(`/mypage/sale-request/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };
 
 // 마이페이지 구매 신청 내역 조회 GET mypage/purchase-request/{memberId}
 export const mypagePurchaseRequestListGetApi = async (memberId) => {
-    try {
-        const response = await authInstance.get(`/mypage/purchase-request/${memberId}`);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const response = await authInstance.get(`/mypage/purchase-request/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };
 
 // 마이페이지 상품 수정 신청폼 조회 GET mypage/registered/edit?memberId=4&productId=21
 export const mypageProductEditRequestGetApi = async (memberId, productId) => {
-    try {
-        const url = `/mypage/registered/edit?memberId=${memberId}&productId=${productId}`;
-        const response = await authInstance.get(url);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const response = await authInstance.get(`/mypage/registered/edit`, {
+      params: {
+        // query string
+        memberId: memberId,
+        productId: productId,
+      },
+    });
+    // const url = `/mypage/registered/edit`;
+    // const response = await authInstance.get(url, );
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };
 
 // 마이페이지 상품 수정 신청폼 제출 PATCH /mypage/registered/edit?memberId=&productId=23
 export const mypageProductEditRequestPatchApi = async (memberId, productId) => {
-    try {
-        const url = `/mypage/registered/edit?memberId=${memberId}&productId=${productId}`;
-        const response = await authInstance.get(url);
-        const data = response.data;
-        return data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const url = `/mypage/registered/edit?memberId=${memberId}&productId=${productId}`;
+    const response = await authInstance.get(url);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };
 
 // 마이페이지 등록한 매물 삭제 요청 PATCH mypage/registered/delete/{productId}
 export const mypageProductDeleteRequestPatchApi = async (memberId) => {
-    try {
-        const response = await authInstance.get(`/mypage/registered/delete/${memberId}`);
-        const data = response.data;
-        return  data;
-    } catch (error) {
-        console.log('실패: ', error);
-        throw error;
-    }
+  try {
+    const response = await authInstance.get(`/mypage/registered/delete/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
 };

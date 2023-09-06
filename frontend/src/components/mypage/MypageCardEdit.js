@@ -7,15 +7,12 @@ import { DELETE_MODAL } from '@/constants/string';
 export default function MypageCardEdit(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  const { content } = props;
+  const { content, memberId } = props;
+  console.log(content);
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
   const handleClickModal = () => setShowModal(!showModal);
-
-  // DUMMY_DATA
-  const memberId = 1;
-  const productId = 1;
 
   const mypageCardCss = {
     container: {
@@ -46,7 +43,7 @@ export default function MypageCardEdit(props) {
     router.push(url);
   };
 
-  const handleMoveEdit = (url) => {
+  const handleMoveEdit = (url, productId) => {
     router.push({
       pathname: url,
       query: { memberId, productId },
@@ -93,7 +90,8 @@ export default function MypageCardEdit(props) {
                     <Chip size="small" label={`상태 : ${item.status}`} />
                   </Grid>
                   <Grid item xs={3} container my={1} gap={1}>
-                    <Button onClick={() => handleMoveEdit(`/mypage/registered/edit`)}>
+                    <Button
+                      onClick={() => handleMoveEdit(`/mypage/registered/edit`, item.productId)}>
                       수정요청
                     </Button>
                     <Button onClick={handleClickModal}>삭제요청</Button>
