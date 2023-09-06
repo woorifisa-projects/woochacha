@@ -51,6 +51,7 @@ public class Product {
     private Integer updatePrice;
 
     @OneToMany(mappedBy = "product") // carImage 엔티티와의 양방향 관계 설정
+    @Builder.Default
     private List<CarImage> carImages = new ArrayList<>();
 
     public Product(Long id, SaleForm saleForm, Integer price, LocalDateTime createdAt, LocalDateTime updatedAt, CarStatus status, CarDetail carDetail, Integer updatePrice, List<CarImage> carImages) {
