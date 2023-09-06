@@ -340,11 +340,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productPurchaseRequestDto.getProductId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         PurchaseForm purchaseForm = PurchaseForm.builder().member(member).product(product).build();
         purchaseFormRepository.save(purchaseForm);
-        try {
-            logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/" + productPurchaseRequestDto.getProductId());
-        } catch (Exception e) {
-            logger.info("########### " + e.toString());
-        }
+        logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/" + productPurchaseRequestDto.getProductId());
     }
 
     public List<ProductInfo> findSearchedProduct(String keyword) {

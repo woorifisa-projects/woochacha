@@ -4,7 +4,6 @@ package com.woochacha.backend.domain.sale.controller;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.dto.SaleFormRequestDto;
-import com.woochacha.backend.domain.sale.entity.Branch;
 import com.woochacha.backend.domain.sale.repository.BranchRepository;
 import com.woochacha.backend.domain.sale.service.SaleFormApplyService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,5 @@
 package com.woochacha.backend.domain.product.controller;
 
-import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductPurchaseRequestDto;
@@ -18,11 +17,8 @@ public class ProductController {
 
     private final ProductService productService;
 
-    private final LogService logService;
-
-    public ProductController(ProductService productService, LogService logService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.logService = logService;
     }
 
     @GetMapping
