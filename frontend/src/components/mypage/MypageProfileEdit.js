@@ -1,43 +1,58 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Button, Card, CardMedia, Grid, Stack, TextField } from '@mui/material';
+import { Box, Button, Card, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import { handleFileUpload } from '../common/FileUpload';
 import { submitEditProfile } from '@/services/profileApi';
-
+import { memberProfileEditGetApi } from '@/services/mypageApi';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 export default function MypageProfileEdit() {
   const [mounted, setMounted] = useState(false);
+  const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+
+  // GET
+  const [memberProfileEdit, setMemberProfileEdit] = useState({
+    imageUrl: '',
+    name: '',
+  });
+  //PATCH
   const [editProfileValue, setEditProfileValue] = useState({
     imageUrl: null,
-    nameValue: '',
+    name: '',
   });
   const [imagefile, setImageFile] = useState(null);
   const fileInput = useRef(null);
-
-  // DUMMY_DATA
-  const dummyData = {
-    profileImage: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/user1%40woorifisa.com',
-    name: '홍길동',
-    phone: '01022223333',
-    email: 'user@woorifisa.com',
-  };
-  const userId = 1;
-
-  /**
-   * 이름 변경
-   */
-  const handleChangeName = (e) => {
-    setEditProfileValue({
-      ...editProfileValue,
-      nameValue: e.target.value,
-    });
-  };
+  const router = useRouter();
+  const memberId = userLoginState.userId;
 
   /**
    * 수정 form 제출
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    submitEditProfile(event, imagefile, editProfileValue, userId);
+    submitEditProfile(event, imagefile, memberProfileEdit, memberId).then((res) => {
+      if (res.status === 200) {
+        router.push(`/mypage/${memberId}`);
+        return;
+      }
+    });
   };
+
+  // GET
+  useEffect(() => {
+    memberProfileEditGetApi(memberId).then((data) => {
+      setMemberProfileEdit({
+        imageUrl: data.imageUrl,
+        name: data.name,
+      });
+      setEditProfileValue({
+        ...editProfileValue,
+        imageUrl: data.imageUrl,
+      });
+    });
+    setMounted(true);
+    console.log(memberProfileEdit);
+  }, []);
 
   const mypageProfileCss = {
     card: {
@@ -59,17 +74,10 @@ export default function MypageProfileEdit() {
       borderRadius: '50%',
     },
     button: { mt: 3, mb: 2 },
+    typography: {
+      color: 'gray',
+    },
   };
-
-  // data 불러온 이후 필터링 data에 맞게 렌더링
-  useEffect(() => {
-    setMounted(true);
-    setEditProfileValue({
-      imageUrl: dummyData.profileImage,
-      nameValue: dummyData.name,
-    });
-  }, []);
-
   return (
     mounted && (
       <Card sx={mypageProfileCss.card}>
@@ -91,7 +99,7 @@ export default function MypageProfileEdit() {
                 onChange={(event) =>
                   handleFileUpload(
                     event,
-                    dummyData,
+                    memberProfileEdit,
                     setImageFile,
                     setEditProfileValue,
                     editProfileValue,
@@ -105,14 +113,9 @@ export default function MypageProfileEdit() {
             </label>
           </Stack>
           <Grid>
-            <TextField
-              margin="normal"
-              required
-              name="name"
-              label="이름 변경"
-              value={editProfileValue.nameValue}
-              onChange={(e) => handleChangeName(e)}
-            />
+            <Typography sx={mypageProfileCss.typography} variant="h5" margin="normal" name="name">
+              {`${memberProfileEdit.name} 님`}
+            </Typography>
           </Grid>
           <Button type="submit" size="large" variant="contained" sx={mypageProfileCss.button}>
             내 프로필 수정하기

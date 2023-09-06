@@ -1,10 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import { memberProfileGetApi } from '@/services/mypageApi';
+import { useRecoilState } from 'recoil';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
 
 export default function MypageProfile() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+  const [memberProfile, setMemberProfile] = useState({
+    profileImage: '',
+    name: '',
+    phone: '',
+    email: '',
+  });
 
   const mypageProfileCss = {
     card: {
@@ -35,14 +45,7 @@ export default function MypageProfile() {
     },
   };
 
-  const dummyData = {
-    profileImage: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/user1%40woorifisa.com',
-    name: '홍길동',
-    phone: '01022223333',
-    email: 'user@woorifisa.com',
-  };
-
-  const userId = 1; // DUMMY_DATA
+  const memberId = userLoginState.userId;
 
   const handleMove = (url) => {
     router.push(url);
@@ -50,6 +53,14 @@ export default function MypageProfile() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
+    memberProfileGetApi(memberId).then((data) => {
+      setMemberProfile({
+        profileImage: data.profileImage,
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+      });
+    });
     setMounted(true);
   }, []);
 
@@ -58,25 +69,25 @@ export default function MypageProfile() {
       <Card sx={mypageProfileCss.card}>
         <CardMedia
           sx={mypageProfileCss.cardMedia}
-          image={dummyData.profileImage}
+          image={memberProfile.profileImage}
           title="profile-image"
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="div" sx={mypageProfileCss.profileTitle}>
-            {dummyData.name} 님
+            {memberProfile.name} 님
           </Typography>
           <Grid container spacing={2} sx={mypageProfileCss.gridContainer}>
             <Grid item xs={6} sx={mypageProfileCss.itemTitle}>
               전화번호
             </Grid>
             <Grid item xs={6}>
-              {dummyData.name}
+              {memberProfile.name}
             </Grid>
             <Grid item xs={6} sx={mypageProfileCss.itemTitle}>
               이메일
             </Grid>
             <Grid item xs={6}>
-              {dummyData.email}
+              {memberProfile.email}
             </Grid>
           </Grid>
         </CardContent>
@@ -84,7 +95,7 @@ export default function MypageProfile() {
           <Button
             variant="contained"
             fullWidth
-            onClick={() => handleMove(`/mypage/profile/edit/${userId}`)}>
+            onClick={() => handleMove(`/mypage/profile/edit/${memberId}`)}>
             수정하기
           </Button>
         </CardActions>

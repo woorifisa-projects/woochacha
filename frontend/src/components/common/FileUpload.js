@@ -13,7 +13,7 @@ export const handleFileUpload = (
   } else {
     setEditProfileValue({
       ...editProfileValue,
-      imageUrl: data.profileImage,
+      imageUrl: data.imageUrl,
     });
     return;
   }
