@@ -28,7 +28,6 @@ function RegisteredItem() {
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
     mypageRegisteredProductsGetApi(memberId).then((data) => {
-      console.log(data);
       setMypageRegisteredProducts(data);
     });
     setMounted(true);
