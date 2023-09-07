@@ -101,7 +101,7 @@ public class MypageController {
     // 등록한 매물 삭제 요청
     @PatchMapping("/registered/delete/{productId}")
     private ResponseEntity<String> productDeleteRequest(@PathVariable Long productId,
-                                                        @RequestHeader(value = "memberId") Long memberId) {
+                                                        @RequestBody Long memberId) {
         mypageService.productDeleteRequest(productId, memberId);
         return ResponseEntity.ok("삭제 신청이 완료되었습니다.");
     }
