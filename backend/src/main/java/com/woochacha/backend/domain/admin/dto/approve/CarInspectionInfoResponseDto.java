@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.admin.dto.approve;
 
+import com.woochacha.backend.domain.car.info.entity.ExchangeType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,4 +16,5 @@ public class CarInspectionInfoResponseDto {
     private int carDistance;
     private List<CarAccidentInfoDto> carAccidentInfoDtoList;
     private List<CarExchangeInfoDto> carExchangeInfoDtoList;
+    private List<ExchangeType> exchangeTypeList;
 }
