@@ -2,8 +2,8 @@ import axios from 'axios';
 import LocalStorage from './localStorage';
 import { Router } from 'next/router';
 
-const BASE_URL = 'http://13.125.32.208:8080';
-// const BASE_URL = 'http://localhost:8080';
+// const BASE_URL = 'http://13.125.32.208:8080';
+const BASE_URL = 'http://localhost:8080';
 const HEADER_JSON = {
   headers: {
     'Content-Type': 'application/json',
