@@ -140,14 +140,14 @@ public class MypageServiceImpl implements MypageService {
     @Transactional
     public void updatePrice(Long productId, Integer updatePrice, Long memberId){
         mypageRepository.updatePrice(productId, updatePrice);
-        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 가격 수정 요청", "/product/" + productId);
+        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 가격 수정 요청", "/product/detail/" + productId);
     }
 
     // 등록한 매물 삭제 신청
     @Transactional
     public void productDeleteRequest(Long productId, Long memberId){
         mypageRepository.requestProductDelete(productId);
-        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 삭제 요청", "/product/" + productId);
+        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 삭제 요청", "/product/detail/" + productId);
     }
 
     // 프로필 수정 (GET요청 시 데이터 보여주기)
@@ -168,7 +168,7 @@ public class MypageServiceImpl implements MypageService {
         String newProfileIamge = amazonS3Service.uploadProfile(amazonS3RequestDto);
         // TODO: multipartfile null 해결
 
-        logService.savedMemberLogWithTypeAndEtc(memberId, "프로필 이미지 수정", newProfileIamge);
+        logService.savedMemberLogWithType(memberId, "프로필 이미지 수정");
         return newProfileIamge;
     }
 }
