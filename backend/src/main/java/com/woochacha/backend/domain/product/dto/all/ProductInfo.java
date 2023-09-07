@@ -1,8 +1,11 @@
 package com.woochacha.backend.domain.product.dto.all;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor
 public class ProductInfo {
     private Long id;
 

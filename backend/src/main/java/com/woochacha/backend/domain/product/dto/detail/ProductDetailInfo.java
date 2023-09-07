@@ -9,6 +9,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductDetailInfo {
     private short capacity; // 승자 정원
 
@@ -20,7 +22,7 @@ public class ProductDetailInfo {
 
     private String transmissionName; // 변속기
 
-    private List<ProductAccidentInfo> produdctAccidentInfoList; // 사고 종류
+    private List<ProductAccidentInfo> productAccidentInfoList; // 사고 종류
 
     private List<ProductExchangeInfo> productExchangeInfoList; // 교체 부위
 
