@@ -4,18 +4,24 @@ import { Box, Grid, TextField, Typography } from '@mui/material';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import withAdminAuth from '@/hooks/withAdminAuth';
 import PurchaseTable from '@/components/admin/PurchaseTable';
-import BasicModal from '@/components/common/BasicModal';
+import OneButtonModal from '@/components/common/OneButtonModal';
 import { todayDate } from '@/utils/date';
 import { ADMIN_PURCHASE_CONFIRM_MODAL, ADMIN_PURCHASE_MODAL } from '@/constants/string';
-import { purchaseRequest } from '@/services/productApi';
+import {
+  allPurchaseFormGetApi,
+  onePurchaseConfirmFormGetApi,
+  onePurchaseConfirmFormPatchApi,
+  onePurchaseTransactionFormPostApi,
+} from '@/services/adminpageApi';
 
 function AdminPurchaseList() {
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
   const [purchaseDateVal, setPurchaseDateVal] = useState(todayDate);
   const [confirmFlag, setConfirmFlag] = useState(false);
-  const [confirmData, setConfirmData] = useState();
-  const [purchaseData, setPurchaseData] = useState();
+  const [confirmData, setConfirmData] = useState(); // 검토여부 관련 get data
+  const [allPurchaseFormInfo, setAllPurchaseFormInfo] = useState();
+  const [currentPurchaseId, setCurrentPurchaseId] = useState();
+  const router = useRouter();
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
@@ -26,14 +32,15 @@ function AdminPurchaseList() {
    */
   const handlePurchaseRequest = () => {
     const purchaseForm = {
-      memberId: '1',
-      productId: '15',
-      purchaseDateVal: purchaseDateVal, // 날짜는 일단 넣어놨습니다.
+      purchaseId: currentPurchaseId,
+      meetingDate: purchaseDateVal, // 날짜는 일단 넣어놨습니다.
     };
-    purchaseRequest(purchaseForm).then((data) => {
-      console.log(data);
-      alert('요청이 완료!');
-      router.push(`/admin/purchase`);
+    onePurchaseConfirmFormPatchApi(currentPurchaseId, purchaseForm).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        alert(res.data);
+        router.push(`/admin/purchase`);
+      }
     });
   };
 
@@ -45,6 +52,66 @@ function AdminPurchaseList() {
     console.log(purchaseDateVal);
   };
 
+  /**
+   * (거래관리 - 성사) 관련 함수
+   */
+  const handleTransactionApprove = () => {
+    onePurchaseTransactionFormPostApi(currentPurchaseId).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        alert(res.data);
+        router.push(`/admin/purchase`);
+      }
+    });
+  };
+
+  /**
+   * 검토여부 관련 정보 get 함수
+   */
+  const getConfirmData = (purchaseId) => {
+    onePurchaseConfirmFormGetApi(purchaseId).then((res) => {
+      if (res.status === 200) {
+        console.log(res);
+        console.log(res.data);
+        setConfirmData(res.data);
+      }
+    });
+  };
+
+  /**
+   * 거래관리 요청 목록 조회
+   */
+  useEffect(() => {
+    allPurchaseFormGetApi().then((data) => {
+      console.log(data);
+      setAllPurchaseFormInfo(data);
+    });
+    setMounted(true);
+  }, []);
+
+  const table_cell_data = [
+    {
+      headerLabel: '게시글',
+      contentCell: 'carNum',
+    },
+    {
+      headerLabel: '구매자',
+      contentCell: 'buyerName',
+    },
+    {
+      headerLabel: '판매자',
+      contentCell: 'sellerName',
+    },
+    {
+      headerLabel: '검토여부',
+      contentCell: 'purchaseStatus',
+    },
+    {
+      headerLabel: '거래여부',
+      contentCell: 'transactionStatus',
+    },
+  ];
+
   const adminPurchaseCss = {
     mainTitle: {
       my: 10,
@@ -53,115 +120,32 @@ function AdminPurchaseList() {
     },
   };
 
-  const table_cell_data = [
-    {
-      headerLabel: '게시글',
-      contentCell: 'productId',
-    },
-    {
-      headerLabel: '구매자',
-      contentCell: 'buyer',
-    },
-    {
-      headerLabel: '판매자',
-      contentCell: 'seller',
-    },
-    {
-      headerLabel: '검토여부',
-      contentCell: 'isConfirm',
-    },
-    {
-      headerLabel: '거래여부',
-      contentCell: 'transactionStatus',
-    },
-  ];
-
-  // TODO: 검토여부 get 하는 함수
-  const getConfirmData = () => {
-    // setConfirmData();
-    // dummy_confirm_data 로 대체
-  };
-
-  // TODO: 거래여부 get 하는 함수
-  const getPurchaseData = () => {
-    // setPurchaseData();
-    // dummy_purchase_data 로 대체
-  };
-
-  // TODO: axios로 data 받아온 데이터라고 가정
-  const dummy_content_data = {
-    content: [
-      {
-        productId: '12',
-        buyer: '김구매',
-        seller: '김판매',
-        isConfirm: 0,
-        transactionStatus: 0,
-      },
-      {
-        productId: '13',
-        buyer: '박구매',
-        seller: '박판매',
-        isConfirm: 1,
-        transactionStatus: 1,
-      },
-      {
-        productId: '14',
-        buyer: '이구매',
-        seller: '이판매',
-        isConfirm: 0,
-        transactionStatus: 0,
-      },
-    ],
-  };
-
-  // TODO: dummy
-  const dummy_confirm_data = {
-    sellerName: '김김김',
-    sellerPhone: '01022223333',
-    buyerName: '인인인',
-    buyerPhone: '01012123333',
-  };
-
-  // TODO: dummy
-  const dummy_purchase_data = {
-    sellerName: '김김김',
-    sellerPhone: '01022223333',
-    buyerName: '인인인',
-    buyerPhone: '01012123333',
-    meetingDate: '2099-12-12',
-  };
-
-  // data 불러온 이후 필터링 data에 맞게 렌더링
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
-    mounted && (
+    mounted &&
+    allPurchaseFormInfo && (
       <>
         <Typography sx={adminPurchaseCss.mainTitle} component="h4" variant="h4" gutterBottom>
           관리자 페이지 - [거래관리] 구매 요청 리스트
         </Typography>
         <PurchaseTable
           headerData={table_cell_data}
-          contentData={dummy_content_data.content}
+          contentData={allPurchaseFormInfo.content}
           callbackFunc={handleClickModal}
           getConfirmData={getConfirmData}
-          getPurchaseData={getPurchaseData}
           setConfirmFlag={setConfirmFlag}
           moveDetailUrl={`/product/detail/`}
+          setCurrentPurchaseId={setCurrentPurchaseId}
         />
         {showModal && (
-          <BasicModal
+          <OneButtonModal
             onClickModal={handleClickModal}
             isOpen={showModal}
             modalContent={
               confirmFlag ? ADMIN_PURCHASE_CONFIRM_MODAL.CONTENTS : ADMIN_PURCHASE_MODAL.CONTENTS
             }
-            callBackFunc={handlePurchaseRequest}>
+            callBackFunc={confirmFlag ? handlePurchaseRequest : handleTransactionApprove}>
             {/* 모달 children */}
-            {confirmFlag ? (
+            {confirmFlag && confirmData ? (
               // 검토여부 modal children
               <Box>
                 <Grid container spacing={2} noValidate justifyContent="center" alignItems="center">
@@ -169,16 +153,16 @@ function AdminPurchaseList() {
                     <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
                       판매자
                     </Typography>
-                    <Typography textAlign="left">{`${dummy_confirm_data.sellerName}`}</Typography>
-                    <Typography textAlign="left">{`${dummy_confirm_data.sellerPhone}`}</Typography>
+                    <Typography textAlign="left">{`${confirmData.sellerName}`}</Typography>
+                    <Typography textAlign="left">{`${confirmData.sellerPhone}`}</Typography>
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <Grid>
                       <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
                         구매자
                       </Typography>
-                      <Typography textAlign="left">{`${dummy_confirm_data.buyerName}`}</Typography>
-                      <Typography textAlign="left">{`${dummy_confirm_data.buyerPhone}`}</Typography>
+                      <Typography textAlign="left">{`${confirmData.buyerName}`}</Typography>
+                      <Typography textAlign="left">{`${confirmData.buyerPhone}`}</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -198,32 +182,9 @@ function AdminPurchaseList() {
               </Box>
             ) : (
               // 거래여부 modal children
-              <Box>
-                <Grid container spacing={2} noValidate justifyContent="center" alignItems="center">
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                      판매자
-                    </Typography>
-                    <Typography textAlign="left">{`${dummy_purchase_data.sellerName}`}</Typography>
-                    <Typography textAlign="left">{`${dummy_purchase_data.sellerPhone}`}</Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Grid>
-                      <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                        구매자
-                      </Typography>
-                      <Typography textAlign="left">{`${dummy_purchase_data.buyerName}`}</Typography>
-                      <Typography textAlign="left">{`${dummy_purchase_data.buyerPhone}`}</Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Typography pt={3} variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                  거래날짜
-                </Typography>
-                <Typography textAlign="left">{`${dummy_purchase_data.meetingDate}`}</Typography>
-              </Box>
+              <></>
             )}
-          </BasicModal>
+          </OneButtonModal>
         )}
       </>
     )
