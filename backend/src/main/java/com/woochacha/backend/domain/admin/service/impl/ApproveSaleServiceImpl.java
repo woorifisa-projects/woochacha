@@ -43,6 +43,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
 
         return jpaQueryFactory
                 .select(Projections.fields(ApproveSaleResponseDto.class,
+                        sf.id,
                         sf.member.name.as("name"),
                         sf.carNum,
                         sf.carStatus.status.as("status")))
