@@ -111,3 +111,87 @@ export const deleteProductApplicationsPatchApi = async (productId) => {
     throw error;
   }
 };
+
+/**
+ * [관리자 - sale] 판매 신청 관리 목록 전체 조회 (GET)
+ */
+export const allSaleFormGetApi = async () => {
+  try {
+    const response = await authInstance.get(`admin/sales`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - sale] 판매 신청 폼 반려하기 (PATCH)
+ */
+export const denySaleFormPatchApi = async (saleFormId) => {
+  try {
+    const response = await authInstance.patch(`admin/sales/deny/${saleFormId}`);
+    return response;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - sale] 점검차량 정보 입력 (GET)
+ */
+export const oneApproveFormGetApi = async (saleFormId) => {
+  try {
+    const response = await authInstance.get(`admin/sales/approve/${saleFormId}`);
+    return response;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - sale] 점검차량 정보 입력 후, patch 요청 (PATCH)
+ */
+export const oneApproveFormPatchApi = async (saleFormId) => {
+  try {
+    const response = await authInstance.get(`admin/sales/approve/${saleFormId}`);
+    return response;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - sale] 차량 게시글 등록을 위한 폼 데이터를 QLDB에서 조회 (GET)
+ */
+export const oneRegisterFormGetApi = async (saleFormId) => {
+  try {
+    const response = await authInstance.get(`admin/sales/register/${saleFormId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - sale] 차량 게시글을 등록 (POST)
+ */
+export const oneRegisterFormPostApi = async (saleFormId, registerInputForm) => {
+  try {
+    const response = await authInstance.post(
+      `admin/sales/register/${saleFormId}`,
+      registerInputForm,
+    );
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
