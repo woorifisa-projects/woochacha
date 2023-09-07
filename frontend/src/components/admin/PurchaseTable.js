@@ -77,9 +77,9 @@ export default function PurchaseTable(props) {
     contentData,
     callbackFunc,
     getConfirmData,
-    getPurchaseData,
     setConfirmFlag,
     moveDetailUrl,
+    setCurrentPurchaseId,
   } = props;
   const rows = contentData;
   const [mounted, setMounted] = useState(false);
@@ -103,15 +103,18 @@ export default function PurchaseTable(props) {
     router.push(`${baseUrl}${purchaseId}`);
   };
 
-  const handleConfirmProduct = () => {
+  const handleCurrentPurchaseId = (purchaseId) => {
+    setCurrentPurchaseId(purchaseId);
+  };
+
+  const handleConfirmProduct = (purchaseId) => {
     callbackFunc();
-    getConfirmData(); // TODO: 검토여부 get
+    getConfirmData(purchaseId); // 검토여부 get
     setConfirmFlag(true);
   };
 
-  const handlePurchaseProduct = () => {
+  const handlePurchaseProduct = (purchaseId) => {
     callbackFunc();
-    getPurchaseData(); // TODO: 거래여부 get
     setConfirmFlag(false);
   };
 
@@ -151,8 +154,11 @@ export default function PurchaseTable(props) {
             {(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
-            ).map((row) => (
-              <TableRow sx={basicButtonTableCss.tableRow} key={row.productId}>
+            ).map((row, idx) => (
+              <TableRow
+                sx={basicButtonTableCss.tableRow}
+                key={idx}
+                onClick={() => handleCurrentPurchaseId(row.purchaseId)}>
                 <TableCell
                   sx={basicButtonTableCss.button}
                   onClick={() => handleMove(moveDetailUrl, row.productId)}
@@ -168,7 +174,7 @@ export default function PurchaseTable(props) {
                     </Button>
                   ) : (
                     <Button
-                      onClick={handleConfirmProduct}
+                      onClick={() => handleConfirmProduct(row.purchaseId)}
                       sx={basicButtonTableCss.button}
                       variant="outlined"
                       color="error">
@@ -177,12 +183,12 @@ export default function PurchaseTable(props) {
                   )}
                 </TableCell>
                 <TableCell align="center">
-                  {row[`${headerData[3].contentCell}`] === 1 ? (
+                  {row[`${headerData[4].contentCell}`] === 0 ? (
                     <Button
-                      onClick={handlePurchaseProduct}
+                      onClick={() => handlePurchaseProduct(row.purchaseId)}
                       sx={basicButtonTableCss.button}
                       variant="outlined">
-                      성사
+                      미성사
                     </Button>
                   ) : (
                     <Button
@@ -190,7 +196,7 @@ export default function PurchaseTable(props) {
                       variant="outlined"
                       color="error"
                       disabled>
-                      미성사
+                      성사
                     </Button>
                   )}
                 </TableCell>
