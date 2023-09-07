@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   IconButton,
+  Typography,
 } from '@mui/material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -70,9 +71,9 @@ function TablePaginationActions(props) {
 }
 
 // basic component
-export default function BasicTable(props) {
+export default function MemberTable(props) {
   const { headerData, contentData, moveUrl } = props;
-  const rows = contentData;
+  const rows = contentData.content;
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -134,7 +135,15 @@ export default function BasicTable(props) {
                 <TableCell align="center">{row[`${headerData[0].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[3].contentCell}`]}</TableCell>
+                {row[headerData[3].contentCell] === 1 ? (
+                  <TableCell align="center">
+                    <Typography variant="body2" color="primary">{`일반 사용자`}</Typography>
+                  </TableCell>
+                ) : (
+                  <TableCell align="center">
+                    <Typography variant="body2" color="error">{`이용제한 사용자`}</Typography>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
             {emptyRows > 0 && (

@@ -3,12 +3,22 @@ import { useRouter } from 'next/router';
 import { Box, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import withAdminAuth from '@/hooks/withAdminAuth';
-import BasicModal from '@/components/common/BasicModal';
 import BasicButtonTable from '@/components/admin/ProductTable';
 import { ADMIN_EDIT_MODAL, DELETE_MODAL } from '@/constants/string';
+import {
+  allProductApplicationsGetApi,
+  deleteProductApplicationsPatchApi,
+  editApproveProductApplicationsPatchApi,
+  editDenyProductApplicationsPatchApi,
+  editProductApplicationsGetApi,
+} from '@/services/adminpageApi';
+import ApproveModal from '@/components/common/ApproveModal';
 
 function AdminProductList() {
   const [mounted, setMounted] = useState(false);
+  const [allProductApplications, setAllProductApplications] = useState();
+  const [editProductApplication, setEditProductApplication] = useState();
+  const [currentProductId, setCurrentProductId] = useState();
   const router = useRouter();
 
   // Modal 버튼 클릭 유무
@@ -17,37 +27,60 @@ function AdminProductList() {
   const [editFlag, setEditFlag] = useState();
 
   /**
-   * 삭제
+   * 삭제요청 삭제
    */
   const handleDelete = async () => {
     try {
-      // await adminDeleteProduct(memberId, productId, updateData);
-      alert('삭제 완료');
-      router.push(`/admin/product`);
+      await deleteProductApplicationsPatchApi(currentProductId).then((res) => {
+        if (res.status === 200) {
+          alert(res.data);
+          router.push(`/admin/product`);
+        }
+      });
     } catch (error) {
       console.log('실패');
     }
   };
 
   /**
-   * 수정
+   * 수정 승인
    */
-  const handleEdit = async () => {
+  const handleApproveEdit = async () => {
     try {
-      // await adminEditProduct(memberId, productId, updateData);
-      alert('수정 완료');
-      router.push(`/admin/product`);
+      await editApproveProductApplicationsPatchApi(currentProductId).then((res) => {
+        if (res.status === 200) {
+          alert(res.data);
+          router.push(`/admin/product`);
+        }
+      });
     } catch (error) {
       console.log('실패');
     }
   };
 
-  // TODO: DUMMY_DATA - edit 요청 시, get해와서 보여주는 data
-  const dummyData = {
-    title: '기아 모닝 2010년형',
-    imageURL: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    price: 2690,
-    updatePrice: 3200,
+  /**
+   * 수정 반려
+   */
+  const handleDenyEdit = async () => {
+    try {
+      await editDenyProductApplicationsPatchApi(currentProductId).then((res) => {
+        if (res.status === 200) {
+          alert(res.data);
+          router.push(`/admin/product`);
+        }
+      });
+    } catch (error) {
+      console.log('실패');
+    }
+  };
+
+  /**
+   * 수정 요청 시, 수정 modal의 내부 content GET 함수
+   */
+  const handleGetEditData = (id) => {
+    editProductApplicationsGetApi(id).then((data) => {
+      setEditProductApplication(data);
+    });
   };
 
   const adminProductCss = {
@@ -97,36 +130,14 @@ function AdminProductList() {
     },
   ];
 
-  // TODO: axios로 data 받아온 데이터라고 가정
-  const dummy_content_data = {
-    content: [
-      {
-        productId: '14',
-        title: '기아 올 뉴 카니발 2018년형',
-        sellerName: '홍길길',
-        sellerEmail: 'fisafisa@naver.com',
-        manageType: 0,
-      },
-      {
-        productId: '2',
-        title: '기아 올 뉴 카니발 2018년형',
-        sellerName: '홍길길',
-        sellerEmail: 'fisafisa@naver.com',
-        manageType: 0,
-      },
-      {
-        productId: '3',
-        title: '기아 올 뉴 카니발 2018년형',
-        sellerName: '홍길길',
-        sellerEmail: 'fisafisa@naver.com',
-        manageType: 1,
-      },
-    ],
-  };
-
-  // data 불러온 이후 필터링 data에 맞게 렌더링
+  /**
+   * 렌더링 시, 모든 수정, 삭제 신청 목록 조회
+   */
   useEffect(() => {
-    setMounted(true);
+    allProductApplicationsGetApi().then((data) => {
+      setAllProductApplications(data);
+      setMounted(true);
+    });
   }, []);
 
   return (
@@ -137,29 +148,39 @@ function AdminProductList() {
         </Typography>
         <BasicButtonTable
           headerData={table_cell_data}
-          contentData={dummy_content_data.content}
+          contentData={allProductApplications.content}
           deleteFunc={handleClickModal}
           editFunc={handleClickModal}
+          getEditFunc={handleGetEditData}
           setEditFlag={setEditFlag}
           moveUrl={`/product/detail/`}
+          setCurrentProductId={setCurrentProductId}
+          currentProductId={currentProductId}
         />
         {showModal && (
-          <BasicModal
+          <ApproveModal
             onClickModal={handleClickModal}
             isOpen={showModal}
             modalContent={editFlag ? ADMIN_EDIT_MODAL.CONTENTS : DELETE_MODAL.CONTENTS}
-            callBackFunc={editFlag ? handleEdit : handleDelete}>
-            {/* modal 자식 요소 - edit 의 경우, 가격 승인을 띄워줘야함 */}
-            {editFlag ? (
+            callBackOneFunc={editFlag ? () => handleApproveEdit() : () => handleDelete()}
+            callBackTwoFunc={
+              editFlag
+                ? () => handleDenyEdit()
+                : () => {
+                    console.log();
+                  }
+            }>
+            {/* modal 자식 요소 - edit 의 경우, 가격 승인을 띄워주기 */}
+            {editFlag && editProductApplication ? (
               <Grid container spacing={2} noValidate justifyContent="center" alignItems="center">
                 <Grid item xs={12} md={6}>
                   <Typography variant="h5" sx={adminProductCss.modalTitle}>
-                    {dummyData.title}
+                    {editProductApplication.title}
                   </Typography>
                   <Stack direction="column" alignItems="center" spacing={2} mb={5}>
                     <CardMedia
                       sx={adminProductCss.modalCardMedia}
-                      image={dummyData.imageURL}
+                      image={editProductApplication.imageUrl}
                       title="게시글 이미지"
                     />
                   </Stack>
@@ -170,13 +191,17 @@ function AdminProductList() {
                       <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
                         현재 가격
                       </Typography>
-                      <Typography textAlign="left">{`${dummyData.price} 만원`}</Typography>
+                      <Typography textAlign="left">{`${editProductApplication.price} 만원`}</Typography>
                     </Grid>
                     <Grid>
                       <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
                         수정 신청한 가격
                       </Typography>
-                      <Typography textAlign="left">{`${dummyData.updatePrice} 만원`}</Typography>
+                      <Typography textAlign="left">
+                        {editProductApplication.updatePrice !== null
+                          ? editProductApplication.updatePrice
+                          : '수정 신청한 가격이 없습니다!'}
+                      </Typography>
                     </Grid>
                   </Box>
                 </Grid>
@@ -184,7 +209,7 @@ function AdminProductList() {
             ) : (
               ''
             )}
-          </BasicModal>
+          </ApproveModal>
         )}
       </>
     )

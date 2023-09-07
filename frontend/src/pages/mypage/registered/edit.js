@@ -19,16 +19,6 @@ function RegisteredEdit() {
     carImage: '',
   });
 
-  // PATCH
-  // const [editPriceValue, setEditPriceValue] = useState({
-  //   updatePrice: null,
-  // });
-  // const [updatePrice, setUpdatePrice] = useState(null);
-
-  // Modal 버튼 클릭 유무
-  // const [showModal, setShowModal] = useState(false);
-  // const handleClickModal = () => setShowModal(showModal);
-
   const registeredEditCss = {
     mypageTitle: {
       my: 10,
@@ -87,22 +77,6 @@ function RegisteredEdit() {
   const handleChangePrice = (e) => {
     setPriceValue(e.target.value);
   };
-
-  // /**
-  //    * 수정 승인
-  //    */
-  // const handleApproveEdit = async () => {
-  //   try {
-  //     await editApproveProductApplicationsPatchApi(currentProductId).then((res) => {
-  //       if (res.status === 200) {
-  //         alert(res.data);
-  //         router.push(`/admin/product`);
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.log('실패');
-  //   }
-  // };
 
   /**
    * 수정 form 제출
