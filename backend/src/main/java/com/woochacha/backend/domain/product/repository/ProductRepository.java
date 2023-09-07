@@ -17,5 +17,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "JOIN p.saleForm sf " +
             "WHERE p.saleForm.member.id = :memberId AND p.status.id = :carStatusId")
     int countSale(@Param("memberId") Long memberId, @Param("carStatusId") short carStatusId);
+
+    @Query("SELECT COUNT(*) FROM Product p " +
+            "JOIN p.carDetail cd " +
+            "WHERE p.carDetail.carNum = :carNum AND p.status.id = :status")
+    int checkCarNum(@Param("carNum") String carNum, @Param("status") short status);
 }
 

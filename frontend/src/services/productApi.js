@@ -1,4 +1,4 @@
-import { jsonInstance } from '@/utils/api';
+import { authInstance, jsonInstance } from '@/utils/api';
 
 export const allProductGetApi = async () => {
   try {
@@ -69,7 +69,7 @@ export const keywordProductGetApi = async (keyword) => {
   console.log(keyword);
   try {
     const response = await jsonInstance.get('/product/search', {
-      params: { keyword: keyword }
+      params: { keyword: keyword },
     });
     const data = response.data;
     return data;
@@ -79,3 +79,24 @@ export const keywordProductGetApi = async (keyword) => {
   }
 };
 
+export const getBranchApi = async () => {
+  try {
+    const response = await authInstance.get('/products/sale');
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+export const saleFormRequest = async (saleForm) => {
+  try {
+    const response = await authInstance.post('/products/sale', saleForm);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
