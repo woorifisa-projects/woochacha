@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
-    @Query("UPDATE Member m SET m.status = :status WHERE m.id = :memberId")
-    int updateMemberStatus(@Param("memberId") Long memberId, @Param("status") Byte status);
+    @Query("UPDATE Member m SET m.isAvailable = :isAvailable WHERE m.id = :memberId")
+    int updateMemberStatus(@Param("memberId") Long memberId, @Param("isAvailable") Byte isAvailable);
     @Modifying
     @Query("UPDATE Member m SET m.profileImage = :profileImage WHERE m.id = :memberId")
     int updateMemberImage(@Param("memberId") Long memberId, @Param("profileImage") String profileImage);

@@ -148,7 +148,7 @@ export const DELETE_MODAL = {
     modalTitle: '삭제하시겠습니까?',
     modalYesBtn: '네',
     modalNoBtn: '아니요',
-    modalContents: '삭제 관련 텍스트입니다!!!',
+    modalContents: '정말로 삭제하시겠습니까?',
   },
 };
 
@@ -158,7 +158,6 @@ export const PURCHASE_MODAL = {
     modalTitle: '구매를 요청하시겠습니까?',
     modalYesBtn: '네',
     modalNoBtn: '아니요',
-    modalContents: '구매 약속일을 선택해주세요.',
   },
 };
 
@@ -194,8 +193,8 @@ export const ADMIN_REGISTER_MODAL = {
 export const ADMIN_EDIT_MODAL = {
   CONTENTS: {
     modalTitle: '수정을 승인하시겠습니까?',
-    modalYesBtn: '네',
-    modalNoBtn: '아니요',
+    modalYesBtn: '승인하기',
+    modalNoBtn: '반려하기',
     modalContents: '',
   },
 };

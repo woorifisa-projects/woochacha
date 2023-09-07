@@ -64,3 +64,18 @@ export const purchaseRequest = async (purchaseForm) => {
     throw error;
   }
 };
+
+export const keywordProductGetApi = async (keyword) => {
+  console.log(keyword);
+  try {
+    const response = await jsonInstance.get('/product/search', {
+      params: { keyword: keyword }
+    });
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+

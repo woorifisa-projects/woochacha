@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Typography } from '@mui/material';
 import withAdminAuth from '@/hooks/withAdminAuth';
-import BasicTable from '@/components/admin/MemberTable';
+import { allUserGetApi } from '@/services/adminpageApi';
+import MemberTable from '@/components/admin/MemberTable';
 
 function AdminUserList() {
   const [mounted, setMounted] = useState(false);
+  const [allUserInfo, setAllUserInfo] = useState();
 
   const mypageCss = {
     mypageTitle: {
@@ -34,47 +36,24 @@ function AdminUserList() {
     },
   ];
 
-  // TODO: axios로 data 받아온 데이터라고 가정
-  const dummy_content_data = {
-    content: [
-      {
-        id: '1',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
-      },
-      {
-        id: '2',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
-      },
-      {
-        id: '3',
-        email: 'aaa@naver.com',
-        name: '김김김',
-        phone: '01011113333',
-        isAvailable: 1,
-      },
-    ],
-  };
-
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
+    allUserGetApi().then((data) => {
+      setAllUserInfo(data);
+    });
     setMounted(true);
   }, []);
 
   return (
-    mounted && (
+    mounted &&
+    allUserInfo && (
       <>
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           관리자 페이지 - 유저 리스트
         </Typography>
-        <BasicTable
+        <MemberTable
           headerData={table_cell_data}
-          contentData={dummy_content_data.content}
+          contentData={allUserInfo}
           moveUrl={`/admin/members/`}
         />
       </>
