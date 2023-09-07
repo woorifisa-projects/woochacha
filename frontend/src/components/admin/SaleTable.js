@@ -72,7 +72,7 @@ function TablePaginationActions(props) {
 
 // basic component
 export default function SaleTable(props) {
-  const { headerData, contentData, moveUrl, callbackFunc } = props;
+  const { headerData, contentData, moveUrl, callbackFunc, setCurrentSaleFormId } = props;
   const rows = contentData;
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(0);
@@ -91,8 +91,12 @@ export default function SaleTable(props) {
     setPage(0);
   };
 
-  const handleMove = (memberId) => {
-    router.push(`${moveUrl}${memberId}`);
+  const handleMove = (saleFormId) => {
+    router.push(`${moveUrl}${saleFormId}`);
+  };
+
+  const handleCurrentId = (currentId) => {
+    setCurrentSaleFormId(currentId);
   };
 
   useEffect(() => {
@@ -132,11 +136,13 @@ export default function SaleTable(props) {
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
             ).map((row) => (
-              <TableRow sx={basicButtonTableCss.tableRow} key={row.id}>
+              <TableRow
+                sx={basicButtonTableCss.tableRow}
+                key={row.id}
+                onClick={() => handleCurrentId(row.id)}>
                 <TableCell align="center">{row[`${headerData[0].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[3].contentCell}`]}</TableCell>
                 <TableCell align="center">
                   <Button
                     onClick={() => handleMove(row.id)}
