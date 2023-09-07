@@ -50,7 +50,6 @@ export default function MypageProfileEdit() {
       });
     });
     setMounted(true);
-    console.log(memberProfileEdit);
   }, []);
 
   const mypageProfileCss = {

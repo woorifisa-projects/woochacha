@@ -3,24 +3,31 @@ import { useRouter } from 'next/router';
 import withAuth from '@/hooks/withAuth';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import { Box, Button, Card, CardMedia, Grid, Stack, TextField, Typography } from '@mui/material';
-import BasicModal from '@/components/common/BasicModal';
-import { EDIT_MODAL } from '@/constants/string';
-import { mypageProductEditRequestGetApi } from '@/services/mypageApi';
+import {
+  mypageProductEditRequestGetApi,
+  mypageProductEditRequestPatchApi,
+} from '@/services/mypageApi';
 
 function RegisteredEdit() {
   const router = useRouter();
   const { memberId, productId } = router.query; // query string
   const [mounted, setMounted] = useState(false);
-  const [priceValue, setPriceValue] = useState();
+  const [priceValue, setPriceValue] = useState('');
   const [mypageProductEditRequest, setMypageProductEditRequest] = useState({
     title: '',
     price: '',
     carImage: '',
   });
 
+  // PATCH
+  // const [editPriceValue, setEditPriceValue] = useState({
+  //   updatePrice: null,
+  // });
+  // const [updatePrice, setUpdatePrice] = useState(null);
+
   // Modal 버튼 클릭 유무
-  const [showModal, setShowModal] = useState(false);
-  const handleClickModal = () => setShowModal(showModal);
+  // const [showModal, setShowModal] = useState(false);
+  // const handleClickModal = () => setShowModal(showModal);
 
   const registeredEditCss = {
     mypageTitle: {
@@ -68,7 +75,6 @@ function RegisteredEdit() {
   useEffect(() => {
     memberId &&
       mypageProductEditRequestGetApi(memberId, productId).then((data) => {
-        console.log(data);
         setMypageProductEditRequest({
           title: data.title,
           price: data.price,
@@ -82,19 +88,40 @@ function RegisteredEdit() {
     setPriceValue(e.target.value);
   };
 
+  // /**
+  //    * 수정 승인
+  //    */
+  // const handleApproveEdit = async () => {
+  //   try {
+  //     await editApproveProductApplicationsPatchApi(currentProductId).then((res) => {
+  //       if (res.status === 200) {
+  //         alert(res.data);
+  //         router.push(`/admin/product`);
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.log('실패');
+  //   }
+  // };
+
   /**
    * 수정 form 제출
    */
   const handleSubmit = async () => {
+    const updatePrice = {
+      updatePrice: priceValue,
+    };
     try {
-      const updateData = {
-        updatePrice: priceValue,
-      };
-      // await submitEditRegistered(memberId, productId, updateData);
-      alert('가격 수정 요청이 완료되었습니다!');
-      router.push(`/mypage/registered/${memberId}`);
+      await mypageProductEditRequestPatchApi(updatePrice, memberId, productId).then((response) => {
+        console.log(response);
+        console.log('res');
+        if (response.status === 200) {
+          alert(response.data);
+          router.push(`/mypage/registered/${memberId}`);
+        }
+      });
     } catch (error) {
-      console.log('실패');
+      console.log(error);
     }
   };
 
@@ -147,8 +174,8 @@ function RegisteredEdit() {
                   />
                 </Grid>
                 <Button
-                  onClick={handleClickModal}
-                  // type="submit"
+                  onClick={handleSubmit}
+                  type="submit"
                   size="large"
                   variant="contained"
                   sx={registeredEditCss.button}>
@@ -158,14 +185,6 @@ function RegisteredEdit() {
             </Grid>
           </Grid>
         </Card>
-        {showModal && (
-          <BasicModal
-            onClickModal={handleClickModal}
-            isOpen={showModal}
-            modalContent={EDIT_MODAL.CONTENTS}
-            callBackFunc={handleSubmit}
-          />
-        )}
       </>
     )
   );
