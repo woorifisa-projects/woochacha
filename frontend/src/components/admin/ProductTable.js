@@ -72,7 +72,16 @@ function TablePaginationActions(props) {
 
 // basic component
 export default function BasicButtonTable(props) {
-  const { headerData, contentData, deleteFunc, editFunc, setEditFlag, moveUrl } = props;
+  const {
+    headerData,
+    contentData,
+    deleteFunc,
+    editFunc,
+    getEditFunc,
+    setEditFlag,
+    moveUrl,
+    setCurrentProductId,
+  } = props;
   const rows = contentData;
   const [mounted, setMounted] = useState(false);
   const [page, setPage] = useState(0);
@@ -95,7 +104,8 @@ export default function BasicButtonTable(props) {
     router.push(`${moveUrl}${id}`);
   };
 
-  const handleEditProduct = () => {
+  const handleEditProduct = (id) => {
+    getEditFunc(id); // 수정 api 호출
     editFunc();
     setEditFlag(true);
   };
@@ -103,6 +113,10 @@ export default function BasicButtonTable(props) {
   const handleDeleteProduct = () => {
     deleteFunc();
     setEditFlag(false);
+  };
+
+  const handleCurrentProductId = (id) => {
+    setCurrentProductId(id);
   };
 
   useEffect(() => {
@@ -141,7 +155,10 @@ export default function BasicButtonTable(props) {
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
             ).map((row) => (
-              <TableRow sx={basicButtonTableCss.tableRow} key={row.productId}>
+              <TableRow
+                sx={basicButtonTableCss.tableRow}
+                key={row.productId}
+                onClick={() => handleCurrentProductId(row.productId)}>
                 <TableCell
                   align="center"
                   onClick={() => handleMove(`${row.productId}`)}
@@ -151,9 +168,9 @@ export default function BasicButtonTable(props) {
                 <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
                 <TableCell align="center">
-                  {row[`${headerData[3].contentCell}`] === 1 ? (
+                  {row[`${headerData[3].contentCell}`] === '수정' ? (
                     <Button
-                      onClick={handleEditProduct}
+                      onClick={() => handleEditProduct(row.productId)}
                       sx={basicButtonTableCss.button}
                       variant="contained">
                       수정
