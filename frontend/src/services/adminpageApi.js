@@ -195,3 +195,31 @@ export const oneRegisterFormPostApi = async (saleFormId, registerInputForm) => {
     throw error;
   }
 };
+
+/**
+ * [관리자 - member] 관리자 페이지에서 한 명의 member 삭제 (PATCH)
+ */
+export const oneMemberDeletePatchApi = async (memberId) => {
+  try {
+    const response = await authInstance.patch(`admin/members/delete/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - log] 관리자 페이지에서 한 명의 member의 로그 내역 조회 (GET)
+ */
+export const oneMemberLogGetApi = async (memberId) => {
+  try {
+    const response = await authInstance.get(`admin/members/log/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
