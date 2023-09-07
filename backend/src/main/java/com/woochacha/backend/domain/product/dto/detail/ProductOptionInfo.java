@@ -1,8 +1,10 @@
 package com.woochacha.backend.domain.product.dto.detail;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Builder
+@NoArgsConstructor
 public class ProductOptionInfo {
     private String option;
     private Byte whether;

@@ -150,7 +150,7 @@ public class ProductServiceImpl implements ProductService {
 
         // 상세 정보 조회
         ProductDetailInfo productDetailInfo = getProductDetailInfo(carNum);
-        productDetailInfo.setProdudctAccidentInfoList(getProductAccidentInfo(carNum)); // 사고 이력
+        productDetailInfo.setProductAccidentInfoList(getProductAccidentInfo(carNum)); // 사고 이력
         productDetailInfo.setProductExchangeInfoList(getProductExchangeInfo(carNum)); // 교체 이력
 
         // 옵션 정보 조회
