@@ -18,6 +18,9 @@ import theme from '@/styles/theme';
 import { CAPITAL_CONTENTS, PURCHASE_MODAL } from '@/constants/string';
 import { purchaseRequest } from '@/services/productApi';
 import { todayDate } from '@/utils/date';
+import { productDetailGetApi } from '@/services/productApi';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import { useRecoilState } from 'recoil';
 // import DetailProduct from '@/components/product/DetailProduct';
 
 export default function ProductDetail() {
@@ -27,6 +30,10 @@ export default function ProductDetail() {
   let responsiveFontTheme = responsiveFontSizes(theme);
   const [detailProduct, setDetailProduct] = useState();
   const [purchaseDateVal, setPurchaseDateVal] = useState(todayDate);
+  const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+
+  // userid 조회
+  const memberId = userLoginState.userId;
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
@@ -41,9 +48,8 @@ export default function ProductDetail() {
    */
   const handlePurchaseRequest = () => {
     const purchaseForm = {
-      memberId: '1',
-      productId: '15',
-      purchaseDateVal: purchaseDateVal, // 날짜는 일단 넣어놨습니다.
+      memberId: memberId,
+      productId: productId,
     };
     purchaseRequest(purchaseForm).then((data) => {
       console.log(data);
@@ -61,89 +67,14 @@ export default function ProductDetail() {
   };
 
   useEffect(() => {
-    //   productId &&
-    //     productDetailGetApi(productId).then((data) => {
-    //       setDetailProduct(data);
-    //     });
+    productId &&
+      productDetailGetApi(productId).then((data) => {
+        setDetailProduct(data);
+      });
     setMounted(true);
   }, []);
 
   // TODO: axios 통신 후 받을 데이터 (DUMMY_DATA)
-  const dummy_data = {
-    productBasicInfo: {
-      title: '기아 올 뉴 카니발 2018년형',
-      carNum: '22나2222',
-      branch: '서울',
-      price: 2690,
-    },
-    productDetailInfo: {
-      capacity: 9,
-      distance: 110000,
-      carType: 'RV',
-      fuelName: '디젤',
-      transmissionName: '오토',
-      produdctAccidentInfoList: [
-        {
-          type: '침수사고',
-          count: 1,
-        },
-        {
-          type: '교통사고',
-          count: 2,
-        },
-      ],
-      productExchangeInfoList: [
-        {
-          type: '본네트',
-          count: 1,
-        },
-        {
-          type: '뒷문',
-          count: 1,
-        },
-      ],
-    },
-    productOptionInfo: [
-      {
-        option: '열선시트',
-        whether: 1,
-      },
-      {
-        option: '스마트키',
-        whether: 0,
-      },
-      {
-        option: '블랙박스',
-        whether: 1,
-      },
-      {
-        option: '네비게이션',
-        whether: 0,
-      },
-      {
-        option: '에어백',
-        whether: 1,
-      },
-      {
-        option: '썬루프',
-        whether: 1,
-      },
-      {
-        option: '하이패스',
-        whether: 0,
-      },
-      {
-        option: '후방카메라',
-        whether: 1,
-      },
-    ],
-    productOwnerInfo: null,
-    carImageList: [
-      'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/00%EA%B0%800000/1',
-      'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/00%EA%B0%800000/1',
-      'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/00%EA%B0%800000/1',
-    ],
-  };
 
   const productDetailCss = {
     detailHeaderBox: {
@@ -185,7 +116,7 @@ export default function ProductDetail() {
   };
 
   return (
-    // detailProduct &&
+    detailProduct &&
     mounted && (
       <ThemeProvider theme={responsiveFontTheme}>
         <CssBaseline />
@@ -198,11 +129,11 @@ export default function ProductDetail() {
               variant="h4"
               component="h4"
               fontWeight="bold">
-              {dummy_data.productBasicInfo.title}
+              {detailProduct.productBasicInfo.title}
             </Typography>
             <Grid container spacing={2} alignItems="flex-start" justifyContent="center" mb={2}>
               <Grid item xs={12} sm={12} md={6}>
-                <ImageSlider image={dummy_data.carImageList} />
+                <ImageSlider image={detailProduct.carImageList} />
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
                 <Grid container spacing={2} alignItems="flex-start" justifyContent="center" mb={2}>
@@ -214,16 +145,16 @@ export default function ProductDetail() {
                             차량 상세 정보
                           </Typography>
                           <Typography gutterBottom variant="body1">
-                            {dummy_data.productBasicInfo.title}
+                            {detailProduct.productBasicInfo.title}
                           </Typography>
                           <Typography gutterBottom variant="body1">
-                            {dummy_data.productBasicInfo.carNum}
+                            {detailProduct.productBasicInfo.carNum}
                           </Typography>
                           <Typography gutterBottom variant="body1">
-                            {dummy_data.productBasicInfo.branch}
+                            {detailProduct.productBasicInfo.branch}
                           </Typography>
                           <Typography gutterBottom variant="body1">
-                            {`${dummy_data.productBasicInfo.price} 만원`}
+                            {`${detailProduct.productBasicInfo.price} 만원`}
                           </Typography>
                         </Box>
                       </CardContent>
@@ -237,43 +168,25 @@ export default function ProductDetail() {
                             차량 상세 정보
                           </Typography>
                           <Typography gutterBottom variant="body2">
-                            {`승차인원 : ${dummy_data.productDetailInfo.capacity}`}
+                            {`승차인원 : ${detailProduct.productDetailInfo.capacity}`}
                           </Typography>
                           <Typography gutterBottom variant="body2">
-                            {`주행거리 : ${dummy_data.productDetailInfo.distance}`}
+                            {`주행거리 : ${detailProduct.productDetailInfo.distance}`}
                           </Typography>
                           <Typography gutterBottom variant="body2">
-                            {`차종 : ${dummy_data.productDetailInfo.carType}`}
+                            {`차종 : ${detailProduct.productDetailInfo.carType}`}
                           </Typography>
                           <Typography gutterBottom variant="body2">
-                            {`연료 : ${dummy_data.productDetailInfo.fuelName}`}
+                            {`연료 : ${detailProduct.productDetailInfo.fuelName}`}
                           </Typography>
                           <Typography gutterBottom variant="body2">
-                            {`변속기 : ${dummy_data.productDetailInfo.transmissionName}`}
+                            {`변속기 : ${detailProduct.productDetailInfo.transmissionName}`}
                           </Typography>
                         </Box>
                       </CardContent>
                     </Card>
                   </Grid>
                   <Grid item xs={12} sm={12} md={12}>
-                    <Card sx={productDetailCss.card}>
-                      <CardContent>
-                        <Box>
-                          <Typography gutterBottom variant="body1">
-                            {dummy_data.productBasicInfo.title}
-                          </Typography>
-                          <Typography gutterBottom variant="body1">
-                            {dummy_data.productBasicInfo.carNum}
-                          </Typography>
-                          <Typography gutterBottom variant="body1">
-                            {dummy_data.productBasicInfo.branch}
-                          </Typography>
-                          <Typography gutterBottom variant="body1">
-                            {dummy_data.productBasicInfo.price}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </Card>
                     <Button onClick={handleClickModal} mt={5} fullWidth variant="contained">
                       구매 신청
                     </Button>
@@ -296,10 +209,10 @@ export default function ProductDetail() {
               mb={2}>
               <Grid item xs={12} sm={12} md={6}>
                 <Typography gutterBottom variant="body1">
-                  {`${dummy_data.productBasicInfo.title}의 가격에 맞는 금융상품이 궁금하다면?`}
+                  {`${detailProduct.productBasicInfo.title}의 가격에 맞는 금융상품이 궁금하다면?`}
                 </Typography>
                 <Typography gutterBottom variant="h4" component="h4">
-                  {`${dummy_data.productBasicInfo.price} 만원`}
+                  {`${detailProduct.productBasicInfo.price} 만원`}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
@@ -337,19 +250,19 @@ export default function ProductDetail() {
                         차량 상세 정보
                       </Typography>
                       <Typography gutterBottom variant="body2">
-                        {`승차인원 : ${dummy_data.productDetailInfo.capacity}`}
+                        {`승차인원 : ${detailProduct.productDetailInfo.capacity}`}
                       </Typography>
                       <Typography gutterBottom variant="body2">
-                        {`주행거리 : ${dummy_data.productDetailInfo.distance}`}
+                        {`주행거리 : ${detailProduct.productDetailInfo.distance}`}
                       </Typography>
                       <Typography gutterBottom variant="body2">
-                        {`차종 : ${dummy_data.productDetailInfo.carType}`}
+                        {`차종 : ${detailProduct.productDetailInfo.carType}`}
                       </Typography>
                       <Typography gutterBottom variant="body2">
-                        {`연료 : ${dummy_data.productDetailInfo.fuelName}`}
+                        {`연료 : ${detailProduct.productDetailInfo.fuelName}`}
                       </Typography>
                       <Typography gutterBottom variant="body2">
-                        {`변속기 : ${dummy_data.productDetailInfo.transmissionName}`}
+                        {`변속기 : ${detailProduct.productDetailInfo.transmissionName}`}
                       </Typography>
                     </Box>
                   </CardContent>
@@ -362,15 +275,44 @@ export default function ProductDetail() {
                       <Typography gutterBottom variant="h6" mr={2}>
                         차량 사고 내역 조회
                       </Typography>
-                      {dummy_data.productDetailInfo.produdctAccidentInfoList.map(
-                        (accidentItem, idx) => {
-                          return (
+                      {
+                        <Typography gutterBottom variant="body2" style={{ borderBottom: '1px solid black' }}>
+                          사고 이력
+                        </Typography>
+                      }
+                      {
+                        detailProduct.productDetailInfo.produdctAccidentInfoList &&
+                          detailProduct.productDetailInfo.produdctAccidentInfoList.length > 0 ? (
+                          detailProduct.productDetailInfo.produdctAccidentInfoList.map((accidentItem, idx) => (
                             <Typography key={idx} gutterBottom variant="body2">
                               {`${accidentItem.type} : ${accidentItem.count} 번`}
                             </Typography>
-                          );
-                        },
-                      )}
+                          ))
+                        ) : (
+                          <Typography gutterBottom variant="body2">
+                            사고 이력 없음
+                          </Typography>
+                        )
+                      }
+                      {
+                        <Typography gutterBottom variant="body2" style={{ borderBottom: '1px solid black', marginTop: '2em' }}>
+                          교체 이력
+                        </Typography>
+                      }
+                      {
+                        detailProduct.productDetailInfo.productExchangeInfoList &&
+                          detailProduct.productDetailInfo.productExchangeInfoList.length > 0 ? (
+                          detailProduct.productDetailInfo.productExchangeInfoList.map((exchangeItem, idx) => (
+                            <Typography key={idx} gutterBottom variant="body2">
+                              {`${exchangeItem.type} : ${exchangeItem.count} 번`}
+                            </Typography>
+                          ))
+                        ) : (
+                          <Typography gutterBottom variant="body2">
+                            교체 이력 없음
+                          </Typography>
+                        )
+                      }
                     </Box>
                   </CardContent>
                 </Card>
@@ -382,7 +324,7 @@ export default function ProductDetail() {
                       <Typography gutterBottom variant="h6" mr={2}>
                         차량 옵션 정보
                       </Typography>
-                      {dummy_data.productOptionInfo.map((optionList, idx) => {
+                      {detailProduct.productOptionInfo.map((optionList, idx) => {
                         return (
                           <Typography key={idx} gutterBottom variant="body2">
                             {`${optionList.whether === 1 ? `${optionList.option}` : ''}`}
@@ -401,19 +343,6 @@ export default function ProductDetail() {
               isOpen={showModal}
               modalContent={PURCHASE_MODAL.CONTENTS}
               callBackFunc={handlePurchaseRequest}>
-              <TextField
-                value={purchaseDateVal}
-                onChange={handleChangeDate}
-                margin="normal"
-                required
-                fullWidth
-                id="date"
-                label="날짜를 선택해주세요"
-                name="date"
-                autoComplete="date"
-                type="date"
-                autoFocus
-              />
             </BasicModal>
           )}
         </main>

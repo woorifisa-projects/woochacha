@@ -24,8 +24,6 @@ export default function ImageSlider(props) {
       mt: 3,
       height: '20rem',
       display: 'block',
-      maxWidth: '20rem',
-      minWidth: '20rem',
       overflow: 'hidden',
       width: '100%',
       borderRadius: '15px',

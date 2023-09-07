@@ -17,7 +17,7 @@ export default function MypageProfileEdit() {
   });
   //PATCH
   const [editProfileValue, setEditProfileValue] = useState({
-    imageUrl: null, 
+    imageUrl: null,
   });
   const [imagefile, setImageFile] = useState(null);
   const fileInput = useRef(null);
@@ -50,7 +50,6 @@ export default function MypageProfileEdit() {
       });
     });
     setMounted(true);
-    console.log(memberProfileEdit);
   }, []);
 
   const mypageProfileCss = {
