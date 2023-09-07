@@ -13,12 +13,13 @@ import SearchBar from '@/components/product/SearchBar';
 import ProductCard from '@/components/product/ProductCard';
 import FilterSideBar from '@/components/product/FilterSideBar';
 import { useEffect, useState } from 'react';
-import { allProductGetApi } from '@/services/productApi';
+import { allProductGetApi, keywordProductGetApi } from '@/services/productApi';
 import { useRouter } from 'next/router';
 
 export default function Products() {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectMenuValue, setSelectMenuValue] = useState({
     typeList: [],
     modelList: [],
@@ -34,6 +35,17 @@ export default function Products() {
     setMounted(true);
   }, []);
 
+  // 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
+  const handleSearch = (keyword) => {
+    console.log(keyword)
+    keywordProductGetApi(keyword).then((data) => {
+      console.log(data);
+      setAllProducts({
+        productInfo: data,
+      })
+    });
+  };
+
   const productsCss = {
     gridContent: {
       height: '100%',
@@ -45,6 +57,8 @@ export default function Products() {
     },
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
+
+
 
   return (
     allProducts &&
@@ -58,7 +72,7 @@ export default function Products() {
             <Typography gutterBottom variant="h5" component="h5" mb={3}>
               궁금한 차량 조회하기
             </Typography>
-            <SearchBar />
+            <SearchBar onSearch={handleSearch} />
           </MiniCard>
 
           {/* 메인 페이지 content */}
@@ -76,7 +90,7 @@ export default function Products() {
 
           {/* pagination */}
           <Grid sx={productsCss.pagination}>
-            <Pagination count={10} />
+            <Pagination count={(Math.ceil(allProducts.productInfo.length / itemsPerPage)) || 1} />
           </Grid>
         </main>
       </ThemeProvider>
