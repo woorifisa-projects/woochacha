@@ -34,7 +34,13 @@ public class ApproveSaleController {
     @GetMapping
     public ResponseEntity<Page<ApproveSaleResponseDto>> allSaleForms(Pageable pageable) {
         List<ApproveSaleResponseDto> saleForms = approveSaleService.getApproveSaleForm(pageable).getResults();
-        return ResponseEntity.ok(new PageImpl<>(saleForms, pageable, saleForms.size()));
+        Long size =  approveSaleService.getApproveSaleForm(pageable).getTotal();
+        return ResponseEntity.ok(new PageImpl<>(saleForms, pageable, size));
+    }
+
+    @PatchMapping("/deny/{saleFormId}")
+    public ResponseEntity<Boolean> denySaleForm(@RequestParam Long saleFormId){
+        return ResponseEntity.ok(approveSaleService.updateSaleFormDenyStatus(saleFormId));
     }
 
     // 점검 후 해당 saleform에 해당하는 car의 정보와 distance,car accident, car exchange를 조회한다.

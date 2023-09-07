@@ -25,7 +25,8 @@ public class ManageMemberController {
     @GetMapping
     public ResponseEntity<Page<MemberInfoListResponseDto>> getMemberInfoList(Pageable pageable){
         List<MemberInfoListResponseDto> memberInfo = manageMemberService.getAllMemberInfo(pageable).getResults();
-        return ResponseEntity.ok(new PageImpl<>(memberInfo, pageable, memberInfo.size()));
+        Long size = manageMemberService.getAllMemberInfo(pageable).getTotal();
+        return ResponseEntity.ok(new PageImpl<>(memberInfo, pageable, size));
     }
 
     @GetMapping("/{memberId}")
