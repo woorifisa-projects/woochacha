@@ -17,7 +17,7 @@ export default function MypageProfileEdit() {
   });
   //PATCH
   const [editProfileValue, setEditProfileValue] = useState({
-    imageUrl: null, 
+    imageUrl: null,
   });
   const [imagefile, setImageFile] = useState(null);
   const fileInput = useRef(null);

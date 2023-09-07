@@ -148,7 +148,7 @@ export const DELETE_MODAL = {
     modalTitle: '삭제하시겠습니까?',
     modalYesBtn: '네',
     modalNoBtn: '아니요',
-    modalContents: '삭제 관련 텍스트입니다!!!',
+    modalContents: '삭제 요청은 취소할 수 없습니다.',
   },
 };
 

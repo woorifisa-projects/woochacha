@@ -102,6 +102,7 @@ export const mypageProductEditRequestGetApi = async (memberId, productId) => {
   }
 };
 
+// 마이페이지 상품 수정 신청폼 제출 PATCH mypage/registered/edit
 export const mypageProductEditRequestPatchApi = async (updatePrice, memberId, productId) => {
   try {
     const response = await authInstance.patch(`/mypage/registered/edit`, updatePrice, {
@@ -118,9 +119,13 @@ export const mypageProductEditRequestPatchApi = async (updatePrice, memberId, pr
 };
 
 // 마이페이지 등록한 매물 삭제 요청 PATCH mypage/registered/delete/{productId}
-export const mypageProductDeleteRequestPatchApi = async (memberId) => {
+export const mypageProductDeleteRequestPatchApi = async (productId, memberId) => {
   try {
-    const response = await authInstance.patch(`/mypage/registered/delete/${memberId}`);
+    const response = await authInstance.patch(`/mypage/registered/delete/${productId}`, memberId, {
+      headers: {
+        'Content-Type': 'application/json', // JSON 형식으로 요청 본문을 설정
+      },
+    });
     const data = response.data;
     return data;
   } catch (error) {

@@ -3,6 +3,7 @@ import { Card, CardContent, CardMedia, Typography, Grid, Chip, Button } from '@m
 import { useRouter } from 'next/router';
 import BasicModal from '../common/BasicModal';
 import { DELETE_MODAL } from '@/constants/string';
+import { mypageProductDeleteRequestPatchApi } from '@/services/mypageApi';
 
 export default function MypageCardEdit(props) {
   const [mounted, setMounted] = useState(false);
@@ -12,6 +13,7 @@ export default function MypageCardEdit(props) {
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
+  const [currentProductId, setCurrentProductId] = useState();
   const handleClickModal = () => setShowModal(!showModal);
 
   const mypageCardCss = {
@@ -50,10 +52,21 @@ export default function MypageCardEdit(props) {
     });
   };
 
+  const handleChangeProductId = (productId) => {
+    setCurrentProductId(productId);
+  };
+
   const handleDeleteItem = () => {
-    // TODO: 삭제 API 요청 - 삭제 modal => 삭제
-    alert('게시글 삭제 요청이 완료되었습니다!');
-    router.push(`/mypage/registered/${memberId}`);
+    console.log(memberId, currentProductId);
+    mypageProductDeleteRequestPatchApi(currentProductId, memberId)
+      .then((data) => {
+        alert(data);
+        router.push(`/mypage/registered/${memberId}`);
+      })
+      .catch((error) => {
+        console.log('실패: ', error);
+        // 에러 처리 코드를 추가할 수 있습니다.
+      });
   };
 
   return (
@@ -61,7 +74,7 @@ export default function MypageCardEdit(props) {
       <Grid container spacing={3} sx={mypageCardCss.container}>
         {content.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
-            <Card sx={mypageCardCss.card}>
+            <Card sx={mypageCardCss.card} onClick={() => handleChangeProductId(item.productId)}>
               <CardMedia
                 component="div"
                 sx={mypageCardCss.cardMedia}
