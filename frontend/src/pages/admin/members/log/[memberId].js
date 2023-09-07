@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
+import withAdminAuth from '@/hooks/withAdminAuth';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -19,6 +21,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
+import { oneMemberLogGetApi } from '@/services/adminpageApi';
 import Link from 'next/link';
 
 /**
@@ -72,16 +75,28 @@ function TablePaginationActions(props) {
 }
 
 // basic component
-export default function MemberTable(props) {
-  const { headerData, contentData, moveUrl } = props;
-  const rows = contentData.content;
+function LogDetail() {
   const [mounted, setMounted] = useState(false);
+  const [oneMemberLog, setOneMemberLog] = useState();
+  const router = useRouter();
+  const { memberId } = router.query;
+
+  useEffect(() => {
+    memberId &&
+      oneMemberLogGetApi(memberId).then((data) => {
+        setOneMemberLog(data);
+        console.log(oneMemberLog);
+      });
+    setMounted(true);
+  }, []);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const router = useRouter();
 
+  //   const rows = oneMemberLog.content;
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - setOneMemberLog.content.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -90,14 +105,6 @@ export default function MemberTable(props) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleMove = (memberId) => {
-    router.push(`${moveUrl}${memberId}`);
-  };
-
-  const handleLogMove = (memberId) => {
-    router.push(`/admin/mebers/log/${memberId}`);
   };
 
   useEffect(() => {
@@ -115,13 +122,37 @@ export default function MemberTable(props) {
     },
   };
 
+  const table_cell_data = [
+    {
+      headerLabel: '이메일',
+      contentCell: 'email',
+    },
+    {
+      headerLabel: '이름',
+      contentCell: 'name',
+    },
+    {
+      headerLabel: '시간',
+      contentCell: 'date',
+    },
+    {
+      headerLabel: '로그 내용',
+      contentCell: 'description',
+    },
+    {
+      headerLabel: '로그 확인',
+      contentCell: 'etc',
+    },
+  ];
+
   return (
-    mounted && (
+    mounted &&
+    oneMemberLog &&(
       <TableContainer component={Paper} sx={{ my: 10 }}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              {headerData.map((headerItem, idx) => {
+              {table_cell_data.map((headerItem, idx) => {
                 return (
                   <TableCell align="center" key={idx}>
                     {headerItem.headerLabel}
@@ -133,27 +164,21 @@ export default function MemberTable(props) {
           <TableBody>
             {/* data map으로 반복 */}
             {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
+              ? oneMemberLog.content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : oneMemberLog.content
             ).map((row) => (
               <TableRow sx={basicTableCss.tableRow} key={row.id}>
-                <TableCell onClick={() => handleMove(row.id)} align="center">
-                  {row[`${headerData[0].contentCell}`]}
-                </TableCell>
-                <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
-                {row[headerData[3].contentCell] === 1 ? (
-                  <TableCell align="center">
-                    <Typography variant="body2" color="primary">{`일반 사용자`}</Typography>
-                  </TableCell>
-                ) : (
-                  <TableCell align="center">
-                    <Typography variant="body2" color="error">{`이용제한 사용자`}</Typography>
-                  </TableCell>
-                )}
+                <TableCell align="center">{row[`${table_cell_data[0].contentCell}`]}</TableCell>
+                <TableCell align="center">{row[`${table_cell_data[1].contentCell}`]}</TableCell>
+                <TableCell align="center">{row[`${table_cell_data[2].contentCell}`]}</TableCell>
+                <TableCell align="center">{row[`${table_cell_data[3].contentCell}`]}</TableCell>
                 <TableCell align="center">
-                  <Link href={`/admin/members/log/${row.id}`}>로그조회</Link>
-                </TableCell>
+                    {row.etc !== null ? (
+                        <Link href={`/${row.etc}`}>보러가기</Link>
+                    ) : (
+                        <span>링크 없음</span>
+                    )}
+                </TableCell>                
               </TableRow>
             ))}
             {emptyRows > 0 && (
@@ -167,7 +192,7 @@ export default function MemberTable(props) {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={rows.length}
+                count={oneMemberLog.content.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
@@ -183,7 +208,11 @@ export default function MemberTable(props) {
             </TableRow>
           </TableFooter>
         </Table>
-      </TableContainer>
+      </TableContainer>,
     )
   );
 }
+
+// side menu 레이아웃
+LogDetail.Layout = withAdminAuth(AdminPageLayout);
+export default LogDetail;
