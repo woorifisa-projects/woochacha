@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, Grid, Chip } from '@mui/material';
 import { useRouter } from 'next/router';
 
-export default function MypageCard(props) {
+export default function MypageCardPurchase(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const { content } = props;
+
   const mypageCardCss = {
     container: {
       mb: 10,
@@ -35,6 +36,7 @@ export default function MypageCard(props) {
     router.push(url);
   };
 
+  // TODO: 기존 이미지 있었던 곳 공백 없애기, 신청일 dateFormat 수정
   return (
     mounted && (
       <Grid container spacing={3} sx={mypageCardCss.container}>
@@ -43,16 +45,15 @@ export default function MypageCard(props) {
             <Card
               sx={mypageCardCss.card}
               onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
-              <CardMedia component="div" sx={mypageCardCss.cardMedia} image={item.imageUrl} />
+              <CardMedia component="div" sx={mypageCardCss.cardMedia} />
               <CardContent sx={mypageCardCss.cardContent}>
                 <Typography gutterBottom variant="h5" component="h5">
-                  {item.title}
+                  {item.carNum}
                 </Typography>
                 <Grid container my={1} gap={1}>
-                  <Chip size="small" label={`주행거리 : ${item.distance} km`} />
-                  <Chip size="small" label={`가격 : ${item.price} 만원`} />
                   <Chip size="small" label={`지점 : ${item.branch}`} />
-                  <Chip size="small" label={`상태 : ${item.status}`} />
+                  <Chip size="small" label={`상태 : ${item.carStatus}`} />
+                  <Chip size="small" label={`신청일 : ${item.createdAt}`} />
                 </Grid>
               </CardContent>
             </Card>

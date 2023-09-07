@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ApproveSaleService {
     QueryResults<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable);
+    Boolean updateSaleFormDenyStatus(Long saleFormId);
     CarInspectionInfoResponseDto getQldbCarInfoList(String carNum, String accidentMetaId, String exchangeMetaId);
     int getCarDistance(String carNum);
     void updateSaleFormStatus(Long saleFormId);

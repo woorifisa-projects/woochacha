@@ -16,8 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/products/sale")
 public class SaleController {
-    private final MemberRepository memberRepository;
-    private final BranchRepository branchRepository;
     private final SaleFormApplyService saleFormApplyService;
 
     @GetMapping

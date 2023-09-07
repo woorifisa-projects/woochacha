@@ -3,70 +3,18 @@ import { Card, CardContent, CardMedia, Typography, Grid, Chip, Button } from '@m
 import { useRouter } from 'next/router';
 import BasicModal from '../common/BasicModal';
 import { DELETE_MODAL } from '@/constants/string';
+import { mypageProductDeleteRequestPatchApi } from '@/services/mypageApi';
 
-export default function MypageCardEdit() {
+export default function MypageCardEdit(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { content, memberId } = props;
+  console.log(content);
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
+  const [currentProductId, setCurrentProductId] = useState();
   const handleClickModal = () => setShowModal(!showModal);
-
-  // DUMMY_DATA
-  const memberId = 1;
-  const productId = 1;
-
-  // TODO: API 조회 후 수정할 dummy data입니다.
-  const itemDummyArr = [
-    {
-      id: 14,
-      title: '기아 올 뉴 카니발 2018년형',
-      distance: 110000,
-      branch: '서울',
-      price: 2690,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    },
-    {
-      id: 15,
-      title: '기아 모닝 2010년형',
-      distance: 100000,
-      branch: '서울',
-      price: 270,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
-    },
-    {
-      id: 16,
-      title: '기아 올 뉴 카니발 2018년형',
-      distance: 110000,
-      branch: '서울',
-      price: 2690,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    },
-    {
-      id: 17,
-      title: '기아 모닝 2010년형',
-      distance: 100000,
-      branch: '서울',
-      price: 270,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
-    },
-    {
-      id: 18,
-      title: '기아 올 뉴 카니발 2018년형',
-      distance: 110000,
-      branch: '서울',
-      price: 2690,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22%EB%82%982222/1',
-    },
-    {
-      id: 19,
-      title: '기아 모닝 2010년형',
-      distance: 100000,
-      branch: '서울',
-      price: 270,
-      imageUrl: 'https://woochacha.s3.ap-northeast-2.amazonaws.com/product/33%EB%8B%A43333/1',
-    },
-  ];
 
   const mypageCardCss = {
     container: {
@@ -97,25 +45,36 @@ export default function MypageCardEdit() {
     router.push(url);
   };
 
-  const handleMoveEdit = (url) => {
+  const handleMoveEdit = (url, productId) => {
     router.push({
       pathname: url,
       query: { memberId, productId },
     });
   };
 
+  const handleChangeProductId = (productId) => {
+    setCurrentProductId(productId);
+  };
+
   const handleDeleteItem = () => {
-    // TODO: 삭제 API 요청 - 삭제 modal => 삭제
-    alert('게시글 삭제 요청이 완료되었습니다!');
-    router.push(`/mypage/registered/${memberId}`);
+    console.log(memberId, currentProductId);
+    mypageProductDeleteRequestPatchApi(currentProductId, memberId)
+      .then((data) => {
+        alert(data);
+        router.push(`/mypage/registered/${memberId}`);
+      })
+      .catch((error) => {
+        console.log('실패: ', error);
+        // 에러 처리 코드를 추가할 수 있습니다.
+      });
   };
 
   return (
     mounted && (
       <Grid container spacing={3} sx={mypageCardCss.container}>
-        {itemDummyArr.map((item) => (
+        {content.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
-            <Card sx={mypageCardCss.card}>
+            <Card sx={mypageCardCss.card} onClick={() => handleChangeProductId(item.productId)}>
               <CardMedia
                 component="div"
                 sx={mypageCardCss.cardMedia}
@@ -141,9 +100,11 @@ export default function MypageCardEdit() {
                     <Chip size="small" label={`주행거리 : ${item.distance} km`} />
                     <Chip size="small" label={`가격 : ${item.price} 만원`} />
                     <Chip size="small" label={`지점 : ${item.branch}`} />
+                    <Chip size="small" label={`상태 : ${item.status}`} />
                   </Grid>
                   <Grid item xs={3} container my={1} gap={1}>
-                    <Button onClick={() => handleMoveEdit(`/mypage/registered/edit`)}>
+                    <Button
+                      onClick={() => handleMoveEdit(`/mypage/registered/edit`, item.productId)}>
                       수정요청
                     </Button>
                     <Button onClick={handleClickModal}>삭제요청</Button>

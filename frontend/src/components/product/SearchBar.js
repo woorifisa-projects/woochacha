@@ -2,7 +2,18 @@ import * as React from 'react';
 import { Grid, Button, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-export default function SearchBar() {
+export default function SearchBar({ onSearch }) {
+  const [keyword, setKeyword] = React.useState('');
+
+  const handleInputChange = (event) => {
+    setKeyword(event.target.value);
+    onSearch(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    onSearch(keyword);
+  };
+
   return (
     <>
       <Grid container spacing={2} alignItems="center">
@@ -24,13 +35,10 @@ export default function SearchBar() {
                 color: '#000',
               },
             }}
+            value={keyword}
+            onChange={handleInputChange}
             variant="standard"
           />
-        </Grid>
-        <Grid item>
-          <Button color="inherit" variant="contained" sx={{ mr: 1 }}>
-            검색하기
-          </Button>
         </Grid>
       </Grid>
     </>

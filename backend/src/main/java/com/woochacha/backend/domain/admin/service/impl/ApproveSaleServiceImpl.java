@@ -11,6 +11,8 @@ import com.woochacha.backend.domain.admin.dto.approve.CarAccidentInfoDto;
 import com.woochacha.backend.domain.admin.dto.approve.CarExchangeInfoDto;
 import com.woochacha.backend.domain.admin.dto.approve.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
+import com.woochacha.backend.domain.car.info.entity.ExchangeType;
+import com.woochacha.backend.domain.car.info.repository.ExchangeTypeRepository;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
@@ -36,6 +38,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     private CarInspectionInfoResponseDto carInspectionInfoResponseDto;
     private int carDistance;
     private final SaleFormRepository saleFormRepository;
+    private final ExchangeTypeRepository exchangeTypeRepository;
 
     @Override
     public QueryResults<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable) {
@@ -43,6 +46,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
 
         return jpaQueryFactory
                 .select(Projections.fields(ApproveSaleResponseDto.class,
+                        sf.id,
                         sf.member.name.as("name"),
                         sf.carNum,
                         sf.carStatus.status.as("status")))
@@ -53,6 +57,16 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
+    }
+
+    @Override
+    @Transactional
+    public Boolean updateSaleFormDenyStatus(Long saleFormId){
+        int count = saleFormRepository.updateDenyStatus(saleFormId);
+        if(count != 0){
+            return true;
+        }
+        return false;
     }
 
     // qldb에서 차량 번호에 따른 필요한 차량 정보를 가지고 온다.
@@ -93,6 +107,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 Result resultCarInfo = txn.execute(
                         "SELECT r.car_owner_name, r.car_owner_phone, r.car_distance FROM car AS r WHERE r.car_num=?", ionSys.newString(carNum));
                 IonStruct ionStruct = (IonStruct) resultCarInfo.iterator().next();
+                List<ExchangeType> exchangeTypeList = exchangeTypeRepository.findAll();
                 carInspectionInfoResponseDto = CarInspectionInfoResponseDto.builder()
                         .carNum(carNum)
                         .carOwnerName(((IonString) ionStruct.get("car_owner_name")).stringValue())
@@ -100,6 +115,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                         .carDistance(((IonInt) ionStruct.get("car_distance")).intValue())
                         .carAccidentInfoDtoList(accidentInfoDtoList)
                         .carExchangeInfoDtoList(exchangeInfoDtoList)
+                        .exchangeTypeList(exchangeTypeList)
                         .build();
             });
             return carInspectionInfoResponseDto;

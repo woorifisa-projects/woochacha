@@ -57,19 +57,20 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // JPQL로 조회한 결과 PurchaseReqeustListDto로 변환
-    private PurchaseReqeustListDto arrayToPurchaseReqeustListDto(Object[] array){
+    private ProductResponseDto arrayToPurchaseReqeustListDto(Object[] array){
         String status;
         if (array[5].toString().equals("0")){
             status = "미검토";
         }else{
             status = "검토";
         }
-        return PurchaseReqeustListDto.builder()
+        return ProductResponseDto.builder()
                 .title((String) array[0])
-                .price((Integer) array[1])
+                .distance((Integer) array[1])
                 .branch((String) array[2])
-                .distance((Integer) array[3])
-                .productId((Long) array[4])
+                .price((Integer) array[3])
+                .imageUrl((String) array[4])
+                .productId((Long) array[5])
                 .status(status)
                 .build();
     }
@@ -123,7 +124,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 구매 신청 폼 조회
-    public Page<PurchaseReqeustListDto> getPurchaseRequestByMemberId(Long memberId, int pageNumber, int pageSize){
+    public Page<ProductResponseDto> getPurchaseRequestByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
         return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
