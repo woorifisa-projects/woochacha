@@ -218,3 +218,13 @@ export const ADMIN_PURCHASE_MODAL = {
     modalContents: '',
   },
 };
+
+// MODAL
+export const MEMBER_DELETE_MODAL = {
+  CONTENTS: {
+    modalTitle: '회원을 삭제하시겠습니까?',
+    modalYesBtn: '네',
+    modalNoBtn: '아니요',
+    modalContents: '정말로 회원을 삭제하시겠습니까?',
+  },
+};

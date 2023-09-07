@@ -25,19 +25,12 @@ public class SaleController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> submitCarSaleForm(@RequestBody SaleFormRequestDto requestDto) {
+    public ResponseEntity<String> submitCarSaleForm(@RequestBody SaleFormRequestDto requestDto) {
         String carNum = requestDto.getCarNum();
         Long memberId = requestDto.getMemberId();
         Long branchId = requestDto.getBranchId();
-
-        Boolean match = saleFormApplyService.submitCarSaleForm(carNum, memberId);
-
-        if(match){
-            saleFormApplyService.saveSaleForm(carNum, memberId, branchId);
-            return ResponseEntity.ok(true);
-        }else{
-            return ResponseEntity.ok(false);
-        }
+        String match = saleFormApplyService.submitCarSaleForm(carNum, memberId, branchId);
+        return ResponseEntity.ok(match);
         // 둘 중 return 값으로 어떤 걸 사용할지 고민 중
         // return new ResponseEntity<>(saleForm, HttpStatus.CREATED);
     }

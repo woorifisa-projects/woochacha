@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SaleFormApplyService {
     List<BranchDto> getBranchList();
-    Boolean submitCarSaleForm(String carNum, Long memberId);
+    String submitCarSaleForm(String carNum, Long memberId, Long branchId);
     String findCarNum(Long saleFormId);
     void saveSaleForm(String carNum, Long memberId, Long branchId);
 }

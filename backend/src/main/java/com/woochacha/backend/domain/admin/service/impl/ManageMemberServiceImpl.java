@@ -94,8 +94,8 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     @Override
     @Transactional
     public String deleteMember(Long memberId) {
-        Byte isAvailable = 1;
-        int deleteCount = memberRepository.deleteMember(memberId,isAvailable);
+        Byte status = 0;
+        int deleteCount = memberRepository.deleteMember(memberId,status);
         if (deleteCount > 0) {
             // isAvailable 업데이트가 성공적으로 이루어진 경우의 처리
             return "Member delete successfully.";
