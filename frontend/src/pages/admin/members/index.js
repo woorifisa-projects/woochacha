@@ -34,6 +34,10 @@ function AdminUserList() {
       headerLabel: '상태',
       contentCell: 'isAvailable',
     },
+    {
+      headerLabel: '로그',
+      contentCell: 'logLink',
+    },
   ];
 
   // data 불러온 이후 필터링 data에 맞게 렌더링

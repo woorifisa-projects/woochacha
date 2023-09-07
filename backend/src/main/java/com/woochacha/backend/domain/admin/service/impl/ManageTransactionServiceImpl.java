@@ -72,7 +72,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
             }
             PurchaseFormListResponseDto dto = PurchaseFormListResponseDto.builder()
                     .productId((Long) data[0])
-                    .productUrl("http://localhost:8080/products/detail/" + data[0])
+                    .purchaseId((Long) data[5])
                     .carNum((String) data[1])
                     .buyerName((String) data[2])
                     .sellerName((String) data[3])

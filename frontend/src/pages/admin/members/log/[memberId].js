@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
+import withAdminAuth from '@/hooks/withAdminAuth';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -12,13 +14,15 @@ import {
   TableRow,
   Paper,
   IconButton,
-  Button,
+  Typography,
 } from '@mui/material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
+import { oneMemberLogGetApi } from '@/services/adminpageApi';
+import Link from 'next/link';
 
 /**
  * 페이지네이션 관련 함수
@@ -71,24 +75,28 @@ function TablePaginationActions(props) {
 }
 
 // basic component
-export default function PurchaseTable(props) {
-  const {
-    headerData,
-    contentData,
-    callbackFunc,
-    getConfirmData,
-    setConfirmFlag,
-    moveDetailUrl,
-    setCurrentPurchaseId,
-  } = props;
-  const rows = contentData;
+function LogDetail() {
   const [mounted, setMounted] = useState(false);
+  const [oneMemberLog, setOneMemberLog] = useState();
+  const router = useRouter();
+  const { memberId } = router.query;
+
+  useEffect(() => {
+    memberId &&
+      oneMemberLogGetApi(memberId).then((data) => {
+        setOneMemberLog(data);
+        console.log(oneMemberLog);
+      });
+    setMounted(true);
+  }, []);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const router = useRouter();
 
+  //   const rows = oneMemberLog.content;
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - setOneMemberLog.content.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -99,32 +107,12 @@ export default function PurchaseTable(props) {
     setPage(0);
   };
 
-  const handleMove = (baseUrl, purchaseId) => {
-    router.push(`${baseUrl}${purchaseId}`);
-  };
-
-  const handleCurrentPurchaseId = (purchaseId) => {
-    setCurrentPurchaseId(purchaseId);
-  };
-
-  const handleConfirmProduct = (purchaseId) => {
-    callbackFunc();
-    getConfirmData(purchaseId); // 검토여부 get
-    setConfirmFlag(true);
-  };
-
-  const handlePurchaseProduct = (purchaseId) => {
-    callbackFunc();
-    setConfirmFlag(false);
-  };
-
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const basicButtonTableCss = {
-    button: {
-      mx: 1,
+  const basicTableCss = {
+    tableRow: {
       '&:hover': {
         boxShadow: 10,
         cursor: 'pointer',
@@ -134,13 +122,37 @@ export default function PurchaseTable(props) {
     },
   };
 
+  const table_cell_data = [
+    {
+      headerLabel: '이메일',
+      contentCell: 'email',
+    },
+    {
+      headerLabel: '이름',
+      contentCell: 'name',
+    },
+    {
+      headerLabel: '시간',
+      contentCell: 'date',
+    },
+    {
+      headerLabel: '로그 내용',
+      contentCell: 'description',
+    },
+    {
+      headerLabel: '로그 확인',
+      contentCell: 'etc',
+    },
+  ];
+
   return (
-    mounted && (
+    mounted &&
+    oneMemberLog &&(
       <TableContainer component={Paper} sx={{ my: 10 }}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              {headerData.map((headerItem, idx) => {
+              {table_cell_data.map((headerItem, idx) => {
                 return (
                   <TableCell align="center" key={idx}>
                     {headerItem.headerLabel}
@@ -152,54 +164,21 @@ export default function PurchaseTable(props) {
           <TableBody>
             {/* data map으로 반복 */}
             {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-            ).map((row, idx) => (
-              <TableRow
-                sx={basicButtonTableCss.tableRow}
-                key={idx}
-                onClick={() => handleCurrentPurchaseId(row.purchaseId)}>
-                <TableCell
-                  sx={basicButtonTableCss.button}
-                  onClick={() => handleMove(moveDetailUrl, row.productId)}
-                  align="center">
-                  {row[`${headerData[0].contentCell}`]}
-                </TableCell>
-                <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
+              ? oneMemberLog.content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : oneMemberLog.content
+            ).map((row) => (
+              <TableRow sx={basicTableCss.tableRow} key={row.id}>
+                <TableCell align="center">{row[`${table_cell_data[0].contentCell}`]}</TableCell>
+                <TableCell align="center">{row[`${table_cell_data[1].contentCell}`]}</TableCell>
+                <TableCell align="center">{row[`${table_cell_data[2].contentCell}`]}</TableCell>
+                <TableCell align="center">{row[`${table_cell_data[3].contentCell}`]}</TableCell>
                 <TableCell align="center">
-                  {row[`${headerData[3].contentCell}`] === 1 ? (
-                    <Button sx={basicButtonTableCss.button} variant="outlined" disabled>
-                      확인
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => handleConfirmProduct(row.purchaseId)}
-                      sx={basicButtonTableCss.button}
-                      variant="outlined"
-                      color="error">
-                      미확인
-                    </Button>
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  {row[`${headerData[4].contentCell}`] === 0 ? (
-                    <Button
-                      onClick={() => handlePurchaseProduct(row.purchaseId)}
-                      sx={basicButtonTableCss.button}
-                      variant="outlined">
-                      미성사
-                    </Button>
-                  ) : (
-                    <Button
-                      sx={basicButtonTableCss.button}
-                      variant="outlined"
-                      color="error"
-                      disabled>
-                      성사
-                    </Button>
-                  )}
-                </TableCell>
+                    {row.etc !== null ? (
+                        <Link href={`/${row.etc}`}>보러가기</Link>
+                    ) : (
+                        <span>링크 없음</span>
+                    )}
+                </TableCell>                
               </TableRow>
             ))}
             {emptyRows > 0 && (
@@ -213,7 +192,7 @@ export default function PurchaseTable(props) {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={rows.length}
+                count={oneMemberLog.content.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{
@@ -229,7 +208,11 @@ export default function PurchaseTable(props) {
             </TableRow>
           </TableFooter>
         </Table>
-      </TableContainer>
+      </TableContainer>,
     )
   );
 }
+
+// side menu 레이아웃
+LogDetail.Layout = withAdminAuth(AdminPageLayout);
+export default LogDetail;

@@ -18,8 +18,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int updateMemberImage(@Param("memberId") Long memberId, @Param("profileImage") String profileImage);
 
     @Modifying
-    @Query("UPDATE Member m SET m.isAvailable = :isAvailable WHERE m.id = :memberId")
-    int deleteMember(@Param("memberId") Long memberId, @Param("isAvailable") Byte isAvailable);
+    @Query("UPDATE Member m SET m.status = :status WHERE m.id = :memberId")
+    int deleteMember(@Param("memberId") Long memberId, @Param("status") Byte status);
 
     @Query("SELECT new com.woochacha.backend.domain.admin.dto.manageMember.MemberInfoDto(" +
             "m.isAvailable, m.name, m.email ,m.phone, m.createdAt, m.profileImage) " +

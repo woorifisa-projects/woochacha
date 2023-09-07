@@ -17,4 +17,7 @@ public class ExchangeType {
     @NotNull
     private ExchangeTypeList type;
 
+
+
+
 }

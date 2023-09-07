@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -12,53 +12,67 @@ import {
   Typography,
 } from '@mui/material';
 import theme from '@/styles/theme';
+import { getBranchApi, saleFormRequest } from '@/services/productApi';
+import { useRecoilState } from 'recoil';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import { useRouter } from 'next/router';
 
 export default function Sale() {
   const [carSaleData, setCarSaleData] = useState({
     carNumber: '', // 차량번호 입력 필드
     garageSelection: '', // 차고지 선택 필드
   });
-
+  const [branches, setBranches] = useState([]); // branch 목록을 저장할 state
   const [setCarNumberError, setGarageError] = useState(false);
+  const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+  const memberId = userLoginState.userId;
+  const router = useRouter();
+
+  useEffect(() => {
+    getBranchApi().then((data) => {
+      setBranches(data);
+    });
+  }, []); // 컴포넌트가 마운트될 때 한 번만 API 호출
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // 차량 번호 필드가 빈 경우 에러를 표시
-    if (carSaleData.carNumber.trim() === '') {
-      setCarNumberError(true);
-    } else {
-      setCarNumberError(false);
-    }
+    const saleForm = {
+      memberId: memberId,
+      branchId: carSaleData.garageSelection,
+      carNum: carSaleData.carNumber,
+    };
 
-    // 차고지 선택이 빈 경우 에러를 표시
-    if (carSaleData.garageSelection.trim() === '') {
-      setGarageError(true);
-    } else {
-      setGarageError(false);
-    }
+    saleFormRequest(saleForm)
+      .then((response) => {
+        if (response === '차량 판매 신청이 성공적으로 완료되었습니다.') {
+          alert(response);
+          router.push('/'); // 홈페이지로 리다이렉트
+        } else {
+          alert(response);
 
-    // applyForCarSale(carSaleData)
-    //   .then((response) => {
-    //     // 성공적으로 처리된 후에 수행할 작업을 추가합니다.
-    //     console.log('차량 판매 신청이 성공적으로 완료되었습니다.', response);
-    //   })
-    //   .catch((error) => {
-    //     // 오류 처리
-    //     console.error('차량 판매 신청 중 오류가 발생했습니다.', error);
-    //   });
+          // 차량 번호와 차고지 선택 부분을 초기화합니다.
+          setCarSaleData({
+            carNumber: '',
+            garageSelection: '',
+          });
+        }
+      })
+      .catch((error) => {
+        alert('해당 차량은 없는 차량입니다.');
+        setCarSaleData({
+          carNumber: '',
+          garageSelection: '',
+        });
+        console.error('차량 판매 신청 중 오류가 발생했습니다.', error);
+      });
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="md" sx={{ mt: 8, mb: 6 }}>
         <CssBaseline />
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-        >
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
           <div style={{ height: '35px' }}></div>
           <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
             내 차 판매 신청서 작성
@@ -69,8 +83,7 @@ export default function Sale() {
             flexDirection="column"
             alignItems="flex-start"
             width="60%"
-            sx={{ mb: 2 }}
-          >
+            sx={{ mb: 2 }}>
             <InputLabel htmlFor="carNumber" sx={{ fontSize: '1.2rem', mb: -0.5 }}>
               차량번호
             </InputLabel>
@@ -84,19 +97,16 @@ export default function Sale() {
               autoComplete="off"
               autoFocus
               value={carSaleData.carNumber}
-              onChange={(e) =>
-                setCarSaleData({ ...carSaleData, carNumber: e.target.value })
-              }
+              onChange={(e) => setCarSaleData({ ...carSaleData, carNumber: e.target.value })}
             />
           </Box>
-          <div style={{ height: '20px' }}></div> 
+          <div style={{ height: '20px' }}></div>
           <Box
             display="flex"
             flexDirection="column"
             alignItems="flex-start"
             width="60%"
-            sx={{ mb: 2 }}
-          >
+            sx={{ mb: 2 }}>
             <InputLabel htmlFor="garageSelection" sx={{ fontSize: '1.2rem' }}>
               차고지 선택
             </InputLabel>
@@ -104,9 +114,7 @@ export default function Sale() {
             <Select
               fullWidth
               value={carSaleData.garageSelection}
-              onChange={(e) =>
-                setCarSaleData({ ...carSaleData, garageSelection: e.target.value })
-              }
+              onChange={(e) => setCarSaleData({ ...carSaleData, garageSelection: e.target.value })}
               displayEmpty
               inputProps={{ 'aria-label': 'Without label' }}
               sx={{
@@ -116,27 +124,19 @@ export default function Sale() {
                   },
                   color: carSaleData.garageSelection ? 'black' : 'gray',
                 },
-              }}
-            >
+              }}>
               <MenuItem value="" disabled>
                 <em>차고지 선택</em>
               </MenuItem>
-              <MenuItem value="차고지1">차고지1</MenuItem>
-              <MenuItem value="차고지2">차고지2</MenuItem>
-              <MenuItem value="차고지3">차고지3</MenuItem>
+              {branches.map((branch) => (
+                <MenuItem key={branch.id} value={branch.id}>
+                  {branch.name}
+                </MenuItem>
+              ))}
             </Select>
           </Box>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            width="60%"
-            sx={{ mt: 1, mb: 9 }}
-          >
-            <Button
-              type="submit"
-              variant="contained"
-              onClick={handleSubmit}
-            >
+          <Box display="flex" justifyContent="flex-end" width="60%" sx={{ mt: 1, mb: 9 }}>
+            <Button type="submit" variant="contained" onClick={handleSubmit}>
               신청하기
             </Button>
           </Box>

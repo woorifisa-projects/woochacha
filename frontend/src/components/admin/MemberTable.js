@@ -19,6 +19,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 /**
  * 페이지네이션 관련 함수
@@ -95,6 +96,10 @@ export default function MemberTable(props) {
     router.push(`${moveUrl}${memberId}`);
   };
 
+  const handleLogMove = (memberId) => {
+    router.push(`/admin/mebers/log/${memberId}`);
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -131,8 +136,10 @@ export default function MemberTable(props) {
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : rows
             ).map((row) => (
-              <TableRow sx={basicTableCss.tableRow} key={row.id} onClick={() => handleMove(row.id)}>
-                <TableCell align="center">{row[`${headerData[0].contentCell}`]}</TableCell>
+              <TableRow sx={basicTableCss.tableRow} key={row.id}>
+                <TableCell onClick={() => handleMove(row.id)} align="center">
+                  {row[`${headerData[0].contentCell}`]}
+                </TableCell>
                 <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
                 {row[headerData[3].contentCell] === 1 ? (
@@ -144,6 +151,9 @@ export default function MemberTable(props) {
                     <Typography variant="body2" color="error">{`이용제한 사용자`}</Typography>
                   </TableCell>
                 )}
+                <TableCell align="center">
+                  <Link href={`/admin/members/log/${row.id}`}>로그조회</Link>
+                </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (

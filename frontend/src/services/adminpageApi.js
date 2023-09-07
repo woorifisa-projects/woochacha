@@ -195,3 +195,84 @@ export const oneRegisterFormPostApi = async (saleFormId, registerInputForm) => {
     throw error;
   }
 };
+
+/**
+ * [관리자 - member] 관리자 페이지에서 한 명의 member 삭제 (PATCH)
+ */
+export const oneMemberDeletePatchApi = async (memberId) => {
+  try {
+    const response = await authInstance.patch(`admin/members/delete/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - log] 관리자 페이지에서 한 명의 member의 로그 내역 조회 (GET)
+ */
+export const oneMemberLogGetApi = async (memberId) => {
+  try {
+    const response = await authInstance.get(`admin/members/log/${memberId}`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - purchase] 거래 관리 요청 목록 조회 (GET)
+ */
+export const allPurchaseFormGetApi = async () => {
+  try {
+    const response = await authInstance.get(`admin/purchase`);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - purchase] 거래 관리 검토여부 조회 (GET)
+ */
+export const onePurchaseConfirmFormGetApi = async (purchaseId) => {
+  try {
+    const response = await authInstance.get(`admin/purchase/${purchaseId}`);
+    return response;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - purchase] 관리자 페이지의 구매 신청폼에서 선택한 희망 거래일 문자 전송 (PATCH)
+ */
+export const onePurchaseConfirmFormPatchApi = async (purchaseId, purchaseForm) => {
+  try {
+    const response = await authInstance.patch(`admin/purchase/${purchaseId}`, purchaseForm);
+    return response;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};
+
+/**
+ * [관리자 - purchase] 성사된 거래 정보를 transaction 테이블에 저장 (POST)
+ */
+export const onePurchaseTransactionFormPostApi = async (purchaseId) => {
+  try {
+    const response = await authInstance.post(`admin/purchase/success/${purchaseId}`);
+    return response;
+  } catch (error) {
+    console.log('실패 : ', error);
+    throw error;
+  }
+};

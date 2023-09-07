@@ -3,13 +3,19 @@ import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import withAdminAuth from '@/hooks/withAdminAuth';
 import { useRouter } from 'next/router';
-import { oneUserGetApi } from '@/services/adminpageApi';
+import { oneUserGetApi, oneMemberDeletePatchApi } from '@/services/adminpageApi';
+import BasicModal from '@/components/common/BasicModal';
+import { MEMBER_DELETE_MODAL } from '@/constants/string';
 
 function AdminUserDetail() {
   const [mounted, setMounted] = useState(false);
   const [userDetailInfo, setUserDetailInfo] = useState();
   const router = useRouter();
   const currentPath = router.query; // 현재 경로 읽어오기
+
+  // Modal 버튼 클릭 유무 *
+  const [showModal, setShowModal] = useState(false);
+  const handleClickModal = () => setShowModal(!showModal);
 
   const adminUserProfileCss = {
     card: {
@@ -56,6 +62,18 @@ function AdminUserDetail() {
 
   const handleMove = (url) => {
     router.push(url);
+  };
+
+  const handleDeleteMember = () => {
+    currentPath.memberId &&
+      oneMemberDeletePatchApi(currentPath.memberId)
+        .then((data) => {
+          alert(data);
+          router.push('/admin/members');
+        })
+        .catch((error) => {
+          console.log('실패: ', error);
+        });
   };
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
@@ -166,11 +184,19 @@ function AdminUserDetail() {
               onClick={() => handleMove(`/admin/members/edit/${currentPath.memberId}`)}>
               수정
             </Button>
-            <Button variant="contained" color="error">
+            <Button variant="contained" color="error" onClick={handleClickModal}>
               삭제
             </Button>
           </CardActions>
         </Card>
+        {showModal && (
+          <BasicModal
+            onClickModal={handleClickModal}
+            isOpen={showModal}
+            modalContent={MEMBER_DELETE_MODAL.CONTENTS}
+            callBackFunc={handleDeleteMember}
+          />
+        )}
       </>
     )
   );
