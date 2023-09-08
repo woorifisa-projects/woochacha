@@ -42,9 +42,7 @@ export default function MypageCardPurchase(props) {
       <Grid container spacing={3} sx={mypageCardCss.container}>
         {content.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
-            <Card
-              sx={mypageCardCss.card}
-              onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
+            <Card sx={mypageCardCss.card}>
               <CardMedia component="div" sx={mypageCardCss.cardMedia} />
               <CardContent sx={mypageCardCss.cardContent}>
                 <Typography gutterBottom variant="h5" component="h5">
