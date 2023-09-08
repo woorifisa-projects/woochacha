@@ -3,10 +3,7 @@ package com.woochacha.backend.domain.product.entity;
 import com.woochacha.backend.domain.car.detail.entity.CarDetail;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.status.entity.CarStatus;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -67,6 +64,15 @@ public class Product {
         this.status = status;
         this.carDetail = carDetail;
         this.updatePrice = updatePrice;
+        this.carImages = carImages;
+    }
+
+    public Product(Long id, SaleForm saleForm, Integer price, CarStatus status, CarDetail carDetail, List<CarImage> carImages) {
+        this.id = id;
+        this.saleForm = saleForm;
+        this.price = price;
+        this.status = status;
+        this.carDetail = carDetail;
         this.carImages = carImages;
     }
 }

@@ -4,16 +4,18 @@ import com.woochacha.backend.domain.jwt.JwtAccessDeniedHandler;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationEntryPoint;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,7 +26,9 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@ConditionalOnDefaultWebSecurity
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -46,13 +50,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // img, js, css 파일 등 보안 필터를 적용할 필요가 없는 리소스를 설정
-    @Override
+//    @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-    @Override
-    protected void configure(final HttpSecurity http) throws Exception {
+//    @Override
+//    protected void configure(final HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable() // CSRF 보호 비활성화 (회원가입은 POST 요청이므로 필요하지 않음)
                 .httpBasic().disable()
@@ -70,10 +76,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and() // TODO: 권한이 필요한 작업 전에 jwt principle과 email 비교해서 일치한 경우에만 진행되도록 리팩토링
                 .authorizeRequests()
-                .antMatchers("/", "/users/register", "/users/login", "/product/**").permitAll()
-                .antMatchers("/users/**", "/products/sale", "/s3/upload-profile", "/mypage/**").hasRole("USER")
+                .antMatchers("/users/**", "/products/sale", "/product/purchase", "/s3/upload-profile", "/mypage/**").hasRole("USER")
+                .antMatchers("/", "/users/register", "/users/login", "/product", "/product/**").permitAll()
                 .antMatchers("/admin/**", "/s3/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
+        return http.build();
     }
 
     @Bean

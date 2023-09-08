@@ -1,8 +1,11 @@
 package com.woochacha.backend.domain.product.dto.detail;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductOwnerInfo {
     private String sellerName; // 판매자 이름
 
