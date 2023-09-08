@@ -1,6 +1,8 @@
 import axios from 'axios';
 import LocalStorage from './localStorage';
+import { Router, useRouter } from 'next/router';
 
+// const router = useRouter();
 const BASE_URL = 'http://13.125.32.208:8080';
 // const BASE_URL = 'http://localhost:8080';
 const HEADER_JSON = {
@@ -44,7 +46,7 @@ const axiosAuthApi = (url, options) => {
 };
 
 // axios interceptor - error handling
-/*
+
 axios.interceptors.response.use(
   function (res) {
     return res;
@@ -66,7 +68,6 @@ axios.interceptors.response.use(
     }
   },
 );
-*/
 
 export const jsonInstance = axiosApi(BASE_URL, HEADER_JSON);
 export const formInstance = axiosApi(BASE_URL, HEADER_FORM);
