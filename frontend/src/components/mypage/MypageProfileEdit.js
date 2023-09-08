@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Button, Card, CardMedia, Grid, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import { handleFileUpload } from '../common/FileUpload';
 import { submitEditProfile } from '@/services/profileApi';
 import { memberProfileEditGetApi } from '@/services/mypageApi';
@@ -29,9 +29,11 @@ export default function MypageProfileEdit() {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    submitEditProfile(event, imagefile, memberProfileEdit, memberId).then((res) => {
+    submitEditProfile(imagefile, memberId).then((res) => {
       if (res.status === 200) {
-        router.push(`/mypage/${memberId}`);
+        alert('사진이 수정되었습니다.');
+        // router.reload(`/mypage/${memberId}`);
+        location.href = `/mypage/${memberId}`;
         return;
       }
     });
