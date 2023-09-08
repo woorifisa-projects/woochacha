@@ -79,14 +79,14 @@ export default function MypageCardEdit(props) {
                 component="div"
                 sx={mypageCardCss.cardMedia}
                 image={item.imageUrl}
-                onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}
+                onClick={() => handleMoveDetail(`/product/detail/${item.productId}`)}
               />
               <CardContent sx={mypageCardCss.cardContent}>
                 <Typography
                   gutterBottom
                   variant="h5"
                   component="h5"
-                  onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
+                  onClick={() => handleMoveDetail(`/product/detail/${item.productId}`)}>
                   {item.title}
                 </Typography>
                 <Grid container spacing={2}>
@@ -96,7 +96,7 @@ export default function MypageCardEdit(props) {
                     container
                     my={1}
                     gap={1}
-                    onClick={() => handleMoveDetail(`/product/detail/${item.id}`)}>
+                    onClick={() => handleMoveDetail(`/product/detail/${item.productId}`)}>
                     <Chip size="small" label={`주행거리 : ${item.distance} km`} />
                     <Chip size="small" label={`가격 : ${item.price} 만원`} />
                     <Chip size="small" label={`지점 : ${item.branch}`} />
