@@ -174,9 +174,9 @@ export const ADMIN_DENY_MODAL = {
 // MODAL
 export const ADMIN_APPROVE_MODAL = {
   CONTENTS: {
-    modalTitle: '승인이 완료되었습니다',
+    modalTitle: '승인하시겠습니까?',
     modalYesBtn: '등록하기',
-    modalContents: '점검 정보가 승인되었습니다. 게시글을 등록해주세요.',
+    modalContents: '점검 정보를 승인합니다. 승인 후 게시글을 등록해주세요.',
   },
 };
 
