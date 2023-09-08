@@ -3,8 +3,8 @@ import LocalStorage from './localStorage';
 import { Router, useRouter } from 'next/router';
 
 // const router = useRouter();
-const BASE_URL = 'http://13.125.32.208:8080';
-// const BASE_URL = 'http://localhost:8080';
+// const BASE_URL = 'http://13.125.32.208:8080';
+const BASE_URL = 'http://localhost:8080';
 const HEADER_JSON = {
   headers: {
     'Content-Type': 'application/json',
