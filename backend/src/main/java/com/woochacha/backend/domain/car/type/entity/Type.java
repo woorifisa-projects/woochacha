@@ -15,5 +15,6 @@ public class Type {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "name")
     private TypeList name;
 }

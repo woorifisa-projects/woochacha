@@ -15,5 +15,6 @@ public class Branch {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "name")
     private BranchList name;
 }

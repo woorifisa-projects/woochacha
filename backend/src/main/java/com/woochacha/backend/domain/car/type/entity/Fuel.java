@@ -15,5 +15,6 @@ public class Fuel {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "name")
     private FuelList name;
 }

@@ -16,5 +16,6 @@ public class Color {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "name")
     private ColorList name;
 }

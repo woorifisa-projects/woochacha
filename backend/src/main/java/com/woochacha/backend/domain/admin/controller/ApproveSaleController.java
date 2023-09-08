@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
@@ -39,7 +40,7 @@ public class ApproveSaleController {
     }
 
     @PatchMapping("/deny/{saleFormId}")
-    public ResponseEntity<Boolean> denySaleForm(@RequestParam Long saleFormId){
+    public ResponseEntity<Boolean> denySaleForm(@PathVariable Long saleFormId){
         return ResponseEntity.ok(approveSaleService.updateSaleFormDenyStatus(saleFormId));
     }
 
@@ -55,6 +56,7 @@ public class ApproveSaleController {
 
     // 차량이 점검 후 입력한 값이 등록 조건에 맞으면 saleForm의 status를 변환시킨다.
     @PatchMapping("/approve/{saleFormId}")
+    @Transactional
     public ResponseEntity<Boolean> compareCarInfo(@RequestBody CompareRequestDto compareRequestDto, @PathVariable Long saleFormId){
         String carNum = saleFormApplyService.findCarNum(saleFormId);
         int carDistance = approveSaleService.getCarDistance(carNum);
