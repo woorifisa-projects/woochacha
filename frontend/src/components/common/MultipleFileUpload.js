@@ -8,6 +8,7 @@ export const handleMultipleFileUpload = (
   setUploadFileValue,
   previewImageList,
   setPreviewImageList,
+  formDataVal,
 ) => {
   let imageLists = e.target.files;
   // let imageUrlLists = [...previewImageList];
@@ -27,15 +28,14 @@ export const handleMultipleFileUpload = (
     setPreviewImageList(imageUrlLists); // preview 값 저장
 
     // upload
-    const formData = new FormData();
     for (let i = 0; i < imageLists.length; i++) {
-      formData.append('files', imageLists[i]);
+      formDataVal.append('imageUrls', imageLists[i]);
     }
 
     // FormData의 value 확인용 콘솔
-    for (let value of formData.values()) {
+    for (let value of formDataVal.values()) {
       console.log(value);
     }
-    return formData;
+    return formDataVal;
   }
 };
