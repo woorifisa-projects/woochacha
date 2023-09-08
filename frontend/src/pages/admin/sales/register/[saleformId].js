@@ -11,6 +11,7 @@ import {
   ListItem,
   ListItemText,
   Stack,
+  TextField,
   ThemeProvider,
   Typography,
   responsiveFontSizes,
@@ -23,27 +24,75 @@ import { ADMIN_REGISTER_MODAL } from '@/constants/string';
 import { handleMultipleFileUpload } from '@/components/common/MultipleFileUpload';
 import ImageSlider from '@/components/product/ImageSlider';
 import OneButtonModal from '@/components/common/OneButtonModal';
+import { useRouter } from 'next/router';
+import { oneRegisterFormGetApi, oneRegisterFormPostApi } from '@/services/adminpageApi';
 
 function AdminSalesRegisterForm() {
   let responsiveFontTheme = responsiveFontSizes(theme);
   const [mounted, setMounted] = useState(false);
   const [uploadFileValue, setUploadFileValue] = useState(null);
   const [previewImageList, setPreviewImageList] = useState([]);
-
-  const handleSaveregisterVal = (e) => {
-    e.preventDefault();
-    console.log('!');
-    handleClickModal();
-  };
-
-  const handleSubmit = () => {
-    console.log('제출');
-  };
+  const [priceVal, setPriceVal] = useState();
+  const [registerInfo, setRegisterInfo] = useState();
+  const formDataVal = new FormData();
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
   const handleClickModal = () => setShowModal(!showModal);
+  
+  const router = useRouter();
+  const { saleformId } = router.query;
 
+  /**
+   * 승인 버튼 클릭 시, modal popup
+   */
+  const handleSaveregisterVal = (e) => {
+    e.preventDefault();
+    console.log(uploadFileValue);
+    handleClickModal();
+  };
+
+  // [주행거리] 주행거리 수정
+  const handleChangePrice = (e) => {
+    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    setPriceVal(e.target.value);
+  };
+
+  /**
+   * 게시글 등록하기
+   */
+  const handleSubmit = () => {
+    formDataVal.append('carNum', registerInfo.registerProductBasicInfo.carNum);
+    formDataVal.append('price', priceVal);
+    console.log('제출');
+    console.log(formDataVal);
+
+    oneRegisterFormPostApi(saleformId, formDataVal).then((res) => {
+      if(res.status === 200 && res.data === "Success") {
+        alert('차량게시글 등록이 완료되었습니다! 게시글을 확인해주세요.');
+        router.replace(`/admin/sales`);
+        return;
+      }
+      if(res.status === 200 && res.data !== "Success") {
+        alert('등록이 완료되지 않았습니다. 다시 시도해주세요.');
+        return;
+      }
+    });
+  };
+
+  // 화면 초기 데이터
+  useEffect(() => {
+    saleformId &&
+      oneRegisterFormGetApi(saleformId).then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
+          setRegisterInfo(res.data);
+        }
+      });
+    setMounted(true);
+  }, []);
+
+  
   const saleRegisterFormCss = {
     registerFormTitle: {
       my: 10,
@@ -92,79 +141,9 @@ function AdminSalesRegisterForm() {
     },
   };
 
-  // TODO: AXIOS
-  const get_dummy_data = {
-    registerProductBasicInfo: {
-      title: '현대 아반떼AD 2021',
-      carName: '아반떼AD',
-      carNum: '00가0000',
-      branch: '서울',
-    },
-    registerProductDetailInfo: {
-      model: '현대',
-      color: '흰색',
-      year: 2021,
-      capacity: 4,
-      distance: 350000,
-      carType: 'SUV',
-      fuelType: '가솔린',
-      transmissionName: '수동',
-      productAccidentInfoList: [
-        {
-          type: '침수사고',
-          date: '2023-08-05',
-        },
-      ],
-      productExchangeInfoList: [
-        {
-          type: '앞문',
-          date: '2023-12-23',
-        },
-      ],
-    },
-    registerProductOptionInfos: [
-      {
-        option: '열선시트',
-        whether: 1,
-      },
-      {
-        option: '스마트키',
-        whether: 1,
-      },
-      {
-        option: '블랙박스',
-        whether: 1,
-      },
-      {
-        option: '네비게이션',
-        whether: 1,
-      },
-      {
-        option: '에어백',
-        whether: 1,
-      },
-      {
-        option: '썬루프',
-        whether: 1,
-      },
-      {
-        option: '하이패스',
-        whether: 1,
-      },
-      {
-        option: '후방카메라',
-        whether: 1,
-      },
-    ],
-  };
-
-  // data 불러온 이후 필터링 data에 맞게 렌더링
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
-    mounted && (
+    mounted &&
+    registerInfo && (
       <ThemeProvider theme={responsiveFontTheme}>
         <CssBaseline />
         <Typography
@@ -199,7 +178,7 @@ function AdminSalesRegisterForm() {
                     게시글명
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductBasicInfo.title}
+                    {registerInfo.registerProductBasicInfo.title}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -207,27 +186,15 @@ function AdminSalesRegisterForm() {
                     차량번호
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductBasicInfo.carNum}
+                    {registerInfo.registerProductBasicInfo.carNum}
                   </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    차량 소유주 이름
-                  </Typography>
-                  <Typography variant="body1">{'소유주 이름 데이터는 어디서?'}</Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    차량 소유주 전화번호
-                  </Typography>
-                  <Typography variant="body1">{'소유주 전화번호 데이터는 어디서?'}</Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
                   <Typography variant="h6" fontWeight="bold">
                     지점명
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductBasicInfo.branch}
+                    {registerInfo.registerProductBasicInfo.branch}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -235,7 +202,7 @@ function AdminSalesRegisterForm() {
                     주행거리
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.distance}
+                    {`${registerInfo.registerProductDetailInfo.distance} km`}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -243,7 +210,7 @@ function AdminSalesRegisterForm() {
                     연식
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.year}
+                    {registerInfo.registerProductDetailInfo.year}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -251,7 +218,7 @@ function AdminSalesRegisterForm() {
                     승차정원
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.capacity}
+                    {`${registerInfo.registerProductDetailInfo.capacity} 인`}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -259,7 +226,7 @@ function AdminSalesRegisterForm() {
                     차종
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.carType}
+                    {registerInfo.registerProductDetailInfo.carType}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -267,7 +234,7 @@ function AdminSalesRegisterForm() {
                     브랜드
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.model}
+                    {registerInfo.registerProductDetailInfo.model}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -275,7 +242,7 @@ function AdminSalesRegisterForm() {
                     연료
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.fuelType}
+                    {registerInfo.registerProductDetailInfo.fuelName}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -283,7 +250,7 @@ function AdminSalesRegisterForm() {
                     차량 색상
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.color}
+                    {registerInfo.registerProductDetailInfo.color}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
@@ -291,14 +258,14 @@ function AdminSalesRegisterForm() {
                     변속기
                   </Typography>
                   <Typography variant="body1">
-                    {get_dummy_data.registerProductDetailInfo.transmissionName}
+                    {registerInfo.registerProductDetailInfo.transmissionName}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
                   <Typography variant="h6" fontWeight="bold">
                     사고이력
                   </Typography>
-                  {get_dummy_data.registerProductDetailInfo.productAccidentInfoList.map(
+                  {registerInfo.registerProductDetailInfo.produdctAccidentInfoList.map(
                     (item, idx) => {
                       return (
                         <Typography
@@ -312,7 +279,7 @@ function AdminSalesRegisterForm() {
                   <Typography variant="h6" fontWeight="bold">
                     교체부위
                   </Typography>
-                  {get_dummy_data.registerProductDetailInfo.productExchangeInfoList.map(
+                  {registerInfo.registerProductDetailInfo.productExchangeInfoList.map(
                     (item, idx) => {
                       return (
                         <Typography
@@ -327,7 +294,7 @@ function AdminSalesRegisterForm() {
                     옵션 정보
                   </Typography>
                   <List>
-                    {get_dummy_data.registerProductOptionInfos.map((item, idx) => {
+                    {registerInfo.registerProductOptionInfos.map((item, idx) => {
                       return item.whether === 1 ? (
                         <ListItem key={idx} variant="body1">
                           <AddIcon />
@@ -338,6 +305,20 @@ function AdminSalesRegisterForm() {
                       );
                     })}
                   </List>
+                </Grid>
+                <Grid item xs={12} py={2}>
+                  <Typography variant="h6" fontWeight="bold">
+                    판매가격
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    id="priceVal"
+                    label="판매가격을 입력해주세요"
+                    name="priceVal"
+                    value={priceVal || ''}
+                    onInput={handleChangePrice}
+                    type="text"
+                  />
                 </Grid>
                 <Grid item xs={12} py={2}>
                   <Typography variant="h6" fontWeight="bold">
@@ -358,6 +339,7 @@ function AdminSalesRegisterForm() {
                             setUploadFileValue,
                             previewImageList,
                             setPreviewImageList,
+                            formDataVal
                           )
                         }
                       />
@@ -393,7 +375,7 @@ function AdminSalesRegisterForm() {
             callBackFunc={handleSubmit}
           />
         )}
-      </ThemeProvider>
+      </ThemeProvider>,
     )
   );
 }
