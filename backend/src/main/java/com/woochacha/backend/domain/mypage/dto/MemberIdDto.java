@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.mypage.dto;
 import lombok.Getter;
 
 @Getter
-public class memberIdDto {
+public class MemberIdDto {
     private Long memberId;
 }
+
