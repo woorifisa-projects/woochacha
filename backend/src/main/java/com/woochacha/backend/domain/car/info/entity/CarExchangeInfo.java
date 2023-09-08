@@ -28,6 +28,7 @@ public class CarExchangeInfo {
     private ExchangeType exchangeType;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private Date createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

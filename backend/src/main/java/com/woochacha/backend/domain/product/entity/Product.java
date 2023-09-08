@@ -32,12 +32,15 @@ public class Product {
     private SaleForm saleForm;
 
     @NotNull
+    @Column(name = "price")
     private Integer price;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,6 +51,7 @@ public class Product {
     @JoinColumn(name = "car_num")
     private CarDetail carDetail;
 
+    @Column(name = "update_price")
     private Integer updatePrice;
 
     @OneToMany(mappedBy = "product") // carImage 엔티티와의 양방향 관계 설정

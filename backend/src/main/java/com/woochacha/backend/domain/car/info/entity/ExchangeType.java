@@ -15,9 +15,6 @@ public class ExchangeType {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "type")
     private ExchangeTypeList type;
-
-
-
-
 }

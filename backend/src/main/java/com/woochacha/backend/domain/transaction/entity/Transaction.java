@@ -28,5 +28,6 @@ public class Transaction {
     private PurchaseForm purchaseForm;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

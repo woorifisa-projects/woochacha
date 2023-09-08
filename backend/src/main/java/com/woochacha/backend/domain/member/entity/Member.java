@@ -34,30 +34,39 @@ public class Member implements UserDetails {
     private Long id;
 
     @NotNull
+    @Column(name = "email")
     private String email;
 
     @NotNull
+    @Column(name = "password")
     private String password;
 
     @NotNull
+    @Column(name = "name")
     private String name;
 
     @NotNull
+    @Column(name = "phone")
     private String phone;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ColumnDefault("1")
+    @Column(name = "is_available")
     private Byte isAvailable;
 
     @ColumnDefault("1")
+    @Column(name = "status")
     private Byte status;
 
     @NotNull
+    @Column(name = "profile_image")
     private String profileImage;
 
     @ElementCollection(fetch = FetchType.EAGER)

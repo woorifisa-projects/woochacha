@@ -23,18 +23,23 @@ public class CarDetail {
     private String carNum;
 
     @NotNull
+    @Column(name = "owner")
     private String owner;
 
     @NotNull
+    @Column(name = "phone")
     private String phone;
 
     @NotNull
+    @Column(name = "distance")
     private Integer distance;
 
     @NotNull
+    @Column(name = "year")
     private short year;
 
     @NotNull
+    @Column(name = "capacity")
     private short capacity;
 
     @OneToOne
