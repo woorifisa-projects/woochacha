@@ -68,6 +68,7 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
         int checkCar = productRepository.checkCarNum(carNum, (short) 4);
         if(memberName.equals(owner) && memberPhone.equals(ownerPhone) && countAccident == 0 && checkCar == 0){
             saveSaleForm(carNum, memberId, branchId);
+            logService.savedMemberLogWithType(memberId, "판매 신청폼 제출");
             return "차량 판매 신청이 성공적으로 완료되었습니다.";
         } else if (!memberName.equals(owner)) {
             return "차량 소유주가 일치하지 않습니다.";
@@ -105,6 +106,5 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
                 .carStatus(carStatus)
                 .build();
         saleFormRepository.save(saleForm);
-        logService.savedMemberLogWithTypeAndEtc(memberId, "판매 신청폼 제출", "/admin/sales/approve/" + saleForm.getId());
     }
 }

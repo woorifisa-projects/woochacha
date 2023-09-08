@@ -56,7 +56,7 @@ export const productDetailGetApi = async (productId) => {
 export const purchaseRequest = async (purchaseForm) => {
   // userId,
   try {
-    const response = await jsonInstance.post(`/product/purchase`, purchaseForm);
+    const response = await authInstance.post(`/product/purchase`, purchaseForm);
     const data = response.data;
     return data;
   } catch (error) {
