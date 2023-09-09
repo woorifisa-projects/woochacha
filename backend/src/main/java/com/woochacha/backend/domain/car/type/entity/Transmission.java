@@ -15,5 +15,6 @@ public class Transmission {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "name")
     private TransmissionList name;
 }

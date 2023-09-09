@@ -1,14 +1,19 @@
 import axios from 'axios';
 import LocalStorage from './localStorage';
-import { Router } from 'next/router';
+import { Router, useRouter } from 'next/router';
 
-const BASE_URL = 'http://13.125.32.208:8080';
-// const BASE_URL = 'http://localhost:8080';
+// const router = useRouter();
+// const BASE_URL = 'http://13.125.32.208:8080';
+const BASE_URL = 'http://localhost:8080';
 const HEADER_JSON = {
   headers: {
     'Content-Type': 'application/json',
   },
 };
+const HEADER_AUTH_FORM = {
+  'Content-Type': 'multipart/form-data',
+};
+
 const HEADER_FORM = {
   headers: {
     'Content-Type': 'multipart/form-data',
@@ -16,7 +21,7 @@ const HEADER_FORM = {
 };
 
 // CORS: 리소스 접근 허용
-axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 // CORS: 서로 다른 도메인간 쿠키 전달 허용
 axios.defaults.withCredentials = true;
@@ -32,14 +37,16 @@ const axiosAuthApi = (url, options) => {
   const token = LocalStorage.getItem('loginToken');
   const instance = axios.create({
     baseURL: url,
-    headers: { Authorization: 'Bearer ' + token },
-    ...options,
+    headers: {
+      Authorization: 'Bearer ' + token,
+      ...options,
+    },
   });
   return instance;
 };
 
 // axios interceptor - error handling
-/*
+
 axios.interceptors.response.use(
   function (res) {
     return res;
@@ -61,8 +68,8 @@ axios.interceptors.response.use(
     }
   },
 );
-*/
 
 export const jsonInstance = axiosApi(BASE_URL, HEADER_JSON);
 export const formInstance = axiosApi(BASE_URL, HEADER_FORM);
 export const authInstance = axiosAuthApi(BASE_URL);
+export const authFormInstance = axiosAuthApi(BASE_URL, HEADER_AUTH_FORM);

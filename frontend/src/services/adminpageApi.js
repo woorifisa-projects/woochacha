@@ -1,4 +1,4 @@
-import { authInstance } from '@/utils/api';
+import { authFormInstance, authInstance } from '@/utils/api';
 
 /**
  * [관리자 - members] 모든 사용자 목록 조회 (GET)
@@ -91,7 +91,7 @@ export const editApproveProductApplicationsPatchApi = async (productId) => {
  */
 export const editDenyProductApplicationsPatchApi = async (productId) => {
   try {
-    const response = await authInstance.patch(`admin/product/edit/deny/${productId}`);
+    const response = await authInstance.patch(`/admin/product/edit/deny/${productId}`);
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -104,7 +104,7 @@ export const editDenyProductApplicationsPatchApi = async (productId) => {
  */
 export const deleteProductApplicationsPatchApi = async (productId) => {
   try {
-    const response = await authInstance.patch(`admin/product/delete/${productId}`);
+    const response = await authInstance.patch(`/admin/product/delete/${productId}`);
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -117,7 +117,7 @@ export const deleteProductApplicationsPatchApi = async (productId) => {
  */
 export const allSaleFormGetApi = async () => {
   try {
-    const response = await authInstance.get(`admin/sales`);
+    const response = await authInstance.get(`/admin/sales`);
     const data = response.data;
     return data;
   } catch (error) {
@@ -131,7 +131,7 @@ export const allSaleFormGetApi = async () => {
  */
 export const denySaleFormPatchApi = async (saleFormId) => {
   try {
-    const response = await authInstance.patch(`admin/sales/deny/${saleFormId}`);
+    const response = await authInstance.patch(`/admin/sales/deny/${saleFormId}`);
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -144,7 +144,7 @@ export const denySaleFormPatchApi = async (saleFormId) => {
  */
 export const oneApproveFormGetApi = async (saleFormId) => {
   try {
-    const response = await authInstance.get(`admin/sales/approve/${saleFormId}`);
+    const response = await authInstance.get(`/admin/sales/approve/${saleFormId}`);
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -155,9 +155,9 @@ export const oneApproveFormGetApi = async (saleFormId) => {
 /**
  * [관리자 - sale] 점검차량 정보 입력 후, patch 요청 (PATCH)
  */
-export const oneApproveFormPatchApi = async (saleFormId) => {
+export const oneApproveFormPatchApi = async (saleFormId, newApproveData) => {
   try {
-    const response = await authInstance.get(`admin/sales/approve/${saleFormId}`);
+    const response = await authInstance.patch(`/admin/sales/approve/${saleFormId}`, newApproveData);
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -170,9 +170,8 @@ export const oneApproveFormPatchApi = async (saleFormId) => {
  */
 export const oneRegisterFormGetApi = async (saleFormId) => {
   try {
-    const response = await authInstance.get(`admin/sales/register/${saleFormId}`);
-    const data = response.data;
-    return data;
+    const response = await authInstance.get(`/admin/sales/register/${saleFormId}`);
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -184,12 +183,11 @@ export const oneRegisterFormGetApi = async (saleFormId) => {
  */
 export const oneRegisterFormPostApi = async (saleFormId, registerInputForm) => {
   try {
-    const response = await authInstance.post(
+    const response = await authFormInstance.post(
       `admin/sales/register/${saleFormId}`,
       registerInputForm,
     );
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -201,7 +199,7 @@ export const oneRegisterFormPostApi = async (saleFormId, registerInputForm) => {
  */
 export const oneMemberDeletePatchApi = async (memberId) => {
   try {
-    const response = await authInstance.patch(`admin/members/delete/${memberId}`);
+    const response = await authInstance.patch(`/admin/members/delete/${memberId}`);
     const data = response.data;
     return data;
   } catch (error) {
@@ -215,7 +213,7 @@ export const oneMemberDeletePatchApi = async (memberId) => {
  */
 export const oneMemberLogGetApi = async (memberId) => {
   try {
-    const response = await authInstance.get(`admin/members/log/${memberId}`);
+    const response = await authInstance.get(`/admin/members/log/${memberId}`);
     const data = response.data;
     return data;
   } catch (error) {
@@ -229,7 +227,7 @@ export const oneMemberLogGetApi = async (memberId) => {
  */
 export const allPurchaseFormGetApi = async () => {
   try {
-    const response = await authInstance.get(`admin/purchase`);
+    const response = await authInstance.get(`/admin/purchase`);
     const data = response.data;
     return data;
   } catch (error) {
@@ -243,7 +241,7 @@ export const allPurchaseFormGetApi = async () => {
  */
 export const onePurchaseConfirmFormGetApi = async (purchaseId) => {
   try {
-    const response = await authInstance.get(`admin/purchase/${purchaseId}`);
+    const response = await authInstance.get(`/admin/purchase/${purchaseId}`);
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -256,7 +254,7 @@ export const onePurchaseConfirmFormGetApi = async (purchaseId) => {
  */
 export const onePurchaseConfirmFormPatchApi = async (purchaseId, purchaseForm) => {
   try {
-    const response = await authInstance.patch(`admin/purchase/${purchaseId}`, purchaseForm);
+    const response = await authInstance.patch(`/admin/purchase/${purchaseId}`, purchaseForm);
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -269,7 +267,7 @@ export const onePurchaseConfirmFormPatchApi = async (purchaseId, purchaseForm) =
  */
 export const onePurchaseTransactionFormPostApi = async (purchaseId) => {
   try {
-    const response = await authInstance.post(`admin/purchase/success/${purchaseId}`);
+    const response = await authInstance.post(`/admin/purchase/success/${purchaseId}`);
     return response;
   } catch (error) {
     console.log('실패 : ', error);

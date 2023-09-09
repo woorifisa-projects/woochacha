@@ -35,8 +35,10 @@ public class PurchaseForm {
     private Member member;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "meeting_date")
     private LocalDate meetingDate;
 
     @Column(name = "status")

@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Button, Card, CardMedia, Grid, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import { handleFileUpload } from '../common/FileUpload';
 import { submitEditProfile } from '@/services/profileApi';
 import { memberProfileEditGetApi } from '@/services/mypageApi';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
+
 export default function MypageProfileEdit() {
   const [mounted, setMounted] = useState(false);
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -29,14 +31,28 @@ export default function MypageProfileEdit() {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    submitEditProfile(event, imagefile, memberProfileEdit, memberId).then((res) => {
+    if (imagefile === null) {
+      Swal.fire({
+        icon: 'error',
+        title: '사진을 선택해주셔야합니다.',
+        showConfirmButton: true,
+        // timer: 1500,
+      });
+      return;
+    }
+    submitEditProfile(imagefile, memberId).then((res) => {
       if (res.status === 200) {
-        router.push(`/mypage/${memberId}`);
-        return;
+        Swal.fire({
+          icon: 'success',
+          title: '수정이 완료되었습니다.',
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          location.href = `/mypage/${memberId}`;
+        });
       }
     });
   };
-
   // GET
   useEffect(() => {
     memberProfileEditGetApi(memberId).then((data) => {

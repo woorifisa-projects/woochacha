@@ -1,5 +1,4 @@
-// TODO: 수정하기
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import {
   Box,
@@ -22,12 +21,15 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import theme from '@/styles/theme';
 import { ADMIN_APPROVE_MODAL } from '@/constants/string';
 import OneButtonModal from '@/components/common/OneButtonModal';
-import { oneApproveFormGetApi } from '@/services/adminpageApi';
+import { oneApproveFormGetApi, oneApproveFormPatchApi } from '@/services/adminpageApi';
 
 function AdminSalesApproveForm() {
   const [mounted, setMounted] = useState(false);
   const [approveSaleForm, setApproveSaleForm] = useState(); // 기존 qldb 값
   const [defaultDistance, setDefaultDistance] = useState(); // 기존 주행거리(유효성 검사용)
+
+  const router = useRouter();
+  const { saleformId } = router.query;
 
   // 교체부위 select box 관련
   const [exchangeVal, setExchangeVal] = useState({
@@ -43,27 +45,9 @@ function AdminSalesApproveForm() {
     accidentDate: '',
   });
 
-  // 제출 시 넘길 data
-  const [approveVal, setApproveVal] = useState({
-    distance: null,
-    carAccidentInfoDto: {
-      accidentType: '',
-      accidentDesc: '',
-      accidentDate: '',
-    },
-    carExchangeInfoDtoList: {
-      exchangeType: '',
-      exchangeDesc: '',
-      exchangeDate: '',
-    },
-  });
-
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
   const handleClickModal = () => setShowModal(!showModal);
-  const approveForm = useRef();
-  const router = useRouter();
-  const { saleformId } = router.query;
 
   let responsiveFontTheme = responsiveFontSizes(theme);
 
@@ -82,23 +66,13 @@ function AdminSalesApproveForm() {
   /**
    * 승인 요청
    */
-  const handleSubmit = (event) => {
-    // TODO: submit axios 연결 여기서
-
-    router.push(`/admin/sales/register/${saleformId}`);
-    /*
-    event.preventDefault();
-    const data = new FormData(approveForm.current);
-    console.log(approveForm);
-    console.log(data);
-
+  const handleSubmit = () => {
     const newApproveData = {
-      distance: data.get('carDistance').trim(),
-      // TODO: 교통사고 & 침수사고 둘 다 있을 경우, 어떤 식으로 데이터를 넘겨야하는지?
+      distance: approveSaleForm.carDistance,
       carAccidentInfoDto: {
-        accidentType: 'carAccident',
-        accidentDesc: data.get('carAccidentDesc'),
-        accidentDate: data.get('carAccidentDate').trim(),
+        accidentType: accidentVal.accidentType,
+        accidentDesc: accidentVal.accidentDesc,
+        accidentDate: accidentVal.accidentDate,
       },
       carExchangeInfoDtoList: {
         exchangeType: exchangeVal.exchangeType,
@@ -106,9 +80,21 @@ function AdminSalesApproveForm() {
         exchangeDate: exchangeVal.exchangeDate,
       },
     };
-    setApproveVal(newApproveData);
-    handleClickModal();
-    */
+
+    console.log(newApproveData);
+
+    oneApproveFormPatchApi(saleformId, newApproveData).then((res) => {
+      console.log(res);
+      if (res.status === 200 && res.data === true) {
+        alert('점검 정보가 승인되었습니다. 차량 게시글을 등록으로 이동합니다.');
+        router.replace(`/admin/sales/register/${saleformId}`);
+        return;
+      }
+      if (res.status === 200 && res.data === false) {
+        alert('잘못된 요청입니다. 다시 확인해주세요.');
+        return;
+      }
+    });
   };
 
   // [교체] select box func
@@ -131,7 +117,7 @@ function AdminSalesApproveForm() {
   const handleExchangeDateChange = (e) => {
     setExchangeVal({
       ...exchangeVal,
-      exchangeDesc: e.target.value,
+      exchangeDate: e.target.value,
     });
   };
 
@@ -145,29 +131,32 @@ function AdminSalesApproveForm() {
 
   // [사고유형] input box func
   const handleAccidentDescChange = (e) => {
-    setAccidentVal({
-      ...accidentVal,
-      accidentDesc: e.target.value,
-    });
+    if (e.target.value.trim().length > 0) {
+      setAccidentVal({
+        ...accidentVal,
+        accidentDesc: e.target.value,
+      });
+    }
   };
 
   // [사고유형] date box func
   const handleAccidentDateChange = (e) => {
     setAccidentVal({
       ...accidentVal,
-      accidentDesc: e.target.value,
+      accidentDate: e.target.value,
     });
   };
 
-  // 가격 수정
+  // [주행거리] 주행거리 수정
   const handleChangeDistance = (e) => {
+    e.target.value = e.target.value.replace(/[^0-9]/g, '');
     setApproveSaleForm({
       ...approveSaleForm,
       carDistance: e.target.value,
     });
   };
 
-  // data 불러온 이후 필터링 data에 맞게 렌더링
+  // qldb data 초기 불러오기
   saleformId &&
     useEffect(() => {
       oneApproveFormGetApi(saleformId).then((res) => {
@@ -253,7 +242,7 @@ function AdminSalesApproveForm() {
         </Typography>
         <Grid container sx={saleApproveFormCss.flexBox} spacing={5}>
           <Grid item xs={12} md={6}>
-            <Box ref={approveForm} noValidate>
+            <Box noValidate>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="carNum" sx={saleApproveFormCss.inputLabel}>
@@ -282,9 +271,9 @@ function AdminSalesApproveForm() {
                     id="carDistance"
                     label="주행거리를 입력해주세요"
                     name="carDistance"
-                    defaultValue={approveSaleForm.carDistance}
-                    onChange={handleChangeDistance}
-                    type="number"
+                    value={approveSaleForm.carDistance}
+                    onInput={handleChangeDistance}
+                    type="text"
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -298,8 +287,8 @@ function AdminSalesApproveForm() {
                     value={accidentVal.accidentType}
                     label="accidentType"
                     onChange={handleAccidentChange}>
-                    <MenuItem value={1}>교통사고</MenuItem>
-                    <MenuItem value={2}>침수사고</MenuItem>
+                    <MenuItem value="교통사고">교통사고</MenuItem>
+                    <MenuItem value="침수사고">침수사고</MenuItem>
                   </Select>
                 </Grid>
                 <Grid item xs={12}>
@@ -310,6 +299,7 @@ function AdminSalesApproveForm() {
                     fullWidth
                     name="accidentDesc"
                     id="accidentDesc"
+                    onChange={handleAccidentDescChange}
                     label="사고 이력을 입력해주세요."
                   />
                 </Grid>
@@ -322,7 +312,7 @@ function AdminSalesApproveForm() {
                     name="carAccidentDate"
                     id="carAccidentDate"
                     type="date"
-                    onChange={handleExchangeDescChange}
+                    onChange={handleAccidentDateChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -336,9 +326,13 @@ function AdminSalesApproveForm() {
                     value={exchangeVal.exchangeType}
                     label="exchangeType"
                     onChange={handleExchangeChange}>
-                    <MenuItem value={1}>백미러</MenuItem>
-                    <MenuItem value={2}>앞문</MenuItem>
-                    <MenuItem value={3}>뒷문</MenuItem>
+                    {approveSaleForm.exchangeTypeList.map((exchangeItem) => {
+                      return (
+                        <MenuItem key={exchangeItem.id} value={exchangeItem.type}>
+                          {exchangeItem.type}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </Grid>
                 <Grid item xs={12}>
@@ -349,7 +343,20 @@ function AdminSalesApproveForm() {
                     fullWidth
                     name="exchangeDesc"
                     label="교체 사유를 입력해주세요."
+                    onChange={handleExchangeDescChange}
                     id="exchangeDesc"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <InputLabel htmlFor="exchangeDate" sx={saleApproveFormCss.inputLabel}>
+                    교체일
+                  </InputLabel>
+                  <TextField
+                    fullWidth
+                    name="exchangeDate"
+                    id="exchangeDate"
+                    type="date"
+                    onChange={handleExchangeDateChange}
                   />
                 </Grid>
               </Grid>

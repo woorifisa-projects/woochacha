@@ -26,17 +26,22 @@ public class Log {
     private Long id;
 
     @NotNull
+    @Column(name = "email")
     private String email;
 
     @NotNull
+    @Column(name = "name")
     private String name;
 
     @CreationTimestamp
+    @Column(name = "date")
     private LocalDateTime date;
 
     @NotNull
+    @Column(name = "type")
     private String type;
 
+    @Column(name = "etc")
     private String etc;
 
     public Log(Long id, String email, String name, String type, String etc) {

@@ -26,12 +26,15 @@ public class SaleForm {
     private Long id;
 
     @NotNull
+    @Column(name = "car_num")
     private String carNum;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

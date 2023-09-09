@@ -16,5 +16,6 @@ public class AccidentType {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "type")
     private AccidentTypeList type;
 }

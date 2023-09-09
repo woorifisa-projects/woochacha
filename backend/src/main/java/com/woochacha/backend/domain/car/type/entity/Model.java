@@ -20,6 +20,7 @@ public class Model {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "name")
     private ModelList name;
 
     public Model(Integer id, ModelList name) {
