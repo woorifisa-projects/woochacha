@@ -18,4 +18,10 @@ public class RegisterProductDto {
     private RegisterProductDetailInfo registerProductDetailInfo; // 차량 상세 정보
 
     private List<RegisterProductOptionInfo> registerProductOptionInfos; // 옵션
+
+    public RegisterProductDto(RegisterProductBasicInfo registerProductBasicInfo, RegisterProductDetailInfo registerProductDetailInfo, List<RegisterProductOptionInfo> registerProductOptionInfos) {
+        this.registerProductBasicInfo = registerProductBasicInfo;
+        this.registerProductDetailInfo = registerProductDetailInfo;
+        this.registerProductOptionInfos = registerProductOptionInfos;
+    }
 }

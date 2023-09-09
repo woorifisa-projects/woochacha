@@ -17,4 +17,14 @@ public class CarInspectionInfoResponseDto {
     private List<CarAccidentInfoDto> carAccidentInfoDtoList;
     private List<CarExchangeInfoDto> carExchangeInfoDtoList;
     private List<ExchangeType> exchangeTypeList;
+
+    public CarInspectionInfoResponseDto(String carNum, String carOwnerName, String carOwnerPhone, int carDistance, List<CarAccidentInfoDto> carAccidentInfoDtoList, List<CarExchangeInfoDto> carExchangeInfoDtoList, List<ExchangeType> exchangeTypeList) {
+        this.carNum = carNum;
+        this.carOwnerName = carOwnerName;
+        this.carOwnerPhone = carOwnerPhone;
+        this.carDistance = carDistance;
+        this.carAccidentInfoDtoList = carAccidentInfoDtoList;
+        this.carExchangeInfoDtoList = carExchangeInfoDtoList;
+        this.exchangeTypeList = exchangeTypeList;
+    }
 }
