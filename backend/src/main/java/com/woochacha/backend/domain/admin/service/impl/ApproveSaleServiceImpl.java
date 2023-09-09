@@ -91,7 +91,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                     accidentInfoDtoList.add(accidentInfoDto);
                 }
                 Result exchangeResult = txn.execute(
-                        "SELECT ce.data.exchange_type, ce.data.exchange_info, ce.data.exchange_date " +
+                        "SELECT ce.data.exchange_type, ce.data.exchange_desc, ce.data.exchange_date " +
                                 "FROM history(car_exchange) AS ce " +
                                 "WHERE ce.metadata.id=?",
                         ionSys.newString(exchangeMetaId));
@@ -99,7 +99,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                     IonStruct ionStruct = (IonStruct) ionValue;
                     CarExchangeInfoDto exchangeInfoDto = CarExchangeInfoDto.builder()
                             .exchangeType(((IonString) ionStruct.get("exchange_type")).stringValue())
-                            .exchangeDesc(((IonString) ionStruct.get("exchange_info")).stringValue())
+                            .exchangeDesc(((IonString) ionStruct.get("exchange_desc")).stringValue())
                             .exchangeDate(((IonString) ionStruct.get("exchange_date")).stringValue())
                             .build();
                     exchangeInfoDtoList.add(exchangeInfoDto);
@@ -198,7 +198,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
             qldbDriver.QldbDriver().execute(txn -> {
                 Result result2 = txn.execute(
                         "UPDATE car_exchange AS ce " +
-                                "SET ce.exchange_info = ?, " +
+                                "SET ce.exchange_desc = ?, " +
                                 "ce.exchange_type=?, " +
                                 "ce.exchange_date=?, " +
                                 "ce.exchange_inspection_place='우차차 정비소'" +

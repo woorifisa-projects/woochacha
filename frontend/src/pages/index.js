@@ -184,10 +184,10 @@ export default function Home(props) {
                 direction="row"
                 spacing={2}
                 justifyContent="center">
-                <Button onClick={() => handleMoveBtn('/products')} variant="contained">
+                <Button onClick={() => handleMoveBtn('/product')} variant="contained">
                   차량 보러가기
                 </Button>
-                <Button onClick={() => handleMoveBtn('/products/sale')} variant="outlined">
+                <Button onClick={() => handleMoveBtn('/product/sale')} variant="outlined">
                   내 차 판매하기
                 </Button>
               </Stack>
