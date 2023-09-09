@@ -1,6 +1,8 @@
 // utils/authApi.js
 import LocalStorage from '@/utils/localStorage';
 import { jsonInstance } from '@/utils/api';
+import Swal from 'sweetalert2';
+import { Toast } from '@/utils/modal';
 
 export const signupApi = async (signupData, setUserLoginState, router) => {
   try {
@@ -13,33 +15,67 @@ export const signupApi = async (signupData, setUserLoginState, router) => {
         email: signupData.email,
         password: signupData.password,
       };
-      console.log('회원가입 되었습니다!');
-      loginApi(loginData, setUserLoginState, router);
+
+      Swal.fire({
+        icon: 'success',
+        title: `회원가입 완료`,
+        html: `회원가입이 완료되었습니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        loginApi(loginData, setUserLoginState, router);
+      });
     }
 
     if (response.data.code !== 0) {
-      console.log(response.data.code);
-      alert(`잘못된 입력이 있습니다. 다시 시도해주세요.`);
-      return;
-      /*
       if (response.data.code === -1) {
-        alert(`잘못된 입력이 있습니다. 다시 시도해주세요.`);
+        Swal.fire({
+          icon: 'error',
+          title: '회원가입 실패',
+          html: '잘못된 입력이 있습니다. 다시 시도해주세요.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
         return;
       }
       if (response.data.code === 1) {
-        alert(`핸드폰 번호가 중복되었습니다. 다른 번호로 회원가입해주세요.`);
+        Swal.fire({
+          icon: 'error',
+          title: '회원가입 실패',
+          html: '핸드폰 번호가 중복되었습니다. 다른 번호로 회원가입해주세요.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
         return;
       }
       if (response.data.code === 2) {
-        alert(`이메일 주소가 중복되었습니다. 다른 이메일로 회원가입해주세요.`);
+        Swal.fire({
+          icon: 'error',
+          title: '회원가입 실패',
+          html: '이메일 주소가 중복되었습니다. 다른 이메일로 회원가입해주세요.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
         return;
       }
       if (response.data.code === 3) {
-        alert(`기존의 정지된 이력이 있는 계정은 다시 회원 가입할 수 없습니다.`);
-        router.push('/');
+        Swal.fire({
+          icon: 'error',
+          title: '회원가입 실패',
+          html: '기존의 정지된 이력이 있는 계정은 다시 회원 가입할 수 없습니다.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
         return;
       }
-      */
+
+      return;
     }
   } catch (error) {
     console.log('실패 : ', error);
@@ -60,18 +96,53 @@ export const loginApi = async (loginData, setUserLoginState, router) => {
         userId: response.data.id,
         userName: response.data.name,
       });
-      console.log('로그인 성공');
+      Swal.fire({
+        icon: 'success',
+        title: `로그인 완료`,
+        html: `로그인이 완료되었습니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      });
       router.push('/');
     }
 
     if (!loginToken || response.data.code !== 1) {
       console.log(response.data.code);
       if (response.data.code === 2) {
-        alert(`${response.data.msg}입니다. 다시 로그인해주세요!`);
-        router.push('/');
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 실패',
+          html: `${response.data.msg}입니다. 다시 로그인해주세요!`,
+          showConfirmButton: false,
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown',
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp',
+          },
+          timer: 1500,
+        });
         return;
       }
-      alert(`${response.data.msg}입니다.`);
+      Swal.fire({
+        icon: 'error',
+        title: '로그인 실패',
+        html: `${response.data.msg}입니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      });
       router.push('/');
     }
   } catch (error) {
