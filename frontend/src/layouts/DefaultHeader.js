@@ -83,7 +83,7 @@ function DefaultHeader() {
   return (
     mounted && (
       <AppBar color="default" position="sticky">
-        <Container maxWidth="xl" sx={defaultHeaderCss.headerContainer}>
+        <Container maxWidth sx={defaultHeaderCss.headerContainer}>
           <Toolbar disableGutters>
             <Typography
               variant="h5"

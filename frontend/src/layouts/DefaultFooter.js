@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import theme from '@/styles/theme';
 import CopyRight from '@/components/common/CopyRight';
-import { HEADER_MINI_MENU, HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
+import { HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
 import { useEffect, useState } from 'react';
 
 export default function DefaultFooter() {
@@ -28,6 +28,27 @@ export default function DefaultFooter() {
   useEffect(() => {
     setMouted(true);
   }, []);
+
+  const FOOTER_MINI_MENU_LOGIN = {
+    CONTENTS: [
+      {
+        pageName: '내 프로필',
+        pageUrl: `/mypage/${userLoginState.userId}`,
+      },
+      {
+        pageName: '구매정보',
+        pageUrl: `/mypage/purchase/${userLoginState.userId}`,
+      },
+      {
+        pageName: '판매정보',
+        pageUrl: `/mypage/sale/${userLoginState.userId}`,
+      },
+      {
+        pageName: '등록한 매물정보',
+        pageUrl: `/mypage/registered/${userLoginState.userId}`,
+      },
+    ],
+  };
 
   const defaultFooter = {
     footerBox: {
@@ -94,7 +115,7 @@ export default function DefaultFooter() {
               <Grid sx={defaultFooter.gridItems}>
                 <Typography>마이페이지</Typography>
                 {userLoginState.loginStatus && userLoginState.userName !== '관리자'
-                  ? HEADER_MINI_MENU.CONTENTS.map((menuItem, idx) => {
+                  ? FOOTER_MINI_MENU_LOGIN.CONTENTS.map((menuItem, idx) => {
                       return (
                         <ListItem key={idx} sx={defaultFooter.listItem}>
                           <ListItemText

@@ -1,20 +1,27 @@
 import { useEffect, useState } from 'react';
 import withAuth from '@/hooks/withAuth';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
-import { Grid, Pagination, Typography } from '@mui/material';
+import { Grid, Pagination, Tab, Typography } from '@mui/material';
 import MypageCard from '@/components/mypage/MypageCard';
 import { mypagePurchaseRequestListGetApi } from '@/services/mypageApi';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import SubTabMenu from '@/components/common/SubTabMenu';
+import { SUB_PURCHASE_TAB_MENU } from '@/constants/string';
 
 function PurchaseRequest() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
   const [mypagePurchaseRequestList, setMypagePurchaseRequestList] = useState();
+  const [subMemuVal, setSubMenuVal] = useState('two');
 
   const memberId = userLoginState.userId;
+
+  const handleMove = (url) => {
+    router.push(`${url}${memberId}`);
+  };
 
   const mypageCss = {
     mypageTitle: {
@@ -40,6 +47,18 @@ function PurchaseRequest() {
         <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
           마이페이지 - 구매요청이력
         </Typography>
+        <SubTabMenu currentVal={subMemuVal}>
+          {SUB_PURCHASE_TAB_MENU.map((item, idx) => {
+            return (
+              <Tab
+                key={idx}
+                value={item.value}
+                label={item.label}
+                onClick={() => handleMove(item.url)}
+              />
+            );
+          })}
+        </SubTabMenu>
         <MypageCard content={mypagePurchaseRequestList.content} />
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
