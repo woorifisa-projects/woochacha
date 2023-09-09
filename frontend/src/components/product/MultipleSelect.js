@@ -8,7 +8,6 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
     },
   },
 };
@@ -37,8 +36,8 @@ export default function MultipleSelect(props) {
 
   const multipleBoxCss = {
     formControl: {
-      m: 1,
-      width: '15rem',
+      mt: 1,
+      width: '100%',
     },
     selectBox: {
       display: 'flex',
