@@ -23,27 +23,35 @@ public class CarOption {
     private CarDetail carDetail;
 
     @NotNull
+    @Column(name = "heated_seat")
     private Byte heatedSeat;
 
     @NotNull
+    @Column(name = "smart_key")
     private Byte smartKey;
 
     @NotNull
+    @Column(name = "blackbox")
     private Byte blackbox;
 
     @NotNull
+    @Column(name = "navigation")
     private Byte navigation;
 
     @NotNull
+    @Column(name = "airbag")
     private Byte airbag;
 
     @NotNull
+    @Column(name = "sunroof")
     private Byte sunroof;
 
     @NotNull
+    @Column(name = "high_pass")
     private Byte highPass;
 
     @NotNull
+    @Column(name = "rearview_camera")
     private Byte rearviewCamera;
 
     public CarOption(int id, CarDetail carDetail, Byte heatedSeat, Byte smartKey, Byte blackbox, Byte navigation, Byte airbag, Byte sunroof, Byte highPass, Byte rearviewCamera) {

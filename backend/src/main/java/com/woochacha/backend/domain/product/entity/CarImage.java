@@ -25,9 +25,11 @@ public class CarImage {
     private Product product;
 
     @NotNull
+    @Column(name = "image_url")
     private String imageUrl;
 
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public CarImage() {

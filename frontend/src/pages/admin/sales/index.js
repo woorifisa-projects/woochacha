@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import { CssBaseline, ThemeProvider, Typography, responsiveFontSizes } from '@mui/material';
 import theme from '@/styles/theme';
@@ -13,6 +14,7 @@ function AdminSalesList() {
   const [allSaleFormInfo, setAllSaleFormInfo] = useState();
   const [currentSaleFormId, setCurrentSaleFormId] = useState();
   let responsiveFontTheme = responsiveFontSizes(theme);
+  const router = useRouter();
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
@@ -24,16 +26,16 @@ function AdminSalesList() {
   const handleDeny = async () => {
     console.log('반려');
     console.log(currentSaleFormId);
-    // try {
-    //   await denySaleFormPatchApi(currentSaleFormId).then((res) => {
-    //     if (res.status === 200) {
-    //       alert('반려 완료');
-    //       router.push(`/admin/sales`);
-    //     }
-    //   });
-    // } catch (error) {
-    //   console.log('실패');
-    // }
+    try {
+      await denySaleFormPatchApi(currentSaleFormId).then((res) => {
+        if (res.status === 200) {
+          alert('반려 완료');
+          router.push(`/admin/sales`);
+        }
+      });
+    } catch (error) {
+      console.log('실패');
+    }
   };
 
   const mypageCss = {
@@ -68,7 +70,6 @@ function AdminSalesList() {
    */
   useEffect(() => {
     allSaleFormGetApi().then((data) => {
-      console.log(data);
       setAllSaleFormInfo(data);
     });
     setMounted(true);

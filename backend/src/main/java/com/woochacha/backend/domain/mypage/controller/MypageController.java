@@ -88,7 +88,7 @@ public class MypageController {
     // 상품 수정 신청폼 제출
     @PatchMapping("/registered/edit")
     private ResponseEntity<String> editProductEditForm(@RequestParam("memberId") Long memberId, @RequestParam("productId") Long productId,
-                                                        @RequestBody @Valid UpdatePriceDto updatePriceDto){
+                                                      @RequestBody @Valid UpdatePriceDto updatePriceDto){
         EditProductDto editProductDto = mypageService.getProductEditRequestInfo(memberId, productId);
         if (updatePriceDto.getUpdatePrice() > editProductDto.getPrice()) {
             // TODO: 리팩토링 후, 이 부분 코드가 서비스 구현체로 들어가면 그때 "가격 변경 요청 실패" 로그 추가

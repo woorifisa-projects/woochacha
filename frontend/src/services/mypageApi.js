@@ -121,10 +121,8 @@ export const mypageProductEditRequestPatchApi = async (updatePrice, memberId, pr
 // 마이페이지 등록한 매물 삭제 요청 PATCH mypage/registered/delete/{productId}
 export const mypageProductDeleteRequestPatchApi = async (productId, memberId) => {
   try {
-    const response = await authInstance.patch(`/mypage/registered/delete/${productId}`, memberId, {
-      headers: {
-        'Content-Type': 'application/json', // JSON 형식으로 요청 본문을 설정
-      },
+    const response = await authInstance.patch(`/mypage/registered/delete/${productId}`, {
+      memberId: memberId,
     });
     const data = response.data;
     return data;

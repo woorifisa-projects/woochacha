@@ -16,6 +16,7 @@ public class CarName {
     private Long id;
 
     @NotNull
+    @Column(name = "name")
     private String name;
 
     public CarName(Long id, String name) {

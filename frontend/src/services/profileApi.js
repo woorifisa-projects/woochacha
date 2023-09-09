@@ -1,11 +1,10 @@
-import { formInstance } from '@/utils/api';
+import { authFormInstance } from '@/utils/api';
 
-export const submitEditProfile = async (event, imagefile, editProfileValue, userId) => {
-  const formData = new FormData(event.currentTarget);
-  formData.append('multipartFile', imagefile); // 이미지 파일값 할당
-
+export const submitEditProfile = async (imagefile, userId) => {
+  const formData = new FormData();
+  formData.append('multipartFile', imagefile);
   try {
-    const response = await formInstance.patch(`/mypage/profile/edit/${userId}`, formData);
+    const response = await authFormInstance.patch(`/mypage/profile/edit/${userId}`, formData);
     return response;
   } catch (err) {
     console.log(err);

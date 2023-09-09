@@ -15,5 +15,6 @@ public class CarStatus {
 
     @Enumerated(value = EnumType.STRING)
     @NotNull
+    @Column(name = "status")
     private CarStatusList status;
 }
