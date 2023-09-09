@@ -5,7 +5,7 @@ import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class ApproveSaleResponseDto {
     //차량 승인을 위한 dto
     private Long id;

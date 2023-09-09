@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class RegisterProductDto {
 
     private RegisterProductBasicInfo registerProductBasicInfo; // 차량 기본 정보

@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CarExchangeInfoDto {
     // 교체이력 dto
     private String exchangeType;

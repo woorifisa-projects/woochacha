@@ -5,7 +5,7 @@ import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CompareRequestDto {
     // 차량 검사 후 비교하여 교체된 이력에 대해 저장하는 dto
     private int distance;

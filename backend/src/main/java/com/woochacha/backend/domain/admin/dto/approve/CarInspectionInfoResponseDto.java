@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CarInspectionInfoResponseDto {
     // qldb에서 가지고 오는 모든 사고의 data를 저장하기 위한 dto
     private String carNum;

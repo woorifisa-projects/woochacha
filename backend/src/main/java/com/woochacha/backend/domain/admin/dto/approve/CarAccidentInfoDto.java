@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CarAccidentInfoDto {
     // 사고이력 dto
     private String accidentType;
