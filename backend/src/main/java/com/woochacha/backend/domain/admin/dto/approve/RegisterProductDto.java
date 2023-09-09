@@ -4,13 +4,16 @@ package com.woochacha.backend.domain.admin.dto.approve;
 import com.woochacha.backend.domain.admin.dto.detail.RegisterProductBasicInfo;
 import com.woochacha.backend.domain.admin.dto.detail.RegisterProductDetailInfo;
 import com.woochacha.backend.domain.admin.dto.detail.RegisterProductOptionInfo;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RegisterProductDto {
 
     private RegisterProductBasicInfo registerProductBasicInfo; // 차량 기본 정보

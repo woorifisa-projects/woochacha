@@ -1,17 +1,16 @@
 package com.woochacha.backend.domain.admin.dto.approve;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CarAccidentInfoDto {
     // 사고이력 dto
     private String accidentType;
     private String accidentDesc;
     private String accidentDate;
+
 
     public CarAccidentInfoDto(String accidentType, String accidentDesc, String accidentDate) {
         this.accidentType = accidentType;

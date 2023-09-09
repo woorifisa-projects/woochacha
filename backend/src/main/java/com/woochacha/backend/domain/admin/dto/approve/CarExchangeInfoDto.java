@@ -1,12 +1,10 @@
 package com.woochacha.backend.domain.admin.dto.approve;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CarExchangeInfoDto {
     // 교체이력 dto
     private String exchangeType;

@@ -1,13 +1,16 @@
 package com.woochacha.backend.domain.admin.dto.approve;
 
 import com.woochacha.backend.domain.car.info.entity.ExchangeType;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CarInspectionInfoResponseDto {
     // qldb에서 가지고 오는 모든 사고의 data를 저장하기 위한 dto
     private String carNum;
