@@ -182,7 +182,8 @@ public class RegisterProductServiceImpl implements RegisterProductService {
             airbagQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("airbag")).toString());
             sunroofQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("sunroof")).toString());
             highPassQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("high_pass")).toString());
-            rearviewCameraQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("rearview_camera")).toString());
+            // TODO: rearview_camera로 수정. 현재는 QLDB에 cameara로 오타나있음
+            rearviewCameraQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("rearview_cameara")).toString()); 
         });
         // TODO: 코드 간략하게 리팩토링
         RegisterProductBasicInfo registerProductBasicInfo = RegisterProductBasicInfo.builder()
