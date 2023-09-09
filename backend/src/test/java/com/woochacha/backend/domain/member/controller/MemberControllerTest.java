@@ -92,6 +92,7 @@ class MemberControllerTest extends CommonTest {
     }
 
     @Test
+    @DisplayName("로그인 - 성공")
     void login() throws Exception {
         LoginRequestDto loginRequestDto = LoginRequestDto.builder()
                 .email("testuser@woochacha.com")
@@ -137,6 +138,7 @@ class MemberControllerTest extends CommonTest {
     }
 
     @Test
+    @DisplayName("로그아웃")
     void logout() throws Exception {
         Long memberId = 1L;
         when(signService.logout(any(Long.class))).thenReturn(true);
@@ -155,6 +157,7 @@ class MemberControllerTest extends CommonTest {
     }
 
     @Test
+    @DisplayName("회원탈퇴")
     void signOut() throws Exception {
         Long memberId = 1L;
         SignResponseDto signResponseDto = new SignResponseDto(true, 0, "Success");
