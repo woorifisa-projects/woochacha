@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.product.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woochacha.backend.domain.car.detail.dto.CarNameDto;
 import com.woochacha.backend.domain.car.type.dto.*;
+import com.woochacha.backend.domain.common.CommonTest;
 import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductPurchaseRequestDto;
@@ -25,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +35,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
@@ -45,13 +43,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@MockBean(JpaMetamodelMappingContext.class)
-@ExtendWith(MockitoExtension.class)
-@ExtendWith(RestDocumentationExtension.class)
-@AutoConfigureRestDocs(outputDir = "build/generated-snippets")
-class ProductControllerTest {
-   private MockMvc mockMvc;
 
+class ProductControllerTest extends CommonTest {
    @InjectMocks
    private ProductController productController;
 
@@ -78,13 +71,7 @@ class ProductControllerTest {
 
    @BeforeEach
    public void init(RestDocumentationContextProvider restDocumentation) {
-       mockMvc = MockMvcBuilders.standaloneSetup(productController)
-               .apply(documentationConfiguration(restDocumentation)
-                       .operationPreprocessors()
-                   .withRequestDefaults(prettyPrint())
-                   .withResponseDefaults(prettyPrint()))
-               .build();
-       objectMapper = new ObjectMapper();
+       super(restDocumentation, productController);
    }
 
    @Test
