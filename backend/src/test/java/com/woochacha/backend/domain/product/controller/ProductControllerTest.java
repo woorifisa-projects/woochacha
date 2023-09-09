@@ -204,6 +204,9 @@ class ProductControllerTest extends CommonTest {
        mockMvc.perform(get("/product/{productId}", productId))
                .andExpect(status().isOk())
                .andDo(document("product/get-detail",
+                       requestParameters(
+                               parameterWithName("productId").description("매물 아이디")
+                       ),
                        responseFields(
                                fieldWithPath("productBasicInfo").description("[기본 정보]"),
                                fieldWithPath("productBasicInfo.title").description("제목(모델+차량명+연식)"),
@@ -266,8 +269,6 @@ class ProductControllerTest extends CommonTest {
    @Test
    @DisplayName("매물 옵션을 선택하여 필터링한다.")
    void findFilteredProduct() throws Exception {
-       // request body
-//        TypeDto typeDto = new TypeDto();
        TypeDto typeDto = new TypeDto(2);
        List<TypeDto> typeDtoList = new ArrayList<>();
        typeDtoList.add(typeDto);
@@ -277,7 +278,6 @@ class ProductControllerTest extends CommonTest {
 
        System.out.println(productFilterInfo);
 
-       // response body
        ProductInfo productInfo = ProductInfo.builder()
                .id((long) 14)
                .title("기아 올 뉴 카니발 2018년형")
@@ -286,7 +286,6 @@ class ProductControllerTest extends CommonTest {
                .price(2690)
                .imageUrl("https://woochacha.s3.ap-northeast-2.amazonaws.com/product/22나2222/1")
                .build();
-//        ProductInfo productInfo = new ProductInfo();
        List<ProductInfo> productInfoList = new ArrayList<>();
        productInfoList.add(productInfo);
 

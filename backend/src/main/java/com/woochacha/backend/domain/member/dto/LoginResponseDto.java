@@ -2,8 +2,6 @@ package com.woochacha.backend.domain.member.dto;
 
 import lombok.*;
 
-@AllArgsConstructor
-@RequiredArgsConstructor
 @Builder
 @Getter
 @Setter
@@ -17,5 +15,13 @@ public class LoginResponseDto {
     public LoginResponseDto(int code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+
+    public LoginResponseDto(int code, String msg, String token, Long id, String name) {
+        this.code = code;
+        this.msg = msg;
+        this.token = token;
+        this.id = id;
+        this.name = name;
     }
 }

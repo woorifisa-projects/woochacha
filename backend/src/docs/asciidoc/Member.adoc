@@ -1,0 +1,59 @@
+:doctype: book
+:icons: font
+:toc: left
+:sectlinks:
+:sectnums:
+:docinfo: shared-head
+:toclevels: 2
+:source-highlighter: highlightjs
+
+
+== Member
+=== 회원가입
+==== Http Request
+include::{snippets}/users/register//http-request.adoc[]
+
+==== Http Response
+include::{snippets}/users/register/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/users/register/response-fields.adoc[]
+
+
+=== 로그인
+==== Http Request
+include::{snippets}/users/login//http-request.adoc[]
+
+==== Http Response
+include::{snippets}/users/login/http-response.adoc[]
+
+==== Request Fields
+include::{snippets}/users/login/request-fields.adoc[]
+
+==== Response Headers
+include::{snippets}/users/login/response-headers.adoc[]
+
+==== Response Fields
+include::{snippets}/users/login/response-fields.adoc[]
+
+
+=== 로그아웃
+==== Http Request
+include::{snippets}/users/logout//http-request.adoc[]
+
+==== Http Response
+include::{snippets}/users/logout/http-response.adoc[]
+
+==== Request Parameters
+include::{snippets}/users/logout/request-parameters.adoc[]
+
+
+=== 회원 탈퇴
+==== Http Request
+include::{snippets}/users/signout/http-request.adoc[]
+
+==== Http Response
+include::{snippets}/users/signout/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/users/signout/response-fields.adoc[]
