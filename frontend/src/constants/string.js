@@ -21,18 +21,22 @@ export const HEADER_MINI_MENU = {
     {
       pageName: '내 프로필',
       pageUrl: `/mypage`,
+      page: 'mypage',
     },
     {
       pageName: '구매정보',
       pageUrl: `/mypage/purchase`,
+      page: 'purchase',
     },
     {
       pageName: '판매정보',
       pageUrl: `/mypage/sale`,
+      page: 'sale',
     },
     {
       pageName: '등록한 매물정보',
       pageUrl: `/mypage/registered`,
+      page: 'registered',
     },
   ],
 };
@@ -42,18 +46,22 @@ export const HEADER_ADMIN_MINI_MENU = {
     {
       pageName: '사용자 관리',
       pageUrl: `/admin/members`,
+      page: 'members',
     },
     {
       pageName: '매물관리',
       pageUrl: `/admin/product`,
+      page: 'product',
     },
     {
       pageName: '판매 신청 관리',
       pageUrl: `/admin/sales`,
+      page: 'sales',
     },
     {
       pageName: '거래 관리',
       pageUrl: `/admin/purchase`,
+      page: 'purchase',
     },
   ],
 };
@@ -73,10 +81,6 @@ export const HEADER_UNLOGIN_USER_MENU = {
 
 export const HEADER_LOGIN_USER_MENU = {
   CONTENTS: [
-    {
-      pageName: '마이페이지',
-      pageUrl: `/mypage`,
-    },
     {
       pageName: '로그아웃',
       pageUrl: `/users/logout`,
@@ -228,3 +232,30 @@ export const MEMBER_DELETE_MODAL = {
     modalContents: '정말로 회원을 삭제하시겠습니까?',
   },
 };
+
+// MYPAGE - SUB TABS
+export const SUB_PURCHASE_TAB_MENU = [
+  {
+    value: 'one',
+    label: '구매이력',
+    url: `/mypage/purchase/`,
+  },
+  {
+    value: 'two',
+    label: '구매요청이력',
+    url: `/mypage/purchase-request/`,
+  },
+];
+
+export const SUB_SALE_TAB_MENU = [
+  {
+    value: 'one',
+    label: '판매이력',
+    url: `/mypage/sale/`,
+  },
+  {
+    value: 'two',
+    label: '판매요청이력',
+    url: `/mypage/sale-request/`,
+  },
+];

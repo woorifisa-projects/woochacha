@@ -1,9 +1,11 @@
 import { Fade, Menu, MenuItem } from '@mui/material';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { HEADER_MINI_MENU } from '@/constants/string';
+import { useRecoilValue } from 'recoil';
+import { userLoggedInState } from '@/atoms/userInfoAtoms';
 
 export default function MenuAppbar(props) {
+  const userLoginState = useRecoilValue(userLoggedInState);
   const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -21,6 +23,27 @@ export default function MenuAppbar(props) {
   const handleMiniMenu = (url) => {
     router.push(url);
     setAnchorEl(null);
+  };
+
+  const HEADER_MINI_MENU_LOGIN = {
+    CONTENTS: [
+      {
+        pageName: '내 프로필',
+        pageUrl: `/mypage/${userLoginState.userId}`,
+      },
+      {
+        pageName: '구매정보',
+        pageUrl: `/mypage/purchase/${userLoginState.userId}`,
+      },
+      {
+        pageName: '판매정보',
+        pageUrl: `/mypage/sale/${userLoginState.userId}`,
+      },
+      {
+        pageName: '등록한 매물정보',
+        pageUrl: `/mypage/registered/${userLoginState.userId}`,
+      },
+    ],
   };
 
   return (
@@ -44,7 +67,7 @@ export default function MenuAppbar(props) {
         open={open}
         onClose={handleClose}
         TransitionComponent={Fade}>
-        {HEADER_MINI_MENU.CONTENTS.map((page, idx) => (
+        {HEADER_MINI_MENU_LOGIN.CONTENTS.map((page, idx) => (
           <MenuItem key={idx} onClick={() => handleMiniMenu(page.pageUrl)}>
             {page.pageName}
           </MenuItem>

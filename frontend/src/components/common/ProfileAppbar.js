@@ -5,6 +5,7 @@ import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { Button, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 import { HEADER_LOGIN_USER_MENU, HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
 import LocalStorage from '@/utils/localStorage';
+import Swal from 'sweetalert2';
 
 export default function ProfileAppbar() {
   const router = useRouter();
@@ -36,8 +37,19 @@ export default function ProfileAppbar() {
         userName: null,
       });
 
-      // TODO: 로그아웃 modal 처리
-      alert('로그아웃 완료!');
+      Swal.fire({
+        icon: 'success',
+        title: `로그아웃`,
+        html: `로그아웃이 완료되었습니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      });
 
       router.push('/');
       return;
@@ -51,7 +63,7 @@ export default function ProfileAppbar() {
       {userLoginState.loginStatus ? (
         <Tooltip title={userLoginState.userName}>
           <Button onClick={handleOpenUserMenu} variant="contained" sx={profileAppbarCss.btnColor}>
-            로그아웃
+            {userLoginState.userName}
           </Button>
         </Tooltip>
       ) : (
