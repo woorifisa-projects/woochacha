@@ -1,7 +1,8 @@
 package com.woochacha.backend.domain.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woochacha.backend.domain.car.type.dto.TypeDto;
+import com.woochacha.backend.domain.car.detail.dto.CarNameDto;
+import com.woochacha.backend.domain.car.type.dto.*;
 import com.woochacha.backend.domain.product.dto.ProductAllResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductDetailResponseDto;
 import com.woochacha.backend.domain.product.dto.ProductPurchaseRequestDto;
@@ -9,6 +10,7 @@ import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.dto.detail.*;
 import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
 import com.woochacha.backend.domain.product.service.ProductService;
+import com.woochacha.backend.domain.sale.dto.BranchDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,8 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -31,8 +35,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,7 +47,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @MockBean(JpaMetamodelMappingContext.class)
 @ExtendWith(MockitoExtension.class)
-@AutoConfigureRestDocs
+@ExtendWith(RestDocumentationExtension.class)
+@AutoConfigureRestDocs(outputDir = "build/generated-snippets")
 class ProductControllerTest {
    private MockMvc mockMvc;
 
@@ -69,8 +77,13 @@ class ProductControllerTest {
    private ObjectMapper objectMapper;
 
    @BeforeEach
-   public void init() {
-       mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
+   public void init(RestDocumentationContextProvider restDocumentation) {
+       mockMvc = MockMvcBuilders.standaloneSetup(productController)
+               .apply(documentationConfiguration(restDocumentation)
+                       .operationPreprocessors()
+                   .withRequestDefaults(prettyPrint())
+                   .withResponseDefaults(prettyPrint()))
+               .build();
        objectMapper = new ObjectMapper();
    }
 
@@ -89,25 +102,73 @@ class ProductControllerTest {
        List<ProductInfo> productInfoList = new ArrayList<>();
        productInfoList.add(productInfo);
 
-       ProductFilterInfo productFilterInfo = new ProductFilterInfo();
+       TypeDto typeDto  = new TypeDto(1, "경차");
+       ModelDto modelDto = new ModelDto(1, "현대");
+       CarNameDto carNameDto = new CarNameDto(1L, "아반떼 AD");
+       FuelDto fuelDto = new FuelDto(1, "가솔린");
+       ColorDto colorDto = new ColorDto(1, "검정색");
+       TransmissionDto transmissionDto = new TransmissionDto(1, "오토");
+       BranchDto branchDto = new BranchDto(1L, "서울");
+
+       List<TypeDto> typeDtoList = new ArrayList<>();
+       List<ModelDto> modelDtoList = new ArrayList<>();
+       List<CarNameDto> carNameDtoList= new ArrayList<>();
+       List<FuelDto> fuelDtoList = new ArrayList<>();
+       List<ColorDto> colorDtoList = new ArrayList<>();
+       List<TransmissionDto> transmissionDtoList = new ArrayList<>();
+       List<BranchDto> branchDtoList = new ArrayList<>();
+
+       typeDtoList.add(typeDto);
+       modelDtoList.add(modelDto);
+       carNameDtoList.add(carNameDto);
+       fuelDtoList.add(fuelDto);
+       colorDtoList.add(colorDto);
+       transmissionDtoList.add(transmissionDto);
+       branchDtoList.add(branchDto);
+
+       ProductFilterInfo productFilterInfo = ProductFilterInfo.builder()
+               .typeList(typeDtoList)
+               .modelList(modelDtoList)
+               .carNameList(carNameDtoList)
+               .fuelList(fuelDtoList)
+               .colorList(colorDtoList)
+               .transmissionList(transmissionDtoList)
+               .branchList(branchDtoList)
+               .build();
+
        ProductAllResponseDto productAllResponseDto = new ProductAllResponseDto(productInfoList, productFilterInfo);
 
        when(productService.findAllProduct()).thenReturn(productAllResponseDto);
 
        mockMvc.perform(get("/product"))
                .andExpect(status().isOk())
-               .andDo(document("get-product-all",
+               .andDo(document("product/get-all",
                        responseFields(
-                               fieldWithPath("id").description("매물 아이디"),
-                               fieldWithPath("title").description("매물 제목(모델+차량명+연식)"),
-                               fieldWithPath("distance").description("주행 거리"),
-                               fieldWithPath("branch").description("판매 지점"),
-                               fieldWithPath("price").description("판매 가격"),
-                               fieldWithPath("imageUrl").description("매물 이미지 리스트"),
-                               fieldWithPath("id").description("매물 아이디"),
-                               fieldWithPath("id").description("매물 아이디"),
-                               fieldWithPath("id").description("매물 아이디")
+                               fieldWithPath("productInfo").description("[기본 정보]"),
+                               fieldWithPath("productInfo[].id").description("아이디"),
+                               fieldWithPath("productInfo[].title").description("제목(모델+차량명+연식)"),
+                               fieldWithPath("productInfo[].distance").description("주행 거리"),
+                               fieldWithPath("productInfo[].branch").description("판매 지점"),
+                               fieldWithPath("productInfo[].price").description("판매 가격"),
+                               fieldWithPath("productInfo[].imageUrl").description("이미지 리스트"),
+
+                               fieldWithPath("productFilterInfo").description("[필터링 종류]"),
+                               fieldWithPath("productFilterInfo.typeList[].id").description("차종 리스트 : 아이디"),
+                               fieldWithPath("productFilterInfo.typeList[].name").description("차종 리스트 : 내용"),
+                               fieldWithPath("productFilterInfo.modelList[].id").description("모델 리스트 : 아이디"),
+                               fieldWithPath("productFilterInfo.modelList[].name").description("모델 리스트 : 내용"),
+                               fieldWithPath("productFilterInfo.carNameList[].id").description("차량명 리스트 : 아이디"),
+                               fieldWithPath("productFilterInfo.carNameList[].name").description("차량명 리스트 : 내용"),
+                               fieldWithPath("productFilterInfo.fuelList[].id").description("연료 리스트 : 아이디"),
+                               fieldWithPath("productFilterInfo.fuelList[].name").description("연료 리스트 : 내용"),
+                               fieldWithPath("productFilterInfo.colorList[].id").description("색상 리스트 : 아이디"),
+                               fieldWithPath("productFilterInfo.colorList[].name").description("색상 리스트  : 내용"),
+                               fieldWithPath("productFilterInfo.transmissionList[].id").description("변속기 리스트 : 아이디"),
+                               fieldWithPath("productFilterInfo.transmissionList[].name").description("변속기 리스트 : 내용"),
+                               fieldWithPath("productFilterInfo.branchList[].id").description("판매 지점 리스트 : 아이디"),
+                               fieldWithPath("productFilterInfo.branchList[].name").description("판매 지점 리스트 : 내용")
                        )))
+               .andDo(print())
                .andExpect(jsonPath("$.productInfo[0].id").value(productAllResponseDto.getProductInfo().get(0).getId()))
                .andExpect(jsonPath("$.productInfo[0].title").value(productAllResponseDto.getProductInfo().get(0).getTitle()))
                .andExpect(jsonPath("$.productInfo[0].distance").value(productAllResponseDto.getProductInfo().get(0).getDistance()))
@@ -116,19 +177,6 @@ class ProductControllerTest {
                .andExpect(jsonPath("$.productInfo[0].imageUrl").value(productAllResponseDto.getProductInfo().get(0).getImageUrl()))
                .andExpect(jsonPath("$.productFilterInfo").exists())
                .andReturn();
-
-
-//        mockMvc.perform(get("/product"))
-//                .andExpect(status().isOk())
-//                .andDo(print())
-//                .andExpect(jsonPath("$.productInfo[0].id").value(productAllResponseDto.getProductInfo().get(0).getId()))
-//                .andExpect(jsonPath("$.productInfo[0].title").value(productAllResponseDto.getProductInfo().get(0).getTitle()))
-//                .andExpect(jsonPath("$.productInfo[0].distance").value(productAllResponseDto.getProductInfo().get(0).getDistance()))
-//                .andExpect(jsonPath("$.productInfo[0].branch").value(productAllResponseDto.getProductInfo().get(0).getBranch()))
-//                .andExpect(jsonPath("$.productInfo[0].price").value(productAllResponseDto.getProductInfo().get(0).getPrice()))
-//                .andExpect(jsonPath("$.productInfo[0].imageUrl").value(productAllResponseDto.getProductInfo().get(0).getImageUrl()))
-//                .andExpect(jsonPath("$.productFilterInfo").exists())
-//                .andReturn();
    }
 
    @Test
@@ -184,6 +232,36 @@ class ProductControllerTest {
 
        mockMvc.perform(get("/product/{productId}", productId))
                .andExpect(status().isOk())
+               .andDo(document("product/get-detail",
+                       responseFields(
+                               fieldWithPath("productBasicInfo").description("[기본 정보]"),
+                               fieldWithPath("productBasicInfo.title").description("제목(모델+차량명+연식)"),
+                               fieldWithPath("productBasicInfo.carNum").description("차량 번호"),
+                               fieldWithPath("productBasicInfo.branch").description("판매 지점"),
+                               fieldWithPath("productBasicInfo.price").description("판매 가격"),
+
+                               fieldWithPath("productDetailInfo.capacity").description("승차 정원"),
+                               fieldWithPath("productDetailInfo.distance").description("주행 거리"),
+                               fieldWithPath("productDetailInfo.carType").description("차종"),
+                               fieldWithPath("productDetailInfo.fuelName").description("연료"),
+                               fieldWithPath("productDetailInfo.transmissionName").description("변속기"),
+
+                               fieldWithPath("productDetailInfo.productAccidentInfoList[].type").description("사고 종류(침수 사고, 교통 사고)"),
+                               fieldWithPath("productDetailInfo.productAccidentInfoList[].count").description("사고 횟수"),
+
+                               fieldWithPath("productDetailInfo.productExchangeInfoList[].type").description("부품 교체 부위"),
+                               fieldWithPath("productDetailInfo.productExchangeInfoList[].count").description("부품 교체 횟수"),
+
+                               fieldWithPath("productOptionInfo[].option").description("차량 옵션 종류"),
+                               fieldWithPath("productOptionInfo[].whether").description("차량 옵션 포함 여부"),
+
+                               fieldWithPath("productOwnerInfo.sellerName").description("판매자 이름"),
+                               fieldWithPath("productOwnerInfo.sellerEmail").description("판매자 이메일"),
+                               fieldWithPath("productOwnerInfo.sellerProfileImage").description("판매자 프로필 사진"),
+
+                               fieldWithPath("carImageList[]").description("차량 사진 리스트")
+
+                       )))
                .andDo(print())
 
                .andExpect(jsonPath("$.productBasicInfo.title").value(productDetailResponseDto.getProductBasicInfo().getTitle()))
@@ -247,6 +325,25 @@ class ProductControllerTest {
                        .content(objectMapper.writeValueAsString(productFilterInfo))
                        .contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
+               .andDo(document("product/filter",
+                       requestFields(
+                               fieldWithPath("typeList[].id").description("차종 리스트 : 아이디"),
+                               fieldWithPath("typeList[].name").description("차종 리스트 : 내용"),
+                               fieldWithPath("modelList").description("모델 리스트"),
+                               fieldWithPath("carNameList").description("차량명 리스트"),
+                               fieldWithPath("fuelList").description("연료 리스트"),
+                               fieldWithPath("colorList").description("색상 리스트"),
+                               fieldWithPath("transmissionList").description("변속기 리스트"),
+                               fieldWithPath("branchList").description("판매 지점 리스트")
+                       ),
+                       responseFields(
+                               fieldWithPath("[].id").description("아이디"),
+                               fieldWithPath("[].title").description("제목(모델+차량명+연식)"),
+                               fieldWithPath("[].distance").description("주행 거리"),
+                               fieldWithPath("[].branch").description("판매 지점"),
+                               fieldWithPath("[].price").description("판매 가격"),
+                               fieldWithPath("[].imageUrl").description("이미지 리스트")
+                       )))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.[0]").exists())
                .andReturn();
@@ -263,6 +360,11 @@ class ProductControllerTest {
                        .content(objectMapper.writeValueAsString(productPurchaseRequestDto))
                        .contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
+               .andDo(document("product/purchase",
+                       requestFields(
+                               fieldWithPath("memberId").description("판매 요청 회원 아이디"),
+                               fieldWithPath("productId").description("판매 요청 매물 아이디")
+                       )))
                .andExpect(status().isOk())
                .andExpect(content().string("true"))
                .andReturn();
@@ -290,6 +392,18 @@ class ProductControllerTest {
                        .param("keyword", keyword)
                        .contentType(MediaType.APPLICATION_JSON))
                .andDo(print())
+               .andDo(document("product/search",
+                       requestParameters(
+                               parameterWithName("keyword").description("검색 키워드")
+                       ),
+                       responseFields(
+                               fieldWithPath("[].id").description("아이디"),
+                               fieldWithPath("[].title").description("제목(모델+차량명+연식)"),
+                               fieldWithPath("[].distance").description("주행 거리"),
+                               fieldWithPath("[].branch").description("판매 지점"),
+                               fieldWithPath("[].price").description("판매 가격"),
+                               fieldWithPath("[].imageUrl").description("이미지 리스트")
+                       )))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$.*", hasSize(1)))
                .andReturn();

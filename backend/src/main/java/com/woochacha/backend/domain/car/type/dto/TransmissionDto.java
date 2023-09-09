@@ -1,8 +1,12 @@
 package com.woochacha.backend.domain.car.type.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter
+@Builder
+@AllArgsConstructor
 public class TransmissionDto {
     private int id;
     private String name;
