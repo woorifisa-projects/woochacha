@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FuelRepository extends JpaRepository<Fuel, Integer> {
-    Fuel findByName(FuelList name);
+    Fuel findByName(String name);
 }
