@@ -258,7 +258,7 @@ public class RegisterProductServiceImpl implements RegisterProductService {
                 .distance(registerProductDto.getRegisterProductDetailInfo().getDistance())
                 .year(registerProductDto.getRegisterProductDetailInfo().getYear())
                 .capacity(registerProductDto.getRegisterProductDetailInfo().getCapacity())
-                .fuel(fuelRepository.findByName(FuelList.valueOf(registerProductDto.getRegisterProductDetailInfo().getFuelName())))
+                .fuel(fuelRepository.findByName((String) registerProductDto.getRegisterProductDetailInfo().getFuelName()))
                 .type(typeRepository.findByName(TypeList.valueOf(registerProductDto.getRegisterProductDetailInfo().getCarType())))
                 .transmission(transmissionRepository.findByName(TransmissionList.valueOf(registerProductDto.getRegisterProductDetailInfo().getTransmissionName())))
                 .color(colorRepository.findByName(ColorList.valueOf(registerProductDto.getRegisterProductDetailInfo().getColor())))

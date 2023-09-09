@@ -1,8 +1,10 @@
 package com.woochacha.backend.domain.car.type.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Builder
+@AllArgsConstructor
 public class FuelDto {
     private int id;
     private String name;

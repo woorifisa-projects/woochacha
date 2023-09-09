@@ -16,7 +16,11 @@ import SearchBar from '@/components/product/SearchBar';
 import MultipleSelect from '@/components/product/MultipleSelect';
 import ProductCard from '@/components/product/ProductCard';
 import MainProduct from '@/components/product/MainProduct';
-import { allProductGetApi, filteringProductGetApi } from '@/services/productApi';
+import {
+  allProductGetApi,
+  filteringProductGetApi,
+  keywordProductGetApi,
+} from '@/services/productApi';
 
 // Dummy Data
 const mainFeaturedPost = {
@@ -35,6 +39,7 @@ export default function Home(props) {
     modelList: [],
     transmissionList: [],
   });
+  const [selectMenus, setSelectMenus] = useState();
   const router = useRouter();
   let responsiveFontTheme = responsiveFontSizes(theme);
 
@@ -51,55 +56,50 @@ export default function Home(props) {
     setMounted(true);
   }, []);
 
-  // TODO: refactoring
-  const handleChangeSelect = (e, selectId) => {
-    const valueArr = e.target.value;
+  /**
+   * selectmenu의 키와 라벨을 매핑
+   */
+  const selectBoxLabelMap = {
+    typeList: '차종',
+    modelList: '모델',
+    transmissionList: '변속기',
+  };
 
-    if (selectId.includes('typeList')) {
-      const typeList = valueArr.map((item) => {
-        return {
-          id: item,
-        };
-      });
-      setSelectMenuValue({
-        ...selectMenuValue,
-        typeList,
-      });
-      return;
+  // selectBoxLabelMap 객체의 키 목록 가져오기
+  const mainSelectMenus = Object.keys(selectBoxLabelMap);
+
+  /**
+   * allProducts가 업데이트될 때만 selectBoxes를 생성하도록 이동
+   */
+  useEffect(() => {
+    if (allProducts) {
+      // 여러 옵션 중, 메인페이지에 나올 selectMenus만 필터링
+      const selectBoxes = mainSelectMenus
+        .filter((key) => allProducts.productFilterInfo[key])
+        .map((key) => ({
+          id: key,
+          label: selectBoxLabelMap[key],
+        }));
+      setSelectMenus(selectBoxes);
     }
-    if (selectId.includes('modelList')) {
-      const modelList = valueArr.map((item) => {
-        return {
-          id: item,
-        };
+  }, [allProducts]);
+
+  /**
+   * 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
+   * */
+  const handleSearch = (keyword) => {
+    keywordProductGetApi(keyword).then((data) => {
+      setAllProducts({
+        productInfo: data,
       });
-      setSelectMenuValue({
-        ...selectMenuValue,
-        modelList,
-      });
-      return;
-    }
-    if (selectId.includes('transmissionList')) {
-      const transmissionList = valueArr.map((item) => {
-        return {
-          id: item,
-        };
-      });
-      setSelectMenuValue({
-        ...selectMenuValue,
-        transmissionList,
-      });
-      return;
-    }
+    });
   };
 
   /**
    * 필터링 관련 함수
    */
   const handleFiltering = () => {
-    console.log(selectMenuValue);
     filteringProductGetApi(selectMenuValue).then((data) => {
-      console.log(data);
       setAllProducts({
         ...allProducts,
         productInfo: data,
@@ -108,26 +108,27 @@ export default function Home(props) {
   };
 
   /**
+   * selectbox 선택 시, 선택한 selectItem 저장 함수
+   */
+  const handleChangeSelect = (e, selectId) => {
+    const valueArr = e.target.value;
+    const updatedValue = {
+      ...selectMenuValue,
+      [selectId]: valueArr.map((item) => {
+        return {
+          id: item,
+        };
+      }),
+    };
+    setSelectMenuValue(updatedValue);
+  };
+
+  /**
    * 상세 페이지 이동 함수
    */
   const handleMoveBtn = (url) => {
     router.push(url);
   };
-
-  const selectBoxes = [
-    {
-      id: 'typeList',
-      label: '차종',
-    },
-    {
-      id: 'modelList',
-      label: '모델',
-    },
-    {
-      id: 'transmissionList',
-      label: '변속기',
-    },
-  ];
 
   const MainPageCss = {
     mainBox: {
@@ -196,24 +197,25 @@ export default function Home(props) {
           <Box sx={MainPageCss.filteringBox} alignItems="center">
             {/* filter item */}
             <Grid container spacing={2} alignItems="center" justifyContent="center" mb={8}>
-              {selectBoxes.map((item, idx) => {
-                return (
-                  <Grid key={idx} item xs={4}>
-                    <MultipleSelect
-                      key={idx}
-                      selectMenu={item}
-                      selectItems={allProducts.productFilterInfo[`${item.id}`]}
-                      onChangeSelect={handleChangeSelect}
-                    />
-                  </Grid>
-                );
-              })}
+              {selectMenus &&
+                selectMenus.map((item, idx) => {
+                  return (
+                    <Grid key={idx} item xs={4}>
+                      <MultipleSelect
+                        key={idx}
+                        selectMenu={item}
+                        selectItems={allProducts.productFilterInfo[`${item.id}`]}
+                        onChangeSelect={handleChangeSelect}
+                      />
+                    </Grid>
+                  );
+                })}
 
               <Button variant="contained" onClick={handleFiltering} sx={MainPageCss.filteringBtn}>
                 필터링 검색
               </Button>
             </Grid>
-            <SearchBar />
+            <SearchBar onSearch={handleSearch} />
           </Box>
 
           <MainProduct post={mainFeaturedPost} />

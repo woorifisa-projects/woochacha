@@ -1,23 +1,21 @@
 package com.woochacha.backend.domain.car.type.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.Objects;
-
-@Data
+@Getter
+@Builder
+@AllArgsConstructor
 public class TypeDto {
     private int id;
     private String name;
 
-    public TypeDto() {
-    }
+    public TypeDto() {}
 
-    public TypeDto(int id) {
-        this.id = id;
-    }
+    public TypeDto(int id) { this.id = id; }
 
-//    @Override
+    //    @Override
 //    public boolean equals(Object o) {
 //        if (this == o) return true;
 //        if (o == null || getClass() != o.getClass()) return false; // 2번
