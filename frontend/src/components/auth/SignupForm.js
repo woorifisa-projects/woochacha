@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { checkFormValidate, handleSignupBlur } from '@/hooks/useChecks';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
@@ -18,8 +17,20 @@ import {
   Container,
   ThemeProvider,
   InputLabel,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import theme from '@/styles/theme';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { SwalModals } from '@/utils/modal';
+import { formatPhoneNumber } from '@/utils/validate';
+import {
+  handleEmailBlur,
+  handleNameBlur,
+  handlePasswordBlur,
+  handlePhoneBlur,
+} from '@/hooks/useChecks';
 
 export default function SignupForm() {
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -34,13 +45,20 @@ export default function SignupForm() {
     phone: '',
     name: '',
   });
-
   const [formValid, setFormValid] = useState({
     emailErr: false,
     pwErr: false,
     phoneErr: false,
     nameErr: false,
   });
+
+  // 비밀번호 확인
+  const [passwordConfirm, setPasswordConfirm] = useState({
+    passwordConfirm: '',
+  });
+
+  // 약관동의 확인
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   /**
    * mounted
@@ -50,25 +68,28 @@ export default function SignupForm() {
   }, []);
 
   /**
-   * 유효성 검사
+   * 비밀번호 확인 일치 여부 확인
    */
-  useEffect(() => {
-    if (
-      signupData.email !== '' ||
-      signupData.password !== '' ||
-      signupData.phone !== '' ||
-      signupData.name !== ''
-    ) {
-      const validationResult = checkFormValidate(signupData);
-      setFormValid(validationResult);
+  const validatePasswordConfirmation = () => {
+    if (signupData.password !== signupData.passwordConfirm) {
+      setFormValid({ ...formValid, pwErr: true });
+      return false;
     }
-  }, [signupData]);
-
-  const handleInputBlur = (event) => {
-    handleSignupBlur(event, setFormValid, formValid);
+    return true;
   };
 
-  // TODO: 데이터 넘기기
+  /**
+   * 휴대폰 번호 포맷 변경
+   */
+  // 전화번호 변경 핸들러
+  const handlePhoneNumChange = (event) => {
+    const formattedPhoneNumber = formatPhoneNumber(event.target.value);
+    setSignupData({ ...signupData, phone: formattedPhoneNumber });
+  };
+
+  /**
+   * 회원가입 api 연결
+   */
   useEffect(() => {
     if (!Object.values(formValid).includes(true) && !Object.values(signupData).includes('')) {
       console.log(signupData);
@@ -81,6 +102,12 @@ export default function SignupForm() {
    */
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // 비밀번호 확인 유효성 검사
+    if (!validatePasswordConfirmation()) {
+      SwalModals('error', '비밀번호 불일치', '비밀번호와 비밀번호 확인이 같지 않습니다.', false);
+      return;
+    }
     const data = new FormData(event.currentTarget);
 
     const newSignupData = {
@@ -115,7 +142,7 @@ export default function SignupForm() {
                     이메일
                   </InputLabel>
                   <TextField
-                    onBlur={handleInputBlur}
+                    onBlur={(event) => handleEmailBlur(event, setFormValid, formValid)}
                     required
                     fullWidth
                     id="email"
@@ -132,7 +159,7 @@ export default function SignupForm() {
                     비밀번호
                   </InputLabel>
                   <TextField
-                    onBlur={handleInputBlur}
+                    onBlur={(event) => handlePasswordBlur(event, setFormValid, formValid)}
                     required
                     fullWidth
                     name="password"
@@ -148,13 +175,16 @@ export default function SignupForm() {
                     비밀번호 확인
                   </InputLabel>
                   <TextField
-                    onBlur={handleInputBlur}
+                    onBlur={(event) => handlePasswordBlur(event, setFormValid, formValid)}
                     required
                     fullWidth
                     name="password-confirm"
                     label="비밀번호를 확인해주세요"
                     type="password"
                     id="password-confirm"
+                    error={formValid.pwErr}
+                    value={passwordConfirm.passwordConfirm}
+                    onChange={(e) => setPasswordConfirm({ passwordConfirm: e.target.value })}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -162,7 +192,7 @@ export default function SignupForm() {
                     이름
                   </InputLabel>
                   <TextField
-                    onBlur={handleInputBlur}
+                    onBlur={(event) => handleNameBlur(event, setFormValid, formValid)}
                     required
                     fullWidth
                     id="name"
@@ -177,7 +207,9 @@ export default function SignupForm() {
                     전화번호
                   </InputLabel>
                   <TextField
-                    onBlur={handleInputBlur}
+                    onBlur={(event) =>
+                      handlePhoneBlur(event, setFormValid, formValid, setSignupData, signupData)
+                    }
                     required
                     fullWidth
                     id="phoneNum"
@@ -186,17 +218,44 @@ export default function SignupForm() {
                     type="tel"
                     autoComplete="tel"
                     error={formValid.phoneErr}
+                    value={signupData.phone}
+                    onChange={handlePhoneNumChange}
                   />
                 </Grid>
 
                 <Grid item xs={12}>
+                  {/* 약관 내용 */}
+                  <Accordion sx={{ my: 3 }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography>약관 동의서</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <div>
+                        <Typography>
+                          {`본 약관은 (주)우차차(이하 “회사”라 합니다)이 운영하는 웹사이트 ‘우차차’
+                          (www.woochacha.store) (이하 “웹사이트”라 합니다)에서 제공하는 온라인
+                          서비스(이하 “서비스”라 한다)를 이용함에 있어 사이버몰과 이용자의 권리,
+                          의무 및 책임사항을 규정함을 목적으로 합니다.`}
+                        </Typography>
+                      </div>
+                    </AccordionDetails>
+                  </Accordion>
+                  {/* 약관 동의 버튼 */}
                   <FormControlLabel
                     control={<Checkbox value="allowExtraEmails" color="primary" />}
-                    label="약관 내용 들어옴"
+                    label="약관에 동의합니다."
+                    checked={agreeTerms}
+                    onChange={() => setAgreeTerms(!agreeTerms)}
                   />
                 </Grid>
               </Grid>
-              <Button type="submit" fullWidth variant="contained" sx={{ my: 3 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ my: 3 }}
+                disabled={!agreeTerms} // 약관 비동의 - 버튼 비활성화
+              >
                 회원가입
               </Button>
               <Grid container>

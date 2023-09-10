@@ -24,8 +24,6 @@ import theme from '@/styles/theme';
 export default function LoginForm() {
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
   const [mounted, setMounted] = useState(false);
-  // console.log(loginToken);
-  // const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const router = useRouter();
 
   const [clickSubmit, setClickSubmit] = useState(true);
@@ -42,7 +40,15 @@ export default function LoginForm() {
   /**
    * 렌더링
    */
+  // 컴포넌트가 마운트될 때 저장된 이메일을 가져와서 이메일 필드에 설정
   useEffect(() => {
+    const rememberedEmail = localStorage.getItem('rememberEmail');
+    if (rememberedEmail) {
+      setLoginData((prev) => ({
+        ...prev,
+        email: rememberedEmail,
+      }));
+    }
     setMounted(true);
   }, []);
 
@@ -60,7 +66,9 @@ export default function LoginForm() {
     handleSignupBlur(event, setFormValid, formValid);
   };
 
-  // TODO: 데이터 넘기기
+  /**
+   * login api 호출
+   */
   useEffect(() => {
     if (!Object.values(formValid).includes(true) && !Object.values(loginData).includes('')) {
       loginApi(loginData, setUserLoginState, router);
@@ -80,6 +88,17 @@ export default function LoginForm() {
     };
     setLoginData(newLoginData);
     setClickSubmit((prev) => !prev);
+  };
+
+  /**
+   * 이메일 기억하기 함수
+   */
+  const handleRemember = (event) => {
+    if (event.target.checked) {
+      localStorage.setItem('rememberEmail', loginData.email); // "이메일 기억하기" 이메일 저장
+    } else {
+      localStorage.removeItem('rememberEmail'); // "이메일 기억하기" 이메일 삭제
+    }
   };
 
   return (
@@ -103,6 +122,7 @@ export default function LoginForm() {
               </InputLabel>
               <TextField
                 onBlur={handleInputBlur}
+                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                 margin="normal"
                 required
                 fullWidth
@@ -113,6 +133,7 @@ export default function LoginForm() {
                 type="email"
                 autoFocus
                 error={formValid.emailErr}
+                value={loginData.email}
               />
               <InputLabel htmlFor="password" sx={{ fontSize: '1.2rem', my: 1 }}>
                 비밀번호
@@ -130,9 +151,12 @@ export default function LoginForm() {
                 error={formValid.pwErr}
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={<Checkbox name="remember" color="primary" onChange={handleRemember} />}
                 label="이메일 기억하기"
+                // 체크박스 상태를 localStorage에서 가져와 설정
+                checked={!!localStorage.getItem('rememberEmail')}
               />
+
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 로그인
               </Button>

@@ -16,6 +16,7 @@ import {
   Typography,
   responsiveFontSizes,
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import AddIcon from '@mui/icons-material/Add';
 import theme from '@/styles/theme';
@@ -24,8 +25,8 @@ import { ADMIN_REGISTER_MODAL } from '@/constants/string';
 import { handleMultipleFileUpload } from '@/components/common/MultipleFileUpload';
 import ImageSlider from '@/components/product/ImageSlider';
 import OneButtonModal from '@/components/common/OneButtonModal';
-import { useRouter } from 'next/router';
 import { oneRegisterFormGetApi, oneRegisterFormPostApi } from '@/services/adminpageApi';
+import { SwalModals } from '@/utils/modal';
 
 function AdminSalesRegisterForm() {
   let responsiveFontTheme = responsiveFontSizes(theme);
@@ -39,7 +40,7 @@ function AdminSalesRegisterForm() {
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
   const handleClickModal = () => setShowModal(!showModal);
-  
+
   const router = useRouter();
   const { saleformId } = router.query;
 
@@ -47,8 +48,6 @@ function AdminSalesRegisterForm() {
    * 승인 버튼 클릭 시, modal popup
    */
   const handleSaveregisterVal = (e) => {
-    e.preventDefault();
-    console.log(uploadFileValue);
     handleClickModal();
   };
 
@@ -62,19 +61,43 @@ function AdminSalesRegisterForm() {
    * 게시글 등록하기
    */
   const handleSubmit = () => {
+    if (uploadFileValue.length !== 4) {
+      SwalModals('error', '사진 업로드 실패', '4장의 사진을 등록해주세요!', false);
+      return;
+    }
+
+    if (!priceVal || priceVal.trim().length === 0) {
+      SwalModals('error', '판매 가격 미등록', '판매가격을 입력해주세요!', false);
+      return;
+    }
+
     formDataVal.append('carNum', registerInfo.registerProductBasicInfo.carNum);
     formDataVal.append('price', priceVal);
-    console.log('제출');
-    console.log(formDataVal);
+    uploadFileValue.forEach((image) => formDataVal.append('imageUrls', image));
+
+    // FormData의 value 확인용 콘솔
+    for (let value of formDataVal.values()) {
+      console.log(value);
+    }
 
     oneRegisterFormPostApi(saleformId, formDataVal).then((res) => {
-      if(res.status === 200 && res.data === "Success") {
-        alert('차량게시글 등록이 완료되었습니다! 게시글을 확인해주세요.');
+      if (res.status === 200 && res.data === 'Success') {
+        SwalModals(
+          'success',
+          '차량게시글 등록 완료',
+          '차량게시글 등록이 완료되었습니다! 게시글을 확인해주세요.',
+          false,
+        );
         router.replace(`/admin/sales`);
         return;
       }
-      if(res.status === 200 && res.data !== "Success") {
-        alert('등록이 완료되지 않았습니다. 다시 시도해주세요.');
+      if (res.status === 200 && res.data !== 'Success') {
+        SwalModals(
+          'error',
+          '차량게시글 등록 미완료',
+          '차량게시글 등록이 완료되지 않았습니다. 다시 시도해주세요.',
+          false,
+        );
         return;
       }
     });
@@ -85,14 +108,12 @@ function AdminSalesRegisterForm() {
     saleformId &&
       oneRegisterFormGetApi(saleformId).then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
           setRegisterInfo(res.data);
         }
       });
     setMounted(true);
   }, []);
 
-  
   const saleRegisterFormCss = {
     registerFormTitle: {
       my: 10,
@@ -171,7 +192,7 @@ function AdminSalesRegisterForm() {
             <Typography component="h1" variant="h4" sx={saleRegisterFormCss.registerFormTitle}>
               차량 게시글 등록
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSaveregisterVal}>
+            <Box noValidate>
               <Grid container spacing={2}>
                 <Grid item xs={12} py={2}>
                   <Typography variant="h6" fontWeight="bold">
@@ -339,7 +360,6 @@ function AdminSalesRegisterForm() {
                             setUploadFileValue,
                             previewImageList,
                             setPreviewImageList,
-                            formDataVal
                           )
                         }
                       />
@@ -356,11 +376,7 @@ function AdminSalesRegisterForm() {
               </Grid>
 
               <Grid sx={saleRegisterFormCss.submitBtn}>
-                <Button
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                  onClick={handleSaveregisterVal}>
+                <Button size="large" variant="contained" onClick={handleSaveregisterVal}>
                   승인 신청
                 </Button>
               </Grid>
@@ -375,7 +391,7 @@ function AdminSalesRegisterForm() {
             callBackFunc={handleSubmit}
           />
         )}
-      </ThemeProvider>,
+      </ThemeProvider>
     )
   );
 }
