@@ -1,16 +1,22 @@
 package com.woochacha.backend.domain.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+
+@Builder
+@Getter
+@Setter
 public class SignResponseDto {
     private boolean success;
     private int code;
     private String msg;
+
+    public SignResponseDto() {}
+    public SignResponseDto(boolean success, int code, String msg) {
+        this.success = success;
+        this.code = code;
+        this.msg = msg;
+    }
 }

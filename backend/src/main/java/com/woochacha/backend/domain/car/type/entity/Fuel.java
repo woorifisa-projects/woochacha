@@ -13,8 +13,7 @@ public class Fuel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Enumerated(value = EnumType.STRING)
     @NotNull
     @Column(name = "name")
-    private FuelList name;
+    private String name;
 }

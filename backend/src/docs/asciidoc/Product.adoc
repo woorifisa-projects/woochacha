@@ -1,9 +1,8 @@
-= REST API - Product
 :doctype: book
 :icons: font
 :toc: left
 :sectlinks:
-:sectnums: // 분류별 자동으로 숫자를 달아줌
+:sectnums:
 :docinfo: shared-head
 :toclevels: 2
 :source-highlighter: highlightjs
@@ -21,7 +20,7 @@ include::{snippets}/product/get-all/http-response.adoc[]
 include::{snippets}/product/get-all/response-fields.adoc[]
 
 
-== 매물 상세 조회
+=== 매물 상세 조회
 ==== Http Request
 include::{snippets}/product/get-detail/http-request.adoc[]
 
@@ -32,7 +31,7 @@ include::{snippets}/product/get-detail/http-response.adoc[]
 include::{snippets}/product/get-detail/response-fields.adoc[]
 
 
-== 매물 필터링 검색
+=== 매물 필터링 검색
 ==== Http Request
 include::{snippets}/product/filter/http-request.adoc[]
 
@@ -46,7 +45,7 @@ include::{snippets}/product/filter/request-fields.adoc[]
 include::{snippets}/product/filter/response-fields.adoc[]
 
 
-== 매물 키워드 검색
+=== 매물 키워드 검색
 ==== Http Request
 include::{snippets}/product/search/http-request.adoc[]
 
@@ -60,7 +59,7 @@ include::{snippets}/product/search/request-parameters.adoc[]
 include::{snippets}/product/search/response-fields.adoc[]
 
 
-== 매물 판매 신청폼 입력
+=== 매물 판매 신청폼 입력
 ==== Http Request
 include::{snippets}/product/purchase/http-request.adoc[]
 
