@@ -1,0 +1,14 @@
+= Woochacha REST API
+:doctype: book
+:icons: font
+:toc: left
+:sectlinks:
+:sectnums: // 분류별 자동으로 숫자를 달아줌
+:docinfo: shared-head
+:toclevels: 2
+:source-highlighter: highlightjs
+
+include::Product.adoc[]
+
+include::Member.adoc[]
+
