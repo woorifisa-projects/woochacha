@@ -124,13 +124,8 @@ public class MypageServiceImpl implements MypageService {
 
     // 프로필 조회
     public ProfileDto getProfileByMemberId(Long memberId) {
-        try{
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
-            return modelMapper.map(member, ProfileDto.class);
-        }catch (Exception e){
-            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
-        }
-
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
+        return modelMapper.map(member, ProfileDto.class);
     }
 
     // 판매 신청 폼 조회
@@ -159,8 +154,7 @@ public class MypageServiceImpl implements MypageService {
     // 수정신청 폼 데이터 가져오기
     public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
         try {
-            EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
-            return editProductDto;
+            return mypageRepository.getProductEditRequestInfo(memberId, productId);
         }catch (Exception e){
             throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
         }
@@ -192,11 +186,10 @@ public class MypageServiceImpl implements MypageService {
     public EditProfileDto getProfileForEdit(Long memberId){
         try {
             Member member = memberRepository.findById(memberId).get();
-            EditProfileDto editProdileDto = EditProfileDto.builder()
+            return EditProfileDto.builder()
                     .name(member.getName())
                     .imageUrl(member.getProfileImage())
                     .build();
-            return editProdileDto;
         }catch (Exception e){
             throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
         }
@@ -209,7 +202,6 @@ public class MypageServiceImpl implements MypageService {
             String email = memberRepository.findById(memberId).get().getEmail();
             amazonS3RequestDto.setEmail(email);
             String newProfileIamge = amazonS3Service.uploadProfile(amazonS3RequestDto);
-            // TODO: multipartfile null 해결
 
             logService.savedMemberLogWithType(memberId, "프로필 이미지 수정");
             return newProfileIamge;
