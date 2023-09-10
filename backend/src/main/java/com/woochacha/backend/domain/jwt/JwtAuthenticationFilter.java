@@ -34,14 +34,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             throws ServletException, IOException {
         try {
             String token = parseJwt((HttpServletRequest) request); // 헤더에서 토큰 추출
-            if (token != null && jwtTokenProvider.validateToken(token)) { // 토큰 유효성 검사
+            if (token != null && jwtTokenProvider.validateToken(token, request, response)) { // 토큰 유효성 검사
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
             LOGGER.error("Cannot set user authentication: {}", e.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 
