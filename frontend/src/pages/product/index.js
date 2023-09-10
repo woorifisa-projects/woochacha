@@ -71,6 +71,7 @@ export default function Products() {
   const handleSearch = (keyword) => {
     keywordProductGetApi(keyword).then((data) => {
       setAllProducts({
+        ...allProducts,
         productInfo: data,
       });
     });

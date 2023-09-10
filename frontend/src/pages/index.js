@@ -90,6 +90,7 @@ export default function Home(props) {
   const handleSearch = (keyword) => {
     keywordProductGetApi(keyword).then((data) => {
       setAllProducts({
+        ...allProducts,
         productInfo: data,
       });
     });
