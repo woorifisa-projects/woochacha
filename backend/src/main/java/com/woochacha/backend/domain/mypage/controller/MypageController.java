@@ -24,7 +24,7 @@ public class MypageController {
     @GetMapping("/registered/{memberId}")
     private ResponseEntity<Page<ProductResponseDto>> registeredProductList(@PathVariable Long memberId,
                                                                       @RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "5") int size) {
+                                                                      @RequestParam(defaultValue = "5") int size) throws Exception {
         Page<ProductResponseDto> productsPage = mypageService.getRegisteredProductsByMemberId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
     }
@@ -36,7 +36,7 @@ public class MypageController {
     @GetMapping("/sale/{memberId}")
     private ResponseEntity<Page<ProductResponseDto>> soldProductList(@PathVariable Long memberId,
                                                                 @RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "5") int size){
+                                                                @RequestParam(defaultValue = "5") int size) throws Exception {
         Page<ProductResponseDto> productsPage = mypageService.getSoldProductsByMemberId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
     }
@@ -48,7 +48,7 @@ public class MypageController {
     @GetMapping("/purchase/{memberId}")
     private ResponseEntity<Page<ProductResponseDto>> purchasedProductList(@PathVariable Long memberId,
                                                                     @RequestParam(defaultValue = "0") int page,
-                                                                    @RequestParam(defaultValue = "5") int size) {
+                                                                    @RequestParam(defaultValue = "5") int size) throws Exception {
         Page<ProductResponseDto> productsPage = mypageService.getPurchaseProductsByMemberId(memberId, page, size);
         return ResponseEntity.ok(productsPage);
     }
