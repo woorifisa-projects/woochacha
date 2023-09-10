@@ -183,7 +183,7 @@ public class RegisterProductServiceImpl implements RegisterProductService {
             sunroofQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("sunroof")).toString());
             highPassQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("high_pass")).toString());
             // TODO: rearview_camera로 수정. 현재는 QLDB에 cameara로 오타나있음
-            rearviewCameraQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("rearview_cameara")).toString()); 
+            rearviewCameraQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("rearview_cameara")).toString());
         });
         // TODO: 코드 간략하게 리팩토링
         RegisterProductBasicInfo registerProductBasicInfo = RegisterProductBasicInfo.builder()
@@ -236,15 +236,15 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         SaleForm saleForm = saleFormRepository.findById(saleFormId).get();
 
         // QLDB에서 조회한 car_name이 RDS의 car_name 테이블에 없으면 insert 하기
-        if (carNameRepository.findByName(registerProductDto.getRegisterProductBasicInfo().getCarName()) == null){
+        if (carNameRepository.findByName(registerProductDto.getRegisterProductBasicInfo().getCarName()) == null) {
             CarName carName = CarName.builder()
-                            .name(registerProductDto.getRegisterProductBasicInfo().getCarName())
-                            .build();
+                    .name(registerProductDto.getRegisterProductBasicInfo().getCarName())
+                    .build();
             carNameRepository.save(carName);
         }
 
         // QLDB에서 조회한 model이 RDS의 model 테이블에 없으면 insert 하기
-        if (modelRepository.findByName(ModelList.valueOf(registerProductDto.getRegisterProductDetailInfo().getModel())) == null){
+        if (modelRepository.findByName(ModelList.valueOf(registerProductDto.getRegisterProductDetailInfo().getModel())) == null) {
             Model model = Model.builder()
                     .name(ModelList.valueOf(registerProductDto.getRegisterProductDetailInfo().getModel()))
                     .build();
@@ -272,7 +272,7 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         Product product = Product.builder()
                 .saleForm(saleFormRepository.findById(saleFormId).get())
                 .price(registerInputDto.getPrice())
-                .status(carStatusRepository.findById((short)4).get())
+                .status(carStatusRepository.findById((short) 4).get())
                 .carDetail(carDetailRepository.findById(registerProductDto.getRegisterProductBasicInfo().getCarNum()).get())
                 .build();
         // 만들어진 Dto 객체 RDS에 insert
@@ -296,18 +296,30 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         carOptionRepository.save(carOption);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-        for (int i=0; i < registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList().size(); i++){
-            Date date = formatter.parse(registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList().get(i).getDate());
-            CarAccidentInfo carAccidentInfo = CarAccidentInfo.builder()
-                    .accidentType(accidentTypeRepository.findIdByType(AccidentTypeList.valueOf(registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList().get(i).getType())))
-                    .carDetail(carDetailRepository.findById(registerProductDto.getRegisterProductBasicInfo().getCarNum()).get())
-                    .createdAt(date)
-                    .build();
-            // 만들어진 Dto 객체 RDS에 insert
-            carAccidentInfoRepository.save(carAccidentInfo);
+        if ("".equals(registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList())) {
+            return;
+        } else {
+            for (int i = 0; i < registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList().size(); i++) {
+                String dateStr = registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList().get(i).getDate();
+                if (dateStr != null && !dateStr.isEmpty()) { // 비어있지 않은 문자열인 경우에만 파싱을 시도
+                    try {
+                        Date date = formatter.parse(dateStr);
+                        CarAccidentInfo carAccidentInfo = CarAccidentInfo.builder()
+                                .accidentType(accidentTypeRepository.findIdByType(AccidentTypeList.valueOf(registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList().get(i).getType())))
+                                .carDetail(carDetailRepository.findById(registerProductDto.getRegisterProductBasicInfo().getCarNum()).get())
+                                .createdAt(date)
+                                .build();
+                        // 만들어진 Dto 객체 RDS에 insert
+                        carAccidentInfoRepository.save(carAccidentInfo);
+                    } catch (ParseException e) {
+                        // 날짜가 유효하지 않을 경우 처리 (예외 처리)
+                        e.printStackTrace(); // 또는 적절한 예외 처리 로직을 추가합니다.
+                    }
+                }
+            }
         }
 
-        for (int i=0; i < registerProductDto.getRegisterProductDetailInfo().getProductExchangeInfoList().size(); i++){
+        for (int i = 0; i < registerProductDto.getRegisterProductDetailInfo().getProductExchangeInfoList().size(); i++) {
             Date date = formatter.parse(registerProductDto.getRegisterProductDetailInfo().getProductExchangeInfoList().get(i).getDate());
             CarExchangeInfo carExchangeInfo = CarExchangeInfo.builder()
                     .exchangeType(exchangeTypeRepository.findIdByType(ExchangeTypeList.valueOf(registerProductDto.getRegisterProductDetailInfo().getProductExchangeInfoList().get(i).getType())))
@@ -319,4 +331,5 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         }
     }
 }
+
 
