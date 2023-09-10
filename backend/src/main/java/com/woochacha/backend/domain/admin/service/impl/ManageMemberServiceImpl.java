@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,7 +108,11 @@ public class ManageMemberServiceImpl implements ManageMemberService {
 
     @Override
     public Page<MemberLogDto> getMemberLog(Long memberId, int pageNumber, int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return manageProductFormRepository.findAllMemberLog(memberId, pageable);
+        try {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            return manageProductFormRepository.findAllMemberLog(memberId, pageable);
+        } catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 }

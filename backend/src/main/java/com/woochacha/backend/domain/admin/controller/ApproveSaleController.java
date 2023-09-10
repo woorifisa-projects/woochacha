@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
@@ -84,7 +86,7 @@ public class ApproveSaleController {
 
     // 차량 게시글을 등록하는 Post요청
     @PostMapping("/register/{saleFormId}")
-    public ResponseEntity<String> registerProduct(@PathVariable("saleFormId") Long saleFormId, @ModelAttribute RegisterInputDto registerInputDto) throws IOException, ParseException {
+    public ResponseEntity<String> registerProduct(@PathVariable("saleFormId") Long saleFormId, @Valid @ModelAttribute RegisterInputDto registerInputDto) throws IOException, ParseException {
         registerProductService.registerProduct(saleFormId, registerInputDto);
         return ResponseEntity.ok("Success");
     }

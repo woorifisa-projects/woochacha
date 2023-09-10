@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,90 +87,135 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 등록한 매물 조회
-    public Page<ProductResponseDto> getRegisteredProductsByMemberId(Long memberId, int pageNumber, int pageSize) {
+    public Page<ProductResponseDto> getRegisteredProductsByMemberId(Long memberId, int pageNumber, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByMemberId(memberId, pageable);
-
-        return productsPage.map(this::arrayToProductResponseDto);
+        try {
+            Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByMemberId(memberId, pageable);
+            return productsPage.map(this::arrayToProductResponseDto);
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 판매 이력 조회
-    public Page<ProductResponseDto> getSoldProductsByMemberId(Long memberId, int pageNumber, int pageSize){
+    public Page<ProductResponseDto> getSoldProductsByMemberId(Long memberId, int pageNumber, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Object[]> productsPage = mypageRepository.getSoldProductsByMemberId(memberId, pageable);
+        try {
+            Page<Object[]> productsPage = mypageRepository.getSoldProductsByMemberId(memberId, pageable);
 
-        return productsPage.map(this::arrayToProductResponseDto);
+            return productsPage.map(this::arrayToProductResponseDto);
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 구매 이력 조회
-    public Page<ProductResponseDto> getPurchaseProductsByMemberId(Long memberId, int pageNumber, int pageSize){
+    public Page<ProductResponseDto> getPurchaseProductsByMemberId(Long memberId, int pageNumber, int pageSize) throws Exception {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Object[]> productsPage = mypageRepository.getPurchaseProductsByMemberId(memberId, pageable);
+        try{
+            Page<Object[]> productsPage = mypageRepository.getPurchaseProductsByMemberId(memberId, pageable);
 
-        return productsPage.map(this::arrayToProductResponseDto);
+            return productsPage.map(this::arrayToProductResponseDto);
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
+
     }
 
     // 프로필 조회
     public ProfileDto getProfileByMemberId(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
-        return modelMapper.map(member, ProfileDto.class);
+        try{
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
+            return modelMapper.map(member, ProfileDto.class);
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
+
     }
 
     // 판매 신청 폼 조회
     public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Object[]> saleFormsPage = mypageRepository.getSaleFormsByMemberId(memberId, pageable);
-        Page<SaleFormDto> saleFormDtosPage = saleFormsPage.map(this::arrayToSaleFormDto);
-        return saleFormDtosPage;
+        try{
+            Page<Object[]> saleFormsPage = mypageRepository.getSaleFormsByMemberId(memberId, pageable);
+            Page<SaleFormDto> saleFormDtosPage = saleFormsPage.map(this::arrayToSaleFormDto);
+            return saleFormDtosPage;
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 구매 신청 폼 조회
     public Page<ProductResponseDto> getPurchaseRequestByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
-        return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
+        try {
+            Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
+            return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
+        } catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 수정신청 폼 데이터 가져오기
     public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
-        EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
-        return editProductDto;
+        try {
+            EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
+            return editProductDto;
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 수정신청 폼 제출
     @Transactional
     public void updatePrice(Long productId, Integer updatePrice, Long memberId){
-        mypageRepository.updatePrice(productId, updatePrice);
-        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 가격 수정 요청", "/product/detail/" + productId);
+        try {
+            mypageRepository.updatePrice(productId, updatePrice);
+            logService.savedMemberLogWithTypeAndEtc(memberId, "상품 가격 수정 요청", "/product/detail/" + productId);
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 등록한 매물 삭제 신청
     @Transactional
     public void productDeleteRequest(Long productId, Long memberId){
-        mypageRepository.requestProductDelete(productId);
-        logService.savedMemberLogWithTypeAndEtc(memberId, "상품 삭제 요청", "/product/detail/" + productId);
+        try {
+            mypageRepository.requestProductDelete(productId);
+            logService.savedMemberLogWithTypeAndEtc(memberId, "상품 삭제 요청", "/product/detail/" + productId);
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 프로필 수정 (GET요청 시 데이터 보여주기)
     public EditProfileDto getProfileForEdit(Long memberId){
-        Member member = memberRepository.findById(memberId).get();
-        EditProfileDto editProdileDto = EditProfileDto.builder()
-                .name(member.getName())
-                .imageUrl(member.getProfileImage())
-                .build();
-        return editProdileDto;
+        try {
+            Member member = memberRepository.findById(memberId).get();
+            EditProfileDto editProdileDto = EditProfileDto.builder()
+                    .name(member.getName())
+                    .imageUrl(member.getProfileImage())
+                    .build();
+            return editProdileDto;
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 
     // 프로필 수정 (PATCH요청 시 데이터 수정)
     @Transactional
     public String editProfile(Long memberId, AmazonS3RequestDto amazonS3RequestDto) throws IOException {
-        String email = memberRepository.findById(memberId).get().getEmail();
-        amazonS3RequestDto.setEmail(email);
-        String newProfileIamge = amazonS3Service.uploadProfile(amazonS3RequestDto);
-        // TODO: multipartfile null 해결
+        try {
+            String email = memberRepository.findById(memberId).get().getEmail();
+            amazonS3RequestDto.setEmail(email);
+            String newProfileIamge = amazonS3Service.uploadProfile(amazonS3RequestDto);
+            // TODO: multipartfile null 해결
 
-        logService.savedMemberLogWithType(memberId, "프로필 이미지 수정");
-        return newProfileIamge;
+            logService.savedMemberLogWithType(memberId, "프로필 이미지 수정");
+            return newProfileIamge;
+        }catch (Exception e){
+            throw new RuntimeException(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 }
 
