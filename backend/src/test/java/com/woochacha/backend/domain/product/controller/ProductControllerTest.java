@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
@@ -32,8 +33,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -201,10 +201,10 @@ class ProductControllerTest extends CommonTest {
        Long productId = 14L;
        when(productService.findDetailProduct(productId)).thenReturn(productDetailResponseDto);
 
-       mockMvc.perform(get("/product/{productId}", productId))
+       mockMvc.perform(RestDocumentationRequestBuilders.get("/product/{productId}", productId))
                .andExpect(status().isOk())
                .andDo(document("product/get-detail",
-                       requestParameters(
+                       pathParameters(
                                parameterWithName("productId").description("매물 아이디")
                        ),
                        responseFields(
