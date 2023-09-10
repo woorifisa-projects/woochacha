@@ -11,3 +11,19 @@ export const Toast = Swal.mixin({
     toast.addEventListener('mouseleave', Swal.resumeTimer);
   },
 });
+
+export const SwalModals = (icon, title, html, btn) => {
+  Swal.fire({
+    icon: icon,
+    title: title,
+    html: html,
+    showConfirmButton: btn,
+    showClass: {
+      popup: 'animate__animated animate__fadeInDown',
+    },
+    hideClass: {
+      popup: 'animate__animated animate__fadeOutUp',
+    },
+    timer: 1500,
+  });
+};
