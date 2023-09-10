@@ -1,6 +1,6 @@
 import axios from 'axios';
 import LocalStorage from './localStorage';
-import { Router, useRouter } from 'next/router';
+import { Router } from 'next/router';
 
 // const router = useRouter();
 // const BASE_URL = 'http://13.125.32.208:8080';
@@ -21,7 +21,7 @@ const HEADER_FORM = {
 };
 
 // CORS: 리소스 접근 허용
-// axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 // CORS: 서로 다른 도메인간 쿠키 전달 허용
 axios.defaults.withCredentials = true;
@@ -56,12 +56,15 @@ axios.interceptors.response.use(
       switch (err.response.status) {
         // status code가 401인 경우 `/users/login` 페이지로 리다이렉트
         case 401:
-          Router.push('users/login').catch(() => {});
-          return new Promise(() => {});
+          Router.push('/users/login').then(() => {
+            LocalStorage.removeItem('loginToken');
+            LocalStorage.removeItem('recoil-persist');
+          }); // 리다이렉트 후에 무엇을 할지 콜백으로 처리
+          return Promise.reject(err); // 에러를 다시 전달하여 해당 요청을 중단
         // status code 403인 경우 `/` 페이지로 리다이렉트
         case 403:
-          Router.push('/').catch(() => {});
-          return new Promise(() => {});
+          Router.push('/').then(() => {});
+          return Promise.reject(err);
         default:
           return Promise.reject(err);
       }

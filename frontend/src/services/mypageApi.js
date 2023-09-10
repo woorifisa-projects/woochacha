@@ -124,8 +124,7 @@ export const mypageProductDeleteRequestPatchApi = async (productId, memberId) =>
     const response = await authInstance.patch(`/mypage/registered/delete/${productId}`, {
       memberId: memberId,
     });
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;

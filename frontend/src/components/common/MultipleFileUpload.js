@@ -8,11 +8,11 @@ export const handleMultipleFileUpload = (
   setUploadFileValue,
   previewImageList,
   setPreviewImageList,
-  formDataVal,
 ) => {
   let imageLists = e.target.files;
   // let imageUrlLists = [...previewImageList];
   let imageUrlLists = [];
+  let imageUploadUrlLists = [];
 
   for (let i = 0; i < imageLists.length; i++) {
     const currentImageUrl = URL.createObjectURL(imageLists[i]);
@@ -20,22 +20,11 @@ export const handleMultipleFileUpload = (
   }
 
   if (imageLists) {
-    if (imageLists.length > 4) {
-      alert('4개까지만 등록하실 수 있습니다!');
-      return;
-    }
-    setUploadFileValue(imageLists); // file upload 값 저장
-    setPreviewImageList(imageUrlLists); // preview 값 저장
-
     // upload
     for (let i = 0; i < imageLists.length; i++) {
-      formDataVal.append('imageUrls', imageLists[i]);
+      imageUploadUrlLists.push(imageLists[i]);
     }
-
-    // FormData의 value 확인용 콘솔
-    for (let value of formDataVal.values()) {
-      console.log(value);
-    }
-    return formDataVal;
+    setPreviewImageList(imageUrlLists); // preview 값 저장
+    setUploadFileValue(imageUploadUrlLists); // image file 값 저장
   }
 };
