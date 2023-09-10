@@ -70,8 +70,8 @@ export default function SignupForm() {
   /**
    * 비밀번호 확인 일치 여부 확인
    */
-  const validatePasswordConfirmation = () => {
-    if (signupData.password !== signupData.passwordConfirm) {
+  const validatePasswordConfirmation = (pw) => {
+    if (pw !== passwordConfirm.passwordConfirm) {
       setFormValid({ ...formValid, pwErr: true });
       return false;
     }
@@ -88,26 +88,11 @@ export default function SignupForm() {
   };
 
   /**
-   * 회원가입 api 연결
-   */
-  useEffect(() => {
-    if (!Object.values(formValid).includes(true) && !Object.values(signupData).includes('')) {
-      console.log(signupData);
-      signupApi(signupData, setUserLoginState, router);
-    }
-  }, [clickSubmit]);
-
-  /**
    * 회원가입 form 제출
    */
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // 비밀번호 확인 유효성 검사
-    if (!validatePasswordConfirmation()) {
-      SwalModals('error', '비밀번호 불일치', '비밀번호와 비밀번호 확인이 같지 않습니다.', false);
-      return;
-    }
     const data = new FormData(event.currentTarget);
 
     const newSignupData = {
@@ -116,8 +101,17 @@ export default function SignupForm() {
       phone: data.get('phoneNum').replace(/-/g, ''),
       name: data.get('name').trim(),
     };
+
     setSignupData(newSignupData);
+
+    // 비밀번호 확인 유효성 검사
+    if (!validatePasswordConfirmation(newSignupData.password)) {
+      SwalModals('error', '비밀번호 불일치', '비밀번호와 비밀번호 확인이 같지 않습니다.', false);
+      return;
+    }
+
     setClickSubmit((prev) => !prev);
+    signupApi(newSignupData, setUserLoginState, router);
   };
 
   return (
