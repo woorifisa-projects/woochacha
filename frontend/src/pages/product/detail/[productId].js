@@ -7,7 +7,6 @@ import {
   CardContent,
   CssBaseline,
   Grid,
-  TextField,
   ThemeProvider,
   Typography,
   responsiveFontSizes,
@@ -21,12 +20,13 @@ import { todayDate } from '@/utils/date';
 import { productDetailGetApi } from '@/services/productApi';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { useRecoilState } from 'recoil';
+import { SwalModals } from '@/utils/modal';
 // import DetailProduct from '@/components/product/DetailProduct';
 
-export default function ProductDetail() {
+export default function ProductDetail(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  const { productId } = router.query;
+  const { productId, fetchData } = props;
   let responsiveFontTheme = responsiveFontSizes(theme);
   const [detailProduct, setDetailProduct] = useState();
   const [purchaseDateVal, setPurchaseDateVal] = useState(todayDate);
@@ -51,10 +51,12 @@ export default function ProductDetail() {
       memberId: memberId,
       productId: productId,
     };
-    purchaseRequest(purchaseForm).then((data) => {
-      console.log(data);
-      alert('요청이 완료!');
-      router.push(`/product`);
+    purchaseRequest(purchaseForm).then((res) => {
+      if (res.status === 200) {
+        SwalModals('success', '구매요청 완료', '구매요청이 완료되었습니다.', false).then(() => {
+          router.push(`/product`);
+        });
+      }
     });
   };
 
@@ -67,14 +69,10 @@ export default function ProductDetail() {
   };
 
   useEffect(() => {
-    productId &&
-      productDetailGetApi(productId).then((data) => {
-        setDetailProduct(data);
-      });
+    setDetailProduct(fetchData);
+    console.log(fetchData);
     setMounted(true);
   }, []);
-
-  // TODO: axios 통신 후 받을 데이터 (DUMMY_DATA)
 
   const productDetailCss = {
     detailHeaderBox: {
@@ -276,43 +274,51 @@ export default function ProductDetail() {
                         차량 사고 내역 조회
                       </Typography>
                       {
-                        <Typography gutterBottom variant="body2" style={{ borderBottom: '1px solid black' }}>
+                        <Typography
+                          gutterBottom
+                          variant="body2"
+                          style={{ borderBottom: '1px solid black' }}>
                           사고 이력
                         </Typography>
                       }
-                      {
-                        detailProduct.productDetailInfo.produdctAccidentInfoList &&
-                          detailProduct.productDetailInfo.produdctAccidentInfoList.length > 0 ? (
-                          detailProduct.productDetailInfo.produdctAccidentInfoList.map((accidentItem, idx) => (
+                      {detailProduct.productDetailInfo.productAccidentInfoList &&
+                      detailProduct.productDetailInfo.productAccidentInfoList.length > 0 ? (
+                        detailProduct.productDetailInfo.productAccidentInfoList.map(
+                          (accidentItem, idx) => (
                             <Typography key={idx} gutterBottom variant="body2">
-                              {`${accidentItem.type} : ${accidentItem.count} 번`}
+                              {`${accidentItem.type ? `${accidentItem.type} :` : ''} ${
+                                accidentItem.count === 0 ? '' : `${accidentItem.count}번`
+                              }`}
                             </Typography>
-                          ))
-                        ) : (
-                          <Typography gutterBottom variant="body2">
-                            사고 이력 없음
-                          </Typography>
+                          ),
                         )
-                      }
+                      ) : (
+                        <Typography gutterBottom variant="body2">
+                          사고 이력 없음
+                        </Typography>
+                      )}
                       {
-                        <Typography gutterBottom variant="body2" style={{ borderBottom: '1px solid black', marginTop: '2em' }}>
+                        <Typography
+                          gutterBottom
+                          variant="body2"
+                          style={{ borderBottom: '1px solid black', marginTop: '2em' }}>
                           교체 이력
                         </Typography>
                       }
-                      {
-                        detailProduct.productDetailInfo.productExchangeInfoList &&
-                          detailProduct.productDetailInfo.productExchangeInfoList.length > 0 ? (
-                          detailProduct.productDetailInfo.productExchangeInfoList.map((exchangeItem, idx) => (
+                      {detailProduct.productDetailInfo.productExchangeInfoList &&
+                      detailProduct.productDetailInfo.productExchangeInfoList.length > 0 ? (
+                        detailProduct.productDetailInfo.productExchangeInfoList.map(
+                          (exchangeItem, idx) => (
                             <Typography key={idx} gutterBottom variant="body2">
                               {`${exchangeItem.type} : ${exchangeItem.count} 번`}
                             </Typography>
-                          ))
-                        ) : (
-                          <Typography gutterBottom variant="body2">
-                            교체 이력 없음
-                          </Typography>
+                          ),
                         )
-                      }
+                      ) : (
+                        <Typography gutterBottom variant="body2">
+                          교체 이력 없음
+                        </Typography>
+                      )}
                     </Box>
                   </CardContent>
                 </Card>
@@ -342,11 +348,23 @@ export default function ProductDetail() {
               onClickModal={handleClickModal}
               isOpen={showModal}
               modalContent={PURCHASE_MODAL.CONTENTS}
-              callBackFunc={handlePurchaseRequest}>
-            </BasicModal>
+              callBackFunc={handlePurchaseRequest}></BasicModal>
           )}
         </main>
       </ThemeProvider>
     )
   );
+}
+
+export async function getServerSideProps(context) {
+  const productId = context.params.productId;
+  console.log(productId);
+  const res = await productDetailGetApi(productId).then((res) => res.data);
+
+  return {
+    props: {
+      productId: productId,
+      fetchData: res,
+    },
+  };
 }

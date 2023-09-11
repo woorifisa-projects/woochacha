@@ -7,10 +7,11 @@ import {
   mypageProductEditRequestGetApi,
   mypageProductEditRequestPatchApi,
 } from '@/services/mypageApi';
+import { SwalModals } from '@/utils/modal';
 
-function RegisteredEdit() {
+function RegisteredEdit(props) {
   const router = useRouter();
-  const { memberId, productId } = router.query; // query string
+  const { memberId, productId } = props; // query string
   const [mounted, setMounted] = useState(false);
   const [priceValue, setPriceValue] = useState('');
   const [mypageProductEditRequest, setMypageProductEditRequest] = useState({
@@ -63,14 +64,15 @@ function RegisteredEdit() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    memberId &&
-      mypageProductEditRequestGetApi(memberId, productId).then((data) => {
+    mypageProductEditRequestGetApi(memberId, productId).then((res) => {
+      if (res.status === 200) {
         setMypageProductEditRequest({
-          title: data.title,
-          price: data.price,
-          carImage: data.carImage,
+          title: res.data.title,
+          price: res.data.price,
+          carImage: res.data.carImage,
         });
-      });
+      }
+    });
     setMounted(true);
   }, []);
 
@@ -90,8 +92,10 @@ function RegisteredEdit() {
         console.log(response);
         console.log('res');
         if (response.status === 200) {
-          alert(response.data);
-          router.push(`/mypage/registered/${memberId}`);
+          SwalModals('success', '수정 제출', response.data, false).then(() => {
+            router.push(`/mypage/registered/${memberId}`);
+            return;
+          });
         }
       });
     } catch (error) {
@@ -100,12 +104,8 @@ function RegisteredEdit() {
   };
 
   return (
-    mounted &&
-    memberId && (
+    mounted && (
       <>
-        <Typography sx={registeredEditCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          마이페이지 - 등록된 게시글 가격 수정요청
-        </Typography>
         <Card sx={registeredEditCss.card}>
           <Typography
             sx={registeredEditCss.mypagesubTitle}
@@ -167,3 +167,13 @@ function RegisteredEdit() {
 // side menu 레이아웃
 RegisteredEdit.Layout = withAuth(UserMyPageLayout);
 export default RegisteredEdit;
+
+export async function getServerSideProps(context) {
+  const query = context.query;
+  return {
+    props: {
+      memberId: query.memberId,
+      productId: query.productId,
+    },
+  };
+}

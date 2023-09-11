@@ -10,7 +10,7 @@ import { mypageSoldProductsGetApi } from '@/services/mypageApi';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { SUB_SALE_TAB_MENU } from '@/constants/string';
 
-function Sale() {
+function Sale(props) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -34,9 +34,11 @@ function Sale() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    mypageSoldProductsGetApi(memberId).then((data) => {
-      console.log(data);
-      setMypageSoldProducts(data);
+    mypageSoldProductsGetApi(memberId).then((res) => {
+      if (res.status === 200) {
+        console.log(res.data);
+        setMypageSoldProducts(res.data);
+      }
     });
     setMounted(true);
   }, []);
@@ -45,9 +47,6 @@ function Sale() {
     mounted &&
     mypageSoldProducts && (
       <>
-        <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          마이페이지 - 판매이력
-        </Typography>
         <SubTabMenu currentVal={subMemuVal}>
           {SUB_SALE_TAB_MENU.map((item, idx) => {
             return (
@@ -73,3 +72,12 @@ function Sale() {
 // side menu 레이아웃
 Sale.Layout = withAuth(UserMyPageLayout);
 export default Sale;
+
+export async function getServerSideProps(context) {
+  const userId = context.params.userId;
+  return {
+    props: {
+      userId,
+    },
+  };
+}
