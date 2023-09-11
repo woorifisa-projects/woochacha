@@ -192,7 +192,7 @@ public class ProductServiceImpl implements ProductService {
 
     private List<ProductAccidentInfo> getProductAccidentInfo(String carNum) {
         return queryFactory
-                .select(Projections.bean(ProductAccidentInfo.class,
+                .select(Projections.fields(ProductAccidentInfo.class,
                         at.type.stringValue().as("type"), at.type.count().intValue().as("count")))
                 .from(cd).join(ca).on(cd.carNum.eq(ca.carDetail.carNum))
                 .join(at).on(ca.accidentType.id.eq(at.id))

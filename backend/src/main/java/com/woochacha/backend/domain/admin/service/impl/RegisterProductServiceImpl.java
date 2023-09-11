@@ -124,10 +124,11 @@ public class RegisterProductServiceImpl implements RegisterProductService {
 
             // QLDB car_accident 테이블의 history 조회를 위한 metaId값 조회
             String metadataIdCarAccident = qldbService.getMetaIdValue(carNum, "car_accident");
-
+            System.out.println(metadataIdCarAccident);
             // QLDB car_accident 테이블의 history 조회
             Result resultCarAccident = txn.execute(
                     "SELECT ca.data.accident_type, ca.data.accident_date FROM history(car_accident) AS ca WHERE ca.metadata.id=?", ionSys.newString(metadataIdCarAccident));
+            registerProductAccidentInfos = new ArrayList<>();
             for (IonValue ionValue : resultCarAccident) {
                 IonStruct ionStruct = (IonStruct) ionValue;
 
@@ -145,6 +146,7 @@ public class RegisterProductServiceImpl implements RegisterProductService {
             LOGGER.info("Exchange"+metaIdCarExchange);
             LOGGER.info("Accident"+metadataIdCarAccident);
 
+            registerProductExchangeInfos = new ArrayList<>();
             // QLDB car_exchange 테이블의 history 조회
             Result resultCarExchange = txn.execute(
                     "SELECT ce.data.exchange_type, ce.data.exchange_date FROM history(car_exchange) AS ce WHERE ce.metadata.id=?", ionSys.newString(metaIdCarExchange));
@@ -331,5 +333,3 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         }
     }
 }
-
-
