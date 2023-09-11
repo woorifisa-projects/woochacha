@@ -15,8 +15,6 @@ export default function MyDocument(props) {
         <meta name="theme-color" content={theme.palette.primary.main} />
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="emotion-insertion-point" content="" />
-        {/* Mixed Content 관련 추가 */}
-        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         {emotionStyleTags}
       </Head>
       <body>

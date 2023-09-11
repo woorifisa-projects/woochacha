@@ -75,17 +75,19 @@ function TablePaginationActions(props) {
 }
 
 // basic component
-function LogDetail() {
+function LogDetail(props) {
   const [mounted, setMounted] = useState(false);
   const [oneMemberLog, setOneMemberLog] = useState();
   const router = useRouter();
-  const { memberId } = router.query;
+  const { memberId } = props;
 
   useEffect(() => {
     memberId &&
-      oneMemberLogGetApi(memberId).then((data) => {
-        setOneMemberLog(data);
-        console.log(oneMemberLog);
+      oneMemberLogGetApi(memberId).then((res) => {
+        if(res.status === 200) {
+          setOneMemberLog(res.data);
+          console.log(oneMemberLog);
+        }
       });
     setMounted(true);
   }, []);
@@ -146,8 +148,8 @@ function LogDetail() {
   ];
 
   return (
-    mounted &&
-    oneMemberLog &&(
+    mounted && (
+    oneMemberLog && (
       <TableContainer component={Paper} sx={{ my: 10 }}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
@@ -170,7 +172,7 @@ function LogDetail() {
               <TableRow sx={basicTableCss.tableRow} key={row.id}>
                 <TableCell align="center">{row[`${table_cell_data[0].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${table_cell_data[1].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${table_cell_data[2].contentCell}`]}</TableCell>
+                <TableCell align="center">{new Date(row[`${table_cell_data[2].contentCell}`]).toISOString().replace('T', ' ').slice(0, -5)}</TableCell>
                 <TableCell align="center">{row[`${table_cell_data[3].contentCell}`]}</TableCell>
                 <TableCell align="center">
                     {row.etc !== null ? (
@@ -209,10 +211,19 @@ function LogDetail() {
           </TableFooter>
         </Table>
       </TableContainer>,
-    )
+    ))
   );
 }
 
 // side menu 레이아웃
 LogDetail.Layout = withAdminAuth(AdminPageLayout);
 export default LogDetail;
+
+export async function getServerSideProps(context) {
+  const memberId = context.params.memberId;
+  return {
+    props: {
+      memberId,
+    },
+  };
+}

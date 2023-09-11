@@ -13,6 +13,9 @@
 ==== Http Request
 include::{snippets}/users/register//http-request.adoc[]
 
+==== Request Fields
+include::{snippets}/users/register/request-fields.adoc[]
+
 ==== Http Response
 include::{snippets}/users/register/http-response.adoc[]
 
@@ -24,11 +27,11 @@ include::{snippets}/users/register/response-fields.adoc[]
 ==== Http Request
 include::{snippets}/users/login//http-request.adoc[]
 
-==== Http Response
-include::{snippets}/users/login/http-response.adoc[]
-
 ==== Request Fields
 include::{snippets}/users/login/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/users/login/http-response.adoc[]
 
 ==== Response Headers
 include::{snippets}/users/login/response-headers.adoc[]
@@ -41,16 +44,19 @@ include::{snippets}/users/login/response-fields.adoc[]
 ==== Http Request
 include::{snippets}/users/logout//http-request.adoc[]
 
-==== Http Response
-include::{snippets}/users/logout/http-response.adoc[]
-
 ==== Request Parameters
 include::{snippets}/users/logout/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/users/logout/http-response.adoc[]
 
 
 === 회원 탈퇴
 ==== Http Request
 include::{snippets}/users/signout/http-request.adoc[]
+
+==== Request Parameters
+include::{snippets}/users/signout/request-parameters.adoc[]
 
 ==== Http Response
 include::{snippets}/users/signout/http-response.adoc[]

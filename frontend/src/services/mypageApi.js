@@ -4,8 +4,7 @@ import { authInstance } from '@/utils/api';
 export const memberProfileGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/mypage/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -16,8 +15,7 @@ export const memberProfileGetApi = async (memberId) => {
 export const memberProfileEditGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/mypage/profile/edit/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;
@@ -28,8 +26,7 @@ export const memberProfileEditGetApi = async (memberId) => {
 export const mypageRegisteredProductsGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/mypage/registered/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;
@@ -40,8 +37,7 @@ export const mypageRegisteredProductsGetApi = async (memberId) => {
 export const mypageSoldProductsGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/mypage/sale/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;
@@ -52,8 +48,7 @@ export const mypageSoldProductsGetApi = async (memberId) => {
 export const mypagePurchasedProductsGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/mypage/purchase/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;
@@ -64,8 +59,7 @@ export const mypagePurchasedProductsGetApi = async (memberId) => {
 export const mypageSaleRequestListGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/mypage/sale-request/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;
@@ -76,8 +70,7 @@ export const mypageSaleRequestListGetApi = async (memberId) => {
 export const mypagePurchaseRequestListGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/mypage/purchase-request/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;
@@ -94,8 +87,7 @@ export const mypageProductEditRequestGetApi = async (memberId, productId) => {
         productId: productId,
       },
     });
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패: ', error);
     throw error;

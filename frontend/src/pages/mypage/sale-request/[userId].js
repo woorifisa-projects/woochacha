@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import withAuth from '@/hooks/withAuth';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
-import { Grid, Pagination, Tab, Typography } from '@mui/material';
-import MypageCard from '@/components/mypage/MypageCard';
+import { Grid, Pagination, Tab } from '@mui/material';
 import { mypageSaleRequestListGetApi } from '@/services/mypageApi';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
@@ -11,7 +10,7 @@ import MypageCardPurchase from '@/components/mypage/MypageCardPurchase';
 import SubTabMenu from '@/components/common/SubTabMenu';
 import { SUB_SALE_TAB_MENU } from '@/constants/string';
 
-function SaleRequest() {
+function SaleRequest(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -35,8 +34,10 @@ function SaleRequest() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    mypageSaleRequestListGetApi(memberId).then((data) => {
-      setMypageSaleRequestList(data);
+    mypageSaleRequestListGetApi(memberId).then((res) => {
+      if (res.status === 200) {
+        setMypageSaleRequestList(res.data);
+      }
     });
     setMounted(true);
   }, []);
@@ -45,9 +46,6 @@ function SaleRequest() {
     mounted &&
     mypageSaleRequestList && (
       <>
-        <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          마이페이지 - 판매요청이력
-        </Typography>
         <SubTabMenu currentVal={subMemuVal}>
           {SUB_SALE_TAB_MENU.map((item, idx) => {
             return (
@@ -74,3 +72,12 @@ function SaleRequest() {
 // side menu 레이아웃
 SaleRequest.Layout = withAuth(UserMyPageLayout);
 export default SaleRequest;
+
+export async function getServerSideProps(context) {
+  const userId = context.params.userId;
+  return {
+    props: {
+      userId,
+    },
+  };
+}

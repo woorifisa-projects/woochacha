@@ -117,7 +117,7 @@ export default function MemberTable(props) {
 
   return (
     mounted && (
-      <TableContainer component={Paper} sx={{ my: 10 }}>
+      <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
