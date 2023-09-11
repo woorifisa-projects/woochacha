@@ -92,6 +92,15 @@ export const HEADER_LOGIN_USER_MENU = {
   ],
 };
 
+export const HEADER_LOGIN_ADMIN_MENU = {
+  CONTENTS: [
+    {
+      pageName: '로그아웃',
+      pageUrl: `/users/logout`,
+    },
+  ],
+};
+
 // 대출
 export const CAPITAL_MAIN_CARD = [
   {

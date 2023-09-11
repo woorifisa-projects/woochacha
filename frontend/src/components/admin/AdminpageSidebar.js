@@ -11,26 +11,31 @@ export default function AdminpageSidebar() {
 
   const myPageSidebarCss = {
     container: {
-      width: '20%',
+      width: '100%',
       height: '80%',
-      mt: 3,
+      textAlign: 'center',
     },
     mypageMenuPaper: {
       backgroundColor: '#D6E6F5',
       borderRadius: '1rem',
       minWidth: '150px',
-      maxWidth: '200px',
+      maxWidth: '100%',
     },
     mypageMenuItem: {
       borderRadius: '0px',
       minWidth: '150px',
-      maxWidth: '200px',
+      maxWidth: '100%',
+      display: 'flex',
+
       paddingTop: 3,
       paddingBottom: 3,
       '&:hover': {
         cursor: 'pointer',
         backgroundColor: '#B2D8FA',
       },
+    },
+    selectedMenuItem: {
+      backgroundColor: '#B2D8FA', // 현재 선택된 메뉴 아이템의 색상
     },
   };
 
@@ -63,7 +68,7 @@ export default function AdminpageSidebar() {
                   }}
                   key={selectItem.page}
                   onClick={() => handleMove(`${selectItem.pageUrl}`)}>
-                  <ListItemText inset>{selectItem.pageName}</ListItemText>
+                  <ListItemText>{selectItem.pageName}</ListItemText>
                 </MenuItem>
               );
             })}

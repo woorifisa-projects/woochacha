@@ -14,20 +14,22 @@ export default function MypageSidebar() {
 
   const myPageSidebarCss = {
     container: {
-      width: '20%',
+      width: '100%',
       height: '80%',
-      mt: 3,
+      textAlign: 'center',
     },
     mypageMenuPaper: {
       backgroundColor: '#D6E6F5',
       borderRadius: '1rem',
       minWidth: '150px',
-      maxWidth: '200px',
+      maxWidth: '100%',
     },
     mypageMenuItem: {
       borderRadius: '0px',
       minWidth: '150px',
-      maxWidth: '200px',
+      maxWidth: '100%',
+      display: 'flex',
+
       paddingTop: 3,
       paddingBottom: 3,
       '&:hover': {
@@ -72,7 +74,7 @@ export default function MypageSidebar() {
                     onClick={() =>
                       handleMove(`${selectItem.pageUrl}/${userLoginState.userId}`, selectItem.page)
                     }>
-                    <ListItemText inset>{selectItem.pageName}</ListItemText>
+                    <ListItemText>{selectItem.pageName}</ListItemText>
                   </MenuItem>
                 );
               })}
