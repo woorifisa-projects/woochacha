@@ -8,6 +8,8 @@ import MemberTable from '@/components/admin/MemberTable';
 function AdminUserList() {
   const [mounted, setMounted] = useState(false);
   const [allUserInfo, setAllUserInfo] = useState();
+  const [page, setPage] = useState(0); // 페이지 번호 초기값 설정
+  const [pageSize, setPageSize] = useState(10); // 페이지 크기 초기값 설정
 
   const mypageCss = {
     mypageTitle: {
@@ -40,15 +42,14 @@ function AdminUserList() {
     },
   ];
 
-  // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    allUserGetApi().then((res) => {
+    allUserGetApi(page, pageSize).then((res) => {
       if (res.status === 200) {
         setAllUserInfo(res.data);
       }
     });
     setMounted(true);
-  }, []);
+  }, [page, pageSize]);
 
   return (
     mounted &&
@@ -58,6 +59,10 @@ function AdminUserList() {
           headerData={table_cell_data}
           contentData={allUserInfo}
           moveUrl={`/admin/members/`}
+          page={page} // 페이지 번호 전달
+          pageSize={pageSize} // 페이지 크기 전달
+          onPageChange={(newPage) => setPage(newPage)} // 페이지 번호 변경 핸들러 전달
+          onPageSizeChange={(newSize) => setPageSize(newSize)} // 페이지 크기 변경 핸들러 전달
         />
       </>
     )

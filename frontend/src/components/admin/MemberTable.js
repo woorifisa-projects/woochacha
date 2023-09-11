@@ -20,6 +20,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { allUserGetApi } from '@/services/adminpageApi';
 
 /**
  * 페이지네이션 관련 함수
@@ -73,23 +74,58 @@ function TablePaginationActions(props) {
 
 // basic component
 export default function MemberTable(props) {
-  const { headerData, contentData, moveUrl } = props;
-  const rows = contentData.content;
+  const {
+    headerData,
+    contentData,
+    moveUrl,
+    onPageChange, // 페이지 번호 변경 핸들러 전달 받음
+    onPageSizeChange, // 페이지 크기 변경 핸들러 전달 받음
+  } = props;
+  // const rows = contentData.content;
   const [mounted, setMounted] = useState(false);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const router = useRouter();
+  const [pageSize, setPageSize] = useState(10); // 페이지 크기 초기값 설정
+  const [allUserInfo, setAllUserInfo] = useState();
+  const [rows, setRows] = useState(contentData.content);
 
   // Avoid a layout jump when reaching the last page with empty rows.
+  // console.log(rows);
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  const fetchDataForPage = async (newPage) => {
+    try {
+      setPage(newPage);
+      const response = await allUserGetApi(newPage);
+
+      // const nextPage = newPage + 1; // 다음 페이지 번호
+      // const response = await allUserGetApi(page, pageSize); // 다음 페이지에 대한 데이터 가져오기
+      if (response.status === 200) {
+        setAllUserInfo(response.data);
+        setRows(response.data.content);
+      }
+
+      // console.log(response.data.content);
+      // setRows(response.data.content);
+      console.log(newPage);
+      console.log(rows);
+      console.log(response.data.content);
+    } catch (error) {
+      console.error('데이터 가져오기 실패: ', error);
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    onPageChange(newPage); // 페이지 번호 변경 핸들러 호출
+    fetchDataForPage(newPage); // 페이지 번호가 변경될 때 데이터 가져오기
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    const newSize = parseInt(event.target.value, 10);
+    onPageSizeChange(newSize); // 페이지 크기 변경 핸들러 호출
+    fetchDataForPage(0, newSize);
   };
 
   const handleMove = (memberId) => {
@@ -167,7 +203,7 @@ export default function MemberTable(props) {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={rows.length}
+                count={contentData.totalElements}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

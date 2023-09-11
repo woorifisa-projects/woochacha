@@ -3,9 +3,24 @@ import { authFormInstance, authInstance } from '@/utils/api';
 /**
  * [관리자 - members] 모든 사용자 목록 조회 (GET)
  */
-export const allUserGetApi = async () => {
+// export const allUserGetApi = async () => {
+//   try {
+//     const response = await authInstance.get('/admin/members');
+//     return response;
+//   } catch (error) {
+//     console.log('실패 : ', error);
+//     throw error;
+//   }
+// };
+
+export const allUserGetApi = async (page, size) => {
   try {
-    const response = await authInstance.get('/admin/members');
+    const response = await authInstance.get('/admin/members', {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패 : ', error);

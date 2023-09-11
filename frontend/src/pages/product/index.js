@@ -75,7 +75,7 @@ export default function Products(props) {
       if (res.status === 200) {
         setAllProducts({
           ...allProducts,
-          productInfo: data,
+          productInfo: res.data,
         });
       }
     });
@@ -147,7 +147,7 @@ export default function Products(props) {
         <CssBaseline />
         {/* main page */}
         <main>
-          {/* 페이지 상단 serch box */}z
+          {/* 페이지 상단 serch box */}
           <Grid mx="auto" container maxWidth="xl">
             <MiniCard colorVal="#def2ff" shadowVal={3} marginVal={10}>
               <Typography gutterBottom variant="h5" component="h5" mb={3}>
