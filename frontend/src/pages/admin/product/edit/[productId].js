@@ -5,10 +5,12 @@ import withAdminAuth from '@/hooks/withAdminAuth';
 import { useRouter } from 'next/router';
 import { EDIT_MODAL } from '@/constants/string';
 import BasicModal from '@/components/common/BasicModal';
+import { SwalModals } from '@/utils/modal';
 
-function AdminProductEdit() {
+function AdminProductEdit(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const { productId } = props;
 
   // Modal 버튼 클릭 유무
   const [showModal, setShowModal] = useState(false);
@@ -20,19 +22,12 @@ function AdminProductEdit() {
   const handleSubmit = async () => {
     try {
       // await submitEditRegistered(memberId, productId, updateData);
-      alert('가격 수정 요청이 완료되었습니다!');
-      router.push(`/admin/product`);
+      SwalModals('success', '수정 반려 완료', '가격 수정 요청이 완료되었습니다!', false).then(() =>
+        router.push('/admin/product'),
+      );
     } catch (error) {
       console.log('실패');
     }
-  };
-
-  const mypageCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
   };
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
@@ -48,11 +43,6 @@ function AdminProductEdit() {
   };
 
   const adminProductEditCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
     mypagesubTitle: {
       fontWeight: 'bold',
       mb: 3,
@@ -92,9 +82,6 @@ function AdminProductEdit() {
   return (
     mounted && (
       <>
-        <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          관리자 페이지 - 수정 신청 상세 조회
-        </Typography>
         <Card sx={adminProductEditCss.card}>
           <Typography
             sx={adminProductEditCss.mypagesubTitle}
@@ -165,3 +152,12 @@ function AdminProductEdit() {
 // side menu 레이아웃
 AdminProductEdit.Layout = withAdminAuth(AdminPageLayout);
 export default AdminProductEdit;
+
+export async function getServerSideProps(context) {
+  const productId = context.params.productId;
+  return {
+    props: {
+      productId,
+    },
+  };
+}

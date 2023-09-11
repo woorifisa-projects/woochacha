@@ -10,7 +10,7 @@ import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import SubTabMenu from '@/components/common/SubTabMenu';
 import { SUB_PURCHASE_TAB_MENU } from '@/constants/string';
 
-function PurchaseRequest() {
+function PurchaseRequest(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -18,6 +18,7 @@ function PurchaseRequest() {
   const [subMemuVal, setSubMenuVal] = useState('two');
 
   const memberId = userLoginState.userId;
+  // const { userId } = props;
 
   const handleMove = (url) => {
     router.push(`${url}${memberId}`);
@@ -34,8 +35,10 @@ function PurchaseRequest() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    mypagePurchaseRequestListGetApi(memberId).then((data) => {
-      setMypagePurchaseRequestList(data);
+    mypagePurchaseRequestListGetApi(memberId).then((res) => {
+      if (res.status === 200) {
+        setMypagePurchaseRequestList(res.data);
+      }
     });
     setMounted(true);
   }, []);
@@ -44,9 +47,6 @@ function PurchaseRequest() {
     mounted &&
     mypagePurchaseRequestList && (
       <>
-        <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          마이페이지 - 구매요청이력
-        </Typography>
         <SubTabMenu currentVal={subMemuVal}>
           {SUB_PURCHASE_TAB_MENU.map((item, idx) => {
             return (
@@ -72,3 +72,12 @@ function PurchaseRequest() {
 // side menu 레이아웃
 PurchaseRequest.Layout = withAuth(UserMyPageLayout);
 export default PurchaseRequest;
+
+export async function getServerSideProps(context) {
+  const userId = context.params.userId;
+  return {
+    props: {
+      userId,
+    },
+  };
+}

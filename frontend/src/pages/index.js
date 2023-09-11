@@ -21,6 +21,8 @@ import {
   filteringProductGetApi,
   keywordProductGetApi,
 } from '@/services/productApi';
+import { jsonInstance } from '@/utils/api';
+import axios from 'axios';
 
 // Dummy Data
 const mainFeaturedPost = {
@@ -43,16 +45,19 @@ export default function Home(props) {
   const router = useRouter();
   let responsiveFontTheme = responsiveFontSizes(theme);
 
-  // TODO: SSG RENDERING
-  // const { fetchData } = props;
+  // TODO: SSR RENDERING
+  const { allPr } = props;
+  console.log('!SSR!');
+  console.log(allPr);
 
   /**
    * mount시, 모든 product api 요청
    */
   useEffect(() => {
-    allProductGetApi().then((data) => {
-      setAllProducts(data);
-    });
+    // allProductGetApi().then((data) => {
+    //   setAllProducts(data);
+    // });
+    setAllProducts(allPr);
     setMounted(true);
   }, []);
 
@@ -88,11 +93,13 @@ export default function Home(props) {
    * 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
    * */
   const handleSearch = (keyword) => {
-    keywordProductGetApi(keyword).then((data) => {
-      setAllProducts({
-        ...allProducts,
-        productInfo: data,
-      });
+    keywordProductGetApi(keyword).then((res) => {
+      if (res.status === 200) {
+        setAllProducts({
+          ...allProducts,
+          productInfo: res.data,
+        });
+      }
     });
   };
 
@@ -100,11 +107,13 @@ export default function Home(props) {
    * 필터링 관련 함수
    */
   const handleFiltering = () => {
-    filteringProductGetApi(selectMenuValue).then((data) => {
-      setAllProducts({
-        ...allProducts,
-        productInfo: data,
-      });
+    filteringProductGetApi(selectMenuValue).then((res) => {
+      if (res.status === 200) {
+        setAllProducts({
+          ...allProducts,
+          productInfo: res.data,
+        });
+      }
     });
   };
 
@@ -241,14 +250,11 @@ export default function Home(props) {
   );
 }
 
-/*
-export async function getStaticProps() {
-  const response = await allProductGetApi();
-
+export async function getServerSideProps(context) {
+  const res = await allProductGetApi().then((res) => res.data);
   return {
     props: {
-      fetchData: response,
+      allPr: res,
     },
   };
 }
-*/

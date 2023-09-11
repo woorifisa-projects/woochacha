@@ -28,7 +28,7 @@ import OneButtonModal from '@/components/common/OneButtonModal';
 import { oneRegisterFormGetApi, oneRegisterFormPostApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
 
-function AdminSalesRegisterForm() {
+function AdminSalesRegisterForm(props) {
   let responsiveFontTheme = responsiveFontSizes(theme);
   const [mounted, setMounted] = useState(false);
   const [uploadFileValue, setUploadFileValue] = useState(null);
@@ -42,7 +42,7 @@ function AdminSalesRegisterForm() {
   const handleClickModal = () => setShowModal(!showModal);
 
   const router = useRouter();
-  const { saleformId } = router.query;
+  const { saleformId } = props;
 
   /**
    * 승인 버튼 클릭 시, modal popup
@@ -399,3 +399,12 @@ function AdminSalesRegisterForm() {
 // side menu 레이아웃
 AdminSalesRegisterForm.Layout = withAdminAuth(AdminPageLayout);
 export default AdminSalesRegisterForm;
+
+export async function getServerSideProps(context) {
+  const saleformId = context.params.saleformId;
+  return {
+    props: {
+      saleformId,
+    },
+  };
+}

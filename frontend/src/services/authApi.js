@@ -1,8 +1,7 @@
 // utils/authApi.js
 import LocalStorage from '@/utils/localStorage';
-import { jsonInstance } from '@/utils/api';
+import { authInstance, jsonInstance } from '@/utils/api';
 import Swal from 'sweetalert2';
-import { Toast } from '@/utils/modal';
 
 export const signupApi = async (signupData, setUserLoginState, router) => {
   try {
@@ -162,4 +161,39 @@ export const loginApi = async (loginData, setUserLoginState, router) => {
   }
 };
 
-export const confirmTokenApi = async () => {};
+// export const confirmTokenApi = async () => {};
+
+/**
+ * [인증/인가 - logout] 회원 로그아웃 (POST)
+ */
+export const logoutApi = async (memberId) => {
+  try {
+    const response = await authInstance.post(`/users/logout`, null, {
+      params: {
+        memberId: memberId,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
+};
+
+/**
+ * [인증/인가 - signout] 회원 탈퇴 (PATCH)
+ */
+export const signoutApi = async (memberId) => {
+  try {
+    const response = await authInstance.patch(`/users/signout`, null, {
+      params: {
+        memberId: memberId,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
+};

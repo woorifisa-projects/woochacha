@@ -30,8 +30,10 @@ export default function Sale() {
   const router = useRouter();
 
   useEffect(() => {
-    getBranchApi().then((data) => {
-      setBranches(data);
+    getBranchApi().then((res) => {
+      if (res.status === 200) {
+        setBranches(res.data);
+      }
     });
   }, []); // 컴포넌트가 마운트될 때 한 번만 API 호출
 

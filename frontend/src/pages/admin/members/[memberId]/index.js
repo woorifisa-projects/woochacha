@@ -6,12 +6,14 @@ import { useRouter } from 'next/router';
 import { oneUserGetApi, oneMemberDeletePatchApi } from '@/services/adminpageApi';
 import BasicModal from '@/components/common/BasicModal';
 import { MEMBER_DELETE_MODAL } from '@/constants/string';
+import { SwalModals } from '@/utils/modal';
 
-function AdminUserDetail() {
+function AdminUserDetail(props) {
   const [mounted, setMounted] = useState(false);
   const [userDetailInfo, setUserDetailInfo] = useState();
   const router = useRouter();
-  const currentPath = router.query; // 현재 경로 읽어오기
+
+  const { memberId } = props;
 
   // Modal 버튼 클릭 유무 *
   const [showModal, setShowModal] = useState(false);
@@ -65,11 +67,12 @@ function AdminUserDetail() {
   };
 
   const handleDeleteMember = () => {
-    currentPath.memberId &&
-      oneMemberDeletePatchApi(currentPath.memberId)
-        .then((data) => {
-          alert(data);
-          router.push('/admin/members');
+    memberId &&
+      oneMemberDeletePatchApi(memberId)
+        .then((res) => {
+          SwalModals('success', '삭제 완료', res.data, false).then(() =>
+            router.push('/admin/members'),
+          );
         })
         .catch((error) => {
           console.log('실패: ', error);
@@ -78,9 +81,11 @@ function AdminUserDetail() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    currentPath.memberId &&
-      oneUserGetApi(currentPath.memberId).then((data) => {
-        setUserDetailInfo(data);
+    memberId &&
+      oneUserGetApi(memberId).then((res) => {
+        if (res.status === 200) {
+          setUserDetailInfo(res.data);
+        }
       });
     setMounted(true);
   }, []);
@@ -181,7 +186,7 @@ function AdminUserDetail() {
             <Button
               variant="contained"
               fullWidth
-              onClick={() => handleMove(`/admin/members/edit/${currentPath.memberId}`)}>
+              onClick={() => handleMove(`/admin/members/edit/${memberId}`)}>
               수정
             </Button>
             <Button variant="contained" color="error" onClick={handleClickModal}>
@@ -205,3 +210,13 @@ function AdminUserDetail() {
 // side menu 레이아웃
 AdminUserDetail.Layout = withAdminAuth(AdminPageLayout);
 export default AdminUserDetail;
+
+export async function getServerSideProps(context) {
+  const memberId = context.params.memberId;
+  // const res = await oneUserGetApi(memberId).then((data) => data);
+  return {
+    props: {
+      memberId,
+    },
+  };
+}
