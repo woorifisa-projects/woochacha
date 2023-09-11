@@ -3,9 +3,14 @@ import { authFormInstance, authInstance } from '@/utils/api';
 /**
  * [관리자 - members] 모든 사용자 목록 조회 (GET)
  */
-export const allUserGetApi = async () => {
+export const allUserGetApi = async (page, size) => {
   try {
-    const response = await authInstance.get('/admin/members');
+    const response = await authInstance.get('/admin/members', {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -46,9 +51,14 @@ export const oneUserEditPatchApi = async (editProfileValue, memberId) => {
 /**
  * [관리자 - product] 매물 관리자 페이지에서 매물 수정, 삭제 신청 요청 조회 (GET)
  */
-export const allProductApplicationsGetApi = async () => {
+export const allProductApplicationsGetApi = async (page, size) => {
   try {
-    const response = await authInstance.get('/admin/product');
+    const response = await authInstance.get('/admin/product', {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -111,9 +121,14 @@ export const deleteProductApplicationsPatchApi = async (productId) => {
 /**
  * [관리자 - sale] 판매 신청 관리 목록 전체 조회 (GET)
  */
-export const allSaleFormGetApi = async () => {
+export const allSaleFormGetApi = async (page, size) => {
   try {
-    const response = await authInstance.get(`/admin/sales`);
+    const response = await authInstance.get(`/admin/sales`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -205,9 +220,14 @@ export const oneMemberDeletePatchApi = async (memberId) => {
 /**
  * [관리자 - log] 관리자 페이지에서 한 명의 member의 로그 내역 조회 (GET)
  */
-export const oneMemberLogGetApi = async (memberId) => {
+export const oneMemberLogGetApi = async (memberId, page, size) => {
   try {
-    const response = await authInstance.get(`/admin/members/log/${memberId}`);
+    const response = await authInstance.get(`/admin/members/log/${memberId}`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패 : ', error);
@@ -218,9 +238,14 @@ export const oneMemberLogGetApi = async (memberId) => {
 /**
  * [관리자 - purchase] 거래 관리 요청 목록 조회 (GET)
  */
-export const allPurchaseFormGetApi = async () => {
+export const allPurchaseFormGetApi = async (page, size) => {
   try {
-    const response = await authInstance.get(`/admin/purchase`);
+    const response = await authInstance.get(`/admin/purchase`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패 : ', error);
