@@ -18,16 +18,16 @@ export default function MypageProfile() {
 
   const mypageProfileCss = {
     card: {
-      maxWidth: '50rem',
-      maxHeight: '45rem',
+      maxWidth: '100%',
+      maxHeight: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 10,
-      paddingY: 8,
+      mb: 5,
+      paddingY: 5,
       textAlign: 'center',
-      boxShadow: 7,
+      boxShadow: 1,
       borderRadius: '3rem',
     },
     cardMedia: {
@@ -53,13 +53,15 @@ export default function MypageProfile() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    memberProfileGetApi(memberId).then((data) => {
-      setMemberProfile({
-        profileImage: data.profileImage,
-        name: data.name,
-        phone: data.phone,
-        email: data.email,
-      });
+    memberProfileGetApi(memberId).then((res) => {
+      if (res.status === 200) {
+        setMemberProfile({
+          profileImage: res.data.profileImage,
+          name: res.data.name,
+          phone: res.data.phone,
+          email: res.data.email,
+        });
+      }
     });
     setMounted(true);
   }, []);
@@ -81,7 +83,7 @@ export default function MypageProfile() {
               전화번호
             </Grid>
             <Grid item xs={6}>
-              {memberProfile.name}
+              {memberProfile.phone}
             </Grid>
             <Grid item xs={6} sx={mypageProfileCss.itemTitle}>
               이메일

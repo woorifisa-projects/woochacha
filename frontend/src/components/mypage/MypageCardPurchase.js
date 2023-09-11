@@ -18,9 +18,8 @@ export default function MypageCardPurchase(props) {
       borderRadius: '1rem',
       '&:hover': {
         boxShadow: 10,
-        cursor: 'pointer',
         transition: '0.3s',
-        transform: 'scale(1.03)',
+        transform: 'scale(1.01)',
       },
     },
     cardMedia: { width: '20%', height: '100%' },
@@ -32,18 +31,12 @@ export default function MypageCardPurchase(props) {
     setMounted(true);
   }, []);
 
-  const handleMoveDetail = (url) => {
-    router.push(url);
-  };
-
-  // TODO: 기존 이미지 있었던 곳 공백 없애기, 신청일 dateFormat 수정
   return (
     mounted && (
       <Grid container spacing={3} sx={mypageCardCss.container}>
         {content.map((item) => (
           <Grid item key={item.id} xs={12} sm={12} md={12}>
             <Card sx={mypageCardCss.card}>
-              <CardMedia component="div" sx={mypageCardCss.cardMedia} />
               <CardContent sx={mypageCardCss.cardContent}>
                 <Typography gutterBottom variant="h5" component="h5">
                   {item.carNum}
@@ -51,7 +44,10 @@ export default function MypageCardPurchase(props) {
                 <Grid container my={1} gap={1}>
                   <Chip size="small" label={`지점 : ${item.branch}`} />
                   <Chip size="small" label={`상태 : ${item.carStatus}`} />
-                  <Chip size="small" label={`신청일 : ${item.createdAt}`} />
+                  <Chip
+                    size="small"
+                    label={`신청일 : ${new Date(item.createdAt).toISOString().split('T')[0]}`}
+                  />
                 </Grid>
               </CardContent>
             </Card>
