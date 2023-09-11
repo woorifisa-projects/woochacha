@@ -3,9 +3,14 @@ import { authInstance, jsonInstance } from '@/utils/api';
 /**
  * [상품] 모든 상품을 조회 (GET)
  */
-export const allProductGetApi = async () => {
+export const allProductGetApi = async (page, size) => {
   try {
-    const response = await jsonInstance.get('/product');
+    const response = await jsonInstance.get('/product', {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패 : ', error);

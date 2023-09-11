@@ -43,7 +43,7 @@ export default function ProductCard(props) {
   return (
     mounted && (
       <>
-        {productItems.map((item) => (
+        {productItems.content.map((item) => (
           <Grid item key={item.id} xs={12} sm={6} md={3}>
             <Card sx={productCardCss.card} onClick={() => handleMoveDetail(item.id)}>
               <CardMedia component="div" sx={productCardCss.cardMedia} image={item.imageUrl} />
