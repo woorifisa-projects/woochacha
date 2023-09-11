@@ -81,23 +81,24 @@ export default function BasicButtonTable(props) {
     setEditFlag,
     moveUrl,
     setCurrentProductId,
+    page,
+    setPage,
+    size,
+    setSize,
   } = props;
-  const rows = contentData;
+  const rows = contentData.content;
   const [mounted, setMounted] = useState(false);
-  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const router = useRouter();
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    setPage(newPage); // 현재 페이지 번호
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    setSize(event.target.value); // 페이지 크기 업데이트
   };
 
   const handleMove = (id) => {
@@ -151,10 +152,7 @@ export default function BasicButtonTable(props) {
           </TableHead>
           <TableBody>
             {/* data map으로 반복 */}
-            {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-            ).map((row) => (
+            {rows.map((row) => (
               <TableRow
                 sx={basicButtonTableCss.tableRow}
                 key={row.productId}
@@ -187,18 +185,13 @@ export default function BasicButtonTable(props) {
                 </TableCell>
               </TableRow>
             ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={rows.length}
+                count={contentData.totalElements}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

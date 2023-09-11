@@ -27,6 +27,10 @@ function AdminProductList() {
   const handleClickModal = () => setShowModal(!showModal);
   const [editFlag, setEditFlag] = useState();
 
+  // pagination
+  const [page, setPage] = useState(0); // 현재 페이지
+  const [size, setSize] = useState(10); // 기본 사이즈
+
   /**
    * 삭제요청 삭제
    */
@@ -135,21 +139,29 @@ function AdminProductList() {
    * 렌더링 시, 모든 수정, 삭제 신청 목록 조회
    */
   useEffect(() => {
-    allProductApplicationsGetApi().then((res) => {
-      if (res.status === 200) {
-        setAllProductApplications(res.data);
-      }
-
+    if (!mounted) {
+      allProductApplicationsGetApi(0, 10).then((res) => {
+        if (res.status === 200) {
+          setAllProductApplications(res.data);
+        }
+      });
       setMounted(true);
-    });
-  }, []);
+    } else {
+      allProductApplicationsGetApi(page, size).then((res) => {
+        if (res.status === 200) {
+          setAllProductApplications(res.data);
+        }
+      });
+    }
+  }, [page, size]);
 
   return (
-    mounted && (
+    mounted &&
+    allProductApplications && (
       <>
         <BasicButtonTable
           headerData={table_cell_data}
-          contentData={allProductApplications.content}
+          contentData={allProductApplications}
           deleteFunc={handleClickModal}
           editFunc={handleClickModal}
           getEditFunc={handleGetEditData}
@@ -157,6 +169,10 @@ function AdminProductList() {
           moveUrl={`/product/detail/`}
           setCurrentProductId={setCurrentProductId}
           currentProductId={currentProductId}
+          page={page}
+          size={size}
+          setPage={setPage}
+          setSize={setSize}
         />
         {showModal && (
           <ApproveModal

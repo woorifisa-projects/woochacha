@@ -21,6 +21,10 @@ function AdminSalesList() {
   const [showModal, setShowModal] = useState(false);
   const handleClickModal = () => setShowModal(!showModal);
 
+  // pagination
+  const [page, setPage] = useState(0); // 현재 페이지
+  const [size, setSize] = useState(10); // 기본 사이즈
+
   /**
    * 판매 신청 form 반려하기
    */
@@ -63,13 +67,21 @@ function AdminSalesList() {
    * 전체 saleform의 정보를 GET
    */
   useEffect(() => {
-    allSaleFormGetApi().then((res) => {
-      if (res.status === 200) {
-        setAllSaleFormInfo(res.data);
-      }
-    });
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      allSaleFormGetApi(0, 10).then((res) => {
+        if (res.status === 200) {
+          setAllSaleFormInfo(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      allSaleFormGetApi(page, size).then((res) => {
+        if (res.status === 200) {
+          setAllSaleFormInfo(res.data);
+        }
+      });
+    }
+  }, [page, size]);
 
   return (
     mounted &&
@@ -78,10 +90,14 @@ function AdminSalesList() {
         <CssBaseline />
         <SaleTable
           headerData={table_cell_data}
-          contentData={allSaleFormInfo.content}
+          contentData={allSaleFormInfo}
           moveUrl={`/admin/sales/approve/`}
           callbackFunc={handleClickModal}
           setCurrentSaleFormId={setCurrentSaleFormId}
+          page={page}
+          size={size}
+          setPage={setPage}
+          setSize={setSize}
         />
         {showModal && (
           <BasicModal
