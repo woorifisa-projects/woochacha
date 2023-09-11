@@ -34,6 +34,8 @@ import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,16 +82,16 @@ public class ProductServiceImpl implements ProductService {
         전체 매물 & 필터링 목록 조회
      */
     @Override
-    public ProductAllResponseDto findAllProduct() {
-        List<ProductInfo> productInfoList = findAllProductInfoList();
+    public ProductAllResponseDto findAllProduct(Pageable pageable) {
+        PageImpl<ProductInfo> productInfoList = findAllProductInfoList(pageable);
 
         ProductFilterInfo productFilterInfo = findAllProductFilterList();
 
         return new ProductAllResponseDto(productInfoList, productFilterInfo);
     }
 
-    private List<ProductInfo> findProductInfoList(BooleanExpression expression) {
-        return queryFactory
+    private PageImpl<ProductInfo> findProductInfoListPageable(Pageable pageable) {
+        List<ProductInfo> productInfoList = queryFactory
                 .select(Projections.fields(
                         ProductInfo.class, p.id,
                         Expressions.asString(
@@ -101,15 +103,18 @@ public class ProductServiceImpl implements ProductService {
                 .join(b).on(b.id.eq(sf.branch.id))
                 .join(model).on(model.id.eq(cd.model.id))
                 .join(cn).on(cn.name.eq(cd.carName.name))
-                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1").and(expression))
+                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1"))
                 .orderBy(p.createdAt.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        return new PageImpl<>(productInfoList);
     }
 
-
     // 전체 매물 조회
-    private List<ProductInfo> findAllProductInfoList() {
-        return findProductInfoList(null);
+    private PageImpl<ProductInfo> findAllProductInfoList(Pageable pageable) {
+        return findProductInfoListPageable(pageable);
     }
 
     // 전체 필터링 목록 조회
@@ -163,6 +168,24 @@ public class ProductServiceImpl implements ProductService {
         List<String> productImageList = getProductImageList(carNum);
 
         return new ProductDetailResponseDto(basicInfo, productDetailInfo, productOptionInfo, productOwnerInfo, productImageList);
+    }
+
+    private List<ProductInfo> findProductInfoList(BooleanExpression expression) {
+        return queryFactory
+                .select(Projections.fields(
+                        ProductInfo.class, p.id,
+                        Expressions.asString(
+                                model.name.stringValue()).concat(" ").concat(cn.name).concat(" ").concat(cd.year.stringValue()).concat("년형").as("title"),
+                        p.price, b.name.stringValue().as("branch"), cd.distance, ci.imageUrl))
+                .from(p).join(cd).on(p.carDetail.carNum.eq(cd.carNum))
+                .join(sf).on(p.saleForm.id.eq(sf.id))
+                .join(ci).on(ci.product.id.eq(p.id))
+                .join(b).on(b.id.eq(sf.branch.id))
+                .join(model).on(model.id.eq(cd.model.id))
+                .join(cn).on(cn.name.eq(cd.carName.name))
+                .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1").and(expression))
+                .orderBy(p.createdAt.asc())
+                .fetch();
     }
 
     private ProductBasicInfo getProductBasicInfo(Long productId) {

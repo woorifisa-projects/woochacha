@@ -75,7 +75,7 @@ export default function Products(props) {
       if (res.status === 200) {
         setAllProducts({
           ...allProducts,
-          productInfo: data,
+          productInfo: res.data,
         });
       }
     });

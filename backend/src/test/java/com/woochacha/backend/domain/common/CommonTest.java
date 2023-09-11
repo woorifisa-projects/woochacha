@@ -9,12 +9,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @MockBean(JpaMetamodelMappingContext.class)
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(RestDocumentationExtension.class)
 @AutoConfigureRestDocs(outputDir = "build/generated-snippets")
-public class CommonTest {
+public class CommonTest implements WebMvcConfigurer {
     protected MockMvc mockMvc;
 
     @Mock
@@ -34,4 +35,6 @@ public class CommonTest {
 //
 //    @Mock
 //    private SecurityFilterChain securityFilterChain;
+
+
 }

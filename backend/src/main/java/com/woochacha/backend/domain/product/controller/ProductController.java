@@ -9,6 +9,7 @@ import com.woochacha.backend.domain.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
@@ -22,8 +23,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ProductAllResponseDto findAllProduct() {
-        return productService.findAllProduct();
+    public ProductAllResponseDto findAllProduct(Pageable pageable) {
+        return productService.findAllProduct(pageable);
     }
 
     @GetMapping("/{productId}")
