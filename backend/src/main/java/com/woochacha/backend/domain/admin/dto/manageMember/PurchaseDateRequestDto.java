@@ -9,4 +9,9 @@ import java.time.LocalDate;
 public class PurchaseDateRequestDto {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate meetingDate;
+
+        public PurchaseDateRequestDto() {}
+        public PurchaseDateRequestDto(LocalDate meetingDate) {
+                this.meetingDate = meetingDate;
+        }
 }

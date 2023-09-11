@@ -1,0 +1,69 @@
+:doctype: book
+:icons: font
+:toc: left
+:sectlinks:
+:sectnums:
+:docinfo: shared-head
+:toclevels: 2
+:source-highlighter: highlightjs
+
+== 매물 관리
+=== 수정/신청폼 조회
+==== Http Request
+include::{snippets}/admin/product/get/http-request.adoc[]
+
+==== Request Parameters
+include::{snippets}/admin/product/get/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/admin/product/get/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/admin/product/get/response-fields.adoc[]
+
+
+=== 매물 삭제 신청 승인
+==== Http Request
+include::{snippets}/admin/product/delete/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/admin/product/delete/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/admin/product/delete/http-response.adoc[]
+
+
+=== 매물 수정 전 매물 정보 조회
+==== Http Request
+include::{snippets}/admin/product/get-edit/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/admin/product/get-edit/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/admin/product/get-edit/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/admin/product/get-edit/response-fields.adoc[]
+
+
+=== 매물 가격 수정 반려
+==== Http Request
+include::{snippets}/admin/product/deny-edit/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/admin/product/deny-edit/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/admin/product/deny-edit/http-response.adoc[]
+
+
+=== 매물 가격 수정 승인
+==== Http Request
+include::{snippets}/admin/product/approve-edit/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/admin/product/approve-edit/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/admin/product/approve-edit/http-response.adoc[]
