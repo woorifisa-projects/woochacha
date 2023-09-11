@@ -10,3 +10,4 @@
 
 include::ManageProduct.adoc[]
 
+include::ManagePurchase.adoc[]

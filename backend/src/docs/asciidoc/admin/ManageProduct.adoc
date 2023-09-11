@@ -10,60 +10,60 @@
 == 매물 관리
 === 수정/신청폼 조회
 ==== Http Request
-include::{snippets}/admin/get-product/http-request.adoc[]
+include::{snippets}/admin/product/get/http-request.adoc[]
 
 ==== Request Parameters
-include::{snippets}/admin/get-product/request-parameters.adoc[]
+include::{snippets}/admin/product/get/request-parameters.adoc[]
 
 ==== Http Response
-include::{snippets}/admin/get-product/http-response.adoc[]
+include::{snippets}/admin/product/get/http-response.adoc[]
 
 ==== Response Fields
-include::{snippets}/admin/get-product/response-fields.adoc[]
+include::{snippets}/admin/product/get/response-fields.adoc[]
 
 
 === 매물 삭제 신청 승인
 ==== Http Request
-include::{snippets}/admin/delete-product/http-request.adoc[]
+include::{snippets}/admin/product/delete/http-request.adoc[]
 
 ==== Path Parameters
-include::{snippets}/admin/delete-product/path-parameters.adoc[]
+include::{snippets}/admin/product/delete/path-parameters.adoc[]
 
 ==== Http Response
-include::{snippets}/admin/delete-product/http-response.adoc[]
+include::{snippets}/admin/product/delete/http-response.adoc[]
 
 
 === 매물 수정 전 매물 정보 조회
 ==== Http Request
-include::{snippets}/admin/get-edit-product/http-request.adoc[]
+include::{snippets}/admin/product/get-edit/http-request.adoc[]
 
 ==== Path Parameters
-include::{snippets}/admin/get-edit-product/path-parameters.adoc[]
+include::{snippets}/admin/product/get-edit/path-parameters.adoc[]
 
 ==== Http Response
-include::{snippets}/admin/get-edit-product/http-response.adoc[]
+include::{snippets}/admin/product/get-edit/http-response.adoc[]
 
 ==== Response Fields
-include::{snippets}/admin/get-edit-product/response-fields.adoc[]
+include::{snippets}/admin/product/get-edit/response-fields.adoc[]
 
 
 === 매물 가격 수정 반려
 ==== Http Request
-include::{snippets}/admin/deny-edit-product/http-request.adoc[]
+include::{snippets}/admin/product/deny-edit/http-request.adoc[]
 
 ==== Path Parameters
-include::{snippets}/admin/deny-edit-product/path-parameters.adoc[]
+include::{snippets}/admin/product/deny-edit/path-parameters.adoc[]
 
 ==== Http Response
-include::{snippets}/admin/deny-edit-product/http-response.adoc[]
+include::{snippets}/admin/product/deny-edit/http-response.adoc[]
 
 
 === 매물 가격 수정 승인
 ==== Http Request
-include::{snippets}/admin/approve-edit-product/http-request.adoc[]
+include::{snippets}/admin/product/approve-edit/http-request.adoc[]
 
 ==== Path Parameters
-include::{snippets}/admin/approve-edit-product/path-parameters.adoc[]
+include::{snippets}/admin/product/approve-edit/path-parameters.adoc[]
 
 ==== Http Response
-include::{snippets}/admin/approve-edit-product/http-response.adoc[]
+include::{snippets}/admin/product/approve-edit/http-response.adoc[]

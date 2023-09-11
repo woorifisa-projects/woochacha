@@ -65,11 +65,11 @@ class ManageProductControllerTest extends CommonTest {
         List<ManageProductFormDto> result = new ArrayList<>();
         result.add(manageProductFormDto);
 
-        QueryResults<ManageProductFormDto> purchaseFormListResponseDtoList = new QueryResults<>(result, 5L, 0L, 10L);
+        QueryResults<ManageProductFormDto> manageProductFormDtoQueryResults = new QueryResults<>(result, 5L, 0L, 10L);
 
         int page = 0, size = 5;
 
-        when(manageProductFormService.findDeleteEditForm(page, size)).thenReturn(new PageImpl<>(purchaseFormListResponseDtoList.getResults()));
+        when(manageProductFormService.findDeleteEditForm(page, size)).thenReturn(new PageImpl<>(manageProductFormDtoQueryResults.getResults()));
 
         mockMvc.perform(get("/admin/product")
                         .param("page", String.valueOf(page))
@@ -77,7 +77,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("admin/get-product",
+                .andDo(document("admin/product/get",
                         requestParameters(
                                 parameterWithName("page").description("페이지 오프셋"),
                                 parameterWithName("size").description("페이지당 보여줄 매물 개수")
@@ -124,7 +124,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("admin/delete-product",
+                .andDo(document("admin/product/delete",
                         pathParameters(
                                 parameterWithName("productId").description("삭제할 매물 아이디")
                         )))
@@ -150,7 +150,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("admin/get-edit-product",
+                .andDo(document("admin/product/get-edit",
                         pathParameters(
                                 parameterWithName("productId").description("가격을 수정할 매물 아이디")
                         ),
@@ -180,7 +180,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("admin/deny-edit-product",
+                .andDo(document("admin/product/deny-edit",
                         pathParameters(
                                 parameterWithName("productId").description("가격 수정을 반려할 매물 아이디")
                         )))
@@ -201,7 +201,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("admin/approve-edit-product",
+                .andDo(document("admin/product/approve-edit",
                         pathParameters(
                                 parameterWithName("productId").description("가격 수정을 승인할 매물 아이디")
                         )))
