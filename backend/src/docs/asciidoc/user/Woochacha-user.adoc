@@ -1,4 +1,4 @@
-= Woochacha REST API
+= Woochacha User REST API
 :doctype: book
 :icons: font
 :toc: left

@@ -2,7 +2,7 @@ package com.woochacha.backend.domain.admin.controller;
 
 import com.woochacha.backend.domain.admin.dto.magageProduct.EditProductDto;
 import com.woochacha.backend.domain.admin.dto.magageProduct.ManageProductFormDto;
-import com.woochacha.backend.domain.admin.service.impl.ManageProductFormServiceImpl;
+import com.woochacha.backend.domain.admin.service.ManageProductFormService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/product")
 public class ManageProductController {
 
-    private final ManageProductFormServiceImpl manageProductFormService;
+    private final ManageProductFormService manageProductFormService;
 
     // 매물 관리 리스트 조회를 위한 GetMapping
     @GetMapping
