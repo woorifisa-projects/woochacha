@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -375,7 +374,12 @@ class ProductControllerTest extends CommonTest {
                                fieldWithPath("[].imageUrl").description("이미지 리스트")
                        )))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.*", hasSize(1)))
+               .andExpect(jsonPath("$.[0].id").value(productInfo.getId()))
+               .andExpect(jsonPath("$.[0].title").value(productInfo.getTitle()))
+               .andExpect(jsonPath("$.[0].distance").value(productInfo.getDistance()))
+               .andExpect(jsonPath("$.[0].branch").value(productInfo.getBranch()))
+               .andExpect(jsonPath("$.[0].price").value(productInfo.getPrice()))
+               .andExpect(jsonPath("$.[0].imageUrl").value(productInfo.getImageUrl()))
                .andReturn();
    }
 }

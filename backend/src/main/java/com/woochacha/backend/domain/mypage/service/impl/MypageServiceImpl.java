@@ -86,6 +86,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 등록한 매물 조회
+    @Override
     public Page<ProductResponseDto> getRegisteredProductsByMemberId(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> productsPage = mypageRepository.getRegisteredProductsByMemberId(memberId, pageable);
@@ -94,6 +95,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 판매 이력 조회
+    @Override
     public Page<ProductResponseDto> getSoldProductsByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> productsPage = mypageRepository.getSoldProductsByMemberId(memberId, pageable);
@@ -102,6 +104,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 구매 이력 조회
+    @Override
     public Page<ProductResponseDto> getPurchaseProductsByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> productsPage = mypageRepository.getPurchaseProductsByMemberId(memberId, pageable);
@@ -110,12 +113,14 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 프로필 조회
+    @Override
     public ProfileDto getProfileByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
         return modelMapper.map(member, ProfileDto.class);
     }
 
     // 판매 신청 폼 조회
+    @Override
     public Page<SaleFormDto> getSaleFormsByMemberId(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> saleFormsPage = mypageRepository.getSaleFormsByMemberId(memberId, pageable);
@@ -124,16 +129,29 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 구매 신청 폼 조회
+    @Override
     public Page<ProductResponseDto> getPurchaseRequestByMemberId(Long memberId, int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> purchaseRequestPage = mypageRepository.getPurchaseRequestByMemberId(memberId, pageable);
         return purchaseRequestPage.map(this::arrayToPurchaseReqeustListDto);
     }
 
-    // 수정신청 폼 데이터 가져오기
+    @Override
     public EditProductDto getProductEditRequestInfo(Long memberId, Long productId){
+        return mypageRepository.getProductEditRequestInfo(memberId, productId);
+    }
+
+    // 수정신청 폼 데이터 가져오기
+    @Override
+    public String editProductEditRequestInfo(Long memberId, Long productId, UpdatePriceDto updatePriceDto){
         EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
-        return editProductDto;
+
+        if (updatePriceDto.getUpdatePrice() > editProductDto.getPrice()) {
+            logService.savedMemberLogWithTypeAndEtc(memberId, "상품 가격 수정 요청 실패", "/product/detail/" + productId);
+            return "변경된 가격은 기존 가격보다 높을 수 없습니다.";
+        }
+        updatePrice(productId, updatePriceDto.getUpdatePrice(), memberId);
+        return "가격 변경 요청이 완료되었습니다.";
     }
 
     // 수정신청 폼 제출
@@ -144,13 +162,16 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 등록한 매물 삭제 신청
+    @Override
     @Transactional
-    public void productDeleteRequest(Long productId, Long memberId){
+    public String productDeleteRequest(Long productId, Long memberId){
         mypageRepository.requestProductDelete(productId);
         logService.savedMemberLogWithTypeAndEtc(memberId, "상품 삭제 요청", "/product/detail/" + productId);
+        return "삭제 신청이 완료되었습니다.";
     }
 
     // 프로필 수정 (GET요청 시 데이터 보여주기)
+    @Override
     public EditProfileDto getProfileForEdit(Long memberId){
         Member member = memberRepository.findById(memberId).get();
         EditProfileDto editProdileDto = EditProfileDto.builder()
@@ -161,6 +182,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 프로필 수정 (PATCH요청 시 데이터 수정)
+    @Override
     @Transactional
     public String editProfile(Long memberId, AmazonS3RequestDto amazonS3RequestDto) throws IOException {
         String email = memberRepository.findById(memberId).get().getEmail();

@@ -1,11 +1,11 @@
 package com.woochacha.backend.domain.mypage.dto;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Builder
 public class SaleFormDto {
 
