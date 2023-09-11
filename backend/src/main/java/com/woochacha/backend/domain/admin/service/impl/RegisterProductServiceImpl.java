@@ -124,7 +124,7 @@ public class RegisterProductServiceImpl implements RegisterProductService {
 
             // QLDB car_accident 테이블의 history 조회를 위한 metaId값 조회
             String metadataIdCarAccident = qldbService.getMetaIdValue(carNum, "car_accident");
-            System.out.println(metadataIdCarAccident);
+
             // QLDB car_accident 테이블의 history 조회
             Result resultCarAccident = txn.execute(
                     "SELECT ca.data.accident_type, ca.data.accident_date FROM history(car_accident) AS ca WHERE ca.metadata.id=?", ionSys.newString(metadataIdCarAccident));
