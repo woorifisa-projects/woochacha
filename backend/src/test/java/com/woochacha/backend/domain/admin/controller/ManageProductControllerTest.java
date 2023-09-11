@@ -54,16 +54,6 @@ class ManageProductControllerTest extends CommonTest {
     @Test
     @DisplayName("매물 관리 리스트에서 수정/신청폼을 조회한다.")
     void getRequestForm() throws Exception {
-//        PurchaseFormListResponseDto purchaseFormListResponseDto = PurchaseFormListResponseDto.builder()
-//                .productId(1L)
-//                .purchaseId(2L)
-//                .carNum("22가 1111")
-//                .buyerName("홍길동")
-//                .sellerName("김철수")
-//                .purchaseStatus(0)
-//                .transactionStatus(1)
-//                .build();
-
         ManageProductFormDto manageProductFormDto = ManageProductFormDto.builder()
                 .productId(1L)
                 .title("기아 올 뉴 카니발 2018년형")
@@ -87,10 +77,10 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("admin/product-get",
+                .andDo(document("admin/get-product",
                         requestParameters(
-                                parameterWithName("page").description("페이지네이션"),
-                                parameterWithName("size").description("페이지네이션")
+                                parameterWithName("page").description("페이지 오프셋"),
+                                parameterWithName("size").description("페이지당 보여줄 매물 개수")
                         ),
                         responseFields(
                                 fieldWithPath("content[].productId").description("판매글 아이디"),
@@ -134,7 +124,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("admin/product-patch",
+                .andDo(document("admin/delete-product",
                         pathParameters(
                                 parameterWithName("productId").description("삭제할 매물 아이디")
                         )))
@@ -160,7 +150,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("admin/product/edit-get",
+                .andDo(document("admin/get-edit-product",
                         pathParameters(
                                 parameterWithName("productId").description("가격을 수정할 매물 아이디")
                         ),
@@ -190,7 +180,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("admin/edit/deny-patch",
+                .andDo(document("admin/deny-edit-product",
                         pathParameters(
                                 parameterWithName("productId").description("가격 수정을 반려할 매물 아이디")
                         )))
@@ -200,7 +190,7 @@ class ManageProductControllerTest extends CommonTest {
     }
 
     @Test
-    @DisplayName("매물 가격 수정을 승인한다.ㅏ")
+    @DisplayName("매물 가격 수정을 승인한다.")
     void permitEditRequest() throws Exception {
         Long productId = 1L;
         String returnMessage = "가격 변경이 완료되었습니다.";
@@ -211,7 +201,7 @@ class ManageProductControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("admin/edit-patch",
+                .andDo(document("admin/approve-edit-product",
                         pathParameters(
                                 parameterWithName("productId").description("가격 수정을 승인할 매물 아이디")
                         )))
