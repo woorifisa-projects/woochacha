@@ -42,8 +42,10 @@ function AdminUserList() {
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    allUserGetApi().then((data) => {
-      setAllUserInfo(data);
+    allUserGetApi().then((res) => {
+      if (res.status === 200) {
+        setAllUserInfo(res.data);
+      }
     });
     setMounted(true);
   }, []);
@@ -52,9 +54,6 @@ function AdminUserList() {
     mounted &&
     allUserInfo && (
       <>
-        <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          관리자 페이지 - 유저 리스트
-        </Typography>
         <MemberTable
           headerData={table_cell_data}
           contentData={allUserInfo}

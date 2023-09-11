@@ -13,6 +13,7 @@ import {
   editProductApplicationsGetApi,
 } from '@/services/adminpageApi';
 import ApproveModal from '@/components/common/ApproveModal';
+import { SwalModals } from '@/utils/modal';
 
 function AdminProductList() {
   const [mounted, setMounted] = useState(false);
@@ -33,8 +34,9 @@ function AdminProductList() {
     try {
       await deleteProductApplicationsPatchApi(currentProductId).then((res) => {
         if (res.status === 200) {
-          alert(res.data);
-          router.push(`/admin/product`);
+          SwalModals('success', '삭제 요청 완료', '삭제 요청이 완료되었습니다!', false).then(() =>
+            router.push('/admin/product'),
+          );
         }
       });
     } catch (error) {
@@ -49,8 +51,9 @@ function AdminProductList() {
     try {
       await editApproveProductApplicationsPatchApi(currentProductId).then((res) => {
         if (res.status === 200) {
-          alert(res.data);
-          router.push(`/admin/product`);
+          SwalModals('success', '수정 승인 완료', res.data, false).then(() =>
+            router.push('/admin/product'),
+          );
         }
       });
     } catch (error) {
@@ -65,8 +68,9 @@ function AdminProductList() {
     try {
       await editDenyProductApplicationsPatchApi(currentProductId).then((res) => {
         if (res.status === 200) {
-          alert(res.data);
-          router.push(`/admin/product`);
+          SwalModals('success', '수정 반려 완료', res.data, false).then(() =>
+            router.push('/admin/product'),
+          );
         }
       });
     } catch (error) {
@@ -78,17 +82,14 @@ function AdminProductList() {
    * 수정 요청 시, 수정 modal의 내부 content GET 함수
    */
   const handleGetEditData = (id) => {
-    editProductApplicationsGetApi(id).then((data) => {
-      setEditProductApplication(data);
+    editProductApplicationsGetApi(id).then((res) => {
+      if (res.status === 200) {
+        setEditProductApplication(res.data);
+      }
     });
   };
 
   const adminProductCss = {
-    mainTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
     modalTitle: {
       fontWeight: 'bold',
       mb: 3,
@@ -134,8 +135,11 @@ function AdminProductList() {
    * 렌더링 시, 모든 수정, 삭제 신청 목록 조회
    */
   useEffect(() => {
-    allProductApplicationsGetApi().then((data) => {
-      setAllProductApplications(data);
+    allProductApplicationsGetApi().then((res) => {
+      if (res.status === 200) {
+        setAllProductApplications(res.data);
+      }
+
       setMounted(true);
     });
   }, []);
@@ -143,9 +147,6 @@ function AdminProductList() {
   return (
     mounted && (
       <>
-        <Typography sx={adminProductCss.mainTitle} component="h4" variant="h4" gutterBottom>
-          관리자 페이지 - 매물 관리 리스트
-        </Typography>
         <BasicButtonTable
           headerData={table_cell_data}
           contentData={allProductApplications.content}

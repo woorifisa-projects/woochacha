@@ -6,8 +6,7 @@ import { authFormInstance, authInstance } from '@/utils/api';
 export const allUserGetApi = async () => {
   try {
     const response = await authInstance.get('/admin/members');
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -20,8 +19,7 @@ export const allUserGetApi = async () => {
 export const oneUserGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/admin/members/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -51,8 +49,7 @@ export const oneUserEditPatchApi = async (editProfileValue, memberId) => {
 export const allProductApplicationsGetApi = async () => {
   try {
     const response = await authInstance.get('/admin/product');
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -65,8 +62,7 @@ export const allProductApplicationsGetApi = async () => {
 export const editProductApplicationsGetApi = async (productId) => {
   try {
     const response = await authInstance.get(`/admin/product/edit/${productId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -118,8 +114,7 @@ export const deleteProductApplicationsPatchApi = async (productId) => {
 export const allSaleFormGetApi = async () => {
   try {
     const response = await authInstance.get(`/admin/sales`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -200,8 +195,7 @@ export const oneRegisterFormPostApi = async (saleFormId, registerInputForm) => {
 export const oneMemberDeletePatchApi = async (memberId) => {
   try {
     const response = await authInstance.patch(`/admin/members/delete/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -214,8 +208,7 @@ export const oneMemberDeletePatchApi = async (memberId) => {
 export const oneMemberLogGetApi = async (memberId) => {
   try {
     const response = await authInstance.get(`/admin/members/log/${memberId}`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
@@ -228,8 +221,7 @@ export const oneMemberLogGetApi = async (memberId) => {
 export const allPurchaseFormGetApi = async () => {
   try {
     const response = await authInstance.get(`/admin/purchase`);
-    const data = response.data;
-    return data;
+    return response;
   } catch (error) {
     console.log('실패 : ', error);
     throw error;
