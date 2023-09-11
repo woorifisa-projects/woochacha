@@ -1,9 +1,9 @@
 import axios from 'axios';
 import LocalStorage from './localStorage';
-import { Router } from 'next/router';
+import Swal from 'sweetalert2';
 
 // const router = useRouter();
-const BASE_URL = 'http://13.125.32.208:8080';
+const BASE_URL = 'https://13.125.32.208:8080';
 // const BASE_URL = 'http://localhost:8080';
 const HEADER_JSON = {
   headers: {
@@ -32,47 +32,342 @@ const axiosApi = (url, options) => {
   return instance;
 };
 
-// 인증 필요 O 경우
-const axiosAuthApi = (url, options) => {
-  const token = LocalStorage.getItem('loginToken');
+// 인증 필요 X 경우
+const axiosApi2 = (url, options) => {
   const instance = axios.create({
     baseURL: url,
     headers: {
-      Authorization: 'Bearer ' + token,
       ...options,
     },
   });
   return instance;
 };
 
-// axios interceptor - error handling
-
-axios.interceptors.response.use(
-  function (res) {
-    return res;
-  },
-  function (err) {
-    if (err.response && err.response.status) {
-      switch (err.response.status) {
-        // status code가 401인 경우 `/users/login` 페이지로 리다이렉트
-        case 401:
-          Router.push('/users/login').then(() => {
-            LocalStorage.removeItem('loginToken');
-            LocalStorage.removeItem('recoil-persist');
-          }); // 리다이렉트 후에 무엇을 할지 콜백으로 처리
-          return Promise.reject(err); // 에러를 다시 전달하여 해당 요청을 중단
-        // status code 403인 경우 `/` 페이지로 리다이렉트
-        case 403:
-          Router.push('/').then(() => {});
-          return Promise.reject(err);
-        default:
-          return Promise.reject(err);
-      }
-    }
-  },
-);
+// // 인증 필요 O 경우
+// const axiosAuthApi = (url, options) => {
+//   const token = LocalStorage.getItem('loginToken');
+//   const instance = axios.create({
+//     baseURL: url,
+//     headers: {
+//       Authorization: 'Bearer ' + token,
+//       ...options,
+//     },
+//   });
+//   console.log(token);
+//   return instance;
+// };
 
 export const jsonInstance = axiosApi(BASE_URL, HEADER_JSON);
 export const formInstance = axiosApi(BASE_URL, HEADER_FORM);
-export const authInstance = axiosAuthApi(BASE_URL);
-export const authFormInstance = axiosAuthApi(BASE_URL, HEADER_AUTH_FORM);
+export const authInstance = axiosApi2(BASE_URL);
+export const authFormInstance = axiosApi2(BASE_URL, HEADER_AUTH_FORM);
+
+/**
+ * 1. 요청 인터셉터
+ */
+authInstance.interceptors.request.use(
+  (config) => {
+    const token = LocalStorage.getItem('loginToken');
+    try {
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+    } catch (err) {
+      console.error('[_axios.interceptors.request] config : ' + err);
+    }
+    return config;
+  },
+  (error) => {
+    // 요청 에러 직전 호출됩니다.
+    return Promise.reject(error);
+  },
+);
+
+authFormInstance.interceptors.request.use(
+  (config) => {
+    const token = LocalStorage.getItem('loginToken');
+    try {
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+    } catch (err) {
+      console.error('[_axios.interceptors.request] config : ' + err);
+    }
+    return config;
+  },
+  (error) => {
+    // 요청 에러 직전 호출됩니다.
+    return Promise.reject(error);
+  },
+);
+
+/**
+ * 2. 응답 인터셉터
+ */
+
+// jsonInstance
+jsonInstance.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    // 오류 응답을 처리
+    console.log(error.response.status);
+    if (error.response.status === 401) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 403) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 500) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    return Promise.reject(error);
+  },
+);
+
+// formInstance
+formInstance.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    console.log(error.response.status);
+    if (error.response.status === 401) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 403) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 500) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    return Promise.reject(error);
+  },
+);
+
+// authInstance
+authInstance.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    // 오류 응답을 처리
+    console.log(error.response.status);
+    if (error.response.status === 401) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 403) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 500) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    return Promise.reject(error);
+  },
+);
+
+// authFormInstance
+authFormInstance.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    // 오류 응답을 처리
+    console.log(error.response.status);
+    if (error.response.status === 401) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 403) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    if (error.response.status === 500) {
+      Swal.fire({
+        icon: 'error',
+        title: `잘못된 접근`,
+        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      }).then(() => {
+        window.location.href = '/users/login';
+        return;
+      });
+    }
+    return Promise.reject(error);
+  },
+);
