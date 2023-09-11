@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
@@ -35,6 +37,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -112,11 +115,19 @@ class ProductControllerTest extends CommonTest {
 
        ProductAllResponseDto productAllResponseDto = new ProductAllResponseDto(productInfoListPageable, productFilterInfo);
 
+       Pageable pageable = PageRequest.of(0,5);
+
        when(productService.findAllProduct(any())).thenReturn(productAllResponseDto);
 
-       mockMvc.perform(get("/product"))
+       mockMvc.perform(get("/product")
+               .param("page", String.valueOf(pageable.getOffset()))
+               .param("size", String.valueOf(pageable.getPageSize())))
                .andExpect(status().isOk())
                .andDo(document("product/get-all",
+                       requestParameters(
+                               parameterWithName("page").description("페이지 오프셋"),
+                               parameterWithName("size").description("페이지당 보여줄 매물 개수")
+                       ),
                        responseFields(
                                fieldWithPath("productInfo").description("[기본 정보]"),
                                fieldWithPath("productInfo.content[].id").description("아이디"),
