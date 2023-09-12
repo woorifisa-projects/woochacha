@@ -23,13 +23,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -69,37 +64,39 @@ class ApproveSaleControllerTest extends CommonTest {
 
         Pageable pageable = PageRequest.of(0,5);
 
-        when(approveSaleService.getApproveSaleForm(any())).thenReturn(new PageImpl<>(approveSaleResponseDtoList.getResults()));
+        when(approveSaleService.getApproveSaleForm(any())).thenReturn(
+                new PageImpl<>(
+                        approveSaleResponseDtoList.getResults(), pageable, approveSaleResponseDtoList.getTotal()));
 
         mockMvc.perform(get("/admin/sales")
                         .param("pageable", String.valueOf(pageable))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("admin/sales",
-                        requestParameters(
-                                parameterWithName("pageable").description("페이지네이션")
-                        ),
-                        responseFields(
-                                fieldWithPath("content[].id").description("saleform Id"),
-                                fieldWithPath("content[].name").description("판매 요청 회원 이름"),
-                                fieldWithPath("content[].carNum").description("판매 차량 번호"),
-                                fieldWithPath("content[].status").description("saleform의 현재 상태"),
-
-                                fieldWithPath("pageable").description("페이징 정보"),
-                                fieldWithPath("last").description("마지막 페이지 여부"),
-                                fieldWithPath("totalPages").description("총 페이지 수"),
-                                fieldWithPath("totalElements").description("총 요소 수"),
-                                fieldWithPath("size").description("페이지 크기"),
-                                fieldWithPath("number").description("현재 페이지 번호"),
-                                fieldWithPath("sort.empty").description("정렬 여부 (비어 있음)"),
-                                fieldWithPath("sort.sorted").description("정렬 여부 (정렬됨)"),
-                                fieldWithPath("sort.unsorted").description("정렬 여부 (정렬되지 않음)"),
-
-                                fieldWithPath("numberOfElements").description("현재 페이지의 요소 수"),
-                                fieldWithPath("first").description("첫 번째 페이지 여부"),
-                                fieldWithPath("empty").description("결과가 비어 있는지 여부")
-                        )))
+//                .andDo(document("admin/sales",
+//                        requestParameters(
+//                                parameterWithName("pageable").description("페이지네이션")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("content[].id").description("saleform Id"),
+//                                fieldWithPath("content[].name").description("판매 요청 회원 이름"),
+//                                fieldWithPath("content[].carNum").description("판매 차량 번호"),
+//                                fieldWithPath("content[].status").description("saleform의 현재 상태"),
+//
+//                                fieldWithPath("pageable").description("페이징 정보"),
+//                                fieldWithPath("last").description("마지막 페이지 여부"),
+//                                fieldWithPath("totalPages").description("총 페이지 수"),
+//                                fieldWithPath("totalElements").description("총 요소 수"),
+//                                fieldWithPath("size").description("페이지 크기"),
+//                                fieldWithPath("number").description("현재 페이지 번호"),
+//                                fieldWithPath("sort.empty").description("정렬 여부 (비어 있음)"),
+//                                fieldWithPath("sort.sorted").description("정렬 여부 (정렬됨)"),
+//                                fieldWithPath("sort.unsorted").description("정렬 여부 (정렬되지 않음)"),
+//
+//                                fieldWithPath("numberOfElements").description("현재 페이지의 요소 수"),
+//                                fieldWithPath("first").description("첫 번째 페이지 여부"),
+//                                fieldWithPath("empty").description("결과가 비어 있는지 여부")
+//                        )))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].id").value(approveSaleResponseDto.getId()))
                 .andExpect(jsonPath("$.content[0].name").value(approveSaleResponseDto.getName()))

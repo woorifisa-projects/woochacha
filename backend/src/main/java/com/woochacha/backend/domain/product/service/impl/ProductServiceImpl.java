@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.product.service.impl;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -34,6 +35,7 @@ import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -83,15 +85,15 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ProductAllResponseDto findAllProduct(Pageable pageable) {
-        PageImpl<ProductInfo> productInfoList = findAllProductInfoList(pageable);
+        Page<ProductInfo> productInfoList = findAllProductInfoList(pageable);
 
         ProductFilterInfo productFilterInfo = findAllProductFilterList();
 
         return new ProductAllResponseDto(productInfoList, productFilterInfo);
     }
 
-    private PageImpl<ProductInfo> findProductInfoListPageable(Pageable pageable) {
-        List<ProductInfo> productInfoList = queryFactory
+    private Page<ProductInfo> findProductInfoListPageable(Pageable pageable) {
+        QueryResults<ProductInfo> productInfoList = queryFactory
                 .select(Projections.fields(
                         ProductInfo.class, p.id,
                         Expressions.asString(
@@ -107,13 +109,13 @@ public class ProductServiceImpl implements ProductService {
                 .orderBy(p.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch();
+                .fetchResults();
 
-        return new PageImpl<>(productInfoList);
+        return new PageImpl<>(productInfoList.getResults(), pageable, productInfoList.getTotal());
     }
 
     // 전체 매물 조회
-    private PageImpl<ProductInfo> findAllProductInfoList(Pageable pageable) {
+    private Page<ProductInfo> findAllProductInfoList(Pageable pageable) {
         return findProductInfoListPageable(pageable);
     }
 

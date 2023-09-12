@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.QueryResults;
 import com.woochacha.backend.domain.car.detail.dto.CarNameDto;
 import com.woochacha.backend.domain.car.type.dto.*;
 import com.woochacha.backend.domain.common.CommonTest;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +39,6 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -77,7 +78,24 @@ class ProductControllerTest extends CommonTest {
 
        List<ProductInfo> productInfoList = new ArrayList<>();
        productInfoList.add(productInfo);
-       PageImpl<ProductInfo> productInfoListPageable = new PageImpl<>(productInfoList);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+       productInfoList.add(productInfo);
+
+       QueryResults<ProductInfo> result = new QueryResults<>(productInfoList, 5L, 0L, 10L);
+
+       Pageable pageable = PageRequest.of(0,5);
+
+       Page<ProductInfo> reulstPage = new PageImpl<>(result.getResults(), pageable, result.getTotal());
+
 
        TypeDto typeDto  = new TypeDto(1, "경차");
        ModelDto modelDto = new ModelDto(1, "현대");
@@ -113,14 +131,12 @@ class ProductControllerTest extends CommonTest {
                .branchList(branchDtoList)
                .build();
 
-       ProductAllResponseDto productAllResponseDto = new ProductAllResponseDto(productInfoListPageable, productFilterInfo);
-
-       Pageable pageable = PageRequest.of(0,5);
+       ProductAllResponseDto productAllResponseDto = new ProductAllResponseDto(reulstPage, productFilterInfo);
 
        when(productService.findAllProduct(any())).thenReturn(productAllResponseDto);
 
        mockMvc.perform(get("/product")
-               .param("page", String.valueOf(pageable.getOffset()))
+               .param("page", String.valueOf(pageable.getPageNumber()))
                .param("size", String.valueOf(pageable.getPageSize())))
                .andExpect(status().isOk())
                .andDo(document("product/get-all",
@@ -136,6 +152,16 @@ class ProductControllerTest extends CommonTest {
                                fieldWithPath("productInfo.content[].branch").description("판매 지점"),
                                fieldWithPath("productInfo.content[].price").description("판매 가격"),
                                fieldWithPath("productInfo.content[].imageUrl").description("이미지 리스트"),
+
+                               fieldWithPath("productInfo.pageable.sort.empty").description("정렬 여부 (비어 있음)"),
+                               fieldWithPath("productInfo.pageable.sort.sorted").description("정렬 여부 (정렬됨)"),
+                               fieldWithPath("productInfo.pageable.sort.unsorted").description("정렬 여부 (정렬되지 않음)"),
+
+                               fieldWithPath("productInfo.pageable.offset").description("페이지 오프셋 값"),
+                               fieldWithPath("productInfo.pageable.pageSize").description("페이지 크기"),
+                               fieldWithPath("productInfo.pageable.pageNumber").description("현재 페이지 번호"),
+                               fieldWithPath("productInfo.pageable.paged").description("페이지 여부 (페이징된 경우 true, 그렇지 않으면 false)"),
+                               fieldWithPath("productInfo.pageable.unpaged").description("페이징되지 않은 경우 true, 그렇지 않으면 false"),
 
                                fieldWithPath("productInfo.pageable").description("페이징 정보"),
                                fieldWithPath("productInfo.last").description("마지막 페이지 여부"),
