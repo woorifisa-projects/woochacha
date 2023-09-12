@@ -57,10 +57,9 @@ function AdminSalesApproveForm(props) {
    */
   const handleOpenModal = () => {
     if (approveSaleForm.carDistance < defaultDistance) {
-      SwalModals('error', '입력 오류', '기존 주행거리보다 작을 수 없습니다!', false).then(() => {
-        router.push('/admin/sales');
-        return;
-      });
+      SwalModals('error', '입력 오류', '기존 주행거리보다 작을 수 없습니다!', false);
+      router.push('/admin/sales');
+      return;
     } else {
       handleClickModal();
     }
@@ -94,10 +93,9 @@ function AdminSalesApproveForm(props) {
           '점검 정보 승인',
           '점검 정보가 승인되었습니다. 차량 게시글을 등록으로 이동합니다.',
           false,
-        ).then(() => {
-          router.replace(`/admin/sales/register/${saleformId}`);
-          return;
-        });
+        );
+        router.replace(`/admin/sales/register/${saleformId}`);
+        return;
       }
       if (res.status === 200 && res.data === false) {
         SwalModals('error', '점검 정보 승인 오류', '잘못된 요청입니다. 다시 확인해주세요.', false);

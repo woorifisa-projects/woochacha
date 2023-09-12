@@ -43,9 +43,8 @@ function AdminPurchaseList() {
     onePurchaseConfirmFormPatchApi(currentPurchaseId, purchaseForm).then((res) => {
       console.log(res);
       if (res.status === 200) {
-        SwalModals('success', '수정 요청 완료', res.data, false).then(() =>
-          router.push('/admin/purchase'),
-        );
+        SwalModals('success', '수정 요청 완료', res.data, false);
+        router.push('/admin/purchase');
       }
     });
   };
@@ -65,9 +64,8 @@ function AdminPurchaseList() {
     onePurchaseTransactionFormPostApi(currentPurchaseId).then((res) => {
       console.log(res);
       if (res.status === 200) {
-        SwalModals('success', '거래 성사 완료', res.data, false).then(() =>
-          router.push('/admin/purchase'),
-        );
+        SwalModals('success', '거래 성사 완료', res.data, false);
+        router.push('/admin/purchase');
       }
     });
   };

@@ -38,9 +38,8 @@ function AdminProductList() {
     try {
       await deleteProductApplicationsPatchApi(currentProductId).then((res) => {
         if (res.status === 200) {
-          SwalModals('success', '삭제 요청 완료', '삭제 요청이 완료되었습니다!', false).then(() =>
-            router.push('/admin/product'),
-          );
+          SwalModals('success', '삭제 요청 완료', '삭제 요청이 완료되었습니다!', false);
+          router.push('/admin/product');
         }
       });
     } catch (error) {
@@ -55,9 +54,8 @@ function AdminProductList() {
     try {
       await editApproveProductApplicationsPatchApi(currentProductId).then((res) => {
         if (res.status === 200) {
-          SwalModals('success', '수정 승인 완료', res.data, false).then(() =>
-            router.push('/admin/product'),
-          );
+          SwalModals('success', '수정 승인 완료', res.data, false);
+          router.push('/admin/product');
         }
       });
     } catch (error) {
@@ -72,9 +70,8 @@ function AdminProductList() {
     try {
       await editDenyProductApplicationsPatchApi(currentProductId).then((res) => {
         if (res.status === 200) {
-          SwalModals('success', '수정 반려 완료', res.data, false).then(() =>
-            router.push('/admin/product'),
-          );
+          SwalModals('success', '수정 반려 완료', res.data, false);
+          router.push('/admin/product');
         }
       });
     } catch (error) {
