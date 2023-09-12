@@ -137,7 +137,7 @@ class ApproveSaleControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("saleForm/deny-apply",
+                .andDo(document("admin/deny-saleForm",
                         pathParameters(
                                 parameterWithName("saleFormId").description("판매 요청글 아이디")
                         )))
@@ -147,6 +147,7 @@ class ApproveSaleControllerTest extends CommonTest {
     }
 
     @Test
+    @DisplayName("차량 정보 전부 조회하기")
     void qldbCarInfo() throws Exception {
         Long saleFormId = 1L;
         CarAccidentInfoDto carAccidentInfoDto = CarAccidentInfoDto.builder()
@@ -188,7 +189,7 @@ class ApproveSaleControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("saleForm/get-approve",
+                .andDo(document("admin/get-saleForm",
                         pathParameters(
                                 parameterWithName("saleFormId").description("판매 요청글 아이디")
                         ),
@@ -215,6 +216,7 @@ class ApproveSaleControllerTest extends CommonTest {
     }
 
     @Test
+    @DisplayName("차량 정보 업데이트")
     void compareCarInfo() throws Exception {
         Long saleFormId = 1L;
         CarAccidentInfoDto carAccidentInfoDto = CarAccidentInfoDto.builder()
@@ -240,7 +242,7 @@ class ApproveSaleControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("saleForm/approve-status",
+                .andDo(document("admin/approve-saleForm",
                         pathParameters(
                                 parameterWithName("saleFormId").description("판매 요청글 아이디")
                         ),
@@ -259,6 +261,7 @@ class ApproveSaleControllerTest extends CommonTest {
     }
 
     @Test
+    @DisplayName("등록하기 위한 차량 정보 조회")
     void registerProductInfo() throws Exception {
         Long saleFormId = 1L;
         RegisterProductBasicInfo registerProductBasicInfo = RegisterProductBasicInfo.builder()
@@ -313,7 +316,7 @@ class ApproveSaleControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("saleForm/get-product-info",
+                .andDo(document("admin/get-product",
                         pathParameters(
                                 parameterWithName("saleFormId").description("판매 요청글 아이디")
                         ),
