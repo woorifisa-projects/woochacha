@@ -81,37 +81,38 @@ function LogDetail(props) {
   const router = useRouter();
   const { memberId } = props;
 
-  useEffect(() => {
-    memberId &&
-      oneMemberLogGetApi(memberId).then((res) => {
-        if(res.status === 200) {
-          setOneMemberLog(res.data);
-          console.log(oneMemberLog);
-        }
-      });
-    setMounted(true);
-  }, []);
-
-  const [page, setPage] = useState(0);
+  // pagination
+  const [page, setPage] = useState(0); // 현재 페이지
+  const [size, setSize] = useState(10); // 기본 사이즈
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  //   const rows = oneMemberLog.content;
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - setOneMemberLog.content.length) : 0;
+  // data 불러온 이후 필터링 data에 맞게 렌더링
+  useEffect(() => {
+    if (!mounted && memberId) {
+      oneMemberLogGetApi(memberId, 0, 10).then((res) => {
+        if (res.status === 200) {
+          setOneMemberLog(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      oneMemberLogGetApi(memberId, page, size).then((res) => {
+        if (res.status === 200) {
+          setOneMemberLog(res.data);
+        }
+      });
+    }
+  }, [page, size]);
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    setPage(newPage); // 현재 page 번호
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    setSize(event.target.value); // 페이지 크기 업데이트
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const basicTableCss = {
     tableRow: {
@@ -165,10 +166,7 @@ function LogDetail(props) {
           </TableHead>
           <TableBody>
             {/* data map으로 반복 */}
-            {(rowsPerPage > 0
-              ? oneMemberLog.content.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : oneMemberLog.content
-            ).map((row) => (
+            {oneMemberLog.content.map((row) => (
               <TableRow sx={basicTableCss.tableRow} key={row.id}>
                 <TableCell align="center">{row[`${table_cell_data[0].contentCell}`]}</TableCell>
                 <TableCell align="center">{row[`${table_cell_data[1].contentCell}`]}</TableCell>
@@ -183,18 +181,13 @@ function LogDetail(props) {
                 </TableCell>                
               </TableRow>
             ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={oneMemberLog.content.length}
+                count={oneMemberLog.totalElements}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

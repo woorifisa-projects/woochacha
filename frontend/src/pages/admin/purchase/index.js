@@ -28,6 +28,10 @@ function AdminPurchaseList() {
   const [showModal, setShowModal] = useState(false);
   const handleClickModal = () => setShowModal(!showModal);
 
+  // pagination
+  const [page, setPage] = useState(0); // 현재 페이지
+  const [size, setSize] = useState(10); // 기본 사이즈
+
   /**
    * 구매요청 관련 함수
    */
@@ -85,14 +89,21 @@ function AdminPurchaseList() {
    * 거래관리 요청 목록 조회
    */
   useEffect(() => {
-    allPurchaseFormGetApi().then((res) => {
-      if (res.status === 200) {
-        console.log(res.data);
-        setAllPurchaseFormInfo(res.data);
-      }
-    });
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      allPurchaseFormGetApi(0, 10).then((res) => {
+        if (res.status === 200) {
+          setAllPurchaseFormInfo(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      allPurchaseFormGetApi(page, size).then((res) => {
+        if (res.status === 200) {
+          setAllPurchaseFormInfo(res.data);
+        }
+      });
+    }
+  }, [page, size]);
 
   const table_cell_data = [
     {
@@ -123,12 +134,16 @@ function AdminPurchaseList() {
       <>
         <PurchaseTable
           headerData={table_cell_data}
-          contentData={allPurchaseFormInfo.content}
+          contentData={allPurchaseFormInfo}
           callbackFunc={handleClickModal}
           getConfirmData={getConfirmData}
           setConfirmFlag={setConfirmFlag}
           moveDetailUrl={`/product/detail/`}
           setCurrentPurchaseId={setCurrentPurchaseId}
+          page={page}
+          size={size}
+          setPage={setPage}
+          setSize={setSize}
         />
         {showModal && (
           <OneButtonModal

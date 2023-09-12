@@ -10,6 +10,7 @@ import {
   Box,
   Typography,
   Container,
+  Pagination,
 } from '@mui/material';
 import theme from '@/styles/theme';
 import SearchBar from '@/components/product/SearchBar';
@@ -21,10 +22,7 @@ import {
   filteringProductGetApi,
   keywordProductGetApi,
 } from '@/services/productApi';
-import { jsonInstance } from '@/utils/api';
-import axios from 'axios';
 
-// Dummy Data
 const mainFeaturedPost = {
   title: '내가 WON하는 금융상품 알아보기 ',
   description: '우리WON카에서 자동차 금융상품을 조회할 수 있어요!',
@@ -45,21 +43,33 @@ export default function Home(props) {
   const router = useRouter();
   let responsiveFontTheme = responsiveFontSizes(theme);
 
-  // TODO: SSR RENDERING
   const { allPr } = props;
-  console.log('!SSR!');
-  console.log(allPr);
 
   /**
-   * mount시, 모든 product api 요청
+   * 페이지네이션
+   */
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  /**
+   * - 첫 렌더링시, 전체 product get
+   * - page 변경 시, 재렌더링
    */
   useEffect(() => {
-    // allProductGetApi().then((data) => {
-    //   setAllProducts(data);
-    // });
-    setAllProducts(allPr);
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      setAllProducts(allPr);
+      setMounted(true);
+    } else {
+      allProductGetApi(page - 1, pageSize).then((res) => {
+        if (res.status === 200) {
+          setAllProducts(res.data);
+        }
+      });
+    }
+  }, [page]);
 
   /**
    * selectmenu의 키와 라벨을 매핑
@@ -95,9 +105,15 @@ export default function Home(props) {
   const handleSearch = (keyword) => {
     keywordProductGetApi(keyword).then((res) => {
       if (res.status === 200) {
-        setAllProducts({
-          ...allProducts,
-          productInfo: res.data,
+        setAllProducts((prevProducts) => {
+          // 기존의 상태를 복사 -> content를 업데이트
+          return {
+            ...prevProducts,
+            productInfo: {
+              ...prevProducts.productInfo,
+              content: [...res.data],
+            },
+          };
         });
       }
     });
@@ -109,9 +125,15 @@ export default function Home(props) {
   const handleFiltering = () => {
     filteringProductGetApi(selectMenuValue).then((res) => {
       if (res.status === 200) {
-        setAllProducts({
-          ...allProducts,
-          productInfo: res.data,
+        setAllProducts((prevProducts) => {
+          // 기존의 상태를 복사 -> content를 업데이트
+          return {
+            ...prevProducts,
+            productInfo: {
+              ...prevProducts.productInfo,
+              content: [...res.data],
+            },
+          };
         });
       }
     });
@@ -165,6 +187,7 @@ export default function Home(props) {
     filteringBtn: { mt: 2 },
     carContainer: { py: 10 },
     carSubTitle: { mb: 4, fontWeight: 'bold' },
+    pagination: { display: 'flex', justifyContent: 'center', mb: 4 },
   };
 
   return (
@@ -244,13 +267,22 @@ export default function Home(props) {
               <ProductCard productItems={allProducts.productInfo} />
             </Grid>
           </Container>
+
+          {/* pagination */}
+          <Grid item md={12} xs={12} sx={MainPageCss.pagination}>
+            <Pagination
+              count={allProducts.productInfo.totalPages + 1}
+              page={page}
+              onChange={handleChange}
+            />
+          </Grid>
         </main>
       </ThemeProvider>
     )
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const res = await allProductGetApi().then((res) => res.data);
   return {
     props: {

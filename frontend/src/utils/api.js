@@ -249,10 +249,13 @@ authInstance.interceptors.response.use(
     // 오류 응답을 처리
     console.log(error.response.status);
     if (error.response.status === 401) {
+      LocalStorage.removeItem('loginToken');
+      LocalStorage.removeItem('recoil-persist');
+
       Swal.fire({
         icon: 'error',
         title: `잘못된 접근`,
-        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        html: `기간이 만료되었거나 잘못된 접근입니다. 다시 로그인해주세요!`,
         showConfirmButton: false,
         showClass: {
           popup: 'animate__animated animate__fadeInDown',
@@ -315,10 +318,13 @@ authFormInstance.interceptors.response.use(
     // 오류 응답을 처리
     console.log(error.response.status);
     if (error.response.status === 401) {
+      LocalStorage.removeItem('loginToken');
+      LocalStorage.removeItem('recoil-persist');
+
       Swal.fire({
         icon: 'error',
         title: `잘못된 접근`,
-        html: `잘못된 접근입니다. 다시 접속해주세요!`,
+        html: `기간이 만료되었거나 잘못된 접근입니다. 다시 로그인해주세요!`,
         showConfirmButton: false,
         showClass: {
           popup: 'animate__animated animate__fadeInDown',

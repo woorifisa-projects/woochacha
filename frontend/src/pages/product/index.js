@@ -24,7 +24,6 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function Products(props) {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
-  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectMenus, setSelectMenus] = useState();
   const [selectMenuValue, setSelectMenuValue] = useState({});
   let responsiveFontTheme = responsiveFontSizes(theme);
@@ -44,15 +43,30 @@ export default function Products(props) {
   };
 
   /**
-   * 첫 렌더링시, 전체 product get
+   * 페이지네이션
+   */
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  /**
+   * - 첫 렌더링시, 전체 product get
+   * - page 변경 시, 재렌더링
    */
   useEffect(() => {
-    setAllProducts(fetchData);
-    // allProductGetApi().then((data) => {
-    //   setAllProducts(data);
-    // });
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      setAllProducts(fetchData);
+      setMounted(true);
+    } else {
+      allProductGetApi(page - 1, pageSize).then((res) => {
+        if (res.status === 200) {
+          setAllProducts(res.data);
+        }
+      });
+    }
+  }, [page]);
 
   /**
    * allProducts가 업데이트될 때만 selectBoxes를 생성하도록 이동
@@ -73,9 +87,15 @@ export default function Products(props) {
   const handleSearch = (keyword) => {
     keywordProductGetApi(keyword).then((res) => {
       if (res.status === 200) {
-        setAllProducts({
-          ...allProducts,
-          productInfo: res.data,
+        setAllProducts((prevProducts) => {
+          // 기존의 상태를 복사 -> content를 업데이트
+          return {
+            ...prevProducts,
+            productInfo: {
+              ...prevProducts.productInfo,
+              content: [...res.data],
+            },
+          };
         });
       }
     });
@@ -87,9 +107,15 @@ export default function Products(props) {
   const handleFiltering = () => {
     filteringProductGetApi(selectMenuValue).then((res) => {
       if (res.status === 200) {
-        setAllProducts({
-          ...allProducts,
-          productInfo: res.data,
+        setAllProducts((prevProducts) => {
+          // 기존의 상태를 복사 -> content를 업데이트
+          return {
+            ...prevProducts,
+            productInfo: {
+              ...prevProducts.productInfo,
+              content: [...res.data],
+            },
+          };
         });
       }
     });
@@ -147,7 +173,7 @@ export default function Products(props) {
         <CssBaseline />
         {/* main page */}
         <main>
-          {/* 페이지 상단 serch box */}z
+          {/* 페이지 상단 serch box */}
           <Grid mx="auto" container maxWidth="xl">
             <MiniCard colorVal="#def2ff" shadowVal={3} marginVal={10}>
               <Typography gutterBottom variant="h5" component="h5" mb={3}>
@@ -216,7 +242,11 @@ export default function Products(props) {
 
             {/* pagination */}
             <Grid item md={12} xs={12} sx={productsCss.pagination}>
-              <Pagination count={Math.ceil(allProducts.productInfo.length / itemsPerPage) || 1} />
+              <Pagination
+                count={allProducts.productInfo.totalPages + 1}
+                page={page}
+                onChange={handleChange}
+              />
             </Grid>
           </Grid>
         </main>
@@ -225,8 +255,8 @@ export default function Products(props) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const data = await allProductGetApi().then((res) => res.data);
+export async function getServerSideProps() {
+  const data = await allProductGetApi(0, 10).then((res) => res.data);
 
   return {
     props: {
