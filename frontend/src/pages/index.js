@@ -49,7 +49,7 @@ export default function Home(props) {
    * 페이지네이션
    */
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
 
   const handleChange = (event, value) => {
     setPage(value - 1);
@@ -288,7 +288,7 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps() {
-  const res = await allProductGetApi().then((res) => res.data);
+  const res = await allProductGetApi(0, 8).then((res) => res.data);
   return {
     props: {
       allPr: res,
