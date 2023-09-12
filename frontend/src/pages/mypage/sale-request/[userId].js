@@ -10,7 +10,7 @@ import MypageCardPurchase from '@/components/mypage/MypageCardPurchase';
 import SubTabMenu from '@/components/common/SubTabMenu';
 import { SUB_SALE_TAB_MENU } from '@/constants/string';
 
-function SaleRequest(props) {
+function SaleRequest() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -19,28 +19,44 @@ function SaleRequest(props) {
 
   const memberId = userLoginState.userId;
 
+  /**
+   * 페이지네이션
+   */
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+
+  const handleChange = (event, value) => {
+    setPage(value - 1);
+  };
+
   const handleMove = (url) => {
     router.push(`${url}${memberId}`);
   };
 
   const mypageCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
 
-  // data 불러온 이후 필터링 data에 맞게 렌더링
+  /**
+   * - 첫 렌더링시, 전체 목록 get
+   * - page 변경 시, 재렌더링
+   */
   useEffect(() => {
-    mypageSaleRequestListGetApi(memberId).then((res) => {
-      if (res.status === 200) {
-        setMypageSaleRequestList(res.data);
-      }
-    });
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      mypageSaleRequestListGetApi(memberId, 0, 5).then((res) => {
+        if (res.status === 200) {
+          setMypageSaleRequestList(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      mypageSaleRequestListGetApi(memberId, page, pageSize).then((res) => {
+        if (res.status === 200) {
+          setMypageSaleRequestList(res.data);
+        }
+      });
+    }
+  }, [page]);
 
   return (
     mounted &&
@@ -60,9 +76,18 @@ function SaleRequest(props) {
         </SubTabMenu>
 
         <MypageCardPurchase content={mypageSaleRequestList.content} />
+
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
-          <Pagination count={10} />
+          {mypageSaleRequestList.totalPages === 0 ? (
+            ''
+          ) : (
+            <Pagination
+              count={mypageSaleRequestList.totalPages}
+              page={page + 1}
+              onChange={handleChange}
+            />
+          )}
         </Grid>
       </>
     )
