@@ -4,46 +4,68 @@ import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import { Grid, Pagination } from '@mui/material';
 import MypageCardEdit from '@/components/mypage/MypageCardEdit';
 import { mypageRegisteredProductsGetApi } from '@/services/mypageApi';
-import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 
-function RegisteredItem(props) {
+function RegisteredItem() {
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
   const [mypageRegisteredProducts, setMypageRegisteredProducts] = useState();
 
   const memberId = userLoginState.userId;
-  const { userId } = props;
 
-  const mypageCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
-    pagination: { display: 'flex', justifyContent: 'center', my: 8 },
+  /**
+   * 페이지네이션
+   */
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+
+  const handleChange = (event, value) => {
+    setPage(value - 1);
   };
 
-  // data 불러온 이후 필터링 data에 맞게 렌더링
+  /**
+   * - 첫 렌더링시, 전체 목록 get
+   * - page 변경 시, 재렌더링
+   */
   useEffect(() => {
-    mypageRegisteredProductsGetApi(memberId).then((res) => {
-      if (res.status === 200) {
-        setMypageRegisteredProducts(res.data);
-      }
-    });
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      mypageRegisteredProductsGetApi(memberId, 0, 5).then((res) => {
+        if (res.status === 200) {
+          setMypageRegisteredProducts(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      mypageRegisteredProductsGetApi(memberId, page, pageSize).then((res) => {
+        if (res.status === 200) {
+          setMypageRegisteredProducts(res.data);
+        }
+      });
+    }
+  }, [page]);
+
+  const registeredCss = {
+    pagination: { display: 'flex', justifyContent: 'center', my: 8 },
+  };
 
   return (
     mounted &&
     mypageRegisteredProducts && (
       <>
         <MypageCardEdit content={mypageRegisteredProducts.content} memberId={memberId} />
+
         {/* pagination */}
-        <Grid sx={mypageCss.pagination}>
-          <Pagination count={10} />
+        <Grid sx={registeredCss.pagination}>
+          {mypageRegisteredProducts.totalPages === 0 ? (
+            ''
+          ) : (
+            <Pagination
+              count={mypageRegisteredProducts.totalPages}
+              page={page + 1}
+              onChange={handleChange}
+            />
+          )}
         </Grid>
       </>
     )
