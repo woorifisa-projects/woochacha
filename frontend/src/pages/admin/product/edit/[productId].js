@@ -22,9 +22,8 @@ function AdminProductEdit(props) {
   const handleSubmit = async () => {
     try {
       // await submitEditRegistered(memberId, productId, updateData);
-      SwalModals('success', '수정 반려 완료', '가격 수정 요청이 완료되었습니다!', false).then(() =>
-        router.push('/admin/product'),
-      );
+      SwalModals('success', '수정 반려 완료', '가격 수정 요청이 완료되었습니다!', false);
+      router.push('/admin/product');
     } catch (error) {
       console.log('실패');
     }
