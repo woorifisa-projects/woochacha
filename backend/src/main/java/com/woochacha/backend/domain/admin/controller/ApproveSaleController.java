@@ -22,7 +22,7 @@ import java.text.ParseException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/sales")
-public class ApproveSaleController extends Exception{
+public class ApproveSaleController{
 
     private final ApproveSaleService approveSaleService;
     private final QldbService qldbService;
