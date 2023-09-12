@@ -14,3 +14,5 @@ include::Member.adoc[]
 
 include::MyPage.adoc[]
 
+include::Sale.adoc[]
+
