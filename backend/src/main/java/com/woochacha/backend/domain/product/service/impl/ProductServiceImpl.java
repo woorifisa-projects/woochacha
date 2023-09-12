@@ -172,8 +172,8 @@ public class ProductServiceImpl implements ProductService {
         return new ProductDetailResponseDto(basicInfo, productDetailInfo, productOptionInfo, productOwnerInfo, productImageList);
     }
 
-    private PageImpl<ProductInfo> findProductDynamicInfoList(BooleanExpression expression, Pageable pageable) {
-        List<ProductInfo> productInfoList =  queryFactory
+    private Page<ProductInfo> findProductDynamicInfoList(BooleanExpression expression, Pageable pageable) {
+        QueryResults<ProductInfo> productInfoList =  queryFactory
                 .select(Projections.fields(
                         ProductInfo.class, p.id,
                         Expressions.asString(
@@ -189,9 +189,9 @@ public class ProductServiceImpl implements ProductService {
                 .orderBy(p.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch();
+                .fetchResults();
 
-        return new PageImpl<>(productInfoList);
+        return new PageImpl<>(productInfoList.getResults(), pageable, productInfoList.getTotal());
     }
 
     private ProductBasicInfo getProductBasicInfo(Long productId) {
@@ -282,7 +282,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageImpl<ProductInfo> findFilteredProduct(ProductFilterInfo productFilterInfo, Pageable pageable) {
+    public Page<ProductInfo> findFilteredProduct(ProductFilterInfo productFilterInfo, Pageable pageable) {
         return findProductDynamicInfoList(dynamicSearch(productFilterInfo), pageable);
     }
 
@@ -373,9 +373,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageImpl<ProductInfo> findSearchedProduct(String keyword, Pageable pageable) {
+    public Page<ProductInfo> findSearchedProduct(String keyword, Pageable pageable) {
         BooleanExpression expression = dynamicSearchWholeModelKeyword(keyword); // 모델명 검색 동적 쿼리 생성
-        PageImpl<ProductInfo> keywordSearchedByModelName = findProductDynamicInfoList(expression, pageable); // 모델명 동적 쿼리 실행
+        Page<ProductInfo> keywordSearchedByModelName = findProductDynamicInfoList(expression, pageable); // 모델명 동적 쿼리 실행
 
         // 모델명 검색 결과가 없으면 차량명 검색 동작
         if (keywordSearchedByModelName.isEmpty())

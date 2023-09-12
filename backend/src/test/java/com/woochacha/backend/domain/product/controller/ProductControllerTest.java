@@ -78,17 +78,6 @@ class ProductControllerTest extends CommonTest {
 
        List<ProductInfo> productInfoList = new ArrayList<>();
        productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
-       productInfoList.add(productInfo);
 
        QueryResults<ProductInfo> result = new QueryResults<>(productInfoList, 5L, 0L, 10L);
 
@@ -340,11 +329,13 @@ class ProductControllerTest extends CommonTest {
        List<ProductInfo> productInfoList = new ArrayList<>();
        productInfoList.add(productInfo);
 
-       PageImpl<ProductInfo> productInfoListPageable = new PageImpl<>(productInfoList);
+       QueryResults<ProductInfo> result = new QueryResults<>(productInfoList, 0L, 0L, productInfoList.size());
 
        Pageable pageable = PageRequest.of(0,5);
 
-       when(productService.findFilteredProduct(any(ProductFilterInfo.class), any())).thenReturn(productInfoListPageable);
+       Page<ProductInfo> reulstPage = new PageImpl<>(result.getResults(), pageable, result.getTotal());
+
+       when(productService.findFilteredProduct(any(ProductFilterInfo.class), any())).thenReturn(reulstPage);
 
        mockMvc.perform(post("/product/filter")
                        .param("page", String.valueOf(pageable.getOffset()))
@@ -374,6 +365,16 @@ class ProductControllerTest extends CommonTest {
                                fieldWithPath("content[].branch").description("판매 지점"),
                                fieldWithPath("content[].price").description("판매 가격"),
                                fieldWithPath("content[].imageUrl").description("이미지 리스트"),
+
+                               fieldWithPath("pageable.sort.empty").description("정렬 여부 (비어 있음)"),
+                               fieldWithPath("pageable.sort.sorted").description("정렬 여부 (정렬됨)"),
+                               fieldWithPath("pageable.sort.unsorted").description("정렬 여부 (정렬되지 않음)"),
+
+                               fieldWithPath("pageable.offset").description("페이지 오프셋 값"),
+                               fieldWithPath("pageable.pageSize").description("페이지 크기"),
+                               fieldWithPath("pageable.pageNumber").description("현재 페이지 번호"),
+                               fieldWithPath("pageable.paged").description("페이지 여부 (페이징된 경우 true, 그렇지 않으면 false)"),
+                               fieldWithPath("pageable.unpaged").description("페이징되지 않은 경우 true, 그렇지 않으면 false"),
 
                                fieldWithPath("pageable").description("페이징 정보"),
                                fieldWithPath("last").description("마지막 페이지 여부"),
@@ -433,13 +434,13 @@ class ProductControllerTest extends CommonTest {
        List<ProductInfo> productInfoList = new ArrayList<>();
        productInfoList.add(productInfo);
 
-       PageImpl<ProductInfo> productInfoListPageable = new PageImpl<>(productInfoList);
+       QueryResults<ProductInfo> result = new QueryResults<>(productInfoList, 0L, 0L, productInfoList.size());
+       Pageable pageable = PageRequest.of(0,5);
+       Page<ProductInfo> reulstPage = new PageImpl<>(result.getResults(), pageable, result.getTotal());
 
        String keyword = "기아";
 
-       Pageable pageable = PageRequest.of(0,5);
-
-       when(productService.findSearchedProduct(any(), any())).thenReturn(productInfoListPageable);
+       when(productService.findSearchedProduct(any(), any())).thenReturn(reulstPage);
 
        mockMvc.perform(get("/product/search")
                        .param("keyword", keyword)
@@ -460,6 +461,16 @@ class ProductControllerTest extends CommonTest {
                                fieldWithPath("content[].branch").description("판매 지점"),
                                fieldWithPath("content[].price").description("판매 가격"),
                                fieldWithPath("content[].imageUrl").description("이미지 리스트"),
+
+                               fieldWithPath("pageable.sort.empty").description("정렬 여부 (비어 있음)"),
+                               fieldWithPath("pageable.sort.sorted").description("정렬 여부 (정렬됨)"),
+                               fieldWithPath("pageable.sort.unsorted").description("정렬 여부 (정렬되지 않음)"),
+
+                               fieldWithPath("pageable.offset").description("페이지 오프셋 값"),
+                               fieldWithPath("pageable.pageSize").description("페이지 크기"),
+                               fieldWithPath("pageable.pageNumber").description("현재 페이지 번호"),
+                               fieldWithPath("pageable.paged").description("페이지 여부 (페이징된 경우 true, 그렇지 않으면 false)"),
+                               fieldWithPath("pageable.unpaged").description("페이징되지 않은 경우 true, 그렇지 않으면 false"),
 
                                fieldWithPath("pageable").description("페이징 정보"),
                                fieldWithPath("last").description("마지막 페이지 여부"),
