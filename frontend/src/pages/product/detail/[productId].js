@@ -53,9 +53,8 @@ export default function ProductDetail(props) {
     };
     purchaseRequest(purchaseForm).then((res) => {
       if (res.status === 200) {
-        SwalModals('success', '구매요청 완료', '구매요청이 완료되었습니다.', false).then(() => {
-          router.push(`/product`);
-        });
+        SwalModals('success', '구매요청 완료', '구매요청이 완료되었습니다.', false);
+        router.push(`/product`);
       }
     });
   };

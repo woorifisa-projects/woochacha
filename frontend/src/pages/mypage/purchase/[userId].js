@@ -20,6 +20,37 @@ function Purchase(props) {
   const memberId = userLoginState.userId;
   // const { userId } = props;
 
+  /**
+   * 페이지네이션
+   */
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+
+  const handleChange = (event, value) => {
+    setPage(value - 1);
+  };
+
+  /**
+   * - 첫 렌더링시, 전체 목록 get
+   * - page 변경 시, 재렌더링
+   */
+  useEffect(() => {
+    if (!mounted) {
+      mypagePurchasedProductsGetApi(memberId, 0, 5).then((res) => {
+        if (res.status === 200) {
+          setMypagePurchasedProducts(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      mypagePurchasedProductsGetApi(memberId, page, pageSize).then((res) => {
+        if (res.status === 200) {
+          setMypagePurchasedProducts(res.data);
+        }
+      });
+    }
+  }, [page]);
+
   const handleMove = (url) => {
     router.push(`${url}${memberId}`);
   };
@@ -27,16 +58,6 @@ function Purchase(props) {
   const mypageCss = {
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
-
-  // data 불러온 이후 필터링 data에 맞게 렌더링
-  useEffect(() => {
-    mypagePurchasedProductsGetApi(memberId).then((res) => {
-      if (res.status === 200) {
-        setMypagePurchasedProducts(res.data);
-      }
-    });
-    setMounted(true);
-  }, []);
 
   return (
     mounted &&
@@ -55,9 +76,18 @@ function Purchase(props) {
           })}
         </SubTabMenu>
         <MypageCard content={mypagePurchasedProducts.content} />
+
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
-          <Pagination count={10} />
+          {mypagePurchasedProducts.totalPages === 0 ? (
+            ''
+          ) : (
+            <Pagination
+              count={mypagePurchasedProducts.totalPages}
+              page={page + 1}
+              onChange={handleChange}
+            />
+          )}
         </Grid>
       </>
     )

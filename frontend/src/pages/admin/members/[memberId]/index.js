@@ -70,9 +70,8 @@ function AdminUserDetail(props) {
     memberId &&
       oneMemberDeletePatchApi(memberId)
         .then((res) => {
-          SwalModals('success', '삭제 완료', res.data, false).then(() =>
-            router.push('/admin/members'),
-          );
+          SwalModals('success', '삭제 완료', res.data, false);
+          router.push('/admin/members');
         })
         .catch((error) => {
           console.log('실패: ', error);

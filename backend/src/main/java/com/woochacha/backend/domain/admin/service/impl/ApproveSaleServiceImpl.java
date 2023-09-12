@@ -6,21 +6,21 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.config.QldbConfig;
-import com.woochacha.backend.domain.admin.dto.approve.ApproveSaleResponseDto;
-import com.woochacha.backend.domain.admin.dto.approve.CarAccidentInfoDto;
-import com.woochacha.backend.domain.admin.dto.approve.CarExchangeInfoDto;
-import com.woochacha.backend.domain.admin.dto.approve.CarInspectionInfoResponseDto;
+import com.woochacha.backend.domain.admin.dto.approve.*;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.car.info.entity.ExchangeType;
 import com.woochacha.backend.domain.car.info.repository.ExchangeTypeRepository;
+import com.woochacha.backend.domain.qldb.service.QldbService;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
+import com.woochacha.backend.domain.sale.service.SaleFormApplyService;
 import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import software.amazon.qldb.Result;
@@ -41,6 +41,8 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     private int carDistance;
     private final SaleFormRepository saleFormRepository;
     private final ExchangeTypeRepository exchangeTypeRepository;
+    private final SaleFormApplyService saleFormApplyService;
+    private final QldbService qldbService;
 
     @Override
     public Page<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable) {
@@ -60,7 +62,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        return new PageImpl<>(approveSaleResponseDtoList.getResults());
+        return new PageImpl<>(approveSaleResponseDtoList.getResults(), pageable, approveSaleResponseDtoList.getTotal());
     }
 
     @Override
@@ -73,9 +75,14 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         return false;
     }
 
+
     // qldb에서 차량 번호에 따른 필요한 차량 정보를 가지고 온다.
     @Override
-    public CarInspectionInfoResponseDto getQldbCarInfoList(String carNum, String accidentMetaId, String exchangeMetaId) {
+    public CarInspectionInfoResponseDto getQldbCarInfoList(Long saleFormId) {
+        String carNum = saleFormApplyService.findCarNum(saleFormId);
+        String accidentMetaId = qldbService.getMetaIdValue(carNum, "car_accident");
+        String exchangeMetaId = qldbService.getMetaIdValue(carNum, "car_exchange");
+
         List<CarAccidentInfoDto> accidentInfoDtoList = new ArrayList<>();
         List<CarExchangeInfoDto> exchangeInfoDtoList = new ArrayList<>();
         try {
@@ -128,8 +135,26 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         }
     }
 
-    // 차량의 distance를 받았을 때 제대로 된 값인지 나타내는 것
     @Override
+    public Boolean compareCarHistory(CompareRequestDto compareRequestDto, Long saleFormId){
+        String carNum = saleFormApplyService.findCarNum(saleFormId);
+        int carDistance = getCarDistance(carNum);
+        if(carDistance > compareRequestDto.getDistance()){
+            return false;
+        }else {
+            updateSaleFormStatus(saleFormId);
+            updateQldbCarDistance(compareRequestDto.getDistance(), saleFormId);
+            if(compareRequestDto.getCarAccidentInfoDto() != null){
+                updateQldbAccidentInfo(compareRequestDto.getCarAccidentInfoDto(), saleFormId);
+            }
+            if(compareRequestDto.getCarExchangeInfoDto() != null){
+                updateQldbExchangeInfo(compareRequestDto.getCarExchangeInfoDto(), saleFormId);
+            }
+            return true;
+        }
+    }
+
+    // 차량의 distance를 받았을 때 제대로 된 값인지 나타내는 것
     public int getCarDistance(String carNum) {
         try {
             qldbDriver.QldbDriver().execute(txn -> {
@@ -147,13 +172,11 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         }
     }
 
-    @Override
     @Transactional
     public void updateSaleFormStatus(Long saleFormId){
         saleFormRepository.updateStatus(saleFormId);
     }
 
-    @Override
     @Transactional
     public void updateQldbCarDistance(int carDistance, Long saleFormId){
         SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));;
@@ -169,7 +192,6 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         }
     }
 
-    @Override
     @Transactional
     public void updateQldbAccidentInfo(CarAccidentInfoDto carAccidentInfoDto, Long saleFormId){
         SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));;
@@ -193,7 +215,6 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         }
     }
 
-    @Override
     @Transactional
     public void updateQldbExchangeInfo(CarExchangeInfoDto carExchangeInfoDto, Long saleFormId){
         SaleForm saleForm = saleFormRepository.findById(saleFormId).orElseThrow(() -> new RuntimeException("SaleForm not found"));

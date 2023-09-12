@@ -92,10 +92,9 @@ function RegisteredEdit(props) {
         console.log(response);
         console.log('res');
         if (response.status === 200) {
-          SwalModals('success', '수정 제출', response.data, false).then(() => {
-            router.push(`/mypage/registered/${memberId}`);
-            return;
-          });
+          SwalModals('success', '수정 제출', response.data, false);
+          router.push(`/mypage/registered/${memberId}`);
+          return;
         }
       });
     } catch (error) {

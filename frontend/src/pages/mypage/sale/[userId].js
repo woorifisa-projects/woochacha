@@ -3,14 +3,14 @@ import withAuth from '@/hooks/withAuth';
 import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
-import { Button, Grid, Pagination, Tab, Typography } from '@mui/material';
+import { Grid, Pagination, Tab } from '@mui/material';
 import MypageCard from '@/components/mypage/MypageCard';
 import SubTabMenu from '@/components/common/SubTabMenu';
 import { mypageSoldProductsGetApi } from '@/services/mypageApi';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { SUB_SALE_TAB_MENU } from '@/constants/string';
 
-function Sale(props) {
+function Sale() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -24,24 +24,39 @@ function Sale(props) {
   };
 
   const mypageCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
 
-  // data 불러온 이후 필터링 data에 맞게 렌더링
+  /**
+   * 페이지네이션
+   */
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+
+  const handleChange = (event, value) => {
+    setPage(value - 1);
+  };
+
+  /**
+   * - 첫 렌더링시, 전체 목록 get
+   * - page 변경 시, 재렌더링
+   */
   useEffect(() => {
-    mypageSoldProductsGetApi(memberId).then((res) => {
-      if (res.status === 200) {
-        console.log(res.data);
-        setMypageSoldProducts(res.data);
-      }
-    });
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      mypageSoldProductsGetApi(memberId, 0, 5).then((res) => {
+        if (res.status === 200) {
+          setMypageSoldProducts(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      mypageSoldProductsGetApi(memberId, page, pageSize).then((res) => {
+        if (res.status === 200) {
+          setMypageSoldProducts(res.data);
+        }
+      });
+    }
+  }, [page]);
 
   return (
     mounted &&
@@ -60,9 +75,18 @@ function Sale(props) {
           })}
         </SubTabMenu>
         <MypageCard content={mypageSoldProducts.content} />
+
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
-          <Pagination count={10} />
+          {mypageSoldProducts.totalPages === 0 ? (
+            ''
+          ) : (
+            <Pagination
+              count={mypageSoldProducts.totalPages}
+              page={page + 1}
+              onChange={handleChange}
+            />
+          )}
         </Grid>
       </>
     )

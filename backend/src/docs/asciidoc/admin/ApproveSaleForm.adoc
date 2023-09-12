@@ -1,0 +1,56 @@
+:doctype: book
+:icons: font
+:toc: left
+:sectlinks:
+:sectnums:
+:docinfo: shared-head
+:toclevels: 2
+:source-highlighter: highlightjs
+
+
+== Product
+=== 신청 폼 반려
+==== Http Request
+include::{snippets}/admin/deny-saleForm/http-request.adoc[]
+
+==== Http Response
+include::{snippets}/admin/deny-saleForm/http-response.adoc[]
+
+
+=== 차량 정보 전부 조회하기
+==== Http Request
+include::{snippets}/admin/get-saleForm/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/admin/get-saleForm/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/admin/get-saleForm/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/admin/get-saleForm/response-fields.adoc[]
+
+
+=== 차량 정보 승인
+==== Http Request
+include::{snippets}/admin/approve-saleForm/http-request.adoc[]
+
+==== Request Fields
+include::{snippets}/admin/approve-saleForm/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/admin/approve-saleForm/http-response.adoc[]
+
+
+=== 매물 정보 조회
+==== Http Request
+include::{snippets}/admin/get-product/http-request.adoc[]
+
+==== Request parameters
+include::{snippets}/admin/get-product/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/admin/get-product/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/admin/get-product/response-fields.adoc[]
