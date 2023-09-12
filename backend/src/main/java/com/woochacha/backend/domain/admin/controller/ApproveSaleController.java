@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/sales")
-public class ApproveSaleController {
+public class ApproveSaleController extends Exception{
 
     private final ApproveSaleService approveSaleService;
     private final QldbService qldbService;
