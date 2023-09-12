@@ -38,7 +38,7 @@ export default function UserMyPageLayout(props) {
 
   const productsCss = {
     gridContent: {
-      // height: '100%',
+      height: '100%',
       display: 'flex',
       flexDirection: 'row',
     },
@@ -52,21 +52,25 @@ export default function UserMyPageLayout(props) {
           {/* main page */}
           <main>
             {/* 마이페이지 전체적인 layouts */}
-            <Grid sx={productsCss.gridContent}>
+            <Grid mx="auto" spacing={0} container sx={productsCss.gridContent} maxWidth="xl" my={3}>
               {/* 마이페이지 side menu */}
-              <MypageSidebar />
+              <Grid item md={2} xs={12}>
+                <MypageSidebar />
+              </Grid>
 
               {/* 마이페이지 세부 항목 관련 content */}
               {/* <Container sx={productsCss.contentContainer} maxWidth="md">
                 {children}
               </Container> */}
-              <LayoutRoot>
-                <LayoutContainer>
-                  <Container sx={productsCss.contentContainer} maxWidth="md">
-                    {children}
-                  </Container>
-                </LayoutContainer>
-              </LayoutRoot>
+              <Grid item md={10} xs={12}>
+                <LayoutRoot>
+                  <LayoutContainer>
+                    <Container sx={productsCss.contentContainer} maxWidth="md">
+                      {children}
+                    </Container>
+                  </LayoutContainer>
+                </LayoutRoot>
+              </Grid>
             </Grid>
           </main>
         </ThemeProvider>

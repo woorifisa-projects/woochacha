@@ -17,6 +17,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -25,7 +29,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -34,6 +37,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -50,6 +54,7 @@ class ProductControllerTest extends CommonTest {
    @BeforeEach
    public void init(RestDocumentationContextProvider restDocumentation) {
        mockMvc = MockMvcBuilders.standaloneSetup(productController)
+               .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                .apply(documentationConfiguration(restDocumentation)
                        .operationPreprocessors()
                        .withRequestDefaults(prettyPrint())
@@ -72,6 +77,7 @@ class ProductControllerTest extends CommonTest {
 
        List<ProductInfo> productInfoList = new ArrayList<>();
        productInfoList.add(productInfo);
+       PageImpl<ProductInfo> productInfoListPageable = new PageImpl<>(productInfoList);
 
        TypeDto typeDto  = new TypeDto(1, "경차");
        ModelDto modelDto = new ModelDto(1, "현대");
@@ -107,21 +113,42 @@ class ProductControllerTest extends CommonTest {
                .branchList(branchDtoList)
                .build();
 
-       ProductAllResponseDto productAllResponseDto = new ProductAllResponseDto(productInfoList, productFilterInfo);
+       ProductAllResponseDto productAllResponseDto = new ProductAllResponseDto(productInfoListPageable, productFilterInfo);
 
-       when(productService.findAllProduct()).thenReturn(productAllResponseDto);
+       Pageable pageable = PageRequest.of(0,5);
 
-       mockMvc.perform(get("/product"))
+       when(productService.findAllProduct(any())).thenReturn(productAllResponseDto);
+
+       mockMvc.perform(get("/product")
+               .param("page", String.valueOf(pageable.getOffset()))
+               .param("size", String.valueOf(pageable.getPageSize())))
                .andExpect(status().isOk())
                .andDo(document("product/get-all",
+                       requestParameters(
+                               parameterWithName("page").description("페이지 오프셋"),
+                               parameterWithName("size").description("페이지당 보여줄 매물 개수")
+                       ),
                        responseFields(
                                fieldWithPath("productInfo").description("[기본 정보]"),
-                               fieldWithPath("productInfo[].id").description("아이디"),
-                               fieldWithPath("productInfo[].title").description("제목(모델+차량명+연식)"),
-                               fieldWithPath("productInfo[].distance").description("주행 거리"),
-                               fieldWithPath("productInfo[].branch").description("판매 지점"),
-                               fieldWithPath("productInfo[].price").description("판매 가격"),
-                               fieldWithPath("productInfo[].imageUrl").description("이미지 리스트"),
+                               fieldWithPath("productInfo.content[].id").description("아이디"),
+                               fieldWithPath("productInfo.content[].title").description("제목(모델+차량명+연식)"),
+                               fieldWithPath("productInfo.content[].distance").description("주행 거리"),
+                               fieldWithPath("productInfo.content[].branch").description("판매 지점"),
+                               fieldWithPath("productInfo.content[].price").description("판매 가격"),
+                               fieldWithPath("productInfo.content[].imageUrl").description("이미지 리스트"),
+
+                               fieldWithPath("productInfo.pageable").description("페이징 정보"),
+                               fieldWithPath("productInfo.last").description("마지막 페이지 여부"),
+                               fieldWithPath("productInfo.totalPages").description("총 페이지 수"),
+                               fieldWithPath("productInfo.totalElements").description("총 요소 수"),
+                               fieldWithPath("productInfo.size").description("페이지 크기"),
+                               fieldWithPath("productInfo.number").description("현재 페이지 번호"),
+                               fieldWithPath("productInfo.sort.empty").description("정렬 여부 (비어 있음)"),
+                               fieldWithPath("productInfo.sort.sorted").description("정렬 여부 (정렬됨)"),
+                               fieldWithPath("productInfo.sort.unsorted").description("정렬 여부 (정렬되지 않음)"),
+                               fieldWithPath("productInfo.numberOfElements").description("현재 페이지의 요소 수"),
+                               fieldWithPath("productInfo.first").description("첫 번째 페이지 여부"),
+                               fieldWithPath("productInfo.empty").description("결과가 비어 있는지 여부"),
 
                                fieldWithPath("productFilterInfo").description("[필터링 종류]"),
                                fieldWithPath("productFilterInfo.typeList[].id").description("차종 리스트 : 아이디"),
@@ -140,12 +167,12 @@ class ProductControllerTest extends CommonTest {
                                fieldWithPath("productFilterInfo.branchList[].name").description("판매 지점 리스트 : 내용")
                        )))
                .andDo(print())
-               .andExpect(jsonPath("$.productInfo[0].id").value(productAllResponseDto.getProductInfo().get(0).getId()))
-               .andExpect(jsonPath("$.productInfo[0].title").value(productAllResponseDto.getProductInfo().get(0).getTitle()))
-               .andExpect(jsonPath("$.productInfo[0].distance").value(productAllResponseDto.getProductInfo().get(0).getDistance()))
-               .andExpect(jsonPath("$.productInfo[0].branch").value(productAllResponseDto.getProductInfo().get(0).getBranch()))
-               .andExpect(jsonPath("$.productInfo[0].price").value(productAllResponseDto.getProductInfo().get(0).getPrice()))
-               .andExpect(jsonPath("$.productInfo[0].imageUrl").value(productAllResponseDto.getProductInfo().get(0).getImageUrl()))
+               .andExpect(jsonPath("$.productInfo.content[0].id").value(productAllResponseDto.getProductInfo().getContent().get(0).getId()))
+               .andExpect(jsonPath("$.productInfo.content[0].title").value(productAllResponseDto.getProductInfo().getContent().get(0).getTitle()))
+               .andExpect(jsonPath("$.productInfo.content[0].distance").value(productAllResponseDto.getProductInfo().getContent().get(0).getDistance()))
+               .andExpect(jsonPath("$.productInfo.content[0].branch").value(productAllResponseDto.getProductInfo().getContent().get(0).getBranch()))
+               .andExpect(jsonPath("$.productInfo.content[0].price").value(productAllResponseDto.getProductInfo().getContent().get(0).getPrice()))
+               .andExpect(jsonPath("$.productInfo.content[0].imageUrl").value(productAllResponseDto.getProductInfo().getContent().get(0).getImageUrl()))
                .andExpect(jsonPath("$.productFilterInfo").exists())
                .andReturn();
    }
@@ -375,7 +402,12 @@ class ProductControllerTest extends CommonTest {
                                fieldWithPath("[].imageUrl").description("이미지 리스트")
                        )))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.*", hasSize(1)))
+               .andExpect(jsonPath("$.[0].id").value(productInfo.getId()))
+               .andExpect(jsonPath("$.[0].title").value(productInfo.getTitle()))
+               .andExpect(jsonPath("$.[0].distance").value(productInfo.getDistance()))
+               .andExpect(jsonPath("$.[0].branch").value(productInfo.getBranch()))
+               .andExpect(jsonPath("$.[0].price").value(productInfo.getPrice()))
+               .andExpect(jsonPath("$.[0].imageUrl").value(productInfo.getImageUrl()))
                .andReturn();
    }
 }

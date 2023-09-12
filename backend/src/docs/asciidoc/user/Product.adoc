@@ -24,6 +24,9 @@ include::{snippets}/product/get-all/response-fields.adoc[]
 ==== Http Request
 include::{snippets}/product/get-detail/http-request.adoc[]
 
+==== Path Parameters
+include::{snippets}/product/get-detail/path-parameters.adoc[]
+
 ==== Http Response
 include::{snippets}/product/get-detail/http-response.adoc[]
 
@@ -35,11 +38,11 @@ include::{snippets}/product/get-detail/response-fields.adoc[]
 ==== Http Request
 include::{snippets}/product/filter/http-request.adoc[]
 
-==== Http Response
-include::{snippets}/product/filter/http-response.adoc[]
-
 ==== Request Fields
 include::{snippets}/product/filter/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/product/filter/http-response.adoc[]
 
 ==== Response Fields
 include::{snippets}/product/filter/response-fields.adoc[]
@@ -49,11 +52,11 @@ include::{snippets}/product/filter/response-fields.adoc[]
 ==== Http Request
 include::{snippets}/product/search/http-request.adoc[]
 
-==== Http Response
-include::{snippets}/product/search/http-response.adoc[]
-
 ==== Request Fields
 include::{snippets}/product/search/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/product/search/http-response.adoc[]
 
 ==== Response Fields
 include::{snippets}/product/search/response-fields.adoc[]
@@ -63,11 +66,11 @@ include::{snippets}/product/search/response-fields.adoc[]
 ==== Http Request
 include::{snippets}/product/purchase/http-request.adoc[]
 
-==== Http Response
-include::{snippets}/product/purchase/http-response.adoc[]
-
 ==== Request Fields
 include::{snippets}/product/purchase/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/product/purchase/http-response.adoc[]
 
 ==== Response Body
 include::{snippets}/product/purchase/response-body.adoc[]

@@ -4,8 +4,9 @@ import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import { Typography } from '@mui/material';
 import MypageProfileEdit from '@/components/mypage/MypageProfileEdit';
 
-function ProfileEdit() {
+function ProfileEdit(props) {
   const [mounted, setMounted] = useState(false);
+  const { userId } = props;
 
   const mypageCss = {
     mypageTitle: {
@@ -23,9 +24,6 @@ function ProfileEdit() {
   return (
     mounted && (
       <>
-        <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          마이페이지 - 내 프로필 수정
-        </Typography>
         <MypageProfileEdit />
       </>
     )
@@ -35,3 +33,12 @@ function ProfileEdit() {
 // side menu 레이아웃
 ProfileEdit.Layout = withAuth(UserMyPageLayout);
 export default ProfileEdit;
+
+export async function getServerSideProps(context) {
+  const userId = context.params.userId;
+  return {
+    props: {
+      userId,
+    },
+  };
+}

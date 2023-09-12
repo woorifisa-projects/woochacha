@@ -22,14 +22,15 @@ import theme from '@/styles/theme';
 import { ADMIN_APPROVE_MODAL } from '@/constants/string';
 import OneButtonModal from '@/components/common/OneButtonModal';
 import { oneApproveFormGetApi, oneApproveFormPatchApi } from '@/services/adminpageApi';
+import { SwalModals } from '@/utils/modal';
 
-function AdminSalesApproveForm() {
+function AdminSalesApproveForm(props) {
   const [mounted, setMounted] = useState(false);
   const [approveSaleForm, setApproveSaleForm] = useState(); // 기존 qldb 값
   const [defaultDistance, setDefaultDistance] = useState(); // 기존 주행거리(유효성 검사용)
 
   const router = useRouter();
-  const { saleformId } = router.query;
+  const { saleformId } = props;
 
   // 교체부위 select box 관련
   const [exchangeVal, setExchangeVal] = useState({
@@ -56,8 +57,10 @@ function AdminSalesApproveForm() {
    */
   const handleOpenModal = () => {
     if (approveSaleForm.carDistance < defaultDistance) {
-      alert('기존 주행거리보다 작을 수 없습니다!');
-      return;
+      SwalModals('error', '입력 오류', '기존 주행거리보다 작을 수 없습니다!', false).then(() => {
+        router.push('/admin/sales');
+        return;
+      });
     } else {
       handleClickModal();
     }
@@ -86,12 +89,18 @@ function AdminSalesApproveForm() {
     oneApproveFormPatchApi(saleformId, newApproveData).then((res) => {
       console.log(res);
       if (res.status === 200 && res.data === true) {
-        alert('점검 정보가 승인되었습니다. 차량 게시글을 등록으로 이동합니다.');
-        router.replace(`/admin/sales/register/${saleformId}`);
-        return;
+        SwalModals(
+          'success',
+          '점검 정보 승인',
+          '점검 정보가 승인되었습니다. 차량 게시글을 등록으로 이동합니다.',
+          false,
+        ).then(() => {
+          router.replace(`/admin/sales/register/${saleformId}`);
+          return;
+        });
       }
       if (res.status === 200 && res.data === false) {
-        alert('잘못된 요청입니다. 다시 확인해주세요.');
+        SwalModals('error', '점검 정보 승인 오류', '잘못된 요청입니다. 다시 확인해주세요.', false);
         return;
       }
     });
@@ -165,7 +174,7 @@ function AdminSalesApproveForm() {
           setApproveSaleForm(res.data);
           setDefaultDistance(res.data.carDistance);
         } else {
-          alert('데이터가 없습니다!');
+          SwalModals('error', '데이터 없음', '데이터가 없습니다!', false);
         }
       });
       setMounted(true);
@@ -428,3 +437,12 @@ function AdminSalesApproveForm() {
 // side menu 레이아웃
 AdminSalesApproveForm.Layout = withAdminAuth(AdminPageLayout);
 export default AdminSalesApproveForm;
+
+export async function getServerSideProps(context) {
+  const saleformId = context.params.saleformId;
+  return {
+    props: {
+      saleformId,
+    },
+  };
+}

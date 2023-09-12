@@ -13,6 +13,7 @@ import {
   onePurchaseConfirmFormPatchApi,
   onePurchaseTransactionFormPostApi,
 } from '@/services/adminpageApi';
+import { SwalModals } from '@/utils/modal';
 
 function AdminPurchaseList() {
   const [mounted, setMounted] = useState(false);
@@ -38,8 +39,9 @@ function AdminPurchaseList() {
     onePurchaseConfirmFormPatchApi(currentPurchaseId, purchaseForm).then((res) => {
       console.log(res);
       if (res.status === 200) {
-        alert(res.data);
-        router.push(`/admin/purchase`);
+        SwalModals('success', '수정 요청 완료', res.data, false).then(() =>
+          router.push('/admin/purchase'),
+        );
       }
     });
   };
@@ -59,8 +61,9 @@ function AdminPurchaseList() {
     onePurchaseTransactionFormPostApi(currentPurchaseId).then((res) => {
       console.log(res);
       if (res.status === 200) {
-        alert(res.data);
-        router.push(`/admin/purchase`);
+        SwalModals('success', '거래 성사 완료', res.data, false).then(() =>
+          router.push('/admin/purchase'),
+        );
       }
     });
   };
@@ -82,9 +85,11 @@ function AdminPurchaseList() {
    * 거래관리 요청 목록 조회
    */
   useEffect(() => {
-    allPurchaseFormGetApi().then((data) => {
-      console.log(data);
-      setAllPurchaseFormInfo(data);
+    allPurchaseFormGetApi().then((res) => {
+      if (res.status === 200) {
+        console.log(res.data);
+        setAllPurchaseFormInfo(res.data);
+      }
     });
     setMounted(true);
   }, []);
@@ -112,21 +117,10 @@ function AdminPurchaseList() {
     },
   ];
 
-  const adminPurchaseCss = {
-    mainTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
-  };
-
   return (
     mounted &&
     allPurchaseFormInfo && (
       <>
-        <Typography sx={adminPurchaseCss.mainTitle} component="h4" variant="h4" gutterBottom>
-          관리자 페이지 - [거래관리] 구매 요청 리스트
-        </Typography>
         <PurchaseTable
           headerData={table_cell_data}
           contentData={allPurchaseFormInfo.content}

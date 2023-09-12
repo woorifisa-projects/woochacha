@@ -18,6 +18,8 @@ import com.woochacha.backend.domain.sale.entity.SaleForm;
 import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,10 +43,10 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     private final ExchangeTypeRepository exchangeTypeRepository;
 
     @Override
-    public QueryResults<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable) {
+    public Page<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable) {
         QSaleForm sf = QSaleForm.saleForm;
 
-        return jpaQueryFactory
+        QueryResults<ApproveSaleResponseDto> approveSaleResponseDtoList = jpaQueryFactory
                 .select(Projections.fields(ApproveSaleResponseDto.class,
                         sf.id,
                         sf.member.name.as("name"),
@@ -57,6 +59,8 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
+
+        return new PageImpl<>(approveSaleResponseDtoList.getResults());
     }
 
     @Override

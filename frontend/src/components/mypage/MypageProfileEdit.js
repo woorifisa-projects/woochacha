@@ -55,31 +55,33 @@ export default function MypageProfileEdit() {
   };
   // GET
   useEffect(() => {
-    memberProfileEditGetApi(memberId).then((data) => {
-      setMemberProfileEdit({
-        imageUrl: data.imageUrl,
-        name: data.name,
-      });
-      setEditProfileValue({
-        ...editProfileValue,
-        imageUrl: data.imageUrl,
-      });
+    memberProfileEditGetApi(memberId).then((res) => {
+      if (res.status === 200) {
+        setMemberProfileEdit({
+          imageUrl: res.data.imageUrl,
+          name: res.data.name,
+        });
+        setEditProfileValue({
+          ...editProfileValue,
+          imageUrl: res.data.imageUrl,
+        });
+      }
     });
     setMounted(true);
   }, []);
 
   const mypageProfileCss = {
     card: {
-      maxWidth: '50rem',
-      maxHeight: '45rem',
+      maxWidth: '100%',
+      maxHeight: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 10,
+      mb: 5,
       paddingY: 8,
       textAlign: 'center',
-      boxShadow: 7,
+      boxShadow: 1,
       borderRadius: '3rem',
     },
     cardMedia: {

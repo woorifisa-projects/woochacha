@@ -1,4 +1,4 @@
-= Woochacha REST API
+= Woochacha User REST API
 :doctype: book
 :icons: font
 :toc: left
@@ -11,4 +11,6 @@
 include::Product.adoc[]
 
 include::Member.adoc[]
+
+include::MyPage.adoc[]
 

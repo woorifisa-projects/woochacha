@@ -8,6 +8,7 @@ import { ADMIN_DENY_MODAL } from '@/constants/string';
 import SaleTable from '@/components/admin/SaleTable';
 import BasicModal from '@/components/common/BasicModal';
 import { allSaleFormGetApi, denySaleFormPatchApi } from '@/services/adminpageApi';
+import { SwalModals } from '@/utils/modal';
 
 function AdminSalesList() {
   const [mounted, setMounted] = useState(false);
@@ -29,21 +30,14 @@ function AdminSalesList() {
     try {
       await denySaleFormPatchApi(currentSaleFormId).then((res) => {
         if (res.status === 200) {
-          alert('반려 완료');
-          router.push(`/admin/sales`);
+          SwalModals('success', '반려 완료', '반려가 완료되었습니다!', false).then(() =>
+            router.push('/admin/sales'),
+          );
         }
       });
     } catch (error) {
       console.log('실패');
     }
-  };
-
-  const mypageCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
   };
 
   const table_cell_data = [
@@ -69,8 +63,10 @@ function AdminSalesList() {
    * 전체 saleform의 정보를 GET
    */
   useEffect(() => {
-    allSaleFormGetApi().then((data) => {
-      setAllSaleFormInfo(data);
+    allSaleFormGetApi().then((res) => {
+      if (res.status === 200) {
+        setAllSaleFormInfo(res.data);
+      }
     });
     setMounted(true);
   }, []);
@@ -80,9 +76,6 @@ function AdminSalesList() {
     allSaleFormInfo && (
       <ThemeProvider theme={responsiveFontTheme}>
         <CssBaseline />
-        <Typography sx={mypageCss.mypageTitle} component="h4" variant="h4" gutterBottom>
-          관리자 페이지 - 판매 신청 목록
-        </Typography>
         <SaleTable
           headerData={table_cell_data}
           contentData={allSaleFormInfo.content}

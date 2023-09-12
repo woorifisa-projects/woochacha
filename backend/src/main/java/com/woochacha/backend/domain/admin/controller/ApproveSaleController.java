@@ -1,24 +1,23 @@
 package com.woochacha.backend.domain.admin.controller;
 
+import com.woochacha.backend.domain.admin.dto.RegisterInputDto;
+import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
 import com.woochacha.backend.domain.admin.dto.approve.ApproveSaleResponseDto;
 import com.woochacha.backend.domain.admin.dto.approve.CarInspectionInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.approve.CompareRequestDto;
-import com.woochacha.backend.domain.admin.dto.RegisterProductDto;
-import com.woochacha.backend.domain.admin.dto.*;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.admin.service.RegisterProductService;
 import com.woochacha.backend.domain.qldb.service.QldbService;
 import com.woochacha.backend.domain.sale.service.SaleFormApplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,9 +33,7 @@ public class ApproveSaleController extends Exception{
     //관리자 페이지에서 모든 차량의 saleform 신청폼(점검 전)을 확인한다.
     @GetMapping
     public ResponseEntity<Page<ApproveSaleResponseDto>> allSaleForms(Pageable pageable) {
-        List<ApproveSaleResponseDto> saleForms = approveSaleService.getApproveSaleForm(pageable).getResults();
-        Long size =  approveSaleService.getApproveSaleForm(pageable).getTotal();
-        return ResponseEntity.ok(new PageImpl<>(saleForms, pageable, size));
+        return ResponseEntity.ok(approveSaleService.getApproveSaleForm(pageable));
     }
 
     @PatchMapping("/deny/{saleFormId}")

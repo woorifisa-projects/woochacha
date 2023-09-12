@@ -9,8 +9,15 @@ export default function SubTabMenu(props) {
     setValue(newValue);
   };
 
+  const subTabMenuCss = {
+    box: {
+      width: '100%',
+      my: 5,
+    },
+  };
+
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={subTabMenuCss.box}>
       <Tabs
         value={value}
         onChange={handleTabChange}

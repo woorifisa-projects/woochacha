@@ -10,6 +10,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
@@ -29,16 +34,19 @@ public class JwtTokenProvider {
     private final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     private final UserDetailsServiceImpl userDetailsService; // Spring Security 에서 제공하는 서비스 레이어
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
 
     private final String SECRET_KEY;
     private final long TOKEN_VALID_MILLISECOND;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
                             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
-                            UserDetailsServiceImpl userDetailsService) {
+                            UserDetailsServiceImpl userDetailsService, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
         this.SECRET_KEY = secretKey;
-        this.TOKEN_VALID_MILLISECOND = tokenValidityInSeconds * 24 * 1000L; // 1시간 토큰 유효인데 우선 테스트로 24시간 설정
+        this.TOKEN_VALID_MILLISECOND = tokenValidityInSeconds * 1000L; // 1시간 토큰 유효인데 우선 테스트로 24시간 설정
         this.userDetailsService = userDetailsService;
     }
 
@@ -79,23 +87,30 @@ public class JwtTokenProvider {
     }
 
     // 토큰의 유효성 + 만료일자 확인
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, ServletRequest request, ServletResponse response) throws IOException {
+        String errorMessage = "";
         try {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
             return true;
         } catch (SecurityException e) {
-            LOGGER.info("기존 서명이 확인되지 않는 JWT 토큰입니다.");
+            errorMessage = "기존 서명이 확인되지 않는 토큰";
         } catch (MalformedJwtException e) {
-            LOGGER.info("올바르게 구성되지 않은 JWT 토큰입니다.");
+            errorMessage = "올바르게 구성되지 않은 토큰";
         } catch (ExpiredJwtException e) {
-            LOGGER.info("만료된 JWT 토큰입니다.");
+            errorMessage = "만료된 토큰";
+//            errorMessage = "Expired Jwt Token";
         } catch (UnsupportedJwtException e) {
-            LOGGER.info("지원되지 않는 JWT 토큰입니다.");
+            errorMessage = "지원되지 않는 토큰";
         } catch (IllegalArgumentException e) {
-            LOGGER.info("JWT 토큰이 잘못되었습니다.");
+            errorMessage = "잘못된 토큰";
         } catch (SignatureException e) {
-            LOGGER.info("JWT 토큰의 형식이 잘못되었습니다.");
+            errorMessage = "형식이 잘못된 토큰";
         }
+        LOGGER.warn(errorMessage);
+
+        jwtAuthenticationEntryPoint.setErrorMessage(errorMessage);
+        jwtAuthenticationEntryPoint.commence((HttpServletRequest) request, (HttpServletResponse) response, null);
+
         return false;
     }
 }

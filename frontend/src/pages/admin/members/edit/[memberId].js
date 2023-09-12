@@ -15,11 +15,11 @@ import {
 import withAdminAuth from '@/hooks/withAdminAuth';
 import { useRouter } from 'next/router';
 import { oneUserEditPatchApi, oneUserGetApi } from '@/services/adminpageApi';
+import { SwalModals } from '@/utils/modal';
 
-function AdminUserEdit() {
+function AdminUserEdit(props) {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  const currentPath = router.query; // 현재 경로 읽어오기
 
   const [editProfileValue, setEditProfileValue] = useState({
     imageUrl: null,
@@ -28,15 +28,18 @@ function AdminUserEdit() {
     isChecked: false, // 기본 이미지로 변경 체크 상태
   });
 
+  const { memberId } = props;
+
   /**
    * 수정 form 제출
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    oneUserEditPatchApi(editProfileValue, currentPath.memberId).then((res) => {
+    oneUserEditPatchApi(editProfileValue, memberId).then((res) => {
       if (res.status === 200) {
-        alert('수정이 완료되었습니다.');
-        router.push('/admin/members');
+        SwalModals('success', '수정 완료', '수정이 완료되었습니다!', false).then(() =>
+          router.push('/admin/members'),
+        );
       }
     });
   };
@@ -62,16 +65,22 @@ function AdminUserEdit() {
     });
   };
 
+  const handleMoveUrl = (url) => {
+    router.push(url);
+  };
+
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
-    currentPath.memberId &&
-      oneUserGetApi(currentPath.memberId).then((data) => {
-        setEditProfileValue({
-          imageUrl: data.memberInfoDto.profileImage,
-          nameValue: data.memberInfoDto.name,
-          status: data.memberInfoDto.isAvailable,
-          isChecked: false, // 기본 이미지로 변경 체크 상태
-        });
+    memberId &&
+      oneUserGetApi(memberId).then((res) => {
+        if (res.status === 200) {
+          setEditProfileValue({
+            imageUrl: res.data.memberInfoDto.profileImage,
+            nameValue: res.data.memberInfoDto.name,
+            status: res.data.memberInfoDto.isAvailable,
+            isChecked: false, // 기본 이미지로 변경 체크 상태
+          });
+        }
       });
     setMounted(true);
   }, []);
@@ -198,6 +207,7 @@ function AdminUserEdit() {
                 size="large"
                 variant="contained"
                 sx={adminUserProfileEditCss.button}
+                onClick={() => handleMoveUrl(`/admin/members/${memberId}`)}
                 color="error">
                 취소
               </Button>
@@ -212,3 +222,12 @@ function AdminUserEdit() {
 // side menu 레이아웃
 AdminUserEdit.Layout = withAdminAuth(AdminPageLayout);
 export default AdminUserEdit;
+
+export async function getServerSideProps(context) {
+  const memberId = context.params.memberId;
+  return {
+    props: {
+      memberId,
+    },
+  };
+}

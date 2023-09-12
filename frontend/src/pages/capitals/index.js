@@ -5,6 +5,7 @@ import {
   Box,
   Typography,
   Button,
+  Grid,
 } from '@mui/material';
 import theme from '@/styles/theme';
 import MainCard from '@/components/common/MainCard';
@@ -13,6 +14,29 @@ import { CAPITAL_MAIN_CARD, CAPITAL_CONTENTS } from '@/constants/string';
 
 export default function Capitals() {
   let responsiveFontTheme = responsiveFontSizes(theme);
+
+  const capitalCss = {
+    mainCardTypo: {
+      mb: 10,
+      color: '#1490ef',
+      fontWeight: 'bold',
+    },
+    mainCardBox: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    imageBox: {
+      width: '100%',
+    },
+    gridBox: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+  };
 
   return (
     <ThemeProvider theme={responsiveFontTheme}>
@@ -40,48 +64,41 @@ export default function Capitals() {
                 marginVal={item.miniCardMarginY}>
                 <Typography
                   mb={10}
-                  component="h4"
-                  variant="h4"
-                  color="#1490ef"
-                  fontWeight="bold"
+                  component="h5"
+                  variant="h5"
+                  sx={capitalCss.mainCardTypo}
                   gutterBottom>
                   {item.capitalTitle}
                 </Typography>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
-                  <img width="40%" src={item.capitalImgUrl} />
-                  <Box
-                    sx={{
-                      width: '40%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                    }}>
-                    <Box>
-                      <Typography
-                        mb={4}
-                        component="h4"
-                        variant="h4"
-                        color="inherit"
-                        fontWeight="bold"
-                        gutterBottom>
-                        {item.capitalSubTitle}
-                      </Typography>
-                      <Typography sx={{ mb: '5rem' }}>{item.capitalSubContent}</Typography>
-                      <Button
-                        href={item.wonCarUrl}
-                        variant="contained"
-                        fullWidth
-                        sx={{ fontSize: '1.3rem' }}>
-                        보러가기
-                      </Button>
-                    </Box>
-                  </Box>
+                <Box sx={capitalCss.mainCardBox}>
+                  <Grid container maxWidth="xl" mx="auto">
+                    <Grid item md={6} xs={12}>
+                      <img src={item.capitalImgUrl} width="100%" />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <Box sx={capitalCss.gridBox}>
+                        <Box>
+                          <Typography
+                            mb={4}
+                            component="h4"
+                            variant="h4"
+                            color="inherit"
+                            fontWeight="bold"
+                            gutterBottom>
+                            {item.capitalSubTitle}
+                          </Typography>
+                          <Typography sx={{ mb: '5rem' }}>{item.capitalSubContent}</Typography>
+                          <Button
+                            href={item.wonCarUrl}
+                            variant="contained"
+                            fullWidth
+                            sx={{ fontSize: '1.3rem' }}>
+                            보러가기
+                          </Button>
+                        </Box>
+                      </Box>
+                    </Grid>
+                  </Grid>
                 </Box>
               </MiniCard>
             </>
