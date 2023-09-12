@@ -45,10 +45,11 @@ export default function Products(props) {
   /**
    * 페이지네이션
    */
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(8);
+
   const handleChange = (event, value) => {
-    setPage(value);
+    setPage(value - 1);
   };
 
   /**
@@ -60,7 +61,7 @@ export default function Products(props) {
       setAllProducts(fetchData);
       setMounted(true);
     } else {
-      allProductGetApi(page - 1, pageSize).then((res) => {
+      allProductGetApi(page, pageSize).then((res) => {
         if (res.status === 200) {
           setAllProducts(res.data);
         }
@@ -242,11 +243,15 @@ export default function Products(props) {
 
             {/* pagination */}
             <Grid item md={12} xs={12} sx={productsCss.pagination}>
-              <Pagination
-                count={allProducts.productInfo.totalPages + 1}
-                page={page}
-                onChange={handleChange}
-              />
+              {allProducts.productInfo.totalPages === 0 ? (
+                ''
+              ) : (
+                <Pagination
+                  count={allProducts.productInfo.totalPages}
+                  page={page + 1}
+                  onChange={handleChange}
+                />
+              )}
             </Grid>
           </Grid>
         </main>
@@ -256,7 +261,7 @@ export default function Products(props) {
 }
 
 export async function getServerSideProps() {
-  const data = await allProductGetApi(0, 10).then((res) => res.data);
+  const data = await allProductGetApi(0, 8).then((res) => res.data);
 
   return {
     props: {
