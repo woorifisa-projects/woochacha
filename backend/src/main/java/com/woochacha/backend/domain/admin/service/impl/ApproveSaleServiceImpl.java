@@ -62,7 +62,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        return new PageImpl<>(approveSaleResponseDtoList.getResults());
+        return new PageImpl<>(approveSaleResponseDtoList.getResults(), pageable, approveSaleResponseDtoList.getTotal());
     }
 
     @Override
