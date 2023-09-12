@@ -85,7 +85,6 @@ class ProductControllerTest extends CommonTest {
 
        Page<ProductInfo> reulstPage = new PageImpl<>(result.getResults(), pageable, result.getTotal());
 
-
        TypeDto typeDto  = new TypeDto(1, "경차");
        ModelDto modelDto = new ModelDto(1, "현대");
        CarNameDto carNameDto = new CarNameDto(1L, "아반떼 AD");
