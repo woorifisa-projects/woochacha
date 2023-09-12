@@ -125,7 +125,7 @@ class ProductControllerTest extends CommonTest {
        when(productService.findAllProduct(any())).thenReturn(productAllResponseDto);
 
        mockMvc.perform(get("/product")
-               .param("page", String.valueOf(pageable.getPageNumber()))
+               .param("page", String.valueOf(pageable.getOffset()))
                .param("size", String.valueOf(pageable.getPageSize())))
                .andExpect(status().isOk())
                .andDo(document("product/get-all",
