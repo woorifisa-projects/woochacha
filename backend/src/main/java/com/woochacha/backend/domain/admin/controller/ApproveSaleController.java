@@ -36,6 +36,7 @@ public class ApproveSaleController{
         return ResponseEntity.ok(approveSaleService.getApproveSaleForm(pageable));
     }
 
+    // 점검 후 해당 매물이 판매 불가 제품일 때 반려를 한다.
     @PatchMapping("/deny/{saleFormId}")
     public ResponseEntity<Boolean> denySaleForm(@PathVariable Long saleFormId){
         return ResponseEntity.ok(approveSaleService.updateSaleFormDenyStatus(saleFormId));
@@ -44,10 +45,7 @@ public class ApproveSaleController{
     // 점검 후 해당 saleform에 해당하는 car의 정보와 distance,car accident, car exchange를 조회한다.
     @GetMapping("/approve/{saleFormId}")
     public ResponseEntity<CarInspectionInfoResponseDto> qldbCarInfo(@PathVariable Long saleFormId){
-        String carNum = saleFormApplyService.findCarNum(saleFormId);
-        String accidentMetaId = qldbService.getMetaIdValue(carNum, "car_accident");
-        String exchangeMetaId = qldbService.getMetaIdValue(carNum, "car_exchange");
-        CarInspectionInfoResponseDto carResponseInfo = approveSaleService.getQldbCarInfoList(carNum,accidentMetaId,exchangeMetaId);
+        CarInspectionInfoResponseDto carResponseInfo = approveSaleService.getQldbCarInfoList(saleFormId);
         return ResponseEntity.ok(carResponseInfo);
     }
 
@@ -55,21 +53,8 @@ public class ApproveSaleController{
     @PatchMapping("/approve/{saleFormId}")
     @Transactional
     public ResponseEntity<Boolean> compareCarInfo(@RequestBody CompareRequestDto compareRequestDto, @PathVariable Long saleFormId){
-        String carNum = saleFormApplyService.findCarNum(saleFormId);
-        int carDistance = approveSaleService.getCarDistance(carNum);
-        if(carDistance > compareRequestDto.getDistance()){
-            return ResponseEntity.ok(false);
-        }else {
-            approveSaleService.updateSaleFormStatus(saleFormId);
-            approveSaleService.updateQldbCarDistance(compareRequestDto.getDistance(), saleFormId);
-            if(compareRequestDto.getCarAccidentInfoDto() != null){
-                approveSaleService.updateQldbAccidentInfo(compareRequestDto.getCarAccidentInfoDto(), saleFormId);
-            }
-            if(compareRequestDto.getCarExchangeInfoDto() != null){
-                approveSaleService.updateQldbExchangeInfo(compareRequestDto.getCarExchangeInfoDto(), saleFormId);
-            }
-            return ResponseEntity.ok(true);
-        }
+        Boolean result = approveSaleService.compareCarHistory(compareRequestDto,saleFormId);
+        return ResponseEntity.ok(result);
     }
 
     // 차량 게시글 등록을위한 폼 데이터를 QLDB에서 조회한다.
