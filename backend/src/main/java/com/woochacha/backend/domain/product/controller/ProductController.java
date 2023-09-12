@@ -6,10 +6,11 @@ import com.woochacha.backend.domain.product.dto.ProductPurchaseRequestDto;
 import com.woochacha.backend.domain.product.dto.all.ProductInfo;
 import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
 import com.woochacha.backend.domain.product.service.ProductService;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
@@ -33,8 +34,8 @@ public class ProductController {
     }
 
     @PostMapping("/filter")
-    public List<ProductInfo> findFilteredProduct(@RequestBody ProductFilterInfo productFilterInfo) {
-        return productService.findFilteredProduct(productFilterInfo);
+    public PageImpl<ProductInfo> findFilteredProduct(@RequestBody ProductFilterInfo productFilterInfo, Pageable pageable) {
+        return productService.findFilteredProduct(productFilterInfo, pageable);
     }
 
     @PostMapping("/purchase")
@@ -44,7 +45,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public List<ProductInfo> findSearchedProduct(@RequestParam(value="keyword") String keyword) {
-        return productService.findSearchedProduct(keyword);
+    public PageImpl<ProductInfo> findSearchedProduct(@RequestParam(value="keyword") String keyword, Pageable pageable) {
+        return productService.findSearchedProduct(keyword, pageable);
     }
 }
