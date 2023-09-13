@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.sale.service;
 
 import com.woochacha.backend.common.ModelMapping;
+import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
@@ -15,6 +16,8 @@ import com.woochacha.backend.domain.status.entity.CarStatus;
 import com.woochacha.backend.domain.status.repository.CarStatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +37,7 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
     private final BranchRepository branchRepository;
     private final ProductRepository productRepository;
     private final LogService logService;
+    private final Logger logger = LoggerFactory.getLogger(SaleFormApplyServiceImpl.class);
     private final ModelMapper modelMapper = ModelMapping.getInstance();
 
     //차량 신청 폼을 요청할 때, 전체 branch 리스트를 넘겨줌 (Get)
@@ -106,5 +110,6 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
                 .carStatus(carStatus)
                 .build();
         saleFormRepository.save(saleForm);
+        logger.info("memberId:{} 판매 신청폼 등록", memberId);
     }
 }

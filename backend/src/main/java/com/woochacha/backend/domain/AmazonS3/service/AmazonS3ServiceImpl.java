@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3ProductRequestDto;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
 import com.woochacha.backend.domain.admin.dto.RegisterInputDto;
+import com.woochacha.backend.domain.admin.service.impl.RegisterProductServiceImpl;
 import com.woochacha.backend.domain.car.detail.entity.QCarDetail;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.product.entity.CarImage;
@@ -31,7 +32,7 @@ import java.util.List;
 @Service
 public class AmazonS3ServiceImpl implements AmazonS3Service {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(AmazonS3ServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(AmazonS3ServiceImpl.class);
     private final AmazonS3 amazonS3;
 
     private final ProductRepository productRepository;
@@ -59,6 +60,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
     public String uploadProfile(AmazonS3RequestDto amazonS3RequestDto) throws IOException {
         String url = this.uploadToS3("/profile", amazonS3RequestDto.getEmail(), amazonS3RequestDto.getMultipartFile());
         this.saveProfileImageToDB(amazonS3RequestDto.getEmail(), url);
+        logger.debug("imageUrl:{} 프로필 이미지 업로드", url);
         return url;
     }
 
@@ -85,9 +87,11 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
             for (MultipartFile multipartFile : multipartFileList) {
                 String url = this.uploadToS3("/product/" + carNum, String.valueOf(++count), multipartFile);
                 this.saveProductImageToDB(productId, url);
+                logger.info("carNum:{} 차량 매물 등록 완료 imageUrl:{}", carNum, url);
             }
             return true;
         } catch (Exception e) {
+            logger.debug("carNum:{} 매뭉 등록 이미지 업로드 중 에러 발생", carNum);
             e.printStackTrace();
             return false;
         }
@@ -115,11 +119,13 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
             for (MultipartFile multipartFile : multipartFileList) {
                 String url = this.uploadToS3("/product/" + carNum, String.valueOf(++count), multipartFile);
-                LOGGER.info("[url] : " + url);
+                logger.info("[url] : " + url);
                 this.saveProductImageToDB(productId, url);
+                logger.info("carNum:{} 차량 매물 등록 완료 imageUrl:{}", carNum, url);
             }
             return true;
         } catch (Exception e) {
+            logger.debug("carNum:{} 매뭉 등록 이미지 업로드 중 에러 발생", carNum);
             e.printStackTrace();
             return false;
         }
@@ -144,6 +150,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
             return BASE_URL + folderName + "/" + fileName;
 
         } catch (AmazonClientException e) {
+            logger.info("S3에 이미지 업로드중 에러 발생 folderName:{} fileName:{}", folderName, fileName);
             e.printStackTrace();
             return "false";
         }
@@ -156,8 +163,10 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
                     .set(QMember.member.profileImage, url)
                     .where(QMember.member.email.eq(email))
                     .execute();
+            logger.info("S3에서 RDS로 프로필 이미지 저장 imageUrl:{}", url);
             return ResponseEntity.ok(true);
         } catch (Exception e) {
+            logger.error("프로필 이미지 저장 중 에러 발생 imageUrl:{}", url);
             return ResponseEntity.ok(false);
         }
     }
@@ -176,7 +185,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
                 .build();
 
         carImageRepository.save(carImage);
-
+        logger.debug("S3에서 RDS로 프로필 이미지 저장 imageUrl:{} productId:{}", url, productId);
         // [QueryDSL]
 
 //            queryFactory
