@@ -378,41 +378,47 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductInfo> findSearchedProduct(String keyword, Pageable pageable) {
-        BooleanExpression expression = dynamicSearchWholeModelKeyword(keyword); // 모델명 검색 동적 쿼리 생성
-        Page<ProductInfo> keywordSearchedByModelName = findProductDynamicInfoList(expression, pageable); // 모델명 동적 쿼리 실행
+        BooleanExpression wholeKeyWordModel = cd.model.name.stringValue().contains(keyword);
+        Page<ProductInfo> wholeKeyWordModelResult = findProductDynamicInfoList(wholeKeyWordModel, pageable);
+        if(!wholeKeyWordModelResult.isEmpty()) return wholeKeyWordModelResult;
 
-        // 모델명 검색 결과가 없으면 차량명 검색 동작
-        if (keywordSearchedByModelName.isEmpty())
-            return findProductDynamicInfoList(dynamicSearchPartKeyword(keyword), pageable);
+        BooleanExpression wholeKeyWordCarName = cd.carName.name.stringValue().contains(keyword);
+        Page<ProductInfo> wholeKeyWordCarNameResult = findProductDynamicInfoList(wholeKeyWordCarName, pageable);
+        if(!wholeKeyWordCarNameResult.isEmpty()) return wholeKeyWordCarNameResult;
 
-            // 모델명 검색 결과가 있다면 모델명 검색 결과 리턴
-        else
-            return keywordSearchedByModelName;
+        // 전체 키워드가 일치하는 매물이 없으면 키워드의 일부가 일치하는 동적 쿼리 생성
+        return findProductDynamicInfoList(dynamicSearchPartKeyword(keyword), pageable);
     }
 
-    private BooleanExpression dynamicSearchWholeModelKeyword(String keyword) {
-        BooleanExpression expression = null;
+    // 키워드 중 일부가 일치하는 매물 검색
+    private BooleanExpression dynamicSearchPartKeyword(String keyword) {
+        BooleanExpression wholeKeyWordModel, wholeKeyWordCarName, expression = null;
         String[] keywordSplitToSpace = keyword.split(" ");
 
         for (String eachKeyword : keywordSplitToSpace) {
-            BooleanExpression eachKeyWordModelName = cd.model.name.stringValue().eq(String.valueOf(eachKeyword));
-            expression = addOrExpression(expression, eachKeyWordModelName);
+            wholeKeyWordModel = cd.model.name.stringValue().contains(String.valueOf(eachKeyword));
+            expression = addOrExpression(expression, wholeKeyWordModel);
+        }
+
+        for (String eachKeyword : keywordSplitToSpace) {
+            wholeKeyWordCarName = cd.carName.name.stringValue().contains(String.valueOf(eachKeyword));
+            expression = addOrExpression(expression, wholeKeyWordCarName);
         }
         return expression;
     }
 
-    private BooleanExpression dynamicSearchPartKeyword(String keyword) {
-        BooleanExpression expression = null;
-        String removeKeywordSpace = keyword.replaceAll(" ", ""); // 입력 값 공백 제거
-        char[] eachKeyWordArray = removeKeywordSpace.toCharArray(); // 입력 값의 각 문자를 배열로 저장
-
-        for (char eachKeyWord : eachKeyWordArray) { // 각 문자를 순회하며 문자마다 쿼리 조건절을 추가
-            BooleanExpression eachKeyWordModel = cd.model.name.stringValue().contains(String.valueOf(eachKeyWord));
-            expression = addOrExpression(expression, eachKeyWordModel);
-
-            BooleanExpression eachKeyWordCarName = cd.carName.name.contains(String.valueOf(eachKeyWord));
-            expression = addOrExpression(expression, eachKeyWordCarName);
-        }
-        return expression;
-    }
+//    private BooleanExpression dynamicSearchPartKeyword(String keyword) {
+//        BooleanExpression expression = null;
+//        String removeKeywordSpace = keyword.replaceAll(" ", ""); // 입력 값 공백 제거
+//        char[] eachKeyWordArray = removeKeywordSpace.toCharArray(); // 입력 값의 각 문자를 배열로 저장
+//
+//        for (char eachKeyWord : eachKeyWordArray) { // 각 문자를 순회하며 문자마다 쿼리 조건절을 추가
+//            BooleanExpression eachKeyWordModel = cd.model.name.stringValue().contains(String.valueOf(eachKeyWord));
+//            expression = addOrExpression(expression, eachKeyWordModel);
+//
+//            BooleanExpression eachKeyWordCarName = cd.carName.name.contains(String.valueOf(eachKeyWord));
+//            expression = addOrExpression(expression, eachKeyWordCarName);
+//        }
+//        return expression;
+//    }
 }
