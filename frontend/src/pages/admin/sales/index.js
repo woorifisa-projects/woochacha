@@ -34,9 +34,8 @@ function AdminSalesList() {
     try {
       await denySaleFormPatchApi(currentSaleFormId).then((res) => {
         if (res.status === 200) {
-          SwalModals('success', '반려 완료', '반려가 완료되었습니다!', false).then(() =>
-            router.push('/admin/sales'),
-          );
+          SwalModals('success', '반려 완료', '반려가 완료되었습니다!', false);
+          router.push('/admin/sales');
         }
       });
     } catch (error) {

@@ -20,7 +20,6 @@ import {
 } from '@/services/productApi';
 import MultipleSelect from '@/components/product/MultipleSelect';
 import SearchIcon from '@mui/icons-material/Search';
-
 export default function Products(props) {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
@@ -28,7 +27,6 @@ export default function Products(props) {
   const [selectMenuValue, setSelectMenuValue] = useState({});
   let responsiveFontTheme = responsiveFontSizes(theme);
   const { fetchData } = props;
-
   /**
    * selectmenu의 키와 라벨을 매핑
    */
@@ -41,16 +39,14 @@ export default function Products(props) {
     transmissionList: '변속기',
     branchList: '차고지',
   };
-
   /**
    * 페이지네이션
    */
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(8);
   const handleChange = (event, value) => {
-    setPage(value);
+    setPage(value - 1);
   };
-
   /**
    * - 첫 렌더링시, 전체 product get
    * - page 변경 시, 재렌더링
@@ -60,14 +56,13 @@ export default function Products(props) {
       setAllProducts(fetchData);
       setMounted(true);
     } else {
-      allProductGetApi(page - 1, pageSize).then((res) => {
+      allProductGetApi(page, pageSize).then((res) => {
         if (res.status === 200) {
           setAllProducts(res.data);
         }
       });
     }
   }, [page]);
-
   /**
    * allProducts가 업데이트될 때만 selectBoxes를 생성하도록 이동
    */
@@ -80,7 +75,6 @@ export default function Products(props) {
       setSelectMenus(selectBoxes);
     }
   }, [allProducts]);
-
   /**
    * 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
    * */
@@ -93,14 +87,13 @@ export default function Products(props) {
             ...prevProducts,
             productInfo: {
               ...prevProducts.productInfo,
-              content: [...res.data],
+              content: [...res.data.content],
             },
           };
         });
       }
     });
   };
-
   /**
    * 필터링 관련 함수
    */
@@ -113,14 +106,13 @@ export default function Products(props) {
             ...prevProducts,
             productInfo: {
               ...prevProducts.productInfo,
-              content: [...res.data],
+              content: [...res.data.content],
             },
           };
         });
       }
     });
   };
-
   /**
    * selectbox 선택 시, 선택한 selectItem 저장 함수
    */
@@ -136,7 +128,6 @@ export default function Products(props) {
     };
     setSelectMenuValue(updatedValue);
   };
-
   const productsCss = {
     gridContent: {
       height: '100%',
@@ -165,7 +156,6 @@ export default function Products(props) {
     },
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
-
   return (
     allProducts &&
     mounted && (
@@ -175,7 +165,7 @@ export default function Products(props) {
         <main>
           {/* 페이지 상단 serch box */}
           <Grid mx="auto" container maxWidth="xl">
-            <MiniCard colorVal="#def2ff" shadowVal={3} marginVal={10}>
+            <MiniCard colorVal="#DEF2FF" shadowVal={3} marginVal={10}>
               <Typography gutterBottom variant="h5" component="h5" mb={3}>
                 궁금한 차량 조회하기
               </Typography>
@@ -215,7 +205,6 @@ export default function Products(props) {
                         </Grid>
                       );
                     })}
-
                   <Button
                     sx={productsCss.filteringBtn}
                     variant="contained"
@@ -224,7 +213,6 @@ export default function Products(props) {
                   </Button>
                 </Card>
               </Grid>
-
               {/* 차량게시글 관련 content */}
               <Grid
                 item
@@ -239,14 +227,17 @@ export default function Products(props) {
                 </Grid>
               </Grid>
             </Grid>
-
             {/* pagination */}
             <Grid item md={12} xs={12} sx={productsCss.pagination}>
-              <Pagination
-                count={allProducts.productInfo.totalPages + 1}
-                page={page}
-                onChange={handleChange}
-              />
+              {allProducts.productInfo.totalPages === 0 ? (
+                ''
+              ) : (
+                <Pagination
+                  count={allProducts.productInfo.totalPages}
+                  page={page}
+                  onChange={handleChange}
+                />
+              )}
             </Grid>
           </Grid>
         </main>
@@ -254,10 +245,8 @@ export default function Products(props) {
     )
   );
 }
-
 export async function getServerSideProps() {
-  const data = await allProductGetApi(0, 10).then((res) => res.data);
-
+  const data = await allProductGetApi(0, 8).then((res) => res.data);
   return {
     props: {
       fetchData: data,

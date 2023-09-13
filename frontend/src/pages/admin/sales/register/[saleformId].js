@@ -61,7 +61,10 @@ function AdminSalesRegisterForm(props) {
    * 게시글 등록하기
    */
   const handleSubmit = () => {
-    if (uploadFileValue.length !== 4) {
+    if (uploadFileValue == null) {
+      SwalModals('error', '사진 업로드 실패', '4장의 사진을 등록해주세요!', false);
+      return;
+    } else if (uploadFileValue.length !== 4) {
       SwalModals('error', '사진 업로드 실패', '4장의 사진을 등록해주세요!', false);
       return;
     }
@@ -376,7 +379,7 @@ function AdminSalesRegisterForm(props) {
               </Grid>
 
               <Grid sx={saleRegisterFormCss.submitBtn}>
-                <Button size="large" variant="contained" onClick={handleSaveregisterVal}>
+                <Button size="large" variant="contained" onClick={handleSubmit}>
                   승인 신청
                 </Button>
               </Grid>

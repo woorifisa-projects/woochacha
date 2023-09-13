@@ -48,10 +48,11 @@ export default function Home(props) {
   /**
    * 페이지네이션
    */
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(8);
+
   const handleChange = (event, value) => {
-    setPage(value);
+    setPage(value - 1);
   };
 
   /**
@@ -63,7 +64,7 @@ export default function Home(props) {
       setAllProducts(allPr);
       setMounted(true);
     } else {
-      allProductGetApi(page - 1, pageSize).then((res) => {
+      allProductGetApi(page, pageSize).then((res) => {
         if (res.status === 200) {
           setAllProducts(res.data);
         }
@@ -111,7 +112,7 @@ export default function Home(props) {
             ...prevProducts,
             productInfo: {
               ...prevProducts.productInfo,
-              content: [...res.data],
+              content: [...res.data.content],
             },
           };
         });
@@ -131,7 +132,7 @@ export default function Home(props) {
             ...prevProducts,
             productInfo: {
               ...prevProducts.productInfo,
-              content: [...res.data],
+              content: [...res.data.content],
             },
           };
         });
@@ -270,11 +271,15 @@ export default function Home(props) {
 
           {/* pagination */}
           <Grid item md={12} xs={12} sx={MainPageCss.pagination}>
-            <Pagination
-              count={allProducts.productInfo.totalPages + 1}
-              page={page}
-              onChange={handleChange}
-            />
+            {allProducts.productInfo.totalPages === 0 ? (
+              ''
+            ) : (
+              <Pagination
+                count={allProducts.productInfo.totalPages}
+                page={page}
+                onChange={handleChange}
+              />
+            )}
           </Grid>
         </main>
       </ThemeProvider>
@@ -283,7 +288,7 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps() {
-  const res = await allProductGetApi().then((res) => res.data);
+  const res = await allProductGetApi(0, 8).then((res) => res.data);
   return {
     props: {
       allPr: res,

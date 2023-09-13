@@ -37,9 +37,8 @@ function AdminUserEdit(props) {
     event.preventDefault();
     oneUserEditPatchApi(editProfileValue, memberId).then((res) => {
       if (res.status === 200) {
-        SwalModals('success', '수정 완료', '수정이 완료되었습니다!', false).then(() =>
-          router.push('/admin/members'),
-        );
+        SwalModals('success', '수정 완료', '수정이 완료되었습니다!', false);
+        router.push('/admin/members');
       }
     });
   };

@@ -23,9 +23,14 @@ export const memberProfileEditGetApi = async (memberId) => {
 };
 
 // 마이페이지 등록한 매물 조회 GET mypage/registered/{memberId}
-export const mypageRegisteredProductsGetApi = async (memberId) => {
+export const mypageRegisteredProductsGetApi = async (memberId, page, size) => {
   try {
-    const response = await authInstance.get(`/mypage/registered/${memberId}`);
+    const response = await authInstance.get(`/mypage/registered/${memberId}`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패: ', error);
@@ -34,9 +39,14 @@ export const mypageRegisteredProductsGetApi = async (memberId) => {
 };
 
 // 마이페이지 판매한 이력 조회 GET mypage/sale/{memberId}
-export const mypageSoldProductsGetApi = async (memberId) => {
+export const mypageSoldProductsGetApi = async (memberId, page, size) => {
   try {
-    const response = await authInstance.get(`/mypage/sale/${memberId}`);
+    const response = await authInstance.get(`/mypage/sale/${memberId}`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패: ', error);
@@ -45,9 +55,14 @@ export const mypageSoldProductsGetApi = async (memberId) => {
 };
 
 // 마이페이지 구매 이력 조회 GET mypage/purchase/{memberId}
-export const mypagePurchasedProductsGetApi = async (memberId) => {
+export const mypagePurchasedProductsGetApi = async (memberId, page, size) => {
   try {
-    const response = await authInstance.get(`/mypage/purchase/${memberId}`);
+    const response = await authInstance.get(`/mypage/purchase/${memberId}`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패: ', error);
@@ -56,9 +71,14 @@ export const mypagePurchasedProductsGetApi = async (memberId) => {
 };
 
 // 마이페이지 판매 신청 내역 조회 GET mypage/sale-request/{memberId}
-export const mypageSaleRequestListGetApi = async (memberId) => {
+export const mypageSaleRequestListGetApi = async (memberId, page, size) => {
   try {
-    const response = await authInstance.get(`/mypage/sale-request/${memberId}`);
+    const response = await authInstance.get(`/mypage/sale-request/${memberId}`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패: ', error);
@@ -67,9 +87,14 @@ export const mypageSaleRequestListGetApi = async (memberId) => {
 };
 
 // 마이페이지 구매 신청 내역 조회 GET mypage/purchase-request/{memberId}
-export const mypagePurchaseRequestListGetApi = async (memberId) => {
+export const mypagePurchaseRequestListGetApi = async (memberId, page, size) => {
   try {
-    const response = await authInstance.get(`/mypage/purchase-request/${memberId}`);
+    const response = await authInstance.get(`/mypage/purchase-request/${memberId}`, {
+      params: {
+        page: page,
+        size: size,
+      },
+    });
     return response;
   } catch (error) {
     console.log('실패: ', error);

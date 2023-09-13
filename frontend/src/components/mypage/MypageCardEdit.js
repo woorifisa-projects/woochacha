@@ -67,9 +67,8 @@ export default function MypageCardEdit(props) {
             '삭제 요청 완료',
             '등록한 게시물 삭제 요청이 완료되었습니다.',
             false,
-          ).then(() => {
-            router.push(`/mypage/registered/${memberId}`);
-          });
+          );
+          router.push(`/mypage/registered/${memberId}`);
         }
       })
       .catch((error) => {

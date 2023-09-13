@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import withAuth from '@/hooks/withAuth';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
-import { Grid, Pagination, Tab, Typography } from '@mui/material';
+import { Grid, Pagination, Tab } from '@mui/material';
 import MypageCard from '@/components/mypage/MypageCard';
 import { mypagePurchaseRequestListGetApi } from '@/services/mypageApi';
 import { useRouter } from 'next/router';
@@ -10,7 +10,7 @@ import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import SubTabMenu from '@/components/common/SubTabMenu';
 import { SUB_PURCHASE_TAB_MENU } from '@/constants/string';
 
-function PurchaseRequest(props) {
+function PurchaseRequest() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -25,23 +25,39 @@ function PurchaseRequest(props) {
   };
 
   const mypageCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
 
-  // data 불러온 이후 필터링 data에 맞게 렌더링
+  /**
+   * 페이지네이션
+   */
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+
+  const handleChange = (event, value) => {
+    setPage(value - 1);
+  };
+
+  /**
+   * - 첫 렌더링시, 전체 목록 get
+   * - page 변경 시, 재렌더링
+   */
   useEffect(() => {
-    mypagePurchaseRequestListGetApi(memberId).then((res) => {
-      if (res.status === 200) {
-        setMypagePurchaseRequestList(res.data);
-      }
-    });
-    setMounted(true);
-  }, []);
+    if (!mounted) {
+      mypagePurchaseRequestListGetApi(memberId, 0, 5).then((res) => {
+        if (res.status === 200) {
+          setMypagePurchaseRequestList(res.data);
+        }
+      });
+      setMounted(true);
+    } else {
+      mypagePurchaseRequestListGetApi(memberId, page, pageSize).then((res) => {
+        if (res.status === 200) {
+          setMypagePurchaseRequestList(res.data);
+        }
+      });
+    }
+  }, [page]);
 
   return (
     mounted &&
@@ -60,9 +76,18 @@ function PurchaseRequest(props) {
           })}
         </SubTabMenu>
         <MypageCard content={mypagePurchaseRequestList.content} />
+
         {/* pagination */}
         <Grid sx={mypageCss.pagination}>
-          <Pagination count={10} />
+          {mypagePurchaseRequestList.totalPages === 0 ? (
+            ''
+          ) : (
+            <Pagination
+              count={mypagePurchaseRequestList.totalPages}
+              page={page + 1}
+              onChange={handleChange}
+            />
+          )}
         </Grid>
       </>
     )

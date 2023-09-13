@@ -1,5 +1,6 @@
 package com.woochacha.backend.domain.product.service.impl;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -35,6 +36,7 @@ import com.woochacha.backend.domain.sale.entity.QBranch;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -84,15 +86,15 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public ProductAllResponseDto findAllProduct(Pageable pageable) {
-        PageImpl<ProductInfo> productInfoList = findAllProductInfoList(pageable);
+        Page<ProductInfo> productInfoList = findAllProductInfoList(pageable);
 
         ProductFilterInfo productFilterInfo = findAllProductFilterList();
 
         return new ProductAllResponseDto(productInfoList, productFilterInfo);
     }
 
-    private PageImpl<ProductInfo> findProductInfoListPageable(Pageable pageable) {
-        List<ProductInfo> productInfoList = queryFactory
+    private Page<ProductInfo> findProductInfoListPageable(Pageable pageable) {
+        QueryResults<ProductInfo> productInfoList = queryFactory
                 .select(Projections.fields(
                         ProductInfo.class, p.id,
                         Expressions.asString(
@@ -108,13 +110,13 @@ public class ProductServiceImpl implements ProductService {
                 .orderBy(p.createdAt.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetch();
+                .fetchResults();
 
-        return new PageImpl<>(productInfoList);
+        return new PageImpl<>(productInfoList.getResults(), pageable, productInfoList.getTotal());
     }
 
     // 전체 매물 조회
-    private PageImpl<ProductInfo> findAllProductInfoList(Pageable pageable) {
+    private Page<ProductInfo> findAllProductInfoList(Pageable pageable) {
         return findProductInfoListPageable(pageable);
     }
 
@@ -171,8 +173,8 @@ public class ProductServiceImpl implements ProductService {
         return new ProductDetailResponseDto(basicInfo, productDetailInfo, productOptionInfo, productOwnerInfo, productImageList);
     }
 
-    private List<ProductInfo> findProductInfoList(BooleanExpression expression) {
-        return queryFactory
+    private Page<ProductInfo> findProductDynamicInfoList(BooleanExpression expression, Pageable pageable) {
+        QueryResults<ProductInfo> productInfoList =  queryFactory
                 .select(Projections.fields(
                         ProductInfo.class, p.id,
                         Expressions.asString(
@@ -186,7 +188,11 @@ public class ProductServiceImpl implements ProductService {
                 .join(cn).on(cn.name.eq(cd.carName.name))
                 .where(p.status.id.eq((short) 4), ci.imageUrl.like("%/1").and(expression))
                 .orderBy(p.createdAt.asc())
-                .fetch();
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+        return new PageImpl<>(productInfoList.getResults(), pageable, productInfoList.getTotal());
     }
 
     private ProductBasicInfo getProductBasicInfo(Long productId) {
@@ -280,8 +286,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductInfo> findFilteredProduct(ProductFilterInfo productFilterInfo) {
-        return findProductInfoList(dynamicSearch(productFilterInfo));
+    public Page<ProductInfo> findFilteredProduct(ProductFilterInfo productFilterInfo, Pageable pageable) {
+        return findProductDynamicInfoList(dynamicSearch(productFilterInfo), pageable);
     }
 
     // 동적 where 조건절 쿼리 작성
@@ -370,13 +376,14 @@ public class ProductServiceImpl implements ProductService {
         logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/detail/" + productPurchaseRequestDto.getProductId());
     }
 
-    public List<ProductInfo> findSearchedProduct(String keyword) {
+    @Override
+    public Page<ProductInfo> findSearchedProduct(String keyword, Pageable pageable) {
         BooleanExpression expression = dynamicSearchWholeModelKeyword(keyword); // 모델명 검색 동적 쿼리 생성
-        List<ProductInfo> keywordSearchedByModelName = findProductInfoList(expression); // 모델명 동적 쿼리 실행
+        Page<ProductInfo> keywordSearchedByModelName = findProductDynamicInfoList(expression, pageable); // 모델명 동적 쿼리 실행
 
         // 모델명 검색 결과가 없으면 차량명 검색 동작
         if (keywordSearchedByModelName.isEmpty())
-            return findProductInfoList(dynamicSearchPartKeyword(keyword));
+            return findProductDynamicInfoList(dynamicSearchPartKeyword(keyword), pageable);
 
             // 모델명 검색 결과가 있다면 모델명 검색 결과 리턴
         else
