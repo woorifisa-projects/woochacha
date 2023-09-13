@@ -64,7 +64,7 @@ export default function Home(props) {
       setAllProducts(allPr);
       setMounted(true);
     } else {
-      allProductGetApi(page - 1, pageSize).then((res) => {
+      allProductGetApi(page, pageSize).then((res) => {
         if (res.status === 200) {
           setAllProducts(res.data);
         }
@@ -112,7 +112,7 @@ export default function Home(props) {
             ...prevProducts,
             productInfo: {
               ...prevProducts.productInfo,
-              content: [...res.data],
+              content: [...res.data.content],
             },
           };
         });
@@ -132,7 +132,7 @@ export default function Home(props) {
             ...prevProducts,
             productInfo: {
               ...prevProducts.productInfo,
-              content: [...res.data],
+              content: [...res.data.content],
             },
           };
         });
@@ -276,7 +276,7 @@ export default function Home(props) {
             ) : (
               <Pagination
                 count={allProducts.productInfo.totalPages}
-                page={page + 1}
+                page={page}
                 onChange={handleChange}
               />
             )}
