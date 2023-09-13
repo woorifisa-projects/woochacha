@@ -234,7 +234,7 @@ export default function Products(props) {
               ) : (
                 <Pagination
                   count={allProducts.productInfo.totalPages}
-                  page={page + 1}
+                  page={page}
                   onChange={handleChange}
                 />
               )}
