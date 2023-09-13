@@ -12,7 +12,7 @@ public enum CustomErrorCode implements ErrorCode{
     LOGIN_DO_NOT_MATCH(HttpStatus.UNAUTHORIZED, "로그인 정보가 일치하지 않습니다."),
     AUTHORIZATION_EXCEPTION(HttpStatus.FORBIDDEN,"접근할 수 있는 권한이 없습니다."),
     USER_IS_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 이용자는 존재하지 않습니다."),
-    PRODUCT_IS_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 상품이 존재 하지 않습니다."),
+    PRODUCT_IS_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR,"해당 상품이 존재 하지 않습니다."),
     CAR_IS_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 차량이 존재 하지 않습니다."),
     LOG_IS_NOT_FOUND(HttpStatus.NOT_FOUND,"로그가 존재 하지 않습니다."),
     SALE_IS_NOT_FOUND(HttpStatus.NOT_FOUND,"판매 정보가 존재하지 않습니다."),

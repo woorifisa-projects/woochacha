@@ -1,9 +1,7 @@
 package com.woochacha.backend.exception.handler;
 
 
-import com.woochacha.backend.domain.admin.controller.ApproveSaleController;
 import com.woochacha.backend.exception.errorcode.CommonErrorCode;
-import com.woochacha.backend.exception.errorcode.CustomErrorCode;
 import com.woochacha.backend.exception.errorcode.ErrorCode;
 import com.woochacha.backend.exception.exception.RestApiException;
 import com.woochacha.backend.exception.response.ErrorResponse;
@@ -11,12 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -52,11 +48,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // 대부분의 에러 처리
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<Object> handleAllException(Exception ex) {
-        log.warn("handleAllException", ex);
-        return handleExceptionInternal(CommonErrorCode.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler({Exception.class})
+//    public ResponseEntity<Object> handleAllException(Exception ex) {
+//        log.warn("handleAllException", ex);
+//        return handleExceptionInternal(CommonErrorCode.INTERNAL_SERVER_ERROR);
+//    }
 
     // RuntimeException과 대부분의 에러 처리 메세지를 보내기 위한 메소드
     private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode) {
