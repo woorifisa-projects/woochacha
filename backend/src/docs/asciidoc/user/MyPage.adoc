@@ -7,7 +7,7 @@
 :toclevels: 2
 :source-highlighter: highlightjs
 
-== MyPage
+== 마이페이지
 === 등록한 매물 조회
 ==== Http Request
 include::{snippets}/mypage/get-purchase-request/http-request.adoc[]

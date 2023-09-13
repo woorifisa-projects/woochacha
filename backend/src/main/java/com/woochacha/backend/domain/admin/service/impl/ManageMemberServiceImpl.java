@@ -13,12 +13,11 @@ import com.woochacha.backend.domain.purchase.repository.PurchaseFormRepository;
 import com.woochacha.backend.domain.transaction.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 
 @Service
@@ -34,10 +33,10 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     private final ManageProductFormRepository manageProductFormRepository;
 
     @Override
-    public QueryResults<MemberInfoListResponseDto> getAllMemberInfo(Pageable pageable) {
+    public Page<MemberInfoListResponseDto> getAllMemberInfo(Pageable pageable) {
         QMember m = QMember.member;
 
-        return jpaQueryFactory
+        QueryResults<MemberInfoListResponseDto> queryResults = jpaQueryFactory
                 .select(Projections.constructor(
                         MemberInfoListResponseDto.class,
                         m.id,
@@ -54,6 +53,8 @@ public class ManageMemberServiceImpl implements ManageMemberService {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
+
+        return new PageImpl<>(queryResults.getResults(), pageable, queryResults.getTotal());
     }
 
     @Override
