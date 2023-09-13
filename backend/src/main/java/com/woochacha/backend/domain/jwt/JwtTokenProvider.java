@@ -93,18 +93,17 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
             return true;
         } catch (SecurityException e) {
-            errorMessage = "기존 서명이 확인되지 않는 토큰";
+            errorMessage = "잘못된 서명";
         } catch (MalformedJwtException e) {
             errorMessage = "올바르게 구성되지 않은 토큰";
         } catch (ExpiredJwtException e) {
             errorMessage = "만료된 토큰";
-//            errorMessage = "Expired Jwt Token";
         } catch (UnsupportedJwtException e) {
             errorMessage = "지원되지 않는 토큰";
         } catch (IllegalArgumentException e) {
             errorMessage = "잘못된 토큰";
         } catch (SignatureException e) {
-            errorMessage = "형식이 잘못된 토큰";
+            errorMessage = "기존 서명이 확인되지 않는 토큰";
         }
         LOGGER.warn(errorMessage);
 

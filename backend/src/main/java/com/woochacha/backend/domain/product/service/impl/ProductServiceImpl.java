@@ -26,6 +26,7 @@ import com.woochacha.backend.domain.product.dto.filter.ProductFilterInfo;
 import com.woochacha.backend.domain.product.entity.Product;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import com.woochacha.backend.domain.product.entity.QProduct;
+import com.woochacha.backend.domain.product.exception.ProductNotFound;
 import com.woochacha.backend.domain.product.repository.ProductRepository;
 import com.woochacha.backend.domain.product.service.ProductService;
 import com.woochacha.backend.domain.purchase.entity.PurchaseForm;
@@ -195,7 +196,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private ProductBasicInfo getProductBasicInfo(Long productId) {
-        return queryFactory
+        ProductBasicInfo productBasicInfo = queryFactory
                 .select(Projections.fields(ProductBasicInfo.class, Expressions.asString(
                                 model.name.stringValue()).concat(" ").concat(cn.name).concat(" ").concat(cd.year.stringValue()).concat("년형").as("title"),
                         cd.carNum, b.name.stringValue().as("branch"), p.price))
@@ -206,6 +207,9 @@ public class ProductServiceImpl implements ProductService {
                 .join(cn).on(cn.name.eq(cd.carName.name))
                 .where(p.id.eq(productId))
                 .fetchOne();
+
+        if(productBasicInfo == null) throw new ProductNotFound();
+        return productBasicInfo;
     }
 
     private ProductDetailInfo getProductDetailInfo(String carNum) {
