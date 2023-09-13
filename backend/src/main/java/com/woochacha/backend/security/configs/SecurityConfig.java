@@ -89,7 +89,7 @@ public class SecurityConfig {
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://web.postman.co/",
                 "http://15.165.239.79:80", "http://localhost:8080",
-                "https://15.165.239.79:80", "https://localhost:8080"));
+                "https://15.165.239.79:80", "https://localhost:8080", "https://woochacha-woochacha.vercel.app/"));
         configuration.setAllowCredentials(true);
 
         configuration.addAllowedOriginPattern(CorsConfiguration.ALL);
