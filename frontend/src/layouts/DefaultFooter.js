@@ -57,7 +57,6 @@ export default function DefaultFooter() {
       px: 2,
       mt: 'auto',
       backgroundColor: '#FFF',
-      boxShadow: 3,
       mx: 'auto',
       color: theme.palette.primary.main,
       fontSize: '14px',
@@ -87,59 +86,6 @@ export default function DefaultFooter() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Box component="footer" sx={defaultFooter.footerBox}>
-          <Grid container spacing={4} columns={16} mb={5}>
-            <Grid item xs={4}>
-              <Grid sx={defaultFooter.gridItems}>
-                <Typography
-                  sx={defaultFooter.listItemText}
-                  onClick={() => handleMovePage('/products')}>
-                  구매
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item xs={4}>
-              <Grid sx={defaultFooter.gridItems}>
-                <Typography sx={defaultFooter.listItemText}>판매</Typography>
-              </Grid>
-            </Grid>
-            <Grid item xs={4}>
-              <Grid sx={defaultFooter.gridItems}>
-                <Typography
-                  sx={defaultFooter.listItemText}
-                  onClick={() => handleMovePage('/capitals')}>
-                  대출
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid item xs={4}>
-              <Grid sx={defaultFooter.gridItems}>
-                <Typography>마이페이지</Typography>
-                {userLoginState.loginStatus && userLoginState.userName !== '관리자'
-                  ? FOOTER_MINI_MENU_LOGIN.CONTENTS.map((menuItem, idx) => {
-                      return (
-                        <ListItem key={idx} sx={defaultFooter.listItem}>
-                          <ListItemText
-                            sx={defaultFooter.listItemText}
-                            primary={menuItem.pageName}
-                            onClick={() => handleMovePage(menuItem.pageUrl)}
-                          />
-                        </ListItem>
-                      );
-                    })
-                  : HEADER_UNLOGIN_USER_MENU.CONTENTS.map((menuItem, idx) => {
-                      return (
-                        <ListItem key={idx} sx={defaultFooter.listItem}>
-                          <ListItemText
-                            sx={defaultFooter.listItemText}
-                            primary={menuItem.pageName}
-                            onClick={() => handleMovePage(menuItem.pageUrl)}
-                          />
-                        </ListItem>
-                      );
-                    })}
-              </Grid>
-            </Grid>
-          </Grid>
           <Grid sx={defaultFooter.gridItems}>
             <CopyRight />
           </Grid>
