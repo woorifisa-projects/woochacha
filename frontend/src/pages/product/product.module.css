@@ -1,0 +1,27 @@
+.strongColor {
+  font-weight: 900;
+  color: #f95700;
+}
+
+.searchGrid {
+  /* border-top: 1px solid gray; */
+  padding: 3rem;
+  margin-top: 1.5rem;
+}
+
+.searchBox {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.searchTitle {
+  font-family: 'NanumSquareRoundExtraBold';
+  font-weight: 500;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  text-decoration: 3px #f95700 solid underline;
+  text-underline-position: under;
+}
