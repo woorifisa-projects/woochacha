@@ -1,0 +1,12 @@
+/* banner image */
+.bannerImageContainer {
+  width: 100%;
+  position: unset !important;
+
+  .bannerImage {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+  }
+}

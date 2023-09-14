@@ -6,15 +6,15 @@ export default function MiniCard({ children, colorVal, shadowVal, marginVal }) {
     <Card
       sx={{
         margin: 'auto',
-        backgroundColor: colorVal,
-        boxShadow: shadowVal,
-        py: 8,
+        backgroundColor: '#FFF',
+        boxShadow: '0px -25px 30px 3px rgba(0,0,0,0.05)',
+        py: 10,
         px: 8,
         my: marginVal,
         height: '100%',
-        width: '80%',
+        width: '100%',
         display: 'flex',
-        borderRadius: '3rem',
+        borderTopLeftRadius: '3rem',
         flexDirection: 'column',
       }}>
       {children}
