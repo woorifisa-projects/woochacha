@@ -19,6 +19,10 @@ import { useRecoilValue } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import AdminMenuAppbar from '@/components/admin/AdminMenuAppbar';
 import { useEffect, useState } from 'react';
+import styles from './DefaultHeader.module.css';
+import Image from 'next/image';
+
+import LogoImage from '../../public/assets/images/logo.png';
 
 function DefaultHeader() {
   const [mounted, setMounted] = useState(false);
@@ -42,7 +46,6 @@ function DefaultHeader() {
 
   const defaultHeaderCss = {
     headerContainer: {
-      backgroundColor: '#fff',
       py: 1.5,
     },
     xsHeaderLogo: {
@@ -82,8 +85,12 @@ function DefaultHeader() {
 
   return (
     mounted && (
-      <AppBar color="default" position="sticky">
-        <Container maxWidth sx={defaultHeaderCss.headerContainer}>
+      <AppBar
+        elevation={0}
+        color="transparent"
+        position="sticky"
+        className={styles.headerContainer}>
+        <Container maxWidth className={styles.headerContainer}>
           <Toolbar disableGutters>
             <Typography
               variant="h5"
@@ -91,7 +98,7 @@ function DefaultHeader() {
               component="a"
               href="/"
               sx={defaultHeaderCss.mdHeaderLogo}>
-              {HEADER_MENU.LOGO}
+              <Image src={LogoImage} width={200} height={80} />
             </Typography>
 
             <Box sx={defaultHeaderCss.xsHeaderBox}>
@@ -143,7 +150,7 @@ function DefaultHeader() {
               component="a"
               href="/"
               sx={defaultHeaderCss.xsHeaderLogo}>
-              {HEADER_MENU.LOGO}
+              <Image src={LogoImage} width={200} height={80} />
             </Typography>
             <Box sx={defaultHeaderCss.mdHeaderBox}>
               {HEADER_MENU.CONTENTS.map((page) => (
