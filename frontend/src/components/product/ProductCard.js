@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Chip,
-  Grid,
-  Typography,
-} from '@mui/material';
+import { Card, CardContent, CardMedia, Chip, Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
+import styles from './ProductCard.module.css';
 
 export default function ProductCard(props) {
   const { productItems } = props;
@@ -51,15 +43,42 @@ export default function ProductCard(props) {
                 <Typography gutterBottom variant="h6" component="h6">
                   {item.title}
                 </Typography>
-                <Grid container my={1} gap={1}>
-                  <Chip size="small" label={`${item.distance} km`} />
-                  <Chip size="small" label={`${item.price} 만원`} />
-                  <Chip size="small" label={`${item.branch}`} />
+                <Grid container py={2} my={1} gap={1}>
+                  <Chip
+                    size="small"
+                    label={`${item.distance} km`}
+                    color={
+                      Number(item.distance) < 5000
+                        ? 'chipBlue'
+                        : Number(item.distance) < 10000
+                        ? 'chipYellow'
+                        : 'chipRed'
+                    }
+                  />
+                  <Chip
+                    size="small"
+                    label={`${item.price} 만원`}
+                    color={
+                      Number(item.price) < 2000
+                        ? 'chipBlue'
+                        : Number(item.price) < 4000
+                        ? 'chipYellow'
+                        : 'chipRed'
+                    }
+                  />
+                  <Chip
+                    size="small"
+                    label={`${item.branch}`}
+                    color={
+                      item.branch === '서울'
+                        ? 'chipBlue'
+                        : item.branch === '부산'
+                        ? 'chipYellow'
+                        : 'chipRed'
+                    }
+                  />
                 </Grid>
               </CardContent>
-              <CardActions>
-                <Button size="small">보러가기</Button>
-              </CardActions>
             </Card>
           </Grid>
         ))}

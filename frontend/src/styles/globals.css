@@ -103,6 +103,8 @@ section {
 }
 body {
   line-height: 1;
+  font-family: 'NanumGothic', 'NanumSquareRoundLight', 'NanumSquareRound', 'NanumSquareRoundBold',
+    'NanumSquareRoundExtraBold';
 }
 ol,
 ul {
@@ -122,4 +124,29 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+@font-face {
+  font-family: 'NanumGothic';
+  src: url(/frontend/public/assets/fonts/NanumGothic-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'NanumSquareRoundLight';
+  src: url(/frontend/public/assets/fonts/NanumSquareRoundL.ttf);
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url(/frontend/public/assets/fonts/NanumSquareRoundR.ttf);
+}
+
+@font-face {
+  font-family: 'NanumSquareRoundBold';
+  src: url(/frontend/public/assets/fonts/NanumSquareRoundB.ttf);
+}
+
+@font-face {
+  font-family: 'NanumSquareRoundExtraBold';
+  src: url(/frontend/public/assets/fonts/NanumSquareRoundEB.ttf);
 }

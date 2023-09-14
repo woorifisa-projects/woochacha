@@ -1,20 +1,20 @@
-import { Roboto } from 'next/font/google';
+// import { Roboto } from 'next/font/google';
 import { createTheme } from '@mui/material/styles';
 import { red, green } from '@mui/material/colors';
 
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
+// const roboto = Roboto({
+//   weight: ['300', '400', '500', '700'],
+//   subsets: ['latin'],
+//   display: 'swap',
+// });
 
 // Create a theme instance.
 const theme = createTheme({
   palette: {
     primary: {
       light: '#00aefa',
-      main: '#007bc3',
-      dark: '#005ba1',
+      main: '#F95700',
+      dark: '#DF4000',
       contrastText: '#fff',
     },
     secondary: {
@@ -29,6 +29,24 @@ const theme = createTheme({
       dark: red[900],
       contrastText: '#fff',
     },
+    neutral: {
+      light: '#FFCACA',
+      main: '#90a4ae',
+      dark: '#37474f',
+      contrastText: '#ffffff',
+    },
+    chipRed: {
+      main: '#ffcdd2',
+      contrastText: '#000000',
+    },
+    chipYellow: {
+      main: '#fff9c4',
+      contrastText: '#000000',
+    },
+    chipBlue: {
+      main: '#e1f5fe',
+      contrastText: '#000000',
+    },
   },
 
   breakpoints: {
@@ -42,7 +60,8 @@ const theme = createTheme({
   },
 
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    fontFamily:
+      "'NanumGothic', 'NanumSquareRoundLight', 'NanumSquareRound','NanumSquareRoundBold','NanumSquareRoundExtraBold'",
   },
 });
 
