@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.mypage.service.impl;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
 import com.woochacha.backend.domain.AmazonS3.service.AmazonS3Service;
+import com.woochacha.backend.domain.AmazonS3.service.AmazonS3ServiceImpl;
 import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
@@ -11,6 +12,8 @@ import com.woochacha.backend.domain.mypage.repository.MypageRepository;
 import com.woochacha.backend.domain.mypage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +32,7 @@ public class MypageServiceImpl implements MypageService {
     private final MemberRepository memberRepository;
     private final AmazonS3Service amazonS3Service;
     private final ModelMapper modelMapper = ModelMapping.getInstance();
+    private final Logger logger = LoggerFactory.getLogger(MypageServiceImpl.class);
 
     private final LogService logService;
 
@@ -159,6 +163,7 @@ public class MypageServiceImpl implements MypageService {
     public void updatePrice(Long productId, Integer updatePrice, Long memberId){
         mypageRepository.updatePrice(productId, updatePrice);
         logService.savedMemberLogWithTypeAndEtc(memberId, "상품 가격 수정 요청", "/product/detail/" + productId);
+        logger.info("memberId:{} 회원이 productId:{} 매물에 대해 가격 수정 요청", memberId, productId);
     }
 
     // 등록한 매물 삭제 신청
@@ -167,6 +172,7 @@ public class MypageServiceImpl implements MypageService {
     public String productDeleteRequest(Long productId, Long memberId){
         mypageRepository.requestProductDelete(productId);
         logService.savedMemberLogWithTypeAndEtc(memberId, "상품 삭제 요청", "/product/detail/" + productId);
+        logger.info("memberId:{} 회원이 productId:{} 매물에 대해 삭제 신청 요청", memberId, productId);
         return "삭제 신청이 완료되었습니다.";
     }
 

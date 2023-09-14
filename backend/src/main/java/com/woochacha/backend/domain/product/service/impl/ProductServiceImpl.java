@@ -374,6 +374,7 @@ public class ProductServiceImpl implements ProductService {
         PurchaseForm purchaseForm = PurchaseForm.builder().member(member).product(product).build();
         purchaseFormRepository.save(purchaseForm);
         logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/detail/" + productPurchaseRequestDto.getProductId());
+        logger.info("pruchaseFormId:{} memberId:{} 판매 신청폼 등록", productPurchaseRequestDto.getProductId(), productPurchaseRequestDto.getMemberId());
     }
 
     @Override

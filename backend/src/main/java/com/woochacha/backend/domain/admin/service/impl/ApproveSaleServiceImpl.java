@@ -7,6 +7,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.config.QldbConfig;
 import com.woochacha.backend.domain.admin.dto.approve.*;
+import com.woochacha.backend.domain.admin.exception.CrudDataFromQLDBError;
 import com.woochacha.backend.domain.admin.service.ApproveSaleService;
 import com.woochacha.backend.domain.car.info.entity.ExchangeType;
 import com.woochacha.backend.domain.car.info.repository.ExchangeTypeRepository;
@@ -17,17 +18,17 @@ import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import com.woochacha.backend.domain.sale.service.SaleFormApplyService;
 import com.woochacha.backend.domain.status.entity.CarStatusList;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import software.amazon.qldb.Result;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +44,8 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     private final ExchangeTypeRepository exchangeTypeRepository;
     private final SaleFormApplyService saleFormApplyService;
     private final QldbService qldbService;
+
+    private static Logger logger = LoggerFactory.getLogger(ApproveSaleServiceImpl.class);
 
     @Override
     public Page<ApproveSaleResponseDto> getApproveSaleForm(Pageable pageable) {
@@ -61,7 +64,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
-
+        logger.info("관리자가 판매신청폼 리스트를 조회");
         return new PageImpl<>(approveSaleResponseDtoList.getResults(), pageable, approveSaleResponseDtoList.getTotal());
     }
 
@@ -72,6 +75,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         if(count != 0){
             return true;
         }
+        logger.debug("조건에 맞는 신청폼 없음");
         return false;
     }
 
@@ -81,7 +85,9 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     public CarInspectionInfoResponseDto getQldbCarInfoList(Long saleFormId) {
         String carNum = saleFormApplyService.findCarNum(saleFormId);
         String accidentMetaId = qldbService.getMetaIdValue(carNum, "car_accident");
+        logger.debug("get car_accident metaIdValue from QLDB={}", accidentMetaId);
         String exchangeMetaId = qldbService.getMetaIdValue(carNum, "car_exchange");
+        logger.debug("get car_exchange metaIdValue from QLDB={}", exchangeMetaId);
 
         List<CarAccidentInfoDto> accidentInfoDtoList = new ArrayList<>();
         List<CarExchangeInfoDto> exchangeInfoDtoList = new ArrayList<>();
@@ -101,6 +107,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                             .build();
                     accidentInfoDtoList.add(accidentInfoDto);
                 }
+                logger.debug("get accident history from QLDB ={}", accidentResult);
                 Result exchangeResult = txn.execute(
                         "SELECT ce.data.exchange_type, ce.data.exchange_desc, ce.data.exchange_date " +
                                 "FROM history(car_exchange) AS ce " +
@@ -115,6 +122,8 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                             .build();
                     exchangeInfoDtoList.add(exchangeInfoDto);
                 }
+                logger.debug("get exchange history from QLDB ={}", exchangeResult);
+
                 Result resultCarInfo = txn.execute(
                         "SELECT r.car_owner_name, r.car_owner_phone, r.car_distance FROM car AS r WHERE r.car_num=?", ionSys.newString(carNum));
                 IonStruct ionStruct = (IonStruct) resultCarInfo.iterator().next();
@@ -128,18 +137,22 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                         .carExchangeInfoDtoList(exchangeInfoDtoList)
                         .exchangeTypeList(exchangeTypeList)
                         .build();
+                logger.debug("get carInspectionInfo={}", carInspectionInfoResponseDto);
             });
             return carInspectionInfoResponseDto;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("QLDB로부터 차량조회 중 에러 발생");
+            throw new CrudDataFromQLDBError();
         }
     }
 
     @Override
     public Boolean compareCarHistory(CompareRequestDto compareRequestDto, Long saleFormId){
-        String carNum = saleFormApplyService.findCarNum(saleFormId);
+        try{
+            String carNum = saleFormApplyService.findCarNum(saleFormId);
         int carDistance = getCarDistance(carNum);
         if(carDistance > compareRequestDto.getDistance()){
+            logger.debug("잘못된 주행거리 입력");
             return false;
         }else {
             updateSaleFormStatus(saleFormId);
@@ -151,6 +164,10 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 updateQldbExchangeInfo(compareRequestDto.getCarExchangeInfoDto(), saleFormId);
             }
             return true;
+        }
+        } catch (Exception e){
+            logger.error("차량 history 조회 중 에러 발생");
+            throw new CrudDataFromQLDBError();
         }
     }
 
@@ -166,9 +183,11 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 IonStruct ionStruct = (IonStruct) result.iterator().next();
                 carDistance = ((IonInt) ionStruct.get("car_distance")).intValue();
             });
+            logger.debug("get car_distance from QLDB={}", carDistance);
             return carDistance;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("QLDB에서 차량의 주행거리 조회 중 에러 발생");
+            throw new CrudDataFromQLDBError();
         }
     }
 
@@ -186,9 +205,11 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                 Result result = txn.execute(
                         "UPDATE car AS c SET c.car_distance=? WHERE c.car_num=?"
                         ,ionSys.newInt(carDistance),ionSys.newString(carNum));
+                logger.debug("QLDB 주행거리 정보 UPDATE");
             });
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("QLDB에 주행거리 UPDATE 중 에러 발생");
+            throw new CrudDataFromQLDBError();
         }
     }
 
@@ -210,8 +231,10 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                         ,ionSys.newString(carAccidentInfoDto.getAccidentDate())
                         ,ionSys.newString(carNum));
             });
+            logger.debug("QLDB 차량 사고이력 UPDATE");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("QLDB에 사고이력 UPDATE 중 에러 발생");
+            throw new CrudDataFromQLDBError();
         }
     }
 
@@ -233,8 +256,10 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
                         ,ionSys.newString(carExchangeInfoDto.getExchangeDate())
                         ,ionSys.newString(carNum));
             });
+            logger.debug("QLDB 차량 교체이력 UPDATE");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("QLDB에 교체이력 UPDATE 중 에러 발생");
+            throw new CrudDataFromQLDBError();
         }
     }
 }

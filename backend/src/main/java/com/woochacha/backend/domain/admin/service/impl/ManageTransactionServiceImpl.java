@@ -16,6 +16,8 @@ import com.woochacha.backend.domain.transaction.entity.Transaction;
 import com.woochacha.backend.domain.transaction.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -58,6 +60,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
     private final PurchaseFormRepository purchaseFormRepository;
     private final TransactionRepository transactionRepository;
     private final ProductRepository productRepository;
+    private static Logger logger = LoggerFactory.getLogger(ManageTransactionServiceImpl.class);
 
     @Override
     public Page<PurchaseFormListResponseDto> getAllPurchaseFormInfo(Pageable pageable) {
@@ -105,6 +108,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
                 + "구매 희망자 : " + purchaseMemberInfoResponseDto.getBuyerName() + "\n"
                 + "상담 문의 : " + "우차차 고객센터( " + phone + " )").build();
         sendSms(sellerMessageDto);
+        logger.info("carNum:{} 차량에 대한 판매날짜 SMS 전송 완료", carNum);
 
         MessageDto buyerMessageDto = MessageDto.builder().to(purchaseMemberInfoResponseDto.getBuyerPhone()).content("<구매 날짜 알림>" + "\n"
                 + carNum +  " 차량 구매 날짜가 결정되었습니다." + "\n"
@@ -113,6 +117,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
                 + "판매자 : " + purchaseMemberInfoResponseDto.getSellerName() + "\n"
                 + "상담 문의 : " + "우차차 고객센터( "  + phone + " )").build();
         sendSms(buyerMessageDto);
+        logger.info("carNum:{} 차량에 대한 구매날짜 SMS 전송 완료", carNum);
     }
     private void sendSms(MessageDto messageDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException, URISyntaxException {
         String time = Long.toString(System.currentTimeMillis());
@@ -182,6 +187,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
         PurchaseForm purchaseForm = purchaseFormRepository.findById(purchaseId).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         Long productId = purchaseForm.getProduct().getId();
         productRepository.updateProductSuccessStatus(productId);
+        logger.info("purchasID:{}매물에 대한 거래 성사", purchaseId);
         return "거래가 성사되었습니다.";
     }
 }
