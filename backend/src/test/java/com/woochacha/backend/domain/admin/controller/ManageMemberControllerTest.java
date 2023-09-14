@@ -213,7 +213,7 @@ class ManageMemberControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("/admin/member/edit",
+                .andDo(document("admin/member/edit",
                         pathParameters(
                                 parameterWithName("memberId").description("수정할 회원 아이디")
                         ),
@@ -238,7 +238,7 @@ class ManageMemberControllerTest extends CommonTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andDo(print())
-                .andDo(document("/admin/member/delete",
+                .andDo(document("admin/member/delete",
                         pathParameters(
                                 parameterWithName("memberId").description("탈퇴시킬 회원 아이디")
                         )))
