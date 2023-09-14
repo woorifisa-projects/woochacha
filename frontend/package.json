@@ -27,6 +27,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
     "react-query": "^3.39.3",
+    "react-router-dom": "^6.16.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "styled-components": "^6.0.7",
