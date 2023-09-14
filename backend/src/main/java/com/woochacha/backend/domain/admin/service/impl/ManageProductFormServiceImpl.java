@@ -5,6 +5,8 @@ import com.woochacha.backend.domain.admin.dto.magageProduct.ManageProductFormDto
 import com.woochacha.backend.domain.admin.repository.ManageProductFormRepository;
 import com.woochacha.backend.domain.admin.service.ManageProductFormService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ManageProductFormServiceImpl implements ManageProductFormService {
 
     private final ManageProductFormRepository manageProductFormRepository;
+    private static Logger logger = LoggerFactory.getLogger(ManageProductFormServiceImpl.class);
 
     private ManageProductFormDto arrayToManageProductFormDto(Object[] array){
         String status;
@@ -39,6 +42,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
     public Page<ManageProductFormDto> findDeleteEditForm(int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> deleteEditForms = manageProductFormRepository.getDeleteEditForm(pageable);
+        logger.debug("매물 관리 리스트 조회");
         return deleteEditForms.map(this::arrayToManageProductFormDto);
     }
 
@@ -47,6 +51,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
     @Override
     public void deleteProduct(Long productId){
         manageProductFormRepository.deleteProduct(productId);
+        logger.debug("productId:{} 매물 삭제", productId);
     }
 
     // 매물 수정 처리를 위한 팝업창 데이터 가져오기
@@ -60,6 +65,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
     @Override
     public void denyEditRequest(Long productId){
         manageProductFormRepository.denyEditRequest(productId);
+        logger.debug("productId:{} 매물 반려", productId);
     }
 
     // 매물 수정 승인
@@ -67,6 +73,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
     @Override
     public void permitEditRequest(Long productId){
         manageProductFormRepository.permitEditRequest(productId);
+        logger.debug("productId:{} 매물 수정 승인", productId);
     }
 
 }

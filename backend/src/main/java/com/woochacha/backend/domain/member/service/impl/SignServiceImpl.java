@@ -95,6 +95,7 @@ public class SignServiceImpl implements SignService {
             // 이용 정지를 당한 같은 핸드폰 번호를 가진 회원이 탈퇴 후 재가입하는 경우 실패
             for(Member phoneSearch : phoneSearchList) {
                 if(!phoneSearch.isAccountNonLocked()) {
+                    logger.debug("phone:{} 회원가입 실패 : 이용 정지를 당한 회원이 탈퇴 후 재가입 시도", signUpRequestDto.getPhone());
                     return SignException.exception(SignResultCode.SUSPENDED_ACCOUNT);
                 }
             }
@@ -102,6 +103,7 @@ public class SignServiceImpl implements SignService {
             // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
             for(Member phoneSearch : phoneSearchList) {
                 if(phoneSearch.isEnabled()) {
+                    logger.debug("phone:{} 회원가입 실패 : 이미 존재하는 회원", signUpRequestDto.getPhone());
                     return SignException.exception(SignResultCode.DUPLICATE_PHONE);
                 }
             }
@@ -112,6 +114,7 @@ public class SignServiceImpl implements SignService {
             // 이용 정지를 당한 같은 이메일을 가진 회원이 탈퇴 후 재가입하는 경우 실패
             for(Member emailSearch : emailSearchList) {
                 if(!emailSearch.isAccountNonLocked()) {
+                    logger.debug("email:{} 회원가입 실패 : 이용 정지를 당한 회원이 탈퇴 후 재가입 시도", signUpRequestDto.getEmail());
                     return SignException.exception(SignResultCode.SUSPENDED_ACCOUNT);
                 }
             }
@@ -119,6 +122,7 @@ public class SignServiceImpl implements SignService {
             // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
             for(Member emailSearch : emailSearchList) {
                 if(emailSearch.isEnabled()) {
+                    logger.debug("email:{} 회원가입 실패 : 이미 존재하는 회원", signUpRequestDto.getEmail());
                     return SignException.exception(SignResultCode.DUPLICATE_EMAIL);
                 }
             }
@@ -129,10 +133,13 @@ public class SignServiceImpl implements SignService {
 
         // Member 테이블에 회원 정보 저장
         Member savedMember = save(signUpRequestDto);
+        logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
 
         if (!savedMember.getName().isEmpty()) {
+            logger.debug("회원가입 중 이름 미입력");
             return SignException.exception(SignResultCode.SUCCESS);
         } else {
+            logger.debug("회원가입 실패");
             return SignException.exception(SignResultCode.FAIL);
         }
 
