@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
-public class MemberController extends Exception{
+public class MemberController{
 
     private final SignService signService;
 
