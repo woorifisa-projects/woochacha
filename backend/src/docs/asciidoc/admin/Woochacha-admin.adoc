@@ -8,6 +8,8 @@
 :toclevels: 2
 :source-highlighter: highlightjs
 
+include::ManageMember.adoc[]
+
 include::ManageProduct.adoc[]
 
 include::ManagePurchase.adoc[]

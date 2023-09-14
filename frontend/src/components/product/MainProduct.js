@@ -9,13 +9,12 @@ function MainProduct(props) {
     <Paper
       sx={{
         position: 'relative',
-        backgroundColor: 'grey.800',
         color: '#fff',
         mb: 4,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        backgroundImage: `url(${post.image})`,
+        backgroundImage: `url(/assets/images/woochacha-ad01.svg)`,
       }}>
       {/* Increase the priority of the hero background image */}
       {<img style={{ display: 'none' }} src={post.image} alt={post.imageText} />}
@@ -26,16 +25,17 @@ function MainProduct(props) {
           bottom: 0,
           right: 0,
           left: 0,
-          backgroundColor: 'rgba(0,0,0,.2)',
         }}
       />
-      <Grid container>
-        <Grid item md={8}>
+      <Grid container justifyContent="flex-end" alignItems="flex-end">
+        <Grid item md={8} justifyContent="flex-end" alignItems="flex-end">
           <Box
             sx={{
               position: 'relative',
               p: { xs: 4, md: 8 },
               pr: { md: 0 },
+              color: '#FFF',
+              fontWeight: 'bold',
             }}>
             <Typography component="h3" variant="h3" color="inherit" gutterBottom>
               {post.title}

@@ -8,7 +8,7 @@
 :source-highlighter: highlightjs
 
 
-== Member
+== 회원
 === 회원가입
 ==== Http Request
 include::{snippets}/users/register//http-request.adoc[]

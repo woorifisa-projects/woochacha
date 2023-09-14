@@ -441,29 +441,39 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_매물_관리">1. 매물 관리</a>
+<li><a href="#_회원_관리">1. 회원 관리</a>
 <ul class="sectlevel2">
-<li><a href="#_수정신청폼_조회">1.1. 수정/신청폼 조회</a></li>
-<li><a href="#_매물_삭제_신청_승인">1.2. 매물 삭제 신청 승인</a></li>
-<li><a href="#_매물_수정_전_매물_정보_조회">1.3. 매물 수정 전 매물 정보 조회</a></li>
-<li><a href="#_매물_가격_수정_반려">1.4. 매물 가격 수정 반려</a></li>
-<li><a href="#_매물_가격_수정_승인">1.5. 매물 가격 수정 승인</a></li>
+<li><a href="#_전체_회원_정보_조회">1.1. 전체 회원 정보 조회</a></li>
+<li><a href="#_특정_회원_정보_조회">1.2. 특정 회원 정보 조회</a></li>
+<li><a href="#_회원_정보_수정">1.3. 회원 정보 수정</a></li>
+<li><a href="#_회원_탈퇴">1.4. 회원 탈퇴</a></li>
+<li><a href="#_회원_로그_조회">1.5. 회원 로그 조회</a></li>
 </ul>
 </li>
-<li><a href="#_거래_관리">2. 거래 관리</a>
+<li><a href="#_매물_관리">2. 매물 관리</a>
 <ul class="sectlevel2">
-<li><a href="#_구매_요청_목록_조회">2.1. 구매 요청 목록 조회</a></li>
-<li><a href="#_매물_판매자_구매_신청자_정보_조회">2.2. 매물 판매자, 구매 신청자 정보 조회</a></li>
-<li><a href="#_매물_거래일_지정">2.3. 매물 거래일 지정</a></li>
-<li><a href="#_성사된_거래_정보_저장">2.4. 성사된 거래 정보 저장</a></li>
+<li><a href="#_수정신청폼_조회">2.1. 수정/신청폼 조회</a></li>
+<li><a href="#_매물_삭제_신청_승인">2.2. 매물 삭제 신청 승인</a></li>
+<li><a href="#_매물_수정_전_매물_정보_조회">2.3. 매물 수정 전 매물 정보 조회</a></li>
+<li><a href="#_매물_가격_수정_반려">2.4. 매물 가격 수정 반려</a></li>
+<li><a href="#_매물_가격_수정_승인">2.5. 매물 가격 수정 승인</a></li>
 </ul>
 </li>
-<li><a href="#_product">3. Product</a>
+<li><a href="#_거래_관리">3. 거래 관리</a>
 <ul class="sectlevel2">
-<li><a href="#_신청_폼_반려">3.1. 신청 폼 반려</a></li>
-<li><a href="#_차량_정보_전부_조회하기">3.2. 차량 정보 전부 조회하기</a></li>
-<li><a href="#_차량_정보_승인">3.3. 차량 정보 승인</a></li>
-<li><a href="#_매물_정보_조회">3.4. 매물 정보 조회</a></li>
+<li><a href="#_구매_요청_목록_조회">3.1. 구매 요청 목록 조회</a></li>
+<li><a href="#_매물_판매자_구매_신청자_정보_조회">3.2. 매물 판매자, 구매 신청자 정보 조회</a></li>
+<li><a href="#_매물_거래일_지정">3.3. 매물 거래일 지정</a></li>
+<li><a href="#_성사된_거래_정보_저장">3.4. 성사된 거래 정보 저장</a></li>
+</ul>
+</li>
+<li><a href="#_판매_관리">4. 판매 관리</a>
+<ul class="sectlevel2">
+<li><a href="#_신청_폼_조회">4.1. 신청 폼 조회</a></li>
+<li><a href="#_신청_폼_반려">4.2. 신청 폼 반려</a></li>
+<li><a href="#_상세_차량_정보_조회">4.3. 상세 차량 정보 조회</a></li>
+<li><a href="#_차량_점검_정보_업데이트">4.4. 차량 점검 정보 업데이트</a></li>
+<li><a href="#_게시글_등록_전_매물_상세_정보_전체_조회">4.5. 게시글 등록 전 매물 상세 정보 전체 조회</a></li>
 </ul>
 </li>
 </ul>
@@ -471,235 +481,1615 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_매물_관리"><a class="link" href="#_매물_관리">1. 매물 관리</a></h2>
+<h2 id="_회원_관리"><a class="link" href="#_회원_관리">1. 회원 관리</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_수정신청폼_조회"><a class="link" href="#_수정신청폼_조회">1.1. 수정/신청폼 조회</a></h3>
+<h3 id="_전체_회원_정보_조회"><a class="link" href="#_전체_회원_정보_조회">1.1. 전체 회원 정보 조회</a></h3>
 <div class="sect3">
 <h4 id="_http_request"><a class="link" href="#_http_request">1.1.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/members?pageable=Page+request+%5Bnumber%3A+0%2C+size+5%2C+sort%3A+UNSORTED%5D HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_request_parameters"><a class="link" href="#_request_parameters">1.1.2. Request Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get/request-parameters.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지네이션</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response"><a class="link" href="#_http_response">1.1.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 642
+
+{
+  "content" : [ {
+    "id" : 1,
+    "email" : "user23@woochacha.com",
+    "name" : "류빈용",
+    "phone" : "01049153041",
+    "isAvailable" : 1
+  } ],
+  "pageable" : {
+    "sort" : {
+      "empty" : true,
+      "sorted" : false,
+      "unsorted" : true
+    },
+    "offset" : 0,
+    "pageSize" : 5,
+    "pageNumber" : 0,
+    "unpaged" : false,
+    "paged" : true
+  },
+  "last" : false,
+  "totalPages" : 2,
+  "totalElements" : 10,
+  "size" : 5,
+  "number" : 0,
+  "sort" : {
+    "empty" : true,
+    "sorted" : false,
+    "unsorted" : true
+  },
+  "numberOfElements" : 1,
+  "first" : true,
+  "empty" : false
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_response_fields"><a class="link" href="#_response_fields">1.1.4. Response Fields</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get/response-fields.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 아이디</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 전화번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].isAvailable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 활동권한</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.sort.empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (비어 있음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.sort.sorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬됨)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.sort.unsorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬되지 않음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 오프셋 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.pageSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.paged</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 여부 (페이징된 경우 true, 그렇지 않으면 false)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.unpaged</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이징되지 않은 경우 true, 그렇지 않으면 false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이징 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>last</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">마지막 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (비어 있음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.sorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬됨)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.unsorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬되지 않음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지의 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>first</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">첫 번째 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">결과가 비어 있는지 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_매물_삭제_신청_승인"><a class="link" href="#_매물_삭제_신청_승인">1.2. 매물 삭제 신청 승인</a></h3>
+<h3 id="_특정_회원_정보_조회"><a class="link" href="#_특정_회원_정보_조회">1.2. 특정 회원 정보 조회</a></h3>
 <div class="sect3">
 <h4 id="_http_request_2"><a class="link" href="#_http_request_2">1.2.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/delete/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/members/17 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_path_parameters"><a class="link" href="#_path_parameters">1.2.2. Path Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/delete/path-parameters.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /admin/members/{memberId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 아이디</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response_2"><a class="link" href="#_http_response_2">1.2.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/delete/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 388
+
+{
+  "memberInfoDto" : {
+    "isAvailable" : 1,
+    "name" : "류빈용",
+    "email" : "user23@woochacha.com",
+    "phone" : "01049153041",
+    "createdAt" : [ 2023, 9, 13, 20, 35, 24, 16230400 ],
+    "profileImage" : "https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/default"
+  },
+  "onSale" : 0,
+  "completeSale" : 0,
+  "onPurchase" : 0,
+  "completePurchase" : 0
+}</code></pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_fields_2"><a class="link" href="#_response_fields_2">1.2.4. Response Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberInfoDto.isAvailable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 활동권한</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberInfoDto.name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberInfoDto.email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberInfoDto.phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 전화번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberInfoDto.createdAt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가입일자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberInfoDto.profileImage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 프로필 사진</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>onSale</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매 중인 상품 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>completeSale</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매 완료한 상품 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>onPurchase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매 대기 중인 상품 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>completePurchase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매한 상품 수</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_매물_수정_전_매물_정보_조회"><a class="link" href="#_매물_수정_전_매물_정보_조회">1.3. 매물 수정 전 매물 정보 조회</a></h3>
+<h3 id="_회원_정보_수정"><a class="link" href="#_회원_정보_수정">1.3. 회원 정보 수정</a></h3>
 <div class="sect3">
 <h4 id="_http_request_3"><a class="link" href="#_http_request_3">1.3.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get-edit/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/members/edit/17 HTTP/1.1
+Content-Type: application/json
+Accept: text/plain;charset=UTF-8
+Content-Length: 45
+Host: localhost:8080
+
+{
+  "isChecked" : 1,
+  "isAvailable" : 1
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_path_parameters_2"><a class="link" href="#_path_parameters_2">1.3.2. Path Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get-edit/path-parameters.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. /admin/members/edit/{memberId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 회원 아이디</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_3"><a class="link" href="#_http_response_3">1.3.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get-edit/http-response.adoc[]</p>
-</div>
+<h4 id="_request_fields"><a class="link" href="#_request_fields">1.3.3. Request Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>isChecked</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">기본 프로필로 수정 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>isAvailable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이용 제한 선택 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
-<h4 id="_response_fields_2"><a class="link" href="#_response_fields_2">1.3.4. Response Fields</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/get-edit/response-fields.adoc[]</p>
+<h4 id="_http_response_3"><a class="link" href="#_http_response_3">1.3.4. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 35
+
+Member status updated successfully.</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_매물_가격_수정_반려"><a class="link" href="#_매물_가격_수정_반려">1.4. 매물 가격 수정 반려</a></h3>
+<h3 id="_회원_탈퇴"><a class="link" href="#_회원_탈퇴">1.4. 회원 탈퇴</a></h3>
 <div class="sect3">
 <h4 id="_http_request_4"><a class="link" href="#_http_request_4">1.4.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/deny-edit/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/members/delete/17 HTTP/1.1
+Content-Type: application/json
+Accept: text/plain;charset=UTF-8
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_path_parameters_3"><a class="link" href="#_path_parameters_3">1.4.2. Path Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/deny-edit/path-parameters.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. /admin/members/delete/{memberId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">탈퇴시킬 회원 아이디</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response_4"><a class="link" href="#_http_response_4">1.4.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/deny-edit/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 27
+
+Member delete successfully.</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_매물_가격_수정_승인"><a class="link" href="#_매물_가격_수정_승인">1.5. 매물 가격 수정 승인</a></h3>
+<h3 id="_회원_로그_조회"><a class="link" href="#_회원_로그_조회">1.5. 회원 로그 조회</a></h3>
 <div class="sect3">
 <h4 id="_http_request_5"><a class="link" href="#_http_request_5">1.5.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/approve-edit/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/members/log/17?page=0&amp;size=5 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_path_parameters_4"><a class="link" href="#_path_parameters_4">1.5.2. Path Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/approve-edit/path-parameters.adoc[]</p>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. /admin/members/log/{memberId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>memberId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 아이디</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_request_parameters_2"><a class="link" href="#_request_parameters_2">1.5.3. Request Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 오프셋</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지당 보여줄 로그 개수</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_5"><a class="link" href="#_http_response_5">1.5.4. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 678
+
+{
+  "content" : [ {
+    "email" : "test@naver.com",
+    "name" : "김철수",
+    "date" : [ 2023, 9, 13, 20, 35, 24, 620825900 ],
+    "description" : "로그인",
+    "etc" : "/login"
+  } ],
+  "pageable" : {
+    "sort" : {
+      "empty" : true,
+      "sorted" : false,
+      "unsorted" : true
+    },
+    "offset" : 0,
+    "pageSize" : 5,
+    "pageNumber" : 0,
+    "unpaged" : false,
+    "paged" : true
+  },
+  "last" : false,
+  "totalPages" : 2,
+  "totalElements" : 10,
+  "size" : 5,
+  "number" : 0,
+  "sort" : {
+    "empty" : true,
+    "sorted" : false,
+    "unsorted" : true
+  },
+  "numberOfElements" : 1,
+  "first" : true,
+  "empty" : false
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_5"><a class="link" href="#_http_response_5">1.5.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManageProduct.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/product/approve-edit/http-response.adoc[]</p>
-</div>
+<h4 id="_response_fields_3"><a class="link" href="#_response_fields_3">1.5.5. Response Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[]..email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[]..name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[]..date</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">활동일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[]..description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[]..etc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">활동 링크</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.sort.empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (비어 있음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.sort.sorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬됨)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.sort.unsorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬되지 않음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.offset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 오프셋 값</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.pageSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.pageNumber</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.paged</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 여부 (페이징된 경우 true, 그렇지 않으면 false)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable.unpaged</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이징되지 않은 경우 true, 그렇지 않으면 false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이징 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>last</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">마지막 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (비어 있음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.sorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬됨)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.unsorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬되지 않음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지의 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>first</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">첫 번째 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">결과가 비어 있는지 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_거래_관리"><a class="link" href="#_거래_관리">2. 거래 관리</a></h2>
+<h2 id="_매물_관리"><a class="link" href="#_매물_관리">2. 매물 관리</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_구매_요청_목록_조회"><a class="link" href="#_구매_요청_목록_조회">2.1. 구매 요청 목록 조회</a></h3>
+<h3 id="_수정신청폼_조회"><a class="link" href="#_수정신청폼_조회">2.1. 수정/신청폼 조회</a></h3>
 <div class="sect3">
 <h4 id="_http_request_6"><a class="link" href="#_http_request_6">2.1.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-form/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/product?page=0&amp;size=5 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_request_parameters_2"><a class="link" href="#_request_parameters_2">2.1.2. Request Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-form/request-parameters.adoc[]</p>
-</div>
+<h4 id="_request_parameters_3"><a class="link" href="#_request_parameters_3">2.1.2. Request Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 오프셋</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지당 보여줄 매물 개수</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response_6"><a class="link" href="#_http_response_6">2.1.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-form/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 487
+
+{
+  "content" : [ {
+    "productId" : 1,
+    "title" : "기아 올 뉴 카니발 2018년형",
+    "sellerName" : "홍길동",
+    "sellerEmail" : "user@woochacha.com",
+    "manageType" : "삭제"
+  } ],
+  "pageable" : "INSTANCE",
+  "last" : true,
+  "totalPages" : 1,
+  "totalElements" : 1,
+  "size" : 1,
+  "number" : 0,
+  "sort" : {
+    "empty" : true,
+    "sorted" : false,
+    "unsorted" : true
+  },
+  "numberOfElements" : 1,
+  "first" : true,
+  "empty" : false
+}</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_response_fields_3"><a class="link" href="#_response_fields_3">2.1.4. Response Fields</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-form/response-fields.adoc[]</p>
-</div>
+<h4 id="_response_fields_4"><a class="link" href="#_response_fields_4">2.1.4. Response Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매글 아이디</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게시글 제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매자명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].sellerEmail</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].manageType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">신청폼 종류</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이징 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>last</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">마지막 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (비어 있음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.sorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬됨)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.unsorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬되지 않음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지의 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>first</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">첫 번째 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">결과가 비어 있는지 여부</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_매물_판매자_구매_신청자_정보_조회"><a class="link" href="#_매물_판매자_구매_신청자_정보_조회">2.2. 매물 판매자, 구매 신청자 정보 조회</a></h3>
+<h3 id="_매물_삭제_신청_승인"><a class="link" href="#_매물_삭제_신청_승인">2.2. 매물 삭제 신청 승인</a></h3>
 <div class="sect3">
 <h4 id="_http_request_7"><a class="link" href="#_http_request_7">2.2.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-user/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/product/delete/1 HTTP/1.1
+Content-Type: application/json
+Accept: text/plain;charset=UTF-8
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_path_parameters_5"><a class="link" href="#_path_parameters_5">2.2.2. Path Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-user/path-parameters.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. /admin/product/delete/{productId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">삭제할 매물 아이디</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response_7"><a class="link" href="#_http_response_7">2.2.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-user/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 32
+
+삭제가 완료되었습니다.</code></pre>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_response_fields_4"><a class="link" href="#_response_fields_4">2.2.4. Response Fields</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/get-user/response-fields.adoc[]</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_매물_거래일_지정"><a class="link" href="#_매물_거래일_지정">2.3. 매물 거래일 지정</a></h3>
+<h3 id="_매물_수정_전_매물_정보_조회"><a class="link" href="#_매물_수정_전_매물_정보_조회">2.3. 매물 수정 전 매물 정보 조회</a></h3>
 <div class="sect3">
 <h4 id="_http_request_8"><a class="link" href="#_http_request_8">2.3.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/patch-date/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/product/edit/1 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_path_parameters_6"><a class="link" href="#_path_parameters_6">2.3.2. Path Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/patch-date/path-parameters.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 6. /admin/product/edit/{productId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가격을 수정할 매물 아이디</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response_8"><a class="link" href="#_http_response_8">2.3.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/patch-date/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 178
+
+{
+  "title" : "기아 올 뉴 카니발 2018년형",
+  "imageUrl" : "https://woochacha.s3.ap-northeast-2.amazonaws.com/product/1",
+  "price" : 1500,
+  "updatePrice" : 1300
+}</code></pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_fields_5"><a class="link" href="#_response_fields_5">2.3.4. Response Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">게시글 제목</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>imageUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 매물 이미지 경로</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>price</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">기존 판매 가격</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>updatePrice</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">수정할 판매 가격</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_성사된_거래_정보_저장"><a class="link" href="#_성사된_거래_정보_저장">2.4. 성사된 거래 정보 저장</a></h3>
+<h3 id="_매물_가격_수정_반려"><a class="link" href="#_매물_가격_수정_반려">2.4. 매물 가격 수정 반려</a></h3>
 <div class="sect3">
 <h4 id="_http_request_9"><a class="link" href="#_http_request_9">2.4.1. Http Request</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/success/http-request.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/product/edit/deny/1 HTTP/1.1
+Content-Type: application/json
+Accept: text/plain;charset=UTF-8
+Host: localhost:8080</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_path_parameters_7"><a class="link" href="#_path_parameters_7">2.4.2. Path Parameters</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/success/path-parameters.adoc[]</p>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 7. /admin/product/edit/deny/{productId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가격 수정을 반려할 매물 아이디</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_http_response_9"><a class="link" href="#_http_response_9">2.4.3. Http Response</a></h4>
-<div class="paragraph">
-<p>Unresolved directive in ManagePurchase.adoc - include::C:/woochacha/backend/build/generated-snippets/admin/purchase/success/http-response.adoc[]</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 39
+
+가격 변경이 반려되었습니다.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_매물_가격_수정_승인"><a class="link" href="#_매물_가격_수정_승인">2.5. 매물 가격 수정 승인</a></h3>
+<div class="sect3">
+<h4 id="_http_request_10"><a class="link" href="#_http_request_10">2.5.1. Http Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/product/edit/1 HTTP/1.1
+Content-Type: application/json
+Accept: text/plain;charset=UTF-8
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters_8"><a class="link" href="#_path_parameters_8">2.5.2. Path Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. /admin/product/edit/{productId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">가격 수정을 승인할 매물 아이디</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_10"><a class="link" href="#_http_response_10">2.5.3. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 39
+
+가격 변경이 완료되었습니다.</code></pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_product"><a class="link" href="#_product">3. Product</a></h2>
+<h2 id="_거래_관리"><a class="link" href="#_거래_관리">3. 거래 관리</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_신청_폼_반려"><a class="link" href="#_신청_폼_반려">3.1. 신청 폼 반려</a></h3>
+<h3 id="_구매_요청_목록_조회"><a class="link" href="#_구매_요청_목록_조회">3.1. 구매 요청 목록 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_10"><a class="link" href="#_http_request_10">3.1.1. Http Request</a></h4>
+<h4 id="_http_request_11"><a class="link" href="#_http_request_11">3.1.1. Http Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/purchase?page=0&amp;size=5 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_request_parameters_4"><a class="link" href="#_request_parameters_4">3.1.2. Request Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 오프셋</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지당 보여줄 매물 개수</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_11"><a class="link" href="#_http_response_11">3.1.3. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 502
+
+{
+  "content" : [ {
+    "productId" : 1,
+    "purchaseId" : 2,
+    "carNum" : "22가 1111",
+    "buyerName" : "홍길동",
+    "sellerName" : "김철수",
+    "purchaseStatus" : 0,
+    "transactionStatus" : 1
+  } ],
+  "pageable" : "INSTANCE",
+  "last" : true,
+  "totalPages" : 1,
+  "totalElements" : 1,
+  "size" : 1,
+  "number" : 0,
+  "sort" : {
+    "empty" : true,
+    "sorted" : false,
+    "unsorted" : true
+  },
+  "numberOfElements" : 1,
+  "first" : true,
+  "empty" : false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_fields_6"><a class="link" href="#_response_fields_6">3.1.4. Response Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].productId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매글 아이디</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].purchaseId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매 요청 아이디</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].carNum</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">차량 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].purchaseStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매 요청 상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content[].transactionStatus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">거래 상태</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이징 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>last</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">마지막 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 크기</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (비어 있음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.sorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬됨)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort.unsorted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 여부 (정렬되지 않음)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numberOfElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지의 요소 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>first</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">첫 번째 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>empty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">결과가 비어 있는지 여부</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_매물_판매자_구매_신청자_정보_조회"><a class="link" href="#_매물_판매자_구매_신청자_정보_조회">3.2. 매물 판매자, 구매 신청자 정보 조회</a></h3>
+<div class="sect3">
+<h4 id="_http_request_12"><a class="link" href="#_http_request_12">3.2.1. Http Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/purchase/1 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters_9"><a class="link" href="#_path_parameters_9">3.2.2. Path Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. /admin/purchase/{purchaseId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>purchaseId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매 요청 아이디</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_12"><a class="link" href="#_http_response_12">3.2.3. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 131
+
+{
+  "sellerName" : "홍길동",
+  "sellerPhone" : "01055556666",
+  "buyerName" : "김철수",
+  "buyerPhone" : "01077778888"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_fields_7"><a class="link" href="#_response_fields_7">3.2.4. Response Fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매자 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sellerPhone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">판매자 핸드폰 번호</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매자 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buyerPhone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매자 핸드폰 번호</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_매물_거래일_지정"><a class="link" href="#_매물_거래일_지정">3.3. 매물 거래일 지정</a></h3>
+<div class="sect3">
+<h4 id="_http_request_13"><a class="link" href="#_http_request_13">3.3.1. Http Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/purchase/1 HTTP/1.1
+Content-Type: application/json
+Accept: text/plain;charset=UTF-8
+Content-Length: 39
+Host: localhost:8080
+
+{
+  "meetingDate" : [ 2023, 9, 13 ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters_10"><a class="link" href="#_path_parameters_10">3.3.2. Path Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. /admin/purchase/{purchaseId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>purchaseId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">구매 요청 아이디</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_13"><a class="link" href="#_http_response_13">3.3.3. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 39
+
+날짜 매칭에 성공하였습니다.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_성사된_거래_정보_저장"><a class="link" href="#_성사된_거래_정보_저장">3.4. 성사된 거래 정보 저장</a></h3>
+<div class="sect3">
+<h4 id="_http_request_14"><a class="link" href="#_http_request_14">3.4.1. Http Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /admin/purchase/success/1 HTTP/1.1
+Content-Type: application/json
+Accept: text/plain;charset=UTF-8
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters_11"><a class="link" href="#_path_parameters_11">3.4.2. Path Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. /admin/purchase/success/{purchaseId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>purchaseId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">성사된 구매 요청 아이디</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_http_response_14"><a class="link" href="#_http_response_14">3.4.3. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: text/plain;charset=UTF-8
+Content-Length: 32
+
+거래가 성사되었습니다.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_판매_관리"><a class="link" href="#_판매_관리">4. 판매 관리</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_신청_폼_조회"><a class="link" href="#_신청_폼_조회">4.1. 신청 폼 조회</a></h3>
+<div class="sect3">
+<h4 id="_http_request_15"><a class="link" href="#_http_request_15">4.1.1. Http Request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/sales?pageable=Page+request+%5Bnumber%3A+0%2C+size+5%2C+sort%3A+UNSORTED%5D HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_response_15"><a class="link" href="#_http_response_15">4.1.2. Http Response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 607
+
+{
+  "content" : [ {
+    "id" : 2,
+    "name" : "주언반",
+    "carNum" : "74사4095",
+    "status" : "심사중"
+  } ],
+  "pageable" : {
+    "sort" : {
+      "empty" : true,
+      "sorted" : false,
+      "unsorted" : true
+    },
+    "offset" : 0,
+    "pageSize" : 5,
+    "pageNumber" : 0,
+    "unpaged" : false,
+    "paged" : true
+  },
+  "last" : false,
+  "totalPages" : 2,
+  "totalElements" : 10,
+  "size" : 5,
+  "number" : 0,
+  "sort" : {
+    "empty" : true,
+    "sorted" : false,
+    "unsorted" : true
+  },
+  "numberOfElements" : 1,
+  "first" : true,
+  "empty" : false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_신청_폼_반려"><a class="link" href="#_신청_폼_반려">4.2. 신청 폼 반려</a></h3>
+<div class="sect3">
+<h4 id="_http_request_16"><a class="link" href="#_http_request_16">4.2.1. Http Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/sales/deny/1 HTTP/1.1
@@ -710,7 +2100,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_http_response_10"><a class="link" href="#_http_response_10">3.1.2. Http Response</a></h4>
+<h4 id="_http_response_16"><a class="link" href="#_http_response_16">4.2.2. Http Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -723,9 +2113,9 @@ true</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_차량_정보_전부_조회하기"><a class="link" href="#_차량_정보_전부_조회하기">3.2. 차량 정보 전부 조회하기</a></h3>
+<h3 id="_상세_차량_정보_조회"><a class="link" href="#_상세_차량_정보_조회">4.3. 상세 차량 정보 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_11"><a class="link" href="#_http_request_11">3.2.1. Http Request</a></h4>
+<h4 id="_http_request_17"><a class="link" href="#_http_request_17">4.3.1. Http Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/sales/approve/1 HTTP/1.1
@@ -736,9 +2126,9 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_path_parameters_8"><a class="link" href="#_path_parameters_8">3.2.2. Path Parameters</a></h4>
+<h4 id="_path_parameters_12"><a class="link" href="#_path_parameters_12">4.3.2. Path Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /admin/sales/approve/{saleFormId}</caption>
+<caption class="title">Table 12. /admin/sales/approve/{saleFormId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -758,7 +2148,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_11"><a class="link" href="#_http_response_11">3.2.3. Http Response</a></h4>
+<h4 id="_http_response_17"><a class="link" href="#_http_response_17">4.3.3. Http Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -789,7 +2179,7 @@ Content-Length: 529
 </div>
 </div>
 <div class="sect3">
-<h4 id="_response_fields_5"><a class="link" href="#_response_fields_5">3.2.4. Response Fields</a></h4>
+<h4 id="_response_fields_8"><a class="link" href="#_response_fields_8">4.3.4. Response Fields</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -869,9 +2259,9 @@ Content-Length: 529
 </div>
 </div>
 <div class="sect2">
-<h3 id="_차량_정보_승인"><a class="link" href="#_차량_정보_승인">3.3. 차량 정보 승인</a></h3>
+<h3 id="_차량_점검_정보_업데이트"><a class="link" href="#_차량_점검_정보_업데이트">4.4. 차량 점검 정보 업데이트</a></h3>
 <div class="sect3">
-<h4 id="_http_request_12"><a class="link" href="#_http_request_12">3.3.1. Http Request</a></h4>
+<h4 id="_http_request_18"><a class="link" href="#_http_request_18">4.4.1. Http Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /admin/sales/approve/1 HTTP/1.1
@@ -897,7 +2287,7 @@ Host: localhost:8080
 </div>
 </div>
 <div class="sect3">
-<h4 id="_request_fields"><a class="link" href="#_request_fields">3.3.2. Request Fields</a></h4>
+<h4 id="_request_fields_2"><a class="link" href="#_request_fields_2">4.4.2. Request Fields</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -951,7 +2341,7 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_12"><a class="link" href="#_http_response_12">3.3.3. Http Response</a></h4>
+<h4 id="_http_response_18"><a class="link" href="#_http_response_18">4.4.3. Http Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -964,9 +2354,9 @@ true</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_매물_정보_조회"><a class="link" href="#_매물_정보_조회">3.4. 매물 정보 조회</a></h3>
+<h3 id="_게시글_등록_전_매물_상세_정보_전체_조회"><a class="link" href="#_게시글_등록_전_매물_상세_정보_전체_조회">4.5. 게시글 등록 전 매물 상세 정보 전체 조회</a></h3>
 <div class="sect3">
-<h4 id="_http_request_13"><a class="link" href="#_http_request_13">3.4.1. Http Request</a></h4>
+<h4 id="_http_request_19"><a class="link" href="#_http_request_19">4.5.1. Http Request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /admin/sales/register/1 HTTP/1.1
@@ -977,9 +2367,9 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_request_parameters_3"><a class="link" href="#_request_parameters_3">3.4.2. Request parameters</a></h4>
+<h4 id="_request_parameters_5"><a class="link" href="#_request_parameters_5">4.5.2. Request parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. /admin/sales/register/{saleFormId}</caption>
+<caption class="title">Table 13. /admin/sales/register/{saleFormId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -999,7 +2389,7 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_http_response_13"><a class="link" href="#_http_response_13">3.4.3. Http Response</a></h4>
+<h4 id="_http_response_19"><a class="link" href="#_http_response_19">4.5.3. Http Response</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -1040,7 +2430,7 @@ Content-Length: 776
 </div>
 </div>
 <div class="sect3">
-<h4 id="_response_fields_6"><a class="link" href="#_response_fields_6">3.4.4. Response Fields</a></h4>
+<h4 id="_response_fields_9"><a class="link" href="#_response_fields_9">4.5.4. Response Fields</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1154,7 +2544,7 @@ Content-Length: 776
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-09-12 20:42:19 +0900
+Last updated 2023-09-13 20:49:00 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
