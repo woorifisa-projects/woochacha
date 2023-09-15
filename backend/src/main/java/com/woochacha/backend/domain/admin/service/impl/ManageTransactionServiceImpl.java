@@ -34,15 +34,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ManageTransactionServiceImpl implements ManageTransactionService {
 
-    @Value("${naver-cloud-sms.accessKey}")
-    private String accessKey;
-
-    @Value("${naver-cloud-sms.secretKey}")
-    private String secretKey;
-
-    @Value("${naver-cloud-sms.serviceId}")
-    private String serviceId;
-
     @Value("${naver-cloud-sms.senderPhone}")
     private String phone;
 

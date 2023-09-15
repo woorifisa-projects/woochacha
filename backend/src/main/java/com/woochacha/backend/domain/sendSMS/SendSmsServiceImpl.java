@@ -2,9 +2,9 @@ package com.woochacha.backend.domain.sendSMS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woochacha.backend.domain.admin.dto.sendMessage.MessageDto;
-import com.woochacha.backend.domain.admin.dto.sendMessage.SmsRequestDto;
-import com.woochacha.backend.domain.admin.dto.sendMessage.SmsResponseDto;
+import com.woochacha.backend.domain.sendSMS.sendMessage.MessageDto;
+import com.woochacha.backend.domain.sendSMS.sendMessage.SmsRequestDto;
+import com.woochacha.backend.domain.sendSMS.sendMessage.SmsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -101,4 +102,14 @@ public class SendSmsServiceImpl implements SendSmsService{
         return Base64.encodeBase64String(rawHmac);
     }
 
+    @Override
+    public String createSmsKey() {
+        StringBuffer key = new StringBuffer();
+        Random rnd = new Random();
+
+        for (int i = 0; i < 6; i++) { // 인증코드 6자리
+            key.append((rnd.nextInt(10)));
+        }
+        return key.toString();
+    }
 }
