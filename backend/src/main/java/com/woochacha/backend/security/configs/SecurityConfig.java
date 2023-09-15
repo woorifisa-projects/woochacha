@@ -94,9 +94,8 @@ public class SecurityConfig {
 
                 .and() // TODO: 권한이 필요한 작업 전에 jwt principle과 email 비교해서 일치한 경우에만 진행되도록 리팩토링
                 .authorizeRequests()
-                .antMatchers("/docs/**").permitAll()
-                .antMatchers("/docs/Woochacha-admin.html", "/docs/Woochacha-admin.html").permitAll()
-                .antMatchers("/", "/users/register", "/users/login", "/product").permitAll()
+                .antMatchers("/docs/Woochacha-user.html", "/docs/Woocahcha-admin.html").permitAll()
+                .antMatchers("/", "/users/register", "/users/login", "/product", "/users/auth").permitAll()
                 .antMatchers("/users/**", "/product/sale", "/product/purchase", "/mypage/**").hasRole("USER")
                 .antMatchers("/product/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")

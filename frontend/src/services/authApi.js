@@ -197,3 +197,57 @@ export const signoutApi = async (memberId) => {
     throw error;
   }
 };
+
+export const sendAuthApi = async (phoneNum) => {
+  try {
+    const data = {
+      phone: phoneNum,
+    };
+    const response = await jsonInstance.post(`/users/auth`, data);
+    console.log(response);
+    if (response.status === 200) {
+      alert('인증 번호를 전송하였습니다.');
+    }
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
+};
+export const checkAuthApi = async (phoneNum, authNum) => {
+  try {
+    const data = {
+      phone: phoneNum,
+      authNum: authNum,
+    };
+    const response = await jsonInstance.patch(`/users/auth`, data);
+    console.log(response);
+    if (response.data === 'success') {
+      Swal.fire({
+        icon: 'success',
+        title: `인증 완료`,
+        html: `전화번호 인증이 완료되었습니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      });
+      return response.data;
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '인증번호 실패',
+        html: '인증번호가 일치하지 않습니다.',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return response.data;
+    }
+  } catch (error) {
+    console.log('실패: ', error);
+    throw error;
+  }
+};
