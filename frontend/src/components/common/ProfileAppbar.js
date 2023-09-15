@@ -23,6 +23,11 @@ export default function ProfileAppbar() {
       px: 3,
       fontWeight: 800,
       borderRadius: '22px',
+
+      '&:hover': {
+        cursor: 'pointer',
+        backgroundColor: '#F95700',
+      },
     },
   };
 
@@ -116,13 +121,21 @@ export default function ProfileAppbar() {
     <>
       {userLoginState.loginStatus ? (
         <Tooltip title={userLoginState.userName}>
-          <Button onClick={handleOpenUserMenu} variant="contained" sx={profileAppbarCss.btnColor}>
+          <Button
+            onClick={handleOpenUserMenu}
+            variant="contained"
+            color="primary"
+            sx={profileAppbarCss.btnColor}>
             {userLoginState.userName}
           </Button>
         </Tooltip>
       ) : (
         <Tooltip title="로그인하기">
-          <Button onClick={handleOpenUserMenu} variant="contained" sx={profileAppbarCss.btnColor}>
+          <Button
+            onClick={handleOpenUserMenu}
+            variant="contained"
+            color="primary"
+            sx={profileAppbarCss.btnColor}>
             로그인
           </Button>
         </Tooltip>

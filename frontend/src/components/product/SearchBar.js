@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Grid, Button, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import styles from './SearchBar.module.css';
 
 export default function SearchBar({ onSearch }) {
   const [keyword, setKeyword] = React.useState('');
@@ -16,29 +17,17 @@ export default function SearchBar({ onSearch }) {
 
   return (
     <>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item>
-          <SearchIcon color="inherit" sx={{ display: 'block' }} />
-        </Grid>
+      <Grid container alignItems="center" sx={{ position: 'relative' }} gap={2}>
         <Grid item xs>
-          <TextField
-            fullWidth
-            placeholder="검색할 차량명을 입력해주세요."
-            InputProps={{
-              disableUnderline: true,
-              sx: {
-                fontSize: 'default',
-                backgroundColor: '#fff',
-                opacity: 0.7,
-                borderRadius: 1,
-                p: 1,
-                color: '#000',
-              },
-            }}
+          <input
+            className={styles.textField}
+            placeholder="모델 또는 차량명으로 검색해주세요."
             value={keyword}
             onChange={handleInputChange}
-            variant="standard"
           />
+        </Grid>
+        <Grid item sx={{ position: 'absolute', top: 10, right: 5 }}>
+          <SearchIcon sx={{ color: '#727272' }} fontSize="medium" />
         </Grid>
       </Grid>
     </>
