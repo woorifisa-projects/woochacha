@@ -4,6 +4,7 @@ import com.woochacha.backend.domain.jwt.JwtAccessDeniedHandler;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationEntryPoint;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -14,9 +15,12 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -34,6 +38,12 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+    @Value("${decode.password.key}")
+    private String passwordKey;
+
+    @Value("${decode.salt.key}")
+    private String saltKey;
+
     public SecurityConfig(
             JwtTokenProvider jwtTokenProvider,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
@@ -49,13 +59,21 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public TextEncryptor textEncryptor() {
+        String password = DigestUtils.md5DigestAsHex(passwordKey.getBytes()); // 비밀 키
+        String salt = DigestUtils.md5DigestAsHex(saltKey.getBytes());
+
+        return Encryptors.text(password, salt);
+    }
+
     // img, js, css 파일 등 보안 필터를 적용할 필요가 없는 리소스를 설정
 //    @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-//    @Override
+    //    @Override
 //    protected void configure(final HttpSecurity http) throws Exception {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -77,7 +95,7 @@ public class SecurityConfig {
                 .and() // TODO: 권한이 필요한 작업 전에 jwt principle과 email 비교해서 일치한 경우에만 진행되도록 리팩토링
                 .authorizeRequests()
                 .antMatchers("/docs/Woochacha-user.html", "/docs/Woocahcha-admin.html").permitAll()
-                .antMatchers("/", "/users/register", "/users/login", "/product").permitAll()
+                .antMatchers("/", "/users/register", "/users/login", "/product", "/users/auth").permitAll()
                 .antMatchers("/users/**", "/product/sale", "/product/purchase", "/mypage/**").hasRole("USER")
                 .antMatchers("/product/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")

@@ -1,9 +1,9 @@
 package com.woochacha.backend.domain.mypage.service.impl;
 
+import com.woochacha.backend.common.DataMasking;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.AmazonS3.dto.AmazonS3RequestDto;
 import com.woochacha.backend.domain.AmazonS3.service.AmazonS3Service;
-import com.woochacha.backend.domain.AmazonS3.service.AmazonS3ServiceImpl;
 import com.woochacha.backend.domain.log.service.LogService;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.repository.MemberRepository;
@@ -35,6 +35,8 @@ public class MypageServiceImpl implements MypageService {
     private final Logger logger = LoggerFactory.getLogger(MypageServiceImpl.class);
 
     private final LogService logService;
+
+    private final DataMasking dataMasking;
 
     // JPQL로 조회한 결과 ProductResponseDto로 변환
     private ProductResponseDto arrayToProductResponseDto(Object[] array) {
@@ -120,7 +122,10 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public ProfileDto getProfileByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
-        return modelMapper.map(member, ProfileDto.class);
+        ProfileDto profileDto = modelMapper.map(member, ProfileDto.class);
+        profileDto.setEmail(dataMasking.decoding(profileDto.getEmail()));
+        profileDto.setPhone(dataMasking.decoding(profileDto.getPhone()));
+        return profileDto;
     }
 
     // 판매 신청 폼 조회
@@ -200,4 +205,3 @@ public class MypageServiceImpl implements MypageService {
         return newProfileIamge;
     }
 }
-

@@ -1,25 +1,37 @@
 package com.woochacha.backend.domain.member.controller;
 
-import com.woochacha.backend.domain.member.dto.LoginRequestDto;
-import com.woochacha.backend.domain.member.dto.LoginResponseDto;
-import com.woochacha.backend.domain.member.dto.SignResponseDto;
-import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.woochacha.backend.domain.member.dto.*;
 import com.woochacha.backend.domain.member.service.SignService;
+import com.woochacha.backend.domain.sendSMS.sendMessage.MessageDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/users")
-public class MemberController extends Exception{
+public class MemberController{
 
     private final SignService signService;
 
     public MemberController(SignService signService) {
         this.signService = signService;
+    }
+
+    @PostMapping("/auth")
+    public String authPhone(@RequestBody PhoneRequestDto phoneRequestDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
+        return signService.authPhone(phoneRequestDto);
+    }
+    @PatchMapping ("/auth")
+    public String checkAuthPhone(@RequestBody AuthPhoneRequestDto authPhoneRequestDto){
+        return signService.checkAuthPhone(authPhoneRequestDto);
     }
 
     @PostMapping("/register")

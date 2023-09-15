@@ -1,4 +1,4 @@
-package com.woochacha.backend.domain.admin.dto.sendMessage;
+package com.woochacha.backend.domain.sendSMS.sendMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
