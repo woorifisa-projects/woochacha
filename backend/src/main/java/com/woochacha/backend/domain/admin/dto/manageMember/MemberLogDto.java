@@ -2,12 +2,14 @@ package com.woochacha.backend.domain.admin.dto.manageMember;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 // 사용사의 로그 데이터 저장을 위한 Dto
 @Getter
 @Builder
+@Setter
 public class MemberLogDto {
 
     String email; // 로그 사용자 이메일

@@ -186,18 +186,18 @@ public class SignServiceImpl implements SignService {
         // 회원가입 시 member의 기본 프로필 사진 설정
         signUpRequestDto.setProfileImage("https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/default");
 
-        AuthPhone authPhone = authPhoneRepository.findById(signUpRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
-
-        if(authPhone.getAuthStatus() == 1){
+//        AuthPhone authPhone = authPhoneRepository.findById(signUpRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
+//
+//        if(authPhone.getAuthStatus() == 1){
             Member savedMember = save(signUpRequestDto);
-            authPhoneRepository.deleteById(signUpRequestDto.getPhone());
+//            authPhoneRepository.deleteById(signUpRequestDto.getPhone());
             logger.debug("회원가입 성공");
             logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
             return SignException.exception(SignResultCode.SUCCESS);
-        }else{
-            logger.debug("회원가입 실패");
-            return SignException.exception(SignResultCode.FAIL);
-        }
+//        }else{
+//            logger.debug("회원가입 실패");
+//            return SignException.exception(SignResultCode.FAIL);
+//        }
         // Member 테이블에 회원 정보 저장
 
     }

@@ -18,7 +18,7 @@ public interface ManageProductFormRepository extends JpaRepository<Product, Long
 
     // 매물 관리 리스트 조회
     @Query("SELECT p.id, CONCAT(CAST(cd.model.name AS string), ' ', cd.carName.name, ' ', CAST(cd.year AS string), '년형') AS title, " +
-            "m.name, m.phone, p.status.id " +
+            "m.name, m.email, p.status.id " +
             "FROM Product p " +
             "JOIN p.carDetail cd " +
             "JOIN p.saleForm sf " +
