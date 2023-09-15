@@ -6,6 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Builder
+@Setter
 public class ProfileDto {
 
     private String profileImage; // 프로필 사진
