@@ -27,6 +27,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'; // 열선시트
 
 import BuildIcon from '@mui/icons-material/Build';
 import ConstructionIcon from '@mui/icons-material/Construction';
@@ -36,7 +37,6 @@ import styled from '@emotion/styled';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
 import { Line } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
 
 export default function ProductDetail(props) {
   const [mounted, setMounted] = useState(false);
@@ -108,6 +108,28 @@ export default function ProductDetail(props) {
     borderRadius: '5px',
     width: '190px', // 각 버튼의 너비 조절
     height: '50px', // 각 버튼의 높이 조절
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
+
+  const buttonStyle5 = {
+    // backgroundColor: '#FE7F02',
+    border: '1px solid #F95700',
+    borderRadius: '25px',
+    width: '160px', // 각 버튼의 너비 조절
+    height: '40px', // 각 버튼의 높이 조절
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
+
+  const buttonStyle6 = {
+    backgroundColor: '#F95700',
+    border: '1px solid #F95700',
+    borderRadius: '25px',
+    width: '160px', // 각 버튼의 너비 조절
+    height: '40px', // 각 버튼의 높이 조절
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -265,7 +287,7 @@ export default function ProductDetail(props) {
                 variant="h4"
                 component="h4"
                 mr={1}
-                ml={55}
+                ml={50}
                 color="#F95700"
                 fontWeight="bold">
                 {`${Number(detailProduct.productBasicInfo.price).toLocaleString()}`}
@@ -324,6 +346,107 @@ export default function ProductDetail(props) {
                       fontWeight="bold">
                       {'만원'}
                     </Typography>
+                  </div>
+
+                  <Grid container spacing={2}>
+                    <Grid item></Grid>
+                    <Grid item></Grid>
+                  </Grid>
+
+                  <div
+                    style={{
+                      position: 'sticky', // 스크롤에 따라 고정되도록 설정
+                      top: '84px', // 화면 상단에 고정
+                      height: '550px', // 컨테이너의 높이를 화면 높이로 설정
+                      width: '450px', // 원하는 사이드바의 너비 설정
+                      backgroundColor: 'white', // 배경색
+                      border: '1px solid #ccc', // 테두리 색상 및 두께 설정
+                      borderRadius: '5px', // 모서리를 둥글게 만듭니다
+                      // boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)', // 그림자 효과
+                      padding: '20px', // 여백 설정
+                      marginLeft: '64%',
+                      marginRight: '20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}>
+                    <div>
+                      <Typography
+                        sx={productDetailCss.productTitle}
+                        variant="h5"
+                        component="h5"
+                        fontWeight="bold">
+                        {detailProduct.productBasicInfo.title}
+                      </Typography>
+                      <Typography gutterBottom variant="h6" mr={2}>
+                        차량 사고 내역 조회
+                      </Typography>
+                      {
+                        <Typography
+                          gutterBottom
+                          variant="body2"
+                          style={{ borderBottom: '1px solid black' }}>
+                          사고 이력
+                        </Typography>
+                      }
+                      {detailProduct.productDetailInfo.productAccidentInfoList &&
+                      detailProduct.productDetailInfo.productAccidentInfoList.length > 0 ? (
+                        detailProduct.productDetailInfo.productAccidentInfoList.map(
+                          (accidentItem, idx) => (
+                            <Typography key={idx} gutterBottom variant="body2">
+                              {`${accidentItem.type ? `${accidentItem.type} :` : ''} ${
+                                accidentItem.count === 0 ? '' : `${accidentItem.count}번`
+                              }`}
+                            </Typography>
+                          ),
+                        )
+                      ) : (
+                        <Typography gutterBottom variant="body2">
+                          사고 이력 없음
+                        </Typography>
+                      )}
+                      {
+                        <Typography
+                          gutterBottom
+                          variant="body2"
+                          style={{ borderBottom: '1px solid black', marginTop: '2em' }}>
+                          교체 이력
+                        </Typography>
+                      }
+                      {detailProduct.productDetailInfo.productExchangeInfoList &&
+                      detailProduct.productDetailInfo.productExchangeInfoList.length > 0 ? (
+                        detailProduct.productDetailInfo.productExchangeInfoList.map(
+                          (exchangeItem, idx) => (
+                            <Typography key={idx} gutterBottom variant="body2">
+                              {`${exchangeItem.type} : ${exchangeItem.count} 번`}
+                            </Typography>
+                          ),
+                        )
+                      ) : (
+                        <Typography gutterBottom variant="body2">
+                          교체 이력 없음
+                        </Typography>
+                      )}
+                    </div>
+                    <Box>
+                      <Typography gutterBottom variant="h6" mr={2}>
+                        차량 옵션 정보
+                      </Typography>
+                      {detailProduct.productOptionInfo.map((optionList, idx) => {
+                        return (
+                          <Typography key={idx} gutterBottom variant="body2">
+                            {`${optionList.whether === 1 ? `${optionList.option}` : ''}`}
+                          </Typography>
+                        );
+                      })}
+                    </Box>
+                    <Button
+                      onClick={handleClickModal}
+                      mt={5}
+                      variant="contained"
+                      style={{ ...buttonStyle, width: '90%', marginLeft: '5%', marginTop: '10%' }} // width 속성 추가
+                    >
+                      구매 신청
+                    </Button>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -577,14 +700,14 @@ export default function ProductDetail(props) {
                 </Grid>
 
                 {/* <Grid item xs={8} sm={7} md={6} ml={20}> */}
-                <Button
+                {/* <Button
                   onClick={handleClickModal}
                   mt={5}
                   variant="contained"
                   style={{ ...buttonStyle, width: '30%', marginLeft: '300px' }} // width 속성 추가
                 >
                   구매 신청
-                </Button>
+                </Button> */}
                 {/* </Grid> */}
               </Grid>
             </Grid>
@@ -643,13 +766,16 @@ export default function ProductDetail(props) {
                           marginTop={2}>
                           {`${Number(detailProduct.productBasicInfo.price).toLocaleString()}만원`}
                         </Typography>
-                        <Link to="https://app.gather.town/app/4vEB4Q4BUbTU0ckj/wooribank">
-                          <Button
-                            sx={{ ...buttonStyle3, marginTop: '10px', color: 'white' }}
-                            variant="outlined">
-                            메타버스 금융상담 받기
-                          </Button>
-                        </Link>
+
+                        {/* <Link to="https://app.gather.town/app/4vEB4Q4BUbTU0ckj/wooribank"> */}
+                        <Button
+                          sx={{ ...buttonStyle3, marginTop: '10px', color: 'white' }}
+                          variant="outlined"
+                          fontWeight="bold"
+                          fontSize="24px">
+                          메타버스 금융상담 받기
+                        </Button>
+                        {/* </Link> */}
                       </div>
                     </div>
                     <div style={{ marginTop: '30px' }} width={10}>
@@ -716,23 +842,189 @@ export default function ProductDetail(props) {
             <Grid container spacing={2}>
               <Grid item>
                 <Box sx={boxStyle2} variant="outlined" marginTop={2}>
-                  <Typography>내용을 추가하세요</Typography>
-                  <Button variant="contained" color="primary">
-                    버튼 1
-                  </Button>
-                  <Typography>추가 텍스트 1</Typography>
+                  <div
+                    style={{
+                      width: '100px', // 원하는 너비
+                      height: '30px', // 원하는 높이
+                      backgroundColor: '#FFF9F7', // 연한 회색 배경색
+                      borderRadius: '25px', // 50%로 설정하여 타원형 모양 생성
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginLeft: '5%',
+                      marginTop: '6%',
+                    }}>
+                    <span style={{ color: '#F95700', marginBottom: '4%' }}>우리은행</span>
+                  </div>
+                  <Typography
+                    variant="h6"
+                    component="h4"
+                    fontWeight="bold"
+                    marginLeft={'5%'}
+                    marginTop={'3%'}>
+                    우리드림카대출[중고차]
+                  </Typography>
+                  <Typography color={'gray'} marginLeft={'5%'}>
+                    중고차 구입을 위한 자동차 대출
+                  </Typography>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      marginTop: '10px',
+                      marginTop: '5%',
+                      marginLeft: '5%',
+                    }}>
+                    <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                      상품안내
+                    </Button>
+                    <Button
+                      sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
+                      variant="outlined">
+                      상담하러 가기
+                    </Button>
+                  </div>
                 </Box>
               </Grid>
               <Grid item>
-                <Box sx={boxStyle2} variant="outlined" marginTop={2}></Box>
+                <Box sx={boxStyle2} variant="outlined" marginTop={2}>
+                  <div
+                    style={{
+                      width: '140px', // 원하는 너비
+                      height: '30px', // 원하는 높이
+                      backgroundColor: '#FFF9F7', // 연한 회색 배경색
+                      borderRadius: '25px', // 50%로 설정하여 타원형 모양 생성
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginLeft: '5%',
+                      marginTop: '6%',
+                    }}>
+                    <span style={{ color: '#F95700', marginBottom: '4%' }}>우리금융캐피탈</span>
+                  </div>
+                  <Typography
+                    variant="h6"
+                    component="h4"
+                    fontWeight="bold"
+                    marginLeft={'5%'}
+                    marginTop={'3%'}>
+                    우리WON카 중고차대출
+                  </Typography>
+                  <Typography color={'gray'} marginLeft={'5%'}>
+                    중고차 구입을 위한 최상의 금융 서비스
+                  </Typography>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      marginTop: '10px',
+                      marginTop: '5%',
+                      marginLeft: '5%',
+                    }}>
+                    <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                      상품안내
+                    </Button>
+                    <Button
+                      sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
+                      variant="outlined">
+                      상담하러 가기
+                    </Button>
+                  </div>
+                </Box>
               </Grid>
             </Grid>
             <Grid container spacing={2}>
               <Grid item>
-                <Box sx={boxStyle2} variant="outlined" marginTop={2}></Box>
+                <Box sx={boxStyle2} variant="outlined" marginTop={2}>
+                  <div
+                    style={{
+                      width: '100px', // 원하는 너비
+                      height: '30px', // 원하는 높이
+                      backgroundColor: '#FFF9F7', // 연한 회색 배경색
+                      borderRadius: '25px', // 50%로 설정하여 타원형 모양 생성
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginLeft: '5%',
+                      marginTop: '6%',
+                    }}>
+                    <span style={{ color: '#F95700', marginBottom: '4%' }}>우리은행</span>
+                  </div>
+                  <Typography
+                    variant="h6"
+                    component="h4"
+                    fontWeight="bold"
+                    marginLeft={'5%'}
+                    marginTop={'3%'}>
+                    우리드림카대출[전환대출]
+                  </Typography>
+                  <Typography color={'gray'} marginLeft={'5%'}>
+                    기존 자동차할부를 바꾸기 위한 자동차대출
+                  </Typography>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      marginTop: '10px',
+                      marginTop: '5%',
+                      marginLeft: '5%',
+                    }}>
+                    <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                      상품안내
+                    </Button>
+                    <Button
+                      sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
+                      variant="outlined">
+                      상담하러 가기
+                    </Button>
+                  </div>
+                </Box>
               </Grid>
               <Grid item>
-                <Box sx={boxStyle2} variant="outlined" marginTop={2}></Box>
+                <Box sx={boxStyle2} variant="outlined" marginTop={2}>
+                  <div
+                    style={{
+                      width: '140px', // 원하는 너비
+                      height: '30px', // 원하는 높이
+                      backgroundColor: '#FFF9F7', // 연한 회색 배경색
+                      borderRadius: '25px', // 50%로 설정하여 타원형 모양 생성
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginLeft: '5%',
+                      marginTop: '6%',
+                    }}>
+                    <span style={{ color: '#F95700', marginBottom: '4%' }}>우리금융캐피탈</span>
+                  </div>
+                  <Typography
+                    variant="h6"
+                    component="h4"
+                    fontWeight="bold"
+                    marginLeft={'5%'}
+                    marginTop={'3%'}>
+                    우리WON카 대출(신용+담보 혼합)
+                  </Typography>
+                  <Typography color={'gray'} marginLeft={'5%'}>
+                    중고차 구입을 위한 최적의 금융 상품
+                  </Typography>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      marginTop: '10px',
+                      marginTop: '5%',
+                      marginLeft: '5%',
+                    }}>
+                    <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                      상품안내
+                    </Button>
+                    <Button
+                      sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
+                      variant="outlined">
+                      상담하러 가기
+                    </Button>
+                  </div>
+                </Box>
               </Grid>
             </Grid>
           </Box>
@@ -769,40 +1061,19 @@ export default function ProductDetail(props) {
 
           {/* 차량 상세 정보 item (전체 정보 & option) box */}
           <Box sx={productDetailCss.detailBox}>
-            <Typography sx={productDetailCss.productTitle} variant="h4" component="h4">
+            {/* <Typography sx={productDetailCss.productTitle} variant="h4" component="h4">
               매물 상세 페이지
-            </Typography>
+            </Typography> */}
             <Grid container spacing={2} alignItems="flex-start" justifyContent="center" mb={2}>
               <Grid item xs={12} sm={12} md={4}>
                 <Card sx={productDetailCss.card}>
-                  <CardContent>
-                    <Box>
-                      <Typography gutterBottom variant="h6" mr={2}>
-                        차량 상세 정보
-                      </Typography>
-                      <Typography gutterBottom variant="body2">
-                        {`승차인원 : ${detailProduct.productDetailInfo.capacity}`}
-                      </Typography>
-                      <Typography gutterBottom variant="body2">
-                        {`주행거리 : ${detailProduct.productDetailInfo.distance}`}
-                      </Typography>
-                      <Typography gutterBottom variant="body2">
-                        {`차종 : ${detailProduct.productDetailInfo.carType}`}
-                      </Typography>
-                      <Typography gutterBottom variant="body2">
-                        {`연료 : ${detailProduct.productDetailInfo.fuelName}`}
-                      </Typography>
-                      <Typography gutterBottom variant="body2">
-                        {`변속기 : ${detailProduct.productDetailInfo.transmissionName}`}
-                      </Typography>
-                    </Box>
-                  </CardContent>
+                  
                 </Card>
               </Grid>
               <Grid item xs={12} sm={12} md={4}>
-                <Card sx={productDetailCss.card}>
-                  <CardContent>
-                    <Box>
+                {/* <Card sx={productDetailCss.card}>
+                  <CardContent> */}
+                {/* <Box>
                       <Typography gutterBottom variant="h6" mr={2}>
                         차량 사고 내역 조회
                       </Typography>
@@ -852,14 +1123,14 @@ export default function ProductDetail(props) {
                           교체 이력 없음
                         </Typography>
                       )}
-                    </Box>
-                  </CardContent>
-                </Card>
+                    </Box> */}
+                {/* </CardContent>
+                </Card> */}
               </Grid>
               <Grid item xs={12} sm={12} md={4}>
                 <Card sx={productDetailCss.card}>
-                  <CardContent>
-                    <Box>
+                  {/* <CardContent> */}
+                  {/* <Box>
                       <Typography gutterBottom variant="h6" mr={2}>
                         차량 옵션 정보
                       </Typography>
@@ -870,8 +1141,8 @@ export default function ProductDetail(props) {
                           </Typography>
                         );
                       })}
-                    </Box>
-                  </CardContent>
+                    </Box> */}
+                  {/* </CardContent> */}
                 </Card>
               </Grid>
             </Grid>

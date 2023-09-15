@@ -22,7 +22,7 @@ export default function ImageSlider(props) {
   const imageSliderCss = {
     box: {
       mt: 1,
-      height: '42rem',
+      height: '48rem',
       display: 'block',
       overflow: 'hidden',
       width: '76rem',
