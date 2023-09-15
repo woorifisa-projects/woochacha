@@ -37,6 +37,7 @@ export const handlePhoneBlur = (event, setFormValid, formValid, setSignupData, s
   setSignupData({ ...signupData, phone: formattedPhoneNumber });
   const isValid = checkPhonenumber(formattedPhoneNumber);
   setFormValid({ ...formValid, phoneErr: !isValid });
+  return isValid;
 };
 
 /// ==== ///

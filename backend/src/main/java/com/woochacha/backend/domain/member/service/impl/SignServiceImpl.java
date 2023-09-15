@@ -1,15 +1,13 @@
 package com.woochacha.backend.domain.member.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
 import com.woochacha.backend.domain.log.service.impl.LogServiceImpl;
-import com.woochacha.backend.domain.member.dto.LoginRequestDto;
-import com.woochacha.backend.domain.member.dto.LoginResponseDto;
-import com.woochacha.backend.domain.member.dto.SignResponseDto;
-import com.woochacha.backend.domain.member.dto.SignUpRequestDto;
+import com.woochacha.backend.domain.member.dto.*;
 import com.woochacha.backend.domain.member.entity.Member;
 import com.woochacha.backend.domain.member.entity.QMember;
 import com.woochacha.backend.domain.member.exception.LoginException;
@@ -19,6 +17,11 @@ import com.woochacha.backend.domain.member.repository.MemberRepository;
 import com.woochacha.backend.domain.member.service.SignService;
 import com.woochacha.backend.domain.product.entity.QProduct;
 import com.woochacha.backend.domain.sale.entity.QSaleForm;
+import com.woochacha.backend.domain.sendSMS.SendSmsService;
+import com.woochacha.backend.domain.sendSMS.entity.AuthPhone;
+import com.woochacha.backend.domain.sendSMS.repository.AuthPhoneRepository;
+import com.woochacha.backend.domain.sendSMS.sendMessage.MessageDto;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +35,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class SignServiceImpl implements SignService {
 
     private final JPAQueryFactory queryFactory;
@@ -59,15 +67,47 @@ public class SignServiceImpl implements SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final LogServiceImpl logService;
+    private final SendSmsService sendSmsService;
+    private final AuthPhoneRepository authPhoneRepository;
 
-    public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
-                           PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, LogServiceImpl logService) {
-        this.queryFactory = queryFactory;
-        this.memberRepository = memberRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.logService = logService;
+
+    /*
+    휴대폰 인증 번호 전송
+     */
+    @Override
+    @Transactional
+    public String authPhone(PhoneRequestDto phoneRequestDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
+        String randomNum = sendSmsService.createSmsKey();
+        String phone = phoneRequestDto.getPhone();
+        System.out.println(phone);
+        authPhoneRepository.findById(phone).ifPresent(authPhone -> authPhoneRepository.deleteById(phone));
+        AuthPhone saveAuthPhone = AuthPhone.builder()
+                .phone(phone)
+                .authNumber(randomNum)
+                .authStatus((byte) 0)
+                .build();
+        authPhoneRepository.save(saveAuthPhone);
+        MessageDto authMessageDto = MessageDto.builder()
+                .to(phone)
+                .content("[우차차 회원가입]" + "\n"
+                + "인증번호 [ " + randomNum + " ]를 입력해주세요.")
+                .build();
+        System.out.println(phone);
+        sendSmsService.sendSms(authMessageDto);
+        return "success";
+    }
+
+    @Override
+    @Transactional
+    public String checkAuthPhone(AuthPhoneRequestDto authPhoneRequestDto){
+        System.out.println(authPhoneRequestDto.getPhone());
+        AuthPhone authPhone = authPhoneRepository.findById(authPhoneRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
+        Byte success = 1;
+        if(authPhone.getAuthNumber().equals(authPhoneRequestDto.getAuthNum())){
+            authPhoneRepository.updateAuthStatus(success,authPhone.getPhone());
+            return "success";
+        }
+        return "fail";
     }
 
     /*
@@ -131,17 +171,19 @@ public class SignServiceImpl implements SignService {
         // 회원가입 시 member의 기본 프로필 사진 설정
         signUpRequestDto.setProfileImage("https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/default");
 
-        // Member 테이블에 회원 정보 저장
-        Member savedMember = save(signUpRequestDto);
-        logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
+        AuthPhone authPhone = authPhoneRepository.findById(signUpRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
 
-        if (!savedMember.getName().isEmpty()) {
-            logger.debug("회원가입 중 이름 미입력");
+        if(authPhone.getAuthStatus() == 1){
+            Member savedMember = save(signUpRequestDto);
+            authPhoneRepository.deleteById(signUpRequestDto.getPhone());
+            logger.debug("회원가입 성공");
+            logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
             return SignException.exception(SignResultCode.SUCCESS);
-        } else {
+        }else{
             logger.debug("회원가입 실패");
             return SignException.exception(SignResultCode.FAIL);
         }
+        // Member 테이블에 회원 정보 저장
 
     }
 
@@ -236,4 +278,5 @@ public class SignServiceImpl implements SignService {
         }
         return null;
     }
+
 }

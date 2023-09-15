@@ -19,9 +19,10 @@ import {
   keywordProductGetApi,
 } from '@/services/productApi';
 import MultipleSelect from '@/components/product/MultipleSelect';
+
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import styles from './product.module.css';
-
+import { debounce } from 'lodash';
 export default function Products(props) {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
@@ -80,22 +81,29 @@ export default function Products(props) {
   /**
    * 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
    * */
-  const handleSearch = (keyword) => {
+  // const debounce = (func, delay) => {
+  //   let timeoutId;
+  //   return (...args) => {
+  //     clearTimeout(timeoutId);
+  //     timeoutId = setTimeout(() => {
+  //       func.apply(null, args);
+  //     }, delay);
+  //   };
+  // };
+  const handleSearchDebounced = debounce((keyword) => {
     keywordProductGetApi(keyword).then((res) => {
       if (res.status === 200) {
-        setAllProducts((prevProducts) => {
-          // 기존의 상태를 복사 -> content를 업데이트
-          return {
-            ...prevProducts,
-            productInfo: {
-              ...prevProducts.productInfo,
-              content: [...res.data.content],
-            },
-          };
-        });
+        setAllProducts((prevProducts) => ({
+          ...prevProducts,
+          productInfo: {
+            ...prevProducts.productInfo,
+            content: [...res.data.content],
+          },
+        }));
       }
     });
-  };
+  }, 500);
+
   /**
    * 필터링 관련 함수
    */
@@ -182,7 +190,7 @@ export default function Products(props) {
             className={styles.searchGrid}>
             <Box className={styles.searchBox}>
               <h5 className={styles.searchTitle}>우차차가 검증한 차량 조회하기</h5>
-              <SearchBar onSearch={handleSearch} />
+              <SearchBar onSearch={handleSearchDebounced} />
             </Box>
             {/* <MiniCard colorVal="#FFF" shadowVal={3} marginVal={10}></MiniCard> */}
           </Grid>
