@@ -1,0 +1,18 @@
+:doctype: book
+:icons: font
+:toc: left
+:sectlinks:
+:sectnums:
+:docinfo: shared-head
+:toclevels: 2
+:source-highlighter: highlightjs
+// ifndef::snippets[]
+// :snippets: ./build/generated-snippets
+// endif::[]
+include::admin/ManageMember.adoc[]
+
+include::admin/ManageProduct.adoc[]
+
+include::admin/ManagePurchase.adoc[]
+
+include::admin/ApproveSaleForm.adoc[]

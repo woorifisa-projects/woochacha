@@ -20,11 +20,6 @@ configurations {
 	asciidoctorExt
 }
 
-// snippetsDir : 테스트 실행시 생성되는 응답을 저장할 디렉토리 지정
-ext {
-	snippetsDir = file('build/generated-snippets')
-}
-
 repositories {
 	mavenCentral()
 }
@@ -62,11 +57,16 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor"
+//	asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor"
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
+}
+
+// snippetsDir : 테스트 실행시 생성되는 응답을 저장할 디렉토리 지정
+ext {
+	snippetsDir = file("build/generated-snippets")
 }
 
 // test 할 때 snippetsDir에 생성된 응답을 asciidoctor로 변환하여 .adoc 파일 생성
@@ -78,32 +78,37 @@ test {
 // asciidoctor 실행 전에 실행
 // 기존에 있던 API 문서를 삭제
 asciidoctor.doFirst {
-	delete file('src/main/resources/static/docs')
+	delete file('/src/main/resources/static/docs')
 }
 
 // asciidoctor를 사용하기 위해서 asciidoctor task에 asciidoctorExt 설정
 asciidoctor {
+	dependsOn test
 	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
-	dependsOn test
 }
 
 // asciidoctor task 실행시 생성된 html 파일을 src/main/resources/static 디렉토리에 복사
 tasks.register('copyDocument', Copy) {
 	dependsOn asciidoctor
-	from file("build/docs/asciidoc/docs")
+//	from file("/build/asciidoc/html5")
+//	into file("/src/main/resources/static/docs")
+	from file("${asciidoctor.outputDir}")
+
+//	from file("build/docs/asciidoc")
 	into file("src/main/resources/static/docs")
 }
 
-// jar 파일로 만들어질 때 build/docs/asciidoc 파일을 src/main/resources/static 로 복사
-bootJar {
+// 빌드 전에 copyDocument task 실행
+build {
 	dependsOn copyDocument
-	from ("${asciidoctor.outputDir}/html5") {
-		into 'static/docs'
-	}
 }
 
 def querydslSrcDir = 'src/main/generated'
+clean {
+	delete file(querydslSrcDir)
+}
+
 sourceSets {
 	main {
 		java {
@@ -112,11 +117,30 @@ sourceSets {
 	}
 }
 
-// 빌드 전에 copyDocument task 실행
-build {
-	dependsOn copyDocument
+// jar 파일로 만들어질 때 build/docs/asciidoc 파일을 src/main/resources/static 로 복사
+bootJar {
+	dependsOn asciidoctor
+	from ("${asciidoctor.outputDir}") {
+		into 'static/docs'
+//		into 'BOOT-INF/classes/static/docs'
+	}
+//	from ("${asciidoctor.outputDir}/html5") {
+//		into 'BOOT-INF/classes/static/docs'
+//	}
 }
 
-clean {
-	delete file(querydslSrcDir)
-}
+//querydsl {
+//	jpa = true
+//	querydslSourcesDir = querydslDir
+//}
+//sourceSets {
+//	main.java.srcDir querydslDir
+//}
+//configurations {
+//	querydsl.extendsFrom compileClasspath
+//}
+//compileQuerydsl {
+//	options.annotationProcessorPath = configurations.querydsl
+//}
+
+

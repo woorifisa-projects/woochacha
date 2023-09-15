@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>Untitled</title>
+<title>회원 관리</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,23 +437,161 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="book">
+<body class="book toc2 toc-left">
 <div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_회원_관리">1. 회원 관리</a>
+<ul class="sectlevel2">
+<li><a href="#_전체_회원_정보_조회">1.1. 전체 회원 정보 조회</a></li>
+<li><a href="#_특정_회원_정보_조회">1.2. 특정 회원 정보 조회</a></li>
+<li><a href="#_회원_정보_수정">1.3. 회원 정보 수정</a></li>
+<li><a href="#_회원_탈퇴">1.4. 회원 탈퇴</a></li>
+<li><a href="#_회원_로그_조회">1.5. 회원 로그 조회</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_회원_관리"><a class="link" href="#_회원_관리">1. 회원 관리</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_전체_회원_정보_조회"><a class="link" href="#_전체_회원_정보_조회">1.1. 전체 회원 정보 조회</a></h3>
+<div class="sect3">
+<h4 id="_http_request"><a class="link" href="#_http_request">1.1.1. Http Request</a></h4>
 <div class="paragraph">
-<p>Unresolved directive in Woochacha-admin.adoc - include::admin/ManageMember.adoc[]</p>
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-all/http-request.adoc[]</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in Woochacha-admin.adoc - include::admin/ManageProduct.adoc[]</p>
 </div>
+<div class="sect3">
+<h4 id="_request_parameters"><a class="link" href="#_request_parameters">1.1.2. Request Parameters</a></h4>
 <div class="paragraph">
-<p>Unresolved directive in Woochacha-admin.adoc - include::admin/ManagePurchase.adoc[]</p>
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-all/request-parameters.adoc[]</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_http_response"><a class="link" href="#_http_response">1.1.3. Http Response</a></h4>
 <div class="paragraph">
-<p>Unresolved directive in Woochacha-admin.adoc - include::admin/ApproveSaleForm.adoc[]</p>
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-all/http-response.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_fields"><a class="link" href="#_response_fields">1.1.4. Response Fields</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-all/response-fields.adoc[]</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_특정_회원_정보_조회"><a class="link" href="#_특정_회원_정보_조회">1.2. 특정 회원 정보 조회</a></h3>
+<div class="sect3">
+<h4 id="_http_request_2"><a class="link" href="#_http_request_2">1.2.1. Http Request</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-detail/http-request.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters"><a class="link" href="#_path_parameters">1.2.2. Path Parameters</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-detail/path-parameters.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_response_2"><a class="link" href="#_http_response_2">1.2.3. Http Response</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-detail/http-response.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_fields_2"><a class="link" href="#_response_fields_2">1.2.4. Response Fields</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/get-detail/response-fields.adoc[]</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원_정보_수정"><a class="link" href="#_회원_정보_수정">1.3. 회원 정보 수정</a></h3>
+<div class="sect3">
+<h4 id="_http_request_3"><a class="link" href="#_http_request_3">1.3.1. Http Request</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/edit/http-request.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters_2"><a class="link" href="#_path_parameters_2">1.3.2. Path Parameters</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/edit/path-parameters.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_request_fields"><a class="link" href="#_request_fields">1.3.3. Request Fields</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/edit/request-fields.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_response_3"><a class="link" href="#_http_response_3">1.3.4. Http Response</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/edit/http-response.adoc[]</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원_탈퇴"><a class="link" href="#_회원_탈퇴">1.4. 회원 탈퇴</a></h3>
+<div class="sect3">
+<h4 id="_http_request_4"><a class="link" href="#_http_request_4">1.4.1. Http Request</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/delete/http-request.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters_3"><a class="link" href="#_path_parameters_3">1.4.2. Path Parameters</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/delete/path-parameters.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_response_4"><a class="link" href="#_http_response_4">1.4.3. Http Response</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/delete/http-response.adoc[]</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원_로그_조회"><a class="link" href="#_회원_로그_조회">1.5. 회원 로그 조회</a></h3>
+<div class="sect3">
+<h4 id="_http_request_5"><a class="link" href="#_http_request_5">1.5.1. Http Request</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/log/http-request.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_path_parameters_4"><a class="link" href="#_path_parameters_4">1.5.2. Path Parameters</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/log/path-parameters.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_request_parameters_2"><a class="link" href="#_request_parameters_2">1.5.3. Request Parameters</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/log/request-parameters.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_http_response_5"><a class="link" href="#_http_response_5">1.5.4. Http Response</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/log/http-response.adoc[]</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_response_fields_3"><a class="link" href="#_response_fields_3">1.5.5. Response Fields</a></h4>
+<div class="paragraph">
+<p>Unresolved directive in ManageMember.adoc - include::{snippets}/admin/member/log/response-fields.adoc[]</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -461,7 +599,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-09-14 18:29:24 +0900
+Last updated 2023-09-14 18:15:37 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

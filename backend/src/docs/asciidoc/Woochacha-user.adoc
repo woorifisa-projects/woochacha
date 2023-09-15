@@ -7,12 +7,14 @@
 :docinfo: shared-head
 :toclevels: 2
 :source-highlighter: highlightjs
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+include::user/Product.adoc[]
 
-include::Product.adoc[]
+include::user/Member.adoc[]
 
-include::Member.adoc[]
+include::user/MyPage.adoc[]
 
-include::MyPage.adoc[]
-
-include::Sale.adoc[]
+include::user/Sale.adoc[]
 

@@ -7,6 +7,9 @@
 :toclevels: 2
 :source-highlighter: highlightjs
 
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
 
 == 판매 관리
 === 신청 폼 조회
