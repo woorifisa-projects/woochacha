@@ -1,9 +1,0 @@
-:toc: left
-:sectlinks:
-:sectnums:
-:docinfo: shared-head
-:toclevels: 2
-:source-highlighter: highlightjs
-
-
-

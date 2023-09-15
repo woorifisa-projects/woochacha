@@ -20,6 +20,11 @@ configurations {
 	asciidoctorExt
 }
 
+// snippetsDir : 테스트 실행시 생성되는 응답을 저장할 디렉토리 지정
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
 repositories {
 	mavenCentral()
 }
@@ -64,44 +69,30 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
 }
 
-// snippetsDir : 테스트 실행시 생성되는 응답을 저장할 디렉토리 지정
-ext {
-	snippetsDir = file("build/generated-snippets")
-}
-
 // test 할 때 snippetsDir에 생성된 응답을 asciidoctor로 변환하여 .adoc 파일 생성
 test {
-	outputs.dir snippetsDir
 	useJUnitPlatform()
+	outputs.dir snippetsDir
 }
 
 // asciidoctor 실행 전에 실행
 // 기존에 있던 API 문서를 삭제
 asciidoctor.doFirst {
-	delete file('/src/main/resources/static/docs')
+	delete file('src/main/resources/static')
 }
 
 // asciidoctor를 사용하기 위해서 asciidoctor task에 asciidoctorExt 설정
 asciidoctor {
-	dependsOn test
 	inputs.dir snippetsDir
 	configurations 'asciidoctorExt'
+	dependsOn test
 }
 
 // asciidoctor task 실행시 생성된 html 파일을 src/main/resources/static 디렉토리에 복사
 tasks.register('copyDocument', Copy) {
 	dependsOn asciidoctor
-//	from file("/build/asciidoc/html5")
-//	into file("/src/main/resources/static/docs")
-	from file("${asciidoctor.outputDir}")
-
-//	from file("build/docs/asciidoc")
+	from file("build/docs/asciidoc")
 	into file("src/main/resources/static/docs")
-}
-
-// 빌드 전에 copyDocument task 실행
-build {
-	dependsOn copyDocument
 }
 
 def querydslSrcDir = 'src/main/generated'
@@ -117,30 +108,16 @@ sourceSets {
 	}
 }
 
-// jar 파일로 만들어질 때 build/docs/asciidoc 파일을 src/main/resources/static 로 복사
+// jar 파일 생성 : src/docs/asciidoc --복사--> src/main/resources/static
 bootJar {
-	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}") {
-		into 'static/docs'
-//		into 'BOOT-INF/classes/static/docs'
+	dependsOn copyDocument
+	from ("build/docs/asciidoc") {
+		into 'src/main/resources/static/docs'
 	}
-//	from ("${asciidoctor.outputDir}/html5") {
-//		into 'BOOT-INF/classes/static/docs'
-//	}
 }
 
-//querydsl {
-//	jpa = true
-//	querydslSourcesDir = querydslDir
-//}
-//sourceSets {
-//	main.java.srcDir querydslDir
-//}
-//configurations {
-//	querydsl.extendsFrom compileClasspath
-//}
-//compileQuerydsl {
-//	options.annotationProcessorPath = configurations.querydsl
-//}
-
+// 빌드 전에 copyDocument task 실행
+build {
+	dependsOn copyDocument
+}
 
