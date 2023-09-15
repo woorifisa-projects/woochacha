@@ -2,6 +2,7 @@ package com.woochacha.backend.domain.member.service.impl;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.woochacha.backend.common.DataMasking;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
@@ -60,14 +61,17 @@ public class SignServiceImpl implements SignService {
 
     private final LogServiceImpl logService;
 
+    private final DataMasking dataMasking;
+
     public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
-                           PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, LogServiceImpl logService) {
+                           PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, LogServiceImpl logService, DataMasking dataMasking) {
         this.queryFactory = queryFactory;
         this.memberRepository = memberRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.logService = logService;
+        this.dataMasking = dataMasking;
     }
 
     /*
@@ -221,10 +225,20 @@ public class SignServiceImpl implements SignService {
         return SignException.exception(SignResultCode.SUCCESS);
     }
 
+
+
     private Member save(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
+
+        // 이메일 암호화
+        signUpRequestDto.setEmail(dataMasking.encoding(signUpRequestDto.getEmail()));
+
+        // 비밀번호 암호화
+        signUpRequestDto.setPhone(dataMasking.encoding(signUpRequestDto.getPhone()));
+
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);
         savedMember.getRoles().add("USER");
+
         memberRepository.save(savedMember);
         return savedMember;
     }
