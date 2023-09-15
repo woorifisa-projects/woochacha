@@ -98,7 +98,7 @@ function DefaultHeader() {
               component="a"
               href="/"
               sx={defaultHeaderCss.mdHeaderLogo}>
-              <Image src={LogoImage} width={200} height={80} />
+              <Image src={LogoImage} width={180} height={80} />
             </Typography>
 
             <Box sx={defaultHeaderCss.xsHeaderBox}>

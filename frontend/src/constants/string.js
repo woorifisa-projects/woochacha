@@ -113,7 +113,7 @@ export const CAPITAL_MAIN_CARD = [
 export const CAPITAL_CONTENTS = [
   {
     miniCardColor: '#DEF2FF',
-    miniCardShadow: 0,
+    miniCardShadow: 3,
     miniCardMarginY: 15,
     capitalTitle: '리스/렌트 견적 비교',
     capitalImgUrl:
@@ -142,6 +142,16 @@ export const CAPITAL_CONTENTS = [
     capitalSubTitle: '중고차 금융상품이 궁금하다면?',
     capitalSubContent: `우리 WON카에서 제공하는 최대한도, 최저금리 상품을 추천해드립니다.`,
     wonCarUrl: 'https://www.wooriwoncar.com/loangoods/loanGoods?loanType=20',
+  },
+  {
+    miniCardColor: '#FFF',
+    miniCardShadow: 0,
+    miniCardMarginY: 15,
+    capitalTitle: '메타버스로 실시간 상담하기',
+    capitalImgUrl: 'metabusImg',
+    capitalSubTitle: '실시간으로 메타버스에서 상담하기',
+    capitalSubContent: `실시간으로 메타버스에서 상담하고 자동차 모임에도 참여하세요!`,
+    wonCarUrl: 'https://app.gather.town/app/4vEB4Q4BUbTU0ckj/wooribank',
   },
 ];
 

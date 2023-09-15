@@ -12,8 +12,8 @@ export default function MainCard({ titleVal, subTitleVal, titleColor }) {
       }}>
       <Container maxWidth="md">
         <Typography
-          component="h3"
-          variant="h3"
+          component="h4"
+          variant="h4"
           align="center"
           fontWeight="bold"
           color={titleColor}
