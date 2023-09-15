@@ -4,11 +4,13 @@ package com.woochacha.backend.domain.admin.dto.magageProduct;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // 매물 관리 리스트 페이지에서 수정/신청 폼을 조회할 때 데이터를 전달하는 Dto
 @Builder
 @Getter
 @NoArgsConstructor
+@Setter
 public class ManageProductFormDto {
 
     private Long productId; // 게시글 url을 위한 productId

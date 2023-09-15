@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.admin.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.woochacha.backend.common.DataMasking;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseDateRequestDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseMemberInfoResponseDto;
 import com.woochacha.backend.domain.admin.dto.manageMember.PurchaseFormListResponseDto;
@@ -41,6 +42,7 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
     private final TransactionRepository transactionRepository;
     private final ProductRepository productRepository;
     private final SendSmsService sendSmsService;
+    private final DataMasking dataMasking;
     private static Logger logger = LoggerFactory.getLogger(ManageTransactionServiceImpl.class);
 
     @Override
@@ -70,7 +72,10 @@ public class ManageTransactionServiceImpl implements ManageTransactionService {
 
     @Override
     public PurchaseMemberInfoResponseDto getPurchaseMemberInfo(Long purchaseId){
-        return purchaseFormRepository.findPurchaseMemberInfo(purchaseId);
+        PurchaseMemberInfoResponseDto purchaseMemberInfoResponseDto = purchaseFormRepository.findPurchaseMemberInfo(purchaseId);
+        purchaseMemberInfoResponseDto.setSellerPhone(dataMasking.decoding(purchaseMemberInfoResponseDto.getSellerPhone()));
+        purchaseMemberInfoResponseDto.setBuyerPhone(dataMasking.decoding(purchaseMemberInfoResponseDto.getBuyerPhone()));
+        return purchaseMemberInfoResponseDto;
     }
 
     @Override

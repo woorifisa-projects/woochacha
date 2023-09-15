@@ -16,13 +16,9 @@ public class DataMasking {
         return textEncryptor.encrypt(plainText);
     }
 
-//    public String decoding(@NotNull String encryptText) {
-//        if(encryptText.contains("010") || encryptText.contains(".com"))
-//            return encryptText;
-//        return textEncryptor.decrypt(encryptText);
-//    }
-
     public String decoding(String encryptText) {
+        if(encryptText.matches("010(.*)") || encryptText.contains(".com"))
+            return encryptText;
         return textEncryptor.decrypt(encryptText);
     }
 }

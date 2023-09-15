@@ -61,7 +61,6 @@ public class ManageMemberServiceImpl implements ManageMemberService {
                     .limit(pageable.getPageSize())
                     .fetchResults();
             for (MemberInfoListResponseDto memberInfoDto : queryResults.getResults()){
-                memberInfoDto.setEmail(dataMasking.decoding(memberInfoDto.getEmail()));
                 memberInfoDto.setPhone(dataMasking.decoding(memberInfoDto.getPhone()));
             }
             return new PageImpl<>(queryResults.getResults(), pageable, queryResults.getTotal());
@@ -74,7 +73,6 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     public MemberInfoResponseDto getMemberInfo(Long memberId) {
         try {
             MemberInfoDto memberInfo = memberRepository.getMemberInfo(memberId);
-            memberInfo.setEmail(dataMasking.decoding(memberInfo.getEmail()));
             memberInfo.setPhone(dataMasking.decoding(memberInfo.getPhone()));
             int countOnSale = productRepository.countSale(memberId, (short) 4);
             int countCompleteSale = productRepository.countSale(memberId, (short) 5);
@@ -133,9 +131,7 @@ public class ManageMemberServiceImpl implements ManageMemberService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<MemberLogDto> memberLogDto = manageProductFormRepository.findAllMemberLog(memberId, pageable);
 
-        for (MemberLogDto logDto : memberLogDto){
-            logDto.setEmail(dataMasking.decoding(logDto.getEmail()));
-        }
+
 
         return memberLogDto;
     }
