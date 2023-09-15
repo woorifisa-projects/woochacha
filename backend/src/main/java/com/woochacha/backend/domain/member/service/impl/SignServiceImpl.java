@@ -178,9 +178,9 @@ public class SignServiceImpl implements SignService {
             String decodingPhone = encoded.get(m.phone);
 
             // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
-            if(!decodingPhone.contains("010")) {
+//            if(!decodingPhone.contains("010")) {
                 decodingPhone = dataMasking.decoding(encoded.get(m.phone));
-            }
+//            }
             if(decodingPhone.equals(signUpRequestDto.getPhone())) phoneDuplicateList.add(encoded);
         }
 
@@ -212,9 +212,9 @@ public class SignServiceImpl implements SignService {
             String decodingEmail = encoded.get(m.email);
 
             // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
-            if(!decodingEmail.contains(".com")) {
+//            if(!decodingEmail.contains(".com")) {
                 decodingEmail = dataMasking.decoding(encoded.get(m.email));
-            }
+//            }
             if(decodingEmail.equals(signUpRequestDto.getEmail())) emailDuplicateList.add(encoded);
         }
 
