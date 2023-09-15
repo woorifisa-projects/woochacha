@@ -3,6 +3,7 @@ package com.woochacha.backend.domain.member.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.woochacha.backend.common.DataMasking;
 import com.woochacha.backend.common.ModelMapping;
 import com.woochacha.backend.domain.jwt.JwtAuthenticationFilter;
 import com.woochacha.backend.domain.jwt.JwtTokenProvider;
@@ -21,7 +22,6 @@ import com.woochacha.backend.domain.sendSMS.SendSmsService;
 import com.woochacha.backend.domain.sendSMS.entity.AuthPhone;
 import com.woochacha.backend.domain.sendSMS.repository.AuthPhoneRepository;
 import com.woochacha.backend.domain.sendSMS.sendMessage.MessageDto;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,6 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class SignServiceImpl implements SignService {
 
     private final JPAQueryFactory queryFactory;
@@ -67,9 +66,25 @@ public class SignServiceImpl implements SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final LogServiceImpl logService;
+    
     private final SendSmsService sendSmsService;
+    
     private final AuthPhoneRepository authPhoneRepository;
+    
+    private final DataMasking dataMasking;
 
+    public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
+                           PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, LogServiceImpl logService, SendSmsService sendSmsService, AuthPhoneRepository authPhoneRepository, DataMasking dataMasking) {
+        this.queryFactory = queryFactory;
+        this.memberRepository = memberRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.logService = logService;
+        this.sendSmsService = sendSmsService;
+        this.authPhoneRepository = authPhoneRepository;
+        this.dataMasking = dataMasking;
+    }
 
     /*
     휴대폰 인증 번호 전송
@@ -263,10 +278,20 @@ public class SignServiceImpl implements SignService {
         return SignException.exception(SignResultCode.SUCCESS);
     }
 
+
+
     private Member save(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
+
+        // 이메일 암호화
+        signUpRequestDto.setEmail(dataMasking.encoding(signUpRequestDto.getEmail()));
+
+        // 핸드폰 번호 암호화
+        signUpRequestDto.setPhone(dataMasking.encoding(signUpRequestDto.getPhone()));
+
         Member savedMember = modelMapper.map(signUpRequestDto, Member.class);
         savedMember.getRoles().add("USER");
+
         memberRepository.save(savedMember);
         return savedMember;
     }
