@@ -16,6 +16,8 @@ public class DataMasking {
     }
 
     public String decoding(String encryptText) {
+        if((encryptText.matches("010(.*)")&&encryptText.length() == 11) || encryptText.contains("(.*).com"))
+            return encryptText;
         return textEncryptor.decrypt(encryptText);
     }
 }

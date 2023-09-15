@@ -96,9 +96,10 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/docs/Woochacha-user.html", "/docs/Woocahcha-admin.html").permitAll()
                 .antMatchers("/", "/users/register", "/users/login", "/product", "/users/auth").permitAll()
-                .antMatchers("/users/**", "/product/sale", "/product/purchase", "/mypage/**").hasRole("USER")
-                .antMatchers("/product/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/**").permitAll()
+//                .antMatchers("/users/**", "/product/sale", "/product/purchase", "/mypage/**").hasRole("USER")
+//                .antMatchers("/product/**").permitAll()
+//                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
         return http.build();
     }
