@@ -1,6 +1,7 @@
 package com.woochacha.backend.domain.member.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.woochacha.backend.common.DataMasking;
@@ -39,6 +40,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,7 +89,7 @@ public class SignServiceImpl implements SignService {
     }
 
     /*
-    휴대폰 인증 번호 전송
+        휴대폰 인증 번호 전송
      */
     @Override
     @Transactional
@@ -132,55 +134,21 @@ public class SignServiceImpl implements SignService {
     @Transactional
     @Override
     public SignResponseDto signUp(SignUpRequestDto signUpRequestDto) {
-        // 핸드폰 번호 중복 체크
-        List<Member> phoneSearchList = queryFactory
-                .selectFrom(m)
-                .where(m.phone.eq(signUpRequestDto.getPhone()))
+        // 핸드폰 번호, 이메일 중복 체크
+        List<Tuple> encodedList = queryFactory
+                .select(m.id, m.email, m.phone, m.isAvailable, m.status)
+                .from(m)
                 .fetch();
 
-        // 이메일 중복 체크
-        List<Member> emailSearchList = queryFactory
-                .selectFrom(m)
-                .where(m.email.eq(signUpRequestDto.getEmail()))
-                .fetch();
+        String duplicatePhoneCheckResult = duplicatePhoneCheck(encodedList, signUpRequestDto);
+        String duplicateEmailCheckResult = duplicateEmailCheck(encodedList, signUpRequestDto);
 
-
-        // 핸드폰 번호 중복인 회원 리스트
-        if (!phoneSearchList.isEmpty()) {
-            // 이용 정지를 당한 같은 핸드폰 번호를 가진 회원이 탈퇴 후 재가입하는 경우 실패
-            for(Member phoneSearch : phoneSearchList) {
-                if(!phoneSearch.isAccountNonLocked()) {
-                    logger.debug("phone:{} 회원가입 실패 : 이용 정지를 당한 회원이 탈퇴 후 재가입 시도", signUpRequestDto.getPhone());
-                    return SignException.exception(SignResultCode.SUSPENDED_ACCOUNT);
-                }
-            }
-
-            // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
-            for(Member phoneSearch : phoneSearchList) {
-                if(phoneSearch.isEnabled()) {
-                    logger.debug("phone:{} 회원가입 실패 : 이미 존재하는 회원", signUpRequestDto.getPhone());
-                    return SignException.exception(SignResultCode.DUPLICATE_PHONE);
-                }
-            }
-        }
-
-        // 이메일 중복인 회원 리스트
-        else if (!emailSearchList.isEmpty()) {
-            // 이용 정지를 당한 같은 이메일을 가진 회원이 탈퇴 후 재가입하는 경우 실패
-            for(Member emailSearch : emailSearchList) {
-                if(!emailSearch.isAccountNonLocked()) {
-                    logger.debug("email:{} 회원가입 실패 : 이용 정지를 당한 회원이 탈퇴 후 재가입 시도", signUpRequestDto.getEmail());
-                    return SignException.exception(SignResultCode.SUSPENDED_ACCOUNT);
-                }
-            }
-
-            // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
-            for(Member emailSearch : emailSearchList) {
-                if(emailSearch.isEnabled()) {
-                    logger.debug("email:{} 회원가입 실패 : 이미 존재하는 회원", signUpRequestDto.getEmail());
-                    return SignException.exception(SignResultCode.DUPLICATE_EMAIL);
-                }
-            }
+        if(duplicatePhoneCheckResult.equals("suspend") || duplicateEmailCheckResult.equals("suspend")) {
+            return SignException.exception(SignResultCode.SUSPENDED_ACCOUNT);
+        } else if(duplicatePhoneCheckResult.equals("duplicate")) {
+            return SignException.exception(SignResultCode.DUPLICATE_PHONE);
+        } else if(duplicateEmailCheckResult.equals("duplicate")) {
+            return SignException.exception(SignResultCode.DUPLICATE_EMAIL);
         }
 
         // 회원가입 시 member의 기본 프로필 사진 설정
@@ -189,8 +157,11 @@ public class SignServiceImpl implements SignService {
         AuthPhone authPhone = authPhoneRepository.findById(signUpRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
 
         if(authPhone.getAuthStatus() == 1){
+            // Member 테이블에 회원 정보 저장
             Member savedMember = save(signUpRequestDto);
+
             authPhoneRepository.deleteById(signUpRequestDto.getPhone());
+
             logger.debug("회원가입 성공");
             logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
             return SignException.exception(SignResultCode.SUCCESS);
@@ -198,8 +169,74 @@ public class SignServiceImpl implements SignService {
             logger.debug("회원가입 실패");
             return SignException.exception(SignResultCode.FAIL);
         }
-        // Member 테이블에 회원 정보 저장
+    }
 
+    private String duplicatePhoneCheck(List<Tuple> encodedList, SignUpRequestDto signUpRequestDto) {
+        // DB에 암호화되어 있는 핸드폰 번호를 복호화한 후, 사용자로부터 입력받은 핸드폰 번호와 비교
+        List<Tuple> phoneDuplicateList = new ArrayList<>();
+        for(Tuple encoded : encodedList) {
+            String decodingPhone = encoded.get(m.phone);
+
+            // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
+            if(!decodingPhone.contains("010")) {
+                decodingPhone = dataMasking.decoding(encoded.get(m.phone));
+            }
+            if(decodingPhone.equals(signUpRequestDto.getPhone())) phoneDuplicateList.add(encoded);
+        }
+
+        // 핸드폰 번호 중복인 회원 리스트
+        if (!phoneDuplicateList.isEmpty()) {
+            // 이용 정지를 당한 같은 핸드폰 번호를 가진 회원이 탈퇴 후 재가입하는 경우 실패
+            for(Tuple phoneSearch : phoneDuplicateList) {
+                if(phoneSearch.get(m.isAvailable) == 0) {
+                    logger.debug("phone:{} 회원가입 실패 : 이용 정지를 당한 회원이 탈퇴 후 재가입 시도", signUpRequestDto.getPhone());
+                    return "suspend";
+                }
+            }
+
+            // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
+            for(Tuple phoneSearch : phoneDuplicateList) {
+                if(phoneSearch.get(m.status) == 1) {
+                    logger.debug("phone:{} 회원가입 실패 : 이미 존재하는 회원", signUpRequestDto.getPhone());
+                    return "duplicate";
+                }
+            }
+        }
+        return "success";
+    }
+
+    private String duplicateEmailCheck(List<Tuple> encodedList, SignUpRequestDto signUpRequestDto) {
+        // DB에 암호화되어 있는 이메일을 복호화한 후, 사용자로부터 입력받은 이메일과 비교
+        List<Tuple> emailDuplicateList = new ArrayList<>();
+        for(Tuple encoded : encodedList) {
+            String decodingEmail = encoded.get(m.email);
+
+            // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
+            if(!decodingEmail.contains(".com")) {
+                decodingEmail = dataMasking.decoding(encoded.get(m.email));
+            }
+            if(decodingEmail.equals(signUpRequestDto.getEmail())) emailDuplicateList.add(encoded);
+        }
+
+        // 이메일 번호 중복인 회원 리스트
+        if (!emailDuplicateList.isEmpty()) {
+            // 이용 정지를 당한 같은 핸드폰 번호를 가진 회원이 탈퇴 후 재가입하는 경우 실패
+            for(Tuple emailSearch : emailDuplicateList) {
+                if(emailSearch.get(m.isAvailable) == 0) {
+                    logger.debug("email:{} 회원가입 실패 : 이용 정지를 당한 회원이 탈퇴 후 재가입 시도", signUpRequestDto.getEmail());
+                    return "suspend";
+                }
+            }
+
+            // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
+            for(Tuple emailSearch : emailDuplicateList) {
+                if(emailSearch.get(m.status) == 1) {
+                    logger.debug("email:{} 회원가입 실패 : 이미 존재하는 회원", signUpRequestDto.getEmail());
+                    return "duplicate";
+                }
+            }
+        }
+        return "success";
     }
 
     @Transactional
