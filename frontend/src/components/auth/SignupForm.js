@@ -3,7 +3,6 @@ import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { signupApi, sendAuthApi, checkAuthApi } from '@/services/authApi';
-
 import {
   Button,
   CssBaseline,
@@ -33,6 +32,7 @@ import {
 } from '@/hooks/useChecks';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Swal from 'sweetalert2';
+import { debounce } from 'lodash';
 
 const Timer = ({ mm, ss }) => {
   const [minutes, setMinutes] = useState(parseInt(mm));
@@ -90,7 +90,7 @@ export default function SignupForm() {
     setPhoneAgree(!phoneAgree);
   };
 
-  const handleSendVerification = () => {
+  const handleSendVerification = debounce(() => {
     //console.log(signupData.phone.replace(/-/g, ''));
     sendAuthApi(signupData.phone.replace(/-/g, ''));
     setShowVerification(true);
@@ -98,7 +98,7 @@ export default function SignupForm() {
       clearInterval(intervalId); // 기존의 타이머 정리
     }
     startCountdownTimer(); // 새로운 타이머 시작
-  };
+  }, 400);
   const startCountdownTimer = () => {
     const endTime = new Date().getTime() + 3 * 60 * 1000;
 
@@ -176,6 +176,7 @@ export default function SignupForm() {
    * 회원가입 form 제출
    */
   const handleSubmit = (event) => {
+    setAgreeTerms(false);
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const newSignupData = {
@@ -188,10 +189,20 @@ export default function SignupForm() {
     // 비밀번호 확인 유효성 검사
     if (!validatePasswordConfirmation(newSignupData.password)) {
       SwalModals('error', '비밀번호 불일치', '비밀번호와 비밀번호 확인이 같지 않습니다.', false);
+      setAgreeTerms(true);
       return;
     }
-
-    if (formValid.emailErr && formValid.nameErr && formValid.phoneErr && formValid.pwErr) {
+    if (
+      !formValid.emailErr &&
+      !formValid.nameErr &&
+      !formValid.phoneErr &&
+      !formValid.pwErr &&
+      successMessage &&
+      signupData.email !== '' &&
+      signupData.name !== '' &&
+      signupData.password !== '' &&
+      signupData.phone !== ''
+    ) {
       setSignupData(newSignupData);
       setClickSubmit((prev) => !prev);
       signupApi(newSignupData, setUserLoginState, router);
@@ -199,7 +210,7 @@ export default function SignupForm() {
       Swal.fire({
         icon: 'error',
         title: `회원가입 실패!`,
-        html: `회원가입 입력값을 모두 작성해주세요!`,
+        html: `회원정보 작성 및 핸드폰 인증을 완료해주세요!`,
         showConfirmButton: false,
         showClass: {
           popup: 'animate__animated animate__fadeInDown',
@@ -209,6 +220,7 @@ export default function SignupForm() {
         },
         timer: 1500,
       });
+      setAgreeTerms(true);
     }
   };
 
@@ -223,7 +235,8 @@ export default function SignupForm() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-            }}>
+            }}
+            disabled={true}>
             <Typography component="h1" variant="h4" sx={{ fontWeight: 'bold' }}>
               회원 가입
             </Typography>
