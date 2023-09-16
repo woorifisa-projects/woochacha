@@ -28,6 +28,9 @@ function AdminUserEdit(props) {
     isChecked: false, // 기본 이미지로 변경 체크 상태
   });
 
+  const [disabledSubmitBtn, setDisabledSubmitBtn] = useState(false); // 버튼 비활성화 여부
+  const [isSubmitting, setIsSubmitting] = useState(false); // 진행 중 상태 확인
+
   const { memberId } = props;
 
   /**
@@ -35,12 +38,34 @@ function AdminUserEdit(props) {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    oneUserEditPatchApi(editProfileValue, memberId).then((res) => {
-      if (res.status === 200) {
-        SwalModals('success', '수정 완료', '수정이 완료되었습니다!', false);
-        router.push('/admin/members');
-      }
-    });
+
+    if (isSubmitting) {
+      // 이미 요청이 진행 중인 경우
+      return;
+    }
+
+    setIsSubmitting(true); // 요청 시작
+
+    oneUserEditPatchApi(editProfileValue, memberId)
+      .then((res) => {
+        if (res.status === 200) {
+          setDisabledSubmitBtn(true);
+          SwalModals('success', '수정 완료', '수정이 완료되었습니다!', false);
+          router.push('/admin/members');
+        } else {
+          // 수정 실패 시
+          setDisabledSubmitBtn(false); // 버튼 다시 활성화
+        }
+      })
+      .catch((error) => {
+        SwalModals('error', '수정 실패', '수정 중 오류가 발생했습니다.', false);
+        console.error('회원 정보 수정 중 오류가 발생했습니다.', error);
+
+        setDisabledSubmitBtn(false); // 에러 발생 시 버튼 다시 활성화
+      })
+      .finally(() => {
+        setIsSubmitting(false); // 요청 종료 후 상태 변경
+      });
   };
 
   /**
@@ -198,7 +223,8 @@ function AdminUserEdit(props) {
                 type="button"
                 size="large"
                 variant="contained"
-                sx={adminUserProfileEditCss.button}>
+                sx={adminUserProfileEditCss.button}
+                disabled={disabledSubmitBtn || isSubmitting}>
                 수정
               </Button>
               <Button
