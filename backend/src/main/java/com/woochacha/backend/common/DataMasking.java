@@ -2,6 +2,7 @@ package com.woochacha.backend.common;
 
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Component;
+import retrofit2.http.HEAD;
 
 @Component
 public class DataMasking {
