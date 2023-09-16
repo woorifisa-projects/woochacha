@@ -78,18 +78,7 @@ export default function Products(props) {
       setSelectMenus(selectBoxes);
     }
   }, [allProducts]);
-  /**
-   * 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
-   * */
-  // const debounce = (func, delay) => {
-  //   let timeoutId;
-  //   return (...args) => {
-  //     clearTimeout(timeoutId);
-  //     timeoutId = setTimeout(() => {
-  //       func.apply(null, args);
-  //     }, delay);
-  //   };
-  // };
+
   const handleSearchDebounced = debounce((keyword) => {
     keywordProductGetApi(keyword).then((res) => {
       if (res.status === 200) {
@@ -107,7 +96,7 @@ export default function Products(props) {
   /**
    * 필터링 관련 함수
    */
-  const handleFiltering = () => {
+  const handleFiltering = debounce(() => {
     filteringProductGetApi(selectMenuValue).then((res) => {
       if (res.status === 200) {
         setAllProducts((prevProducts) => {
@@ -122,7 +111,7 @@ export default function Products(props) {
         });
       }
     });
-  };
+  }, 200);
   /**
    * selectbox 선택 시, 선택한 selectItem 저장 함수
    */

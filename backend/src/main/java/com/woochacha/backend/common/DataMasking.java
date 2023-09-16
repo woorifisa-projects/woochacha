@@ -2,6 +2,7 @@ package com.woochacha.backend.common;
 
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Component;
+import retrofit2.http.HEAD;
 
 @Component
 public class DataMasking {
@@ -16,7 +17,7 @@ public class DataMasking {
     }
 
     public String decoding(String encryptText) {
-        if(encryptText.contains("010") || encryptText.contains(".com"))
+        if(encryptText.matches("010(.*)"))
             return encryptText;
         return textEncryptor.decrypt(encryptText);
     }

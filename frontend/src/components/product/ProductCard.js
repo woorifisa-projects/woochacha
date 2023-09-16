@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Chip, Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import styles from './ProductCard.module.css';
+import { debounce } from 'lodash';
 
 export default function ProductCard(props) {
   const { productItems } = props;
@@ -28,9 +29,9 @@ export default function ProductCard(props) {
     setMounted(true);
   }, []);
 
-  const handleMoveDetail = (url) => {
+  const handleMoveDetail = debounce((url) => {
     router.push(`/product/detail/${url}`);
-  };
+  }, 200);
 
   return (
     mounted && (

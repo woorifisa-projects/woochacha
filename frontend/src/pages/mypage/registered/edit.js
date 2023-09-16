@@ -8,7 +8,8 @@ import {
   mypageProductEditRequestPatchApi,
 } from '@/services/mypageApi';
 import { SwalModals } from '@/utils/modal';
-
+import Swal from 'sweetalert2';
+import { debounce } from 'lodash';
 function RegisteredEdit(props) {
   const router = useRouter();
   const { memberId, productId } = props; // query string
@@ -19,6 +20,13 @@ function RegisteredEdit(props) {
     price: '',
     carImage: '',
   });
+  const [modifyPriceButton, setModifyPriceButton] = useState(false);
+  const [verificationNum, setVerificationNum] = useState('');
+
+  const handleVerificationNumChange = (event) => {
+    const number = event.target.value.replace(/[^0-9]/g, '');
+    setVerificationNum(number);
+  };
 
   const registeredEditCss = {
     mypageTitle: {
@@ -84,6 +92,27 @@ function RegisteredEdit(props) {
    * 수정 form 제출
    */
   const handleSubmit = async () => {
+    setModifyPriceButton(true);
+    console.log(mypageProductEditRequest.price);
+    if (priceValue === '') {
+      Swal.fire({
+        icon: 'error',
+        title: '가격을 설정해주셔야합니다',
+        showConfirmButton: true,
+        // timer: 1500,
+      });
+      setModifyPriceButton(false);
+      return;
+    } else if (priceValue > mypageProductEditRequest.price) {
+      Swal.fire({
+        icon: 'error',
+        title: '기존 차량 가격보다 비싸게 판매할 수 없습니다.',
+        showConfirmButton: true,
+        // timer: 1500,
+      });
+      setModifyPriceButton(false);
+      return;
+    }
     const updatePrice = {
       updatePrice: priceValue,
     };
@@ -136,14 +165,22 @@ function RegisteredEdit(props) {
                     수정할 가격
                   </Typography>
                   <TextField
-                    type="number"
+                    type="text"
                     margin="normal"
                     required
                     name="updatePrice"
                     label="가격 수정"
-                    value={priceValue || ''}
+                    value={verificationNum}
                     fullWidth
-                    onChange={(e) => handleChangePrice(e)}
+                    onChange={handleVerificationNumChange}
+                    InputProps={{
+                      endAdornment: (
+                        <Typography style={{ color: 'gray', whiteSpace: 'nowrap' }}>
+                          만원
+                        </Typography>
+                      ),
+                      style: { display: 'flex', alignItems: 'center' },
+                    }}
                   />
                 </Grid>
                 <Button
@@ -151,7 +188,8 @@ function RegisteredEdit(props) {
                   type="submit"
                   size="large"
                   variant="contained"
-                  sx={registeredEditCss.button}>
+                  sx={registeredEditCss.button}
+                  disabled={modifyPriceButton}>
                   가격 수정하기
                 </Button>
               </Box>
