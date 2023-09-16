@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { memberProfileGetApi } from '@/services/mypageApi';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import { debounce } from 'lodash';
 
 export default function MypageProfile() {
   const router = useRouter();
@@ -47,9 +48,9 @@ export default function MypageProfile() {
 
   const memberId = userLoginState.userId;
 
-  const handleMove = (url) => {
+  const handleMove = debounce((url) => {
     router.push(url);
-  };
+  }, 200);
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {

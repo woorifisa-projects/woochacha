@@ -7,10 +7,12 @@ import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import Swal from 'sweetalert2';
+import { debounce } from 'lodash';
 
 export default function MypageProfileEdit() {
   const [mounted, setMounted] = useState(false);
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+  const [profileButton, setProfileButton] = useState(false);
 
   // GET
   const [memberProfileEdit, setMemberProfileEdit] = useState({
@@ -30,6 +32,7 @@ export default function MypageProfileEdit() {
    * 수정 form 제출
    */
   const handleSubmit = async (event) => {
+    setProfileButton(true);
     event.preventDefault();
     if (imagefile === null) {
       Swal.fire({
@@ -38,6 +41,7 @@ export default function MypageProfileEdit() {
         showConfirmButton: true,
         // timer: 1500,
       });
+      setProfileButton(false);
       return;
     }
     submitEditProfile(imagefile, memberId).then((res) => {
@@ -133,7 +137,12 @@ export default function MypageProfileEdit() {
               {`${memberProfileEdit.name} 님`}
             </Typography>
           </Grid>
-          <Button type="submit" size="large" variant="contained" sx={mypageProfileCss.button}>
+          <Button
+            type="submit"
+            size="large"
+            variant="contained"
+            sx={mypageProfileCss.button}
+            disabled={profileButton}>
             내 프로필 수정하기
           </Button>
         </Box>

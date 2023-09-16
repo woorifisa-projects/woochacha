@@ -68,11 +68,11 @@ public class SignServiceImpl implements SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final LogServiceImpl logService;
-    
+
     private final SendSmsService sendSmsService;
-    
+
     private final AuthPhoneRepository authPhoneRepository;
-    
+
     private final DataMasking dataMasking;
 
     public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
@@ -107,7 +107,7 @@ public class SignServiceImpl implements SignService {
         MessageDto authMessageDto = MessageDto.builder()
                 .to(phone)
                 .content("[우차차 회원가입]" + "\n"
-                + "인증번호 [ " + randomNum + " ]를 입력해주세요.")
+                        + "인증번호 [ " + randomNum + " ]를 입력해주세요.")
                 .build();
         System.out.println(phone);
         sendSmsService.sendSms(authMessageDto);
@@ -154,37 +154,31 @@ public class SignServiceImpl implements SignService {
         // 회원가입 시 member의 기본 프로필 사진 설정
         signUpRequestDto.setProfileImage("https://woochacha.s3.ap-northeast-2.amazonaws.com/profile/default");
 
-//        AuthPhone authPhone = authPhoneRepository.findById(signUpRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
+        AuthPhone authPhone = authPhoneRepository.findById(signUpRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
 
-//        if(authPhone.getAuthStatus() == 1){
-//            // Member 테이블에 회원 정보 저장
-////        AuthPhone authPhone = authPhoneRepository.findById(signUpRequestDto.getPhone()).orElseThrow(() -> new RuntimeException("Auth not found"));
-////
-//        if(authPhone.getAuthStatus() == 1){
+        if(authPhone.getAuthStatus() == 1){
+            // Member 테이블에 회원 정보 저장
+            authPhoneRepository.deleteById(signUpRequestDto.getPhone());
             Member savedMember = save(signUpRequestDto);
-
-//            authPhoneRepository.deleteById(signUpRequestDto.getPhone());
 
 //            authPhoneRepository.deleteById(signUpRequestDto.getPhone());
             logger.debug("회원가입 성공");
             logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
             return SignException.exception(SignResultCode.SUCCESS);
-//        }else{
-//            logger.debug("회원가입 실패");
-//            return SignException.exception(SignResultCode.FAIL);
-//        }
+        }else{
+            logger.debug("회원가입 실패");
+            return SignException.exception(SignResultCode.FAIL);
+        }
     }
 
     private String duplicatePhoneCheck(List<Tuple> encodedList, SignUpRequestDto signUpRequestDto) {
         // DB에 암호화되어 있는 핸드폰 번호를 복호화한 후, 사용자로부터 입력받은 핸드폰 번호와 비교
         List<Tuple> phoneDuplicateList = new ArrayList<>();
         for(Tuple encoded : encodedList) {
-            String decodingPhone = encoded.get(m.phone);
+            String decodingPhone;
 
             // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
-//            if(!decodingPhone.contains("010")) {
-                decodingPhone = dataMasking.decoding(encoded.get(m.phone));
-//            }
+            decodingPhone = dataMasking.decoding(encoded.get(m.phone));
             if(decodingPhone.equals(signUpRequestDto.getPhone())) phoneDuplicateList.add(encoded);
         }
 
@@ -197,11 +191,6 @@ public class SignServiceImpl implements SignService {
                     return "suspend";
                 }
             }
-//        }else{
-//            logger.debug("회원가입 실패");
-//            return SignException.exception(SignResultCode.FAIL);
-//        }
-        // Member 테이블에 회원 정보 저장
 
             // 탈퇴하지 않은 이미 존재하는 회원인 경우 실패
             for(Tuple phoneSearch : phoneDuplicateList) {
@@ -215,13 +204,12 @@ public class SignServiceImpl implements SignService {
     }
 
     private String duplicateEmailCheck(List<Tuple> encodedList, SignUpRequestDto signUpRequestDto) {
-        // DB에 암호화되어 있는 이메일을 복호화한 후, 사용자로부터 입력받은 이메일과 비교
         List<Tuple> emailDuplicateList = new ArrayList<>();
         for(Tuple encoded : encodedList) {
             String decodingEmail = encoded.get(m.email);
 
-
-            if(decodingEmail.equals(signUpRequestDto.getEmail())) emailDuplicateList.add(encoded);
+            if(decodingEmail.equals(signUpRequestDto.getEmail()))
+                emailDuplicateList.add(encoded);
         }
 
         // 이메일 번호 중복인 회원 리스트
@@ -322,10 +310,8 @@ public class SignServiceImpl implements SignService {
     }
 
 
-
     private Member save(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
-
 
         // 핸드폰 번호 암호화
         signUpRequestDto.setPhone(dataMasking.encoding(signUpRequestDto.getPhone()));
@@ -344,5 +330,4 @@ public class SignServiceImpl implements SignService {
         }
         return null;
     }
-
 }
