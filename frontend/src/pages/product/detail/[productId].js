@@ -37,6 +37,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import styled from '@emotion/styled';
 import Paper from '@mui/material/Paper';
 import Avatar from '@mui/material/Avatar';
+
 // import { Line } from 'react-bootstrap-icons';
 
 export default function ProductDetail(props) {
@@ -47,6 +48,18 @@ export default function ProductDetail(props) {
   const [detailProduct, setDetailProduct] = useState();
   const [purchaseDateVal, setPurchaseDateVal] = useState(todayDate);
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+
+  const gatherTownUrl = 'https://app.gather.town/app/4vEB4Q4BUbTU0ckj/wooribank';
+  const wooriCardUrl = 'https://pc.wooricard.com/dcpc/yh1/crd/crd13/cardisuinqcan/H1CRD213S13.do';
+  const wooriCardEvent = 'https://pc.wooricard.com/dcpc/yh1/bnf/bnf01/H1BNF201S00.do';
+
+  const loanItem1Url =
+    'https://spot.wooribank.com/pot/Dream?withyou=POLON0052&cc=c010528:c010531;c012425:c012399&PLM_PDCD=P020000031&PRD_CD=P020000031&HOST_PRD_CD=2013109171100';
+  const loanItem2Url = 'https://www.wooriwoncar.com/loangoods/loanGoods?loanType=99';
+  const loanItem3Url =
+    'https://spot.wooribank.com/pot/Dream?withyou=POLON0058&cc=c010528:c010531;c012425:c012399&PLM_PDCD=P020006053&PRD_CD=P020006053&HOST_PRD_CD=2013109121100';
+  const loanItem4Url = 'https://www.wooriwoncar.com/loangoods/loanGoods?loanType=99';
+
   const buttonStyle = {
     backgroundColor: '#F95700', // 원하는 색상으로 변경
     color: 'white', // 텍스트 색상을 변경하려면 지정
@@ -59,8 +72,6 @@ export default function ProductDetail(props) {
 
   // 선택한 할부 기간에 따라 월 납부금 계산 함수
   const calculateMonthlyPayment = () => {
-    // detailProduct.productBasicInfo.price: 상품 가격
-    // parseInt(selectedInstallment): 선택한 할부 기간
     if (selectedInstallment !== '') {
       const price = parseInt(detailProduct.productBasicInfo.price);
       const installment = parseInt(selectedInstallment);
@@ -151,8 +162,6 @@ export default function ProductDetail(props) {
     height: '200px',
   };
 
-  // const carInspectionIcon = styled(BsClipboardCheckFill);
-
   // userid 조회
   const memberId = userLoginState.userId;
 
@@ -198,10 +207,8 @@ export default function ProductDetail(props) {
     detailHeaderBox: {
       maxWidth: 'fitContents',
       margin: 'auto',
-      // backgroundColor: '#DEF2FF',
-      // boxShadow: 3,
       borderRadius: 7,
-      py: 8,
+      py: 0,
       px: 8,
       my: 10,
       height: '100%',
@@ -211,7 +218,7 @@ export default function ProductDetail(props) {
     },
     detailBox: {
       maxWidth: 'fitContents',
-      margin: 'auto',
+      // margin: 'auto',
       backgroundColor: '#FFF',
       py: 8,
       px: 8,
@@ -221,7 +228,6 @@ export default function ProductDetail(props) {
       display: 'flex',
       flexDirection: 'column',
     },
-    // , borderBottom: '1px solid #313131'
     productTitle: { color: '#313131', pb: 1 },
     card: {
       height: '50%',
@@ -264,22 +270,53 @@ export default function ProductDetail(props) {
                 marginTop={1}
                 marginBottom={2}
                 marginRight={1}
-                marginLeft={3}>
+                marginLeft={3}
+                color="gray">
                 {`${detailProduct.productBasicInfo.branch} ㆍ`}
               </Typography>
-              <Typography gutterBottom variant="h6" marginTop={1} marginBottom={2} marginRight={1}>
+              <Typography
+                gutterBottom
+                variant="h6"
+                marginTop={1}
+                marginBottom={2}
+                marginRight={1}
+                color="gray">
                 {`${detailProduct.productDetailInfo.distance}km ㆍ`}
               </Typography>
-              <Typography gutterBottom variant="h6" marginTop={1} marginBottom={2} marginRight={1}>
+              <Typography
+                gutterBottom
+                variant="h6"
+                marginTop={1}
+                marginBottom={2}
+                marginRight={1}
+                color="gray">
                 {`${detailProduct.productDetailInfo.carType} ㆍ`}
               </Typography>
-              <Typography gutterBottom variant="h6" marginTop={1} marginBottom={2} marginRight={1}>
+              <Typography
+                gutterBottom
+                variant="h6"
+                marginTop={1}
+                marginBottom={2}
+                marginRight={1}
+                color="gray">
                 {`${detailProduct.productDetailInfo.fuelName} ㆍ`}
               </Typography>
-              <Typography gutterBottom variant="h6" marginTop={1} marginBottom={2} marginRight={1}>
+              <Typography
+                gutterBottom
+                variant="h6"
+                marginTop={1}
+                marginBottom={2}
+                marginRight={1}
+                color="gray">
                 {`${detailProduct.productDetailInfo.transmissionName} ㆍ`}
               </Typography>
-              <Typography gutterBottom variant="h6" marginTop={1} marginBottom={2} marginRight={1}>
+              <Typography
+                gutterBottom
+                variant="h6"
+                marginTop={1}
+                marginBottom={2}
+                marginRight={1}
+                color="gray">
                 {detailProduct.productDetailInfo.capacity}
               </Typography>
 
@@ -373,35 +410,35 @@ export default function ProductDetail(props) {
                             backgroundColor: 'transparent', // 배경색을 투명으로 설정
                             marginTop: '20px',
                           }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                              // marginTop: '17px',
-                            }}>
-                            <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
-                              <Typography marginLeft={1}>주행거리</Typography>
-                              <DirectionsCarFilledIcon
-                                style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
-                              />
-                            </div>
+                          <div style={{ marginTop: '2%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                              }}>
+                              <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
+                                <Typography>주행거리</Typography>
+                                <DirectionsCarFilledIcon
+                                  style={{ fontSize: '20px', color: 'gray' }}
+                                />
+                              </div>
 
-                            <div>
-                              <Typography
-                                gutterBottom
-                                variant="h6"
-                                // marginTop={1}
-                                marginBottom={2}
-                                marginRight={1}
-                                marginLeft={3}
-                                fontWeight="bold">
-                                {`${detailProduct.productDetailInfo.distance}km`}
-                              </Typography>
+                              <div>
+                                <Typography
+                                  gutterBottom
+                                  variant="h6"
+                                  // marginTop={1}
+                                  // marginBottom={2}
+                                  // marginRight={1}
+                                  marginLeft={2}
+                                  fontWeight="bold">
+                                  {`${detailProduct.productDetailInfo.distance}km`}
+                                </Typography>
+                              </div>
                             </div>
                           </div>
                         </div>
-
                         <div
                           style={{
                             width: '370px', // 가로 크기
@@ -415,29 +452,31 @@ export default function ProductDetail(props) {
                             marginTop: '20px',
                             marginLeft: '20px',
                           }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                              marginTop: '17px',
-                            }}>
-                            <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
-                              <Typography marginLeft={3}>승차인원</Typography>
-                              <PeopleOutlineIcon
-                                style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
-                              />
-                            </div>
-                            <div>
-                              <Typography
-                                gutterBottom
-                                variant="h6"
-                                // marginTop={1}
-                                marginBottom={2}
-                                marginRight={4}
-                                fontWeight="bold">
-                                {`${detailProduct.productDetailInfo.capacity}명`}
-                              </Typography>
+                          <div style={{ marginTop: '2%', marginLeft: '5%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                                marginTop: '17px',
+                              }}>
+                              <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
+                                <Typography>승차인원</Typography>
+                                <PeopleOutlineIcon
+                                  style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
+                                />
+                              </div>
+                              <div>
+                                <Typography
+                                  gutterBottom
+                                  variant="h6"
+                                  // marginTop={1}
+                                  marginBottom={2}
+                                  marginRight={6}
+                                  fontWeight="bold">
+                                  {`${detailProduct.productDetailInfo.capacity}명`}
+                                </Typography>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -456,30 +495,31 @@ export default function ProductDetail(props) {
                             backgroundColor: 'transparent', // 배경색을 투명으로 설정
                             marginTop: '20px',
                           }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                              marginTop: '17px',
-                            }}>
-                            <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
-                              <Typography marginLeft={3}>차고지</Typography>
-                              <WarehouseIcon
-                                style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
-                              />
-                            </div>
-                            <div>
-                              <Typography
-                                gutterBottom
-                                variant="h6"
-                                // marginTop={1}
-                                marginBottom={2}
-                                marginRight={4}
-                                marginLeft={2}
-                                fontWeight="bold">
-                                {`${detailProduct.productBasicInfo.branch}`}
-                              </Typography>
+                          <div style={{ marginTop: '2%', marginLeft: '5%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                                marginTop: '17px',
+                              }}>
+                              <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
+                                <Typography>차고지</Typography>
+                                <WarehouseIcon
+                                  style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
+                                />
+                              </div>
+                              <div>
+                                <Typography
+                                  gutterBottom
+                                  variant="h6"
+                                  // marginTop={1}
+                                  marginBottom={2}
+                                  marginRight={4}
+                                  fontWeight="bold">
+                                  {`${detailProduct.productBasicInfo.branch}`}
+                                </Typography>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -497,30 +537,29 @@ export default function ProductDetail(props) {
                             marginTop: '20px',
                             marginLeft: '20px',
                           }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                              marginTop: '17px',
-                            }}>
-                            <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
-                              <Typography marginLeft={3}>차종</Typography>
-                              <TaskAltIcon
-                                style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
-                              />
-                            </div>
-                            <div>
-                              <Typography
-                                gutterBottom
-                                variant="h6"
-                                // marginTop={1}
-                                marginBottom={2}
-                                marginRight={4}
-                                marginLeft={2}
-                                fontWeight="bold">
-                                {`${detailProduct.productDetailInfo.carType}`}
-                              </Typography>
+                          <div style={{ marginTop: '2%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                flexDirection: 'column',
+                                marginTop: '17px',
+                              }}>
+                              <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
+                                <Typography>차종</Typography>
+                                <TaskAltIcon style={{ fontSize: '20px', color: 'gray' }} />
+                              </div>
+                              <div>
+                                <Typography
+                                  gutterBottom
+                                  variant="h6"
+                                  marginBottom={2}
+                                  marginRight={4}
+                                  marginLeft={2}
+                                  fontWeight="bold">
+                                  {`${detailProduct.productDetailInfo.carType}`}
+                                </Typography>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -539,31 +578,36 @@ export default function ProductDetail(props) {
                             backgroundColor: 'transparent', // 배경색을 투명으로 설정
                             marginTop: '20px',
                           }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                              marginTop: '17px',
-                            }}>
-                            <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
-                              <Typography marginLeft={4}>연료</Typography>
-                              <LocalGasStationIcon
-                                style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
-                              />
-                            </div>
+                          <div style={{ marginTop: '2%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                // alignItems: 'center',
 
-                            <div>
-                              <Typography
-                                gutterBottom
-                                variant="h6"
-                                // marginTop={1}
-                                marginBottom={2}
-                                marginRight={1}
-                                marginLeft={3}
-                                fontWeight="bold">
-                                {`${detailProduct.productDetailInfo.fuelName}`}
-                              </Typography>
+                                flexDirection: 'column',
+                                marginTop: '17px',
+                              }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  color: 'gray',
+                                  marginLeft: '11%',
+                                }}>
+                                <Typography>연료</Typography>
+                                <LocalGasStationIcon style={{ fontSize: '20px', color: 'gray' }} />
+                              </div>
+                              <div>
+                                <Typography
+                                  gutterBottom
+                                  variant="h6"
+                                  marginBottom={2}
+                                  marginRight={4}
+                                  marginLeft={2}
+                                  fontWeight="bold">
+                                  {`${detailProduct.productDetailInfo.fuelName}`}
+                                </Typography>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -581,29 +625,31 @@ export default function ProductDetail(props) {
                             marginTop: '20px',
                             marginLeft: '20px',
                           }}>
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              flexDirection: 'column',
-                              marginTop: '17px',
-                            }}>
-                            <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
-                              <Typography marginLeft={3}>변속기</Typography>
-                              <SettingsIcon
-                                style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
-                              />
-                            </div>
-                            <div>
-                              <Typography
-                                gutterBottom
-                                variant="h6"
-                                // marginTop={1}
-                                marginBottom={2}
-                                marginRight={4}
-                                fontWeight="bold">
-                                {`${detailProduct.productDetailInfo.transmissionName}`}
-                              </Typography>
+                          <div style={{ marginTop: '2%', marginLeft: '5%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                // alignItems: 'center',
+                                flexDirection: 'column',
+                                marginTop: '17px',
+                              }}>
+                              <div style={{ display: 'flex', alignItems: 'center', color: 'gray' }}>
+                                <Typography>변속기</Typography>
+                                <SettingsIcon
+                                  style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
+                                />
+                              </div>
+                              <div>
+                                <Typography
+                                  gutterBottom
+                                  variant="h6"
+                                  // marginTop={1}
+                                  marginBottom={2}
+                                  marginRight={4}
+                                  fontWeight="bold">
+                                  {`${detailProduct.productDetailInfo.transmissionName}`}
+                                </Typography>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -664,9 +710,15 @@ export default function ProductDetail(props) {
                           mb={2}
                           ml={4}
                           flexDirection="column"
-                          marginTop="2%">
+                          marginTop="2%"
+                          width="63%">
                           <div>
-                            <div style={{ display: 'flex', alignItems: 'center', marginTop: '6%' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginTop: '6%',
+                              }}>
                               <Typography variant="body2" fontWeight="bold" fontSize="19px">
                                 총 할부 신청금액
                               </Typography>
@@ -698,7 +750,11 @@ export default function ProductDetail(props) {
                             </div>
                           </div>
                         </Grid>
+
                         <Button
+                          onClick={() => {
+                            window.open(gatherTownUrl);
+                          }}
                           sx={{
                             ...buttonStyle3,
                             marginTop: '8%',
@@ -734,6 +790,9 @@ export default function ProductDetail(props) {
                         </div>
                         <Grid marginLeft={19} marginTop={4}>
                           <Button
+                            onClick={() => {
+                              window.open(wooriCardUrl);
+                            }}
                             sx={{
                               ...buttonStyle4,
                               marginTop: '10px',
@@ -744,6 +803,9 @@ export default function ProductDetail(props) {
                             우리카드 신규 발급
                           </Button>
                           <Button
+                            onClick={() => {
+                              window.open(wooriCardEvent);
+                            }}
                             sx={{
                               ...buttonStyle4,
                               marginTop: '10px',
@@ -801,12 +863,20 @@ export default function ProductDetail(props) {
                           marginTop: '5%',
                           marginLeft: '5%',
                         }}>
-                        <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                        <Button
+                          sx={{ ...buttonStyle5, color: '#F95700' }}
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(loanItem1Url);
+                          }}>
                           상품안내
                         </Button>
                         <Button
                           sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
-                          variant="outlined">
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(gatherTownUrl);
+                          }}>
                           상담하러 가기
                         </Button>
                       </div>
@@ -847,12 +917,20 @@ export default function ProductDetail(props) {
                           marginTop: '5%',
                           marginLeft: '5%',
                         }}>
-                        <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                        <Button
+                          sx={{ ...buttonStyle5, color: '#F95700' }}
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(loanItem2Url);
+                          }}>
                           상품안내
                         </Button>
                         <Button
                           sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
-                          variant="outlined">
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(gatherTownUrl);
+                          }}>
                           상담하러 가기
                         </Button>
                       </div>
@@ -895,12 +973,20 @@ export default function ProductDetail(props) {
                           marginTop: '5%',
                           marginLeft: '5%',
                         }}>
-                        <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                        <Button
+                          sx={{ ...buttonStyle5, color: '#F95700' }}
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(loanItem3Url);
+                          }}>
                           상품안내
                         </Button>
                         <Button
                           sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
-                          variant="outlined">
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(gatherTownUrl);
+                          }}>
                           상담하러 가기
                         </Button>
                       </div>
@@ -941,12 +1027,20 @@ export default function ProductDetail(props) {
                           marginTop: '5%',
                           marginLeft: '5%',
                         }}>
-                        <Button sx={{ ...buttonStyle5, color: '#F95700' }} variant="outlined">
+                        <Button
+                          sx={{ ...buttonStyle5, color: '#F95700' }}
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(loanItem4Url);
+                          }}>
                           상품안내
                         </Button>
                         <Button
                           sx={{ ...buttonStyle6, color: '#FFFFFF', marginLeft: '2%' }}
-                          variant="outlined">
+                          variant="outlined"
+                          onClick={() => {
+                            window.open(gatherTownUrl);
+                          }}>
                           상담하러 가기
                         </Button>
                       </div>
@@ -986,11 +1080,13 @@ export default function ProductDetail(props) {
                     <Typography gutterBottom variant="h6" mr={2} fontWeight="bold">
                       차량 사고 내역
                     </Typography>
+
                     {
                       <Typography
                         gutterBottom
                         variant="body2"
-                        style={{ borderBottom: '1px solid black' }}>
+                        style={{ borderBottom: '1px solid gray' }}
+                        fontWeight="bold">
                         사고 이력
                       </Typography>
                     }
@@ -1014,7 +1110,12 @@ export default function ProductDetail(props) {
                       <Typography
                         gutterBottom
                         variant="body2"
-                        style={{ borderBottom: '1px solid black', marginTop: '2em' }}>
+                        style={{
+                          borderBottom: '1px solid gray',
+                          marginTop: '2em',
+                          position: 'relative',
+                        }}
+                        fontWeight="bold">
                         교체 이력
                       </Typography>
                     }
