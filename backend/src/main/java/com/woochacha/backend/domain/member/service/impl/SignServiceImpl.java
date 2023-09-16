@@ -68,11 +68,11 @@ public class SignServiceImpl implements SignService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final LogServiceImpl logService;
-    
+
     private final SendSmsService sendSmsService;
-    
+
     private final AuthPhoneRepository authPhoneRepository;
-    
+
     private final DataMasking dataMasking;
 
     public SignServiceImpl(JPAQueryFactory queryFactory, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider,
@@ -107,7 +107,7 @@ public class SignServiceImpl implements SignService {
         MessageDto authMessageDto = MessageDto.builder()
                 .to(phone)
                 .content("[우차차 회원가입]" + "\n"
-                + "인증번호 [ " + randomNum + " ]를 입력해주세요.")
+                        + "인증번호 [ " + randomNum + " ]를 입력해주세요.")
                 .build();
         System.out.println(phone);
         sendSmsService.sendSms(authMessageDto);
@@ -158,9 +158,8 @@ public class SignServiceImpl implements SignService {
 
         if(authPhone.getAuthStatus() == 1){
             // Member 테이블에 회원 정보 저장
-            Member savedMember = save(signUpRequestDto);
-
             authPhoneRepository.deleteById(signUpRequestDto.getPhone());
+            Member savedMember = save(signUpRequestDto);
 
             logger.debug("회원가입 성공");
             logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
@@ -176,7 +175,6 @@ public class SignServiceImpl implements SignService {
         List<Tuple> phoneDuplicateList = new ArrayList<>();
         for(Tuple encoded : encodedList) {
             String decodingPhone;
-//            String decodingPhone = encoded.get(m.phone);
 
             // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
             decodingPhone = dataMasking.decoding(encoded.get(m.phone));
@@ -311,12 +309,8 @@ public class SignServiceImpl implements SignService {
     }
 
 
-
     private Member save(SignUpRequestDto signUpRequestDto) {
         signUpRequestDto.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
-
-        // 이메일 암호화
-        signUpRequestDto.setEmail(dataMasking.encoding(signUpRequestDto.getEmail()));
 
         // 핸드폰 번호 암호화
         signUpRequestDto.setPhone(dataMasking.encoding(signUpRequestDto.getPhone()));
@@ -335,5 +329,4 @@ public class SignServiceImpl implements SignService {
         }
         return null;
     }
-
 }
