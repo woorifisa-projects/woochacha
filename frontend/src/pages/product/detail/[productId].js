@@ -181,12 +181,17 @@ export default function ProductDetail(props) {
       memberId: memberId,
       productId: productId,
     };
-    purchaseRequest(purchaseForm).then((res) => {
-      if (res.status === 200) {
-        SwalModals('success', '구매요청 완료', '구매요청이 완료되었습니다.', false);
-        router.push(`/product`);
-      }
-    });
+    purchaseRequest(purchaseForm)
+      .then((res) => {
+        if (res.status === 200) {
+          SwalModals('success', '구매요청 완료', '구매요청이 완료되었습니다.', false);
+          router.push(`/product`);
+        }
+      })
+      .catch((error) => {
+        SwalModals('error', '구매신청 실패', '본인이 등록한 매물은 구매할 수 없습니다.', false);
+        router.push(`/product/detail/${productId}`);
+      });
   };
 
   /**

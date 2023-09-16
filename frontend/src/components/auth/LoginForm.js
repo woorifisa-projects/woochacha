@@ -138,6 +138,11 @@ export default function LoginForm() {
         timer: 1500,
       });
     }
+    setLoginData(newLoginData);
+    setClickSubmit((prev) => !prev);
+    if (!Object.values(formValid).includes(true) && !Object.values(loginData).includes('')) {
+      loginApi(loginData, setUserLoginState, router);
+    }
   };
 
   /**

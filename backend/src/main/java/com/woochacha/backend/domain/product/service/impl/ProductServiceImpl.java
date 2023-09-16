@@ -27,6 +27,7 @@ import com.woochacha.backend.domain.product.entity.Product;
 import com.woochacha.backend.domain.product.entity.QCarImage;
 import com.woochacha.backend.domain.product.entity.QProduct;
 import com.woochacha.backend.domain.product.exception.ProductNotFound;
+import com.woochacha.backend.domain.product.exception.SellerBuyerSamePurchaseRequest;
 import com.woochacha.backend.domain.product.repository.ProductRepository;
 import com.woochacha.backend.domain.product.service.ProductService;
 import com.woochacha.backend.domain.purchase.entity.PurchaseForm;
@@ -372,9 +373,13 @@ public class ProductServiceImpl implements ProductService {
         Member member = memberRepository.findById(productPurchaseRequestDto.getMemberId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         Product product = productRepository.findById(productPurchaseRequestDto.getProductId()).orElseThrow(() -> new RuntimeException("SaleForm not found"));
         PurchaseForm purchaseForm = PurchaseForm.builder().member(member).product(product).build();
+        if (member.getId().equals(product.getSaleForm().getMember().getId())){
+            // 자신이 등록한 매물에 대해 구매신청을 하는 경우 예외처리
+            throw new SellerBuyerSamePurchaseRequest();
+        }
         purchaseFormRepository.save(purchaseForm);
         logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/detail/" + productPurchaseRequestDto.getProductId());
-        logger.info("pruchaseFormId:{} memberId:{} 판매 신청폼 등록", productPurchaseRequestDto.getProductId(), productPurchaseRequestDto.getMemberId());
+        logger.info("pruchaseFormId:{} memberId:{} 구매 신청", productPurchaseRequestDto.getProductId(), productPurchaseRequestDto.getMemberId());
     }
 
     @Override

@@ -53,7 +53,7 @@ function RegisteredItem() {
     mounted &&
     mypageRegisteredProducts && (
       <>
-        <MypageCardEdit content={mypageRegisteredProducts.content} memberId={memberId} />
+        <MypageCardEdit content={mypageRegisteredProducts.content} memberId={memberId}/>
 
         {/* pagination */}
         <Grid sx={registeredCss.pagination}>
