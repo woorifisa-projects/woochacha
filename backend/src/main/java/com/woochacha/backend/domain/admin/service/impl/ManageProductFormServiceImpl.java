@@ -28,6 +28,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
         } else {
             status = "수정";
         }
+
         return ManageProductFormDto.builder()
                 .productId((Long) array[0])
                 .title((String) array[1])
@@ -35,6 +36,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
                 .sellerEmail((String) array[3])
                 .manageType(status)
                 .build();
+
     }
 
     // 매물 관리 리스트 조회
@@ -42,6 +44,7 @@ public class ManageProductFormServiceImpl implements ManageProductFormService {
     public Page<ManageProductFormDto> findDeleteEditForm(int pageNumber, int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Object[]> deleteEditForms = manageProductFormRepository.getDeleteEditForm(pageable);
+
         logger.debug("매물 관리 리스트 조회");
         return deleteEditForms.map(this::arrayToManageProductFormDto);
     }

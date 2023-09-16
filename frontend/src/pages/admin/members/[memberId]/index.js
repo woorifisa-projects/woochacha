@@ -19,6 +19,9 @@ function AdminUserDetail(props) {
   const [showModal, setShowModal] = useState(false);
   const handleClickModal = () => setShowModal(!showModal);
 
+  const [disabledSubmitBtn, setDisabledSubmitBtn] = useState(false); // 버튼 비활성화 여부
+  const [isSubmitting, setIsSubmitting] = useState(false); // 진행 중 상태 확인
+
   const adminUserProfileCss = {
     card: {
       marginTop: '25px',
@@ -67,6 +70,14 @@ function AdminUserDetail(props) {
   };
 
   const handleDeleteMember = () => {
+    // 요청이 진행중인 경우
+    if (isSubmitting) {
+      return;
+    }
+
+    // 요청 시작
+    setIsSubmitting(true);
+
     memberId &&
       oneMemberDeletePatchApi(memberId)
         .then((res) => {
@@ -75,6 +86,9 @@ function AdminUserDetail(props) {
         })
         .catch((error) => {
           console.log('실패: ', error);
+        })
+        .finally(() => {
+          setIsSubmitting(false); // 요청 종료 후 상태 변경
         });
   };
 
@@ -188,7 +202,11 @@ function AdminUserDetail(props) {
               onClick={() => handleMove(`/admin/members/edit/${memberId}`)}>
               수정
             </Button>
-            <Button variant="contained" color="error" onClick={handleClickModal}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleClickModal}
+              disabled={disabledSubmitBtn || isSubmitting}>
               삭제
             </Button>
           </CardActions>

@@ -21,7 +21,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.woochacha.backend.common.DataMasking;
 
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     private final PurchaseFormRepository purchaseFormRepository;
     private final TransactionRepository transactionRepository;
     private final ManageProductFormRepository manageProductFormRepository;
-
+    private final DataMasking dataMasking;
     private static final Logger logger = LoggerFactory.getLogger(ManageMemberServiceImpl.class);
 
     @Override
@@ -58,7 +60,9 @@ public class ManageMemberServiceImpl implements ManageMemberService {
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetchResults();
-
+            for (MemberInfoListResponseDto memberInfoDto : queryResults.getResults()){
+                memberInfoDto.setPhone(dataMasking.decoding(memberInfoDto.getPhone()));
+            }
             return new PageImpl<>(queryResults.getResults(), pageable, queryResults.getTotal());
         } catch (Exception e) {
             throw new AdminNotFound();
@@ -69,6 +73,7 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     public MemberInfoResponseDto getMemberInfo(Long memberId) {
         try {
             MemberInfoDto memberInfo = memberRepository.getMemberInfo(memberId);
+            memberInfo.setPhone(dataMasking.decoding(memberInfo.getPhone()));
             int countOnSale = productRepository.countSale(memberId, (short) 4);
             int countCompleteSale = productRepository.countSale(memberId, (short) 5);
             int countOnPurchase = purchaseFormRepository.countPurchaseFormId(memberId);
@@ -124,6 +129,10 @@ public class ManageMemberServiceImpl implements ManageMemberService {
     @Override
     public Page<MemberLogDto> getMemberLog(Long memberId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return manageProductFormRepository.findAllMemberLog(memberId, pageable);
+        Page<MemberLogDto> memberLogDto = manageProductFormRepository.findAllMemberLog(memberId, pageable);
+
+
+
+        return memberLogDto;
     }
 }

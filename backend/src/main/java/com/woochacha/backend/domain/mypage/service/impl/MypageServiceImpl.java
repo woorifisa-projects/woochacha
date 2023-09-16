@@ -123,7 +123,6 @@ public class MypageServiceImpl implements MypageService {
     public ProfileDto getProfileByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
         ProfileDto profileDto = modelMapper.map(member, ProfileDto.class);
-        profileDto.setEmail(dataMasking.decoding(profileDto.getEmail()));
         profileDto.setPhone(dataMasking.decoding(profileDto.getPhone()));
         return profileDto;
     }

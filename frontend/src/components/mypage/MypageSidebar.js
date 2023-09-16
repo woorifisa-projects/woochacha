@@ -4,6 +4,7 @@ import { HEADER_MINI_MENU } from '@/constants/string';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import { debounce } from 'lodash';
 
 export default function MypageSidebar() {
   const router = useRouter();
@@ -53,9 +54,9 @@ export default function MypageSidebar() {
     });
   }, []);
 
-  const handleMove = (url) => {
+  const handleMove = debounce((url) => {
     router.push(url);
-  };
+  }, 300);
 
   return (
     selectedMenu && (

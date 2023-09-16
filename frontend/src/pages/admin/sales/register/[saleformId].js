@@ -27,6 +27,7 @@ import ImageSlider from '@/components/product/ImageSlider';
 import OneButtonModal from '@/components/common/OneButtonModal';
 import { oneRegisterFormGetApi, oneRegisterFormPostApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminSalesRegisterForm(props) {
   let responsiveFontTheme = responsiveFontSizes(theme);
@@ -44,12 +45,8 @@ function AdminSalesRegisterForm(props) {
   const router = useRouter();
   const { saleformId } = props;
 
-  /**
-   * 승인 버튼 클릭 시, modal popup
-   */
-  const handleSaveregisterVal = (e) => {
-    handleClickModal();
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false); // 중복 요청 방지
+  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true); // 버튼 비활성화 상태 추가
 
   // [주행거리] 주행거리 수정
   const handleChangePrice = (e) => {
@@ -57,19 +54,35 @@ function AdminSalesRegisterForm(props) {
     setPriceVal(e.target.value);
   };
 
+  useEffect(() => {
+    if (priceVal && uploadFileValue && uploadFileValue.length === 4) {
+      setIsSubmitButtonDisabled(false);
+    } else {
+      setIsSubmitButtonDisabled(true);
+    }
+  }, [priceVal, uploadFileValue]);
+
   /**
    * 게시글 등록하기
    */
   const handleSubmit = () => {
-    if (uploadFileValue == null) {
-      SwalModals('error', '사진 업로드 실패', '4장의 사진을 등록해주세요!', false);
-      return;
-    } else if (uploadFileValue.length !== 4) {
-      SwalModals('error', '사진 업로드 실패', '4장의 사진을 등록해주세요!', false);
+    if (isSubmitting) {
+      return; // 이미 제출 중인 경우 중복 제출 방지
+    }
+
+    setIsSubmitting(true); // 중복 제출 방지 상태 업데이트
+    console.log(uploadFileValue.length);
+
+    // 이미지 업로드 유효성 검사 - 유효성 X
+    if (!uploadFileValue || uploadFileValue.length !== 4) {
+      setIsSubmitting(false);
+      SwalModals('error', '사진 업로드 실패', '1장에서 4장 사이의 사진을 등록해주세요!', false);
       return;
     }
 
+    // 판매 가격 유효성 검사
     if (!priceVal || priceVal.trim().length === 0) {
+      setIsSubmitting(false);
       SwalModals('error', '판매 가격 미등록', '판매가격을 입력해주세요!', false);
       return;
     }
@@ -85,6 +98,7 @@ function AdminSalesRegisterForm(props) {
 
     oneRegisterFormPostApi(saleformId, formDataVal).then((res) => {
       if (res.status === 200 && res.data === 'Success') {
+        setIsSubmitting(false); // 중복 제출 방지 상태 해제
         SwalModals(
           'success',
           '차량게시글 등록 완료',
@@ -95,6 +109,7 @@ function AdminSalesRegisterForm(props) {
         return;
       }
       if (res.status === 200 && res.data !== 'Success') {
+        setIsSubmitting(false); // 중복 제출 방지 상태 해제
         SwalModals(
           'error',
           '차량게시글 등록 미완료',
@@ -165,237 +180,239 @@ function AdminSalesRegisterForm(props) {
     },
   };
 
-  return (
-    mounted &&
-    registerInfo && (
-      <ThemeProvider theme={responsiveFontTheme}>
-        <CssBaseline />
-        <Typography
-          sx={saleRegisterFormCss.registerFormTitle}
-          component="h4"
-          variant="h4"
-          gutterBottom>
-          관리자 페이지 - 차량 게시글 등록
+  return mounted && registerInfo ? (
+    <ThemeProvider theme={responsiveFontTheme}>
+      <CssBaseline />
+      <Typography
+        sx={saleRegisterFormCss.registerFormTitle}
+        component="h4"
+        variant="h4"
+        gutterBottom>
+        관리자 페이지 - 차량 게시글 등록
+      </Typography>
+      {/* subtitle card */}
+      <Card sx={saleRegisterFormCss.titleCard}>
+        <Typography variant="h4" sx={saleRegisterFormCss.subTitleTypo}>
+          점검 정보 승인
         </Typography>
-        {/* subtitle card */}
-        <Card sx={saleRegisterFormCss.titleCard}>
-          <Typography variant="h4" sx={saleRegisterFormCss.subTitleTypo}>
-            점검 정보 승인
-          </Typography>
-          <ArrowForwardIcon fontSize="large" />
-          <Typography variant="h4" sx={saleRegisterFormCss.colorTypo}>
+        <ArrowForwardIcon fontSize="large" />
+        <Typography variant="h4" sx={saleRegisterFormCss.colorTypo}>
+          차량 게시글 등록
+        </Typography>
+      </Card>
+
+      {/* form contents */}
+      <Container sx={saleRegisterFormCss.formContents} maxWidth="xs">
+        <CssBaseline />
+        <Box>
+          <Typography component="h1" variant="h4" sx={saleRegisterFormCss.registerFormTitle}>
             차량 게시글 등록
           </Typography>
-        </Card>
-
-        {/* form contents */}
-        <Container sx={saleRegisterFormCss.formContents} maxWidth="xs">
-          <CssBaseline />
-          <Box>
-            <Typography component="h1" variant="h4" sx={saleRegisterFormCss.registerFormTitle}>
-              차량 게시글 등록
-            </Typography>
-            <Box noValidate>
-              <Grid container spacing={2}>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    게시글명
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductBasicInfo.title}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    차량번호
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductBasicInfo.carNum}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    지점명
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductBasicInfo.branch}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    주행거리
-                  </Typography>
-                  <Typography variant="body1">
-                    {`${registerInfo.registerProductDetailInfo.distance} km`}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    연식
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductDetailInfo.year}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    승차정원
-                  </Typography>
-                  <Typography variant="body1">
-                    {`${registerInfo.registerProductDetailInfo.capacity} 인`}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    차종
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductDetailInfo.carType}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    브랜드
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductDetailInfo.model}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    연료
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductDetailInfo.fuelName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    차량 색상
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductDetailInfo.color}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    변속기
-                  </Typography>
-                  <Typography variant="body1">
-                    {registerInfo.registerProductDetailInfo.transmissionName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    사고이력
-                  </Typography>
-                  {registerInfo.registerProductDetailInfo.produdctAccidentInfoList.map(
-                    (item, idx) => {
-                      return (
-                        <Typography
-                          key={idx}
-                          variant="body1">{`${item.type} - ${item.date}`}</Typography>
-                      );
-                    },
-                  )}
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    교체부위
-                  </Typography>
-                  {registerInfo.registerProductDetailInfo.productExchangeInfoList.map(
-                    (item, idx) => {
-                      return (
-                        <Typography
-                          key={idx}
-                          variant="body1">{`${item.type} - ${item.date}`}</Typography>
-                      );
-                    },
-                  )}
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    옵션 정보
-                  </Typography>
-                  <List>
-                    {registerInfo.registerProductOptionInfos.map((item, idx) => {
-                      return item.whether === 1 ? (
-                        <ListItem key={idx} variant="body1">
-                          <AddIcon />
-                          <ListItemText primary={`${item.option}`} />
-                        </ListItem>
-                      ) : (
-                        ''
-                      );
-                    })}
-                  </List>
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    판매가격
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    id="priceVal"
-                    label="판매가격을 입력해주세요"
-                    name="priceVal"
-                    value={priceVal || ''}
-                    onInput={handleChangePrice}
-                    type="text"
-                  />
-                </Grid>
-                <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
-                    사진 등록 (최대 4장)
-                  </Typography>
-                  <Stack direction="column" alignItems="center" spacing={2} mb={5}>
-                    {previewImageList.length > 0 ? <ImageSlider image={previewImageList} /> : ''}
-                    <label htmlFor="upload-image">
-                      <input
-                        id="upload-image"
-                        hidden
-                        accept="image/*"
-                        type="file"
-                        multiple={true}
-                        onChange={(event) =>
-                          handleMultipleFileUpload(
-                            event,
-                            setUploadFileValue,
-                            previewImageList,
-                            setPreviewImageList,
-                          )
-                        }
-                      />
-                      <Button
-                        size="large"
-                        variant="outlined"
-                        component="span"
-                        sx={saleRegisterFormCss.uploadBtn}>
-                        사진 업로드하기
-                      </Button>
-                    </label>
-                  </Stack>
-                </Grid>
+          <Box noValidate>
+            <Grid container spacing={2}>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  게시글명
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductBasicInfo.title}
+                </Typography>
               </Grid>
-
-              <Grid sx={saleRegisterFormCss.submitBtn}>
-                <Button size="large" variant="contained" onClick={handleSubmit}>
-                  승인 신청
-                </Button>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  차량번호
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductBasicInfo.carNum}
+                </Typography>
               </Grid>
-            </Box>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  지점명
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductBasicInfo.branch}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  주행거리
+                </Typography>
+                <Typography variant="body1">
+                  {`${registerInfo.registerProductDetailInfo.distance} km`}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  연식
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductDetailInfo.year}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  승차정원
+                </Typography>
+                <Typography variant="body1">
+                  {`${registerInfo.registerProductDetailInfo.capacity} 인`}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  차종
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductDetailInfo.carType}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  브랜드
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductDetailInfo.model}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  연료
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductDetailInfo.fuelName}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  차량 색상
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductDetailInfo.color}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  변속기
+                </Typography>
+                <Typography variant="body1">
+                  {registerInfo.registerProductDetailInfo.transmissionName}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  사고이력
+                </Typography>
+                {registerInfo.registerProductDetailInfo.produdctAccidentInfoList.map(
+                  (item, idx) => {
+                    return (
+                      <Typography
+                        key={idx}
+                        variant="body1">{`${item.type} - ${item.date}`}</Typography>
+                    );
+                  },
+                )}
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  교체부위
+                </Typography>
+                {registerInfo.registerProductDetailInfo.productExchangeInfoList.map((item, idx) => {
+                  return (
+                    <Typography
+                      key={idx}
+                      variant="body1">{`${item.type} - ${item.date}`}</Typography>
+                  );
+                })}
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  옵션 정보
+                </Typography>
+                <List>
+                  {registerInfo.registerProductOptionInfos.map((item, idx) => {
+                    return item.whether === 1 ? (
+                      <ListItem key={idx} variant="body1">
+                        <AddIcon />
+                        <ListItemText primary={`${item.option}`} />
+                      </ListItem>
+                    ) : (
+                      ''
+                    );
+                  })}
+                </List>
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  판매가격
+                </Typography>
+                <TextField
+                  fullWidth
+                  id="priceVal"
+                  label="판매가격을 입력해주세요 (만원)"
+                  name="priceVal"
+                  value={priceVal || ''}
+                  onInput={handleChangePrice}
+                  type="text"
+                />
+              </Grid>
+              <Grid item xs={12} py={2}>
+                <Typography variant="h6" fontWeight="bold">
+                  사진 등록 (최대 4장)
+                </Typography>
+                <Stack direction="column" alignItems="center" spacing={2} mb={5}>
+                  {previewImageList.length > 0 ? <ImageSlider image={previewImageList} /> : ''}
+                  <label htmlFor="upload-image">
+                    <input
+                      id="upload-image"
+                      hidden
+                      accept="image/*"
+                      type="file"
+                      multiple={true}
+                      onChange={(event) =>
+                        handleMultipleFileUpload(
+                          event,
+                          setUploadFileValue,
+                          previewImageList,
+                          setPreviewImageList,
+                        )
+                      }
+                    />
+                    <Button
+                      size="large"
+                      variant="outlined"
+                      component="span"
+                      sx={saleRegisterFormCss.uploadBtn}>
+                      사진 업로드하기
+                    </Button>
+                  </label>
+                </Stack>
+              </Grid>
+            </Grid>
+
+            <Grid sx={saleRegisterFormCss.submitBtn}>
+              <Button
+                size="large"
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={isSubmitButtonDisabled} // 버튼 활성/비활성 상태 추가
+              >
+                등록하기
+              </Button>
+            </Grid>
           </Box>
-        </Container>
-        {showModal && (
-          <OneButtonModal
-            onClickModal={handleClickModal}
-            isOpen={showModal}
-            modalContent={ADMIN_REGISTER_MODAL.CONTENTS}
-            callBackFunc={handleSubmit}
-          />
-        )}
-      </ThemeProvider>
-    )
+        </Box>
+      </Container>
+      {showModal && (
+        <OneButtonModal
+          onClickModal={handleClickModal}
+          isOpen={showModal}
+          modalContent={ADMIN_REGISTER_MODAL.CONTENTS}
+          callBackFunc={handleSubmit}
+        />
+      )}
+    </ThemeProvider>
+  ) : (
+    <LoadingBar />
   );
 }
 

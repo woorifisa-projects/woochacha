@@ -161,6 +161,7 @@ public class SignServiceImpl implements SignService {
             authPhoneRepository.deleteById(signUpRequestDto.getPhone());
             Member savedMember = save(signUpRequestDto);
 
+//            authPhoneRepository.deleteById(signUpRequestDto.getPhone());
             logger.debug("회원가입 성공");
             logger.info("사용자 회원가입 memberId:{}", savedMember.getId());
             return SignException.exception(SignResultCode.SUCCESS);

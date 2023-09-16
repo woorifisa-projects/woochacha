@@ -20,6 +20,8 @@ import {
   InputLabel,
 } from '@mui/material';
 import theme from '@/styles/theme';
+import LocalStorage from '@/utils/localStorage';
+import Swal from 'sweetalert2';
 
 export default function LoginForm() {
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -36,6 +38,9 @@ export default function LoginForm() {
     emailErr: false,
     pwErr: false,
   });
+  const [rememberEmail, setRememberEmail] = useState(false);
+  const [disabledCheckBox, setDisabledCheckBox] = useState(true);
+  const [disabledSubmitBtn, setDisabledSubmitBtn] = useState(false);
 
   /**
    * 렌더링
@@ -48,6 +53,7 @@ export default function LoginForm() {
         ...prev,
         email: rememberedEmail,
       }));
+      setRememberEmail(true);
     }
     setMounted(true);
   }, []);
@@ -62,6 +68,17 @@ export default function LoginForm() {
     }
   }, [loginData]);
 
+  /**
+   * 이메일 미입력 시 - 체크박스 비활성화
+   */
+  useEffect(() => {
+    if (loginData.email !== '') {
+      setDisabledCheckBox(false);
+    } else {
+      setDisabledCheckBox(true);
+    }
+  }, [loginData.email]);
+
   const handleInputBlur = (event) => {
     handleSignupBlur(event, setFormValid, formValid);
   };
@@ -71,7 +88,18 @@ export default function LoginForm() {
    */
   useEffect(() => {
     if (!Object.values(formValid).includes(true) && !Object.values(loginData).includes('')) {
-      loginApi(loginData, setUserLoginState, router);
+      if (!disabledSubmitBtn) {
+        // 버튼이 비활성화된 경우에만 API 호출
+        loginApi(loginData, setUserLoginState, router)
+          .then((res) => {
+            if (res === 'success') {
+              setDisabledSubmitBtn(true); // 성공적으로 로그인한 경우 버튼 비활성화
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     }
   }, [clickSubmit]);
 
@@ -86,8 +114,30 @@ export default function LoginForm() {
       email: data.get('email').trim(),
       password: data.get('password').trim(),
     };
-    setLoginData(newLoginData);
-    setClickSubmit((prev) => !prev);
+
+    if (
+      !formValid.emailErr &&
+      !formValid.pwErr &&
+      newLoginData.email.trim().length !== 0 &&
+      newLoginData.password.trim().length !== 0
+    ) {
+      setLoginData(newLoginData);
+      setClickSubmit((prev) => !prev);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: `로그인 실패!`,
+        html: `로그인 입력값을 모두 작성해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      });
+    }
   };
 
   /**
@@ -95,9 +145,11 @@ export default function LoginForm() {
    */
   const handleRemember = (event) => {
     if (event.target.checked) {
-      localStorage.setItem('rememberEmail', loginData.email); // "이메일 기억하기" 이메일 저장
+      LocalStorage.setItem('rememberEmail', loginData.email); // "이메일 기억하기" 이메일 저장
+      setRememberEmail(true);
     } else {
-      localStorage.removeItem('rememberEmail'); // "이메일 기억하기" 이메일 삭제
+      LocalStorage.removeItem('rememberEmail'); // "이메일 기억하기" 이메일 삭제
+      setRememberEmail(false);
     }
   };
 
@@ -154,10 +206,16 @@ export default function LoginForm() {
                 control={<Checkbox name="remember" color="primary" onChange={handleRemember} />}
                 label="이메일 기억하기"
                 // 체크박스 상태를 localStorage에서 가져와 설정
-                checked={!!localStorage.getItem('rememberEmail')}
+                checked={rememberEmail}
+                disabled={disabledCheckBox}
               />
 
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                disabled={disabledSubmitBtn}
+                sx={{ mt: 3, mb: 2 }}>
                 로그인
               </Button>
               <Grid container>

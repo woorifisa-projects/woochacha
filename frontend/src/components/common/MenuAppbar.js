@@ -3,6 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import { debounce } from 'lodash';
 
 export default function MenuAppbar(props) {
   const userLoginState = useRecoilValue(userLoggedInState);
@@ -20,10 +21,10 @@ export default function MenuAppbar(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleMiniMenu = (url) => {
+  const handleMiniMenu = debounce((url) => {
     router.push(url);
     setAnchorEl(null);
-  };
+  }, 300);
 
   const HEADER_MINI_MENU_LOGIN = {
     CONTENTS: [

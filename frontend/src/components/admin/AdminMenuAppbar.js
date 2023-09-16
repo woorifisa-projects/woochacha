@@ -2,6 +2,7 @@ import { Fade, Menu, MenuItem } from '@mui/material';
 import React from 'react';
 import { useRouter } from 'next/router';
 import { HEADER_ADMIN_MINI_MENU } from '@/constants/string';
+import { debounce } from 'lodash';
 
 export default function AdminMenuAppbar(props) {
   const router = useRouter();
@@ -18,10 +19,10 @@ export default function AdminMenuAppbar(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleMiniMenu = (url) => {
+  const handleMiniMenu = debounce((url) => {
     router.push(url);
     setAnchorEl(null);
-  };
+  });
 
   return (
     <>
