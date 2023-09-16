@@ -151,6 +151,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 수정신청 폼 데이터 가져오기
+    @Transactional
     @Override
     public String editProductEditRequestInfo(Long memberId, Long productId, UpdatePriceDto updatePriceDto){
         EditProductDto editProductDto = mypageRepository.getProductEditRequestInfo(memberId, productId);
@@ -164,6 +165,7 @@ public class MypageServiceImpl implements MypageService {
     }
 
     // 수정신청 폼 제출
+//    @Override
     @Transactional
     public void updatePrice(Long productId, Integer updatePrice, Long memberId){
         mypageRepository.updatePrice(productId, updatePrice);
