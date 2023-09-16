@@ -138,11 +138,6 @@ export default function LoginForm() {
         timer: 1500,
       });
     }
-    setLoginData(newLoginData);
-    setClickSubmit((prev) => !prev);
-    if (!Object.values(formValid).includes(true) && !Object.values(loginData).includes('')) {
-      loginApi(loginData, setUserLoginState, router);
-    }
   };
 
   /**
@@ -197,6 +192,7 @@ export default function LoginForm() {
               </InputLabel>
               <TextField
                 onBlur={handleInputBlur}
+                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                 margin="normal"
                 required
                 fullWidth
