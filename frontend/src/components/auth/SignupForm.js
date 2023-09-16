@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
-import { signupApi } from '@/services/authApi';
-
+import { signupApi, sendAuthApi, checkAuthApi } from '@/services/authApi';
 import {
   Button,
   CssBaseline,
@@ -31,6 +30,20 @@ import {
   handlePasswordBlur,
   handlePhoneBlur,
 } from '@/hooks/useChecks';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import Swal from 'sweetalert2';
+import { debounce } from 'lodash';
+
+const Timer = ({ mm, ss }) => {
+  const [minutes, setMinutes] = useState(parseInt(mm));
+  const [seconds, setSeconds] = useState(parseInt(ss));
+
+  return (
+    <div>
+      {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+    </div>
+  );
+};
 
 export default function SignupForm() {
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
@@ -59,6 +72,78 @@ export default function SignupForm() {
 
   // 약관동의 확인
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [phoneAgree, setPhoneAgree] = useState(false);
+  const [checkAgree, setCheckAgree] = useState(true);
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [showVerification, setShowVerification] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [intervalId, setIntervalId] = useState(null); // intervalId 상태 추가
+  const [verificationCode, setVerificationCode] = useState('');
+
+  const handleVerificationCodeChange = (event) => {
+    const code = event.target.value.replace(/[^0-9]/g, '');
+    setVerificationCode(code);
+  };
+  const isButtonDisabled = verificationCode.length !== 6;
+
+  const handleCheckboxChange = () => {
+    setPhoneAgree(!phoneAgree);
+  };
+
+  const handleSendVerification = debounce(() => {
+    //console.log(signupData.phone.replace(/-/g, ''));
+    sendAuthApi(signupData.phone.replace(/-/g, ''));
+    setShowVerification(true);
+    if (intervalId) {
+      clearInterval(intervalId); // 기존의 타이머 정리
+    }
+    startCountdownTimer(); // 새로운 타이머 시작
+  }, 400);
+  const startCountdownTimer = () => {
+    const endTime = new Date().getTime() + 3 * 60 * 1000;
+
+    const id = setInterval(() => {
+      // intervalId 대신 id 변수 사용
+      const currentTime = new Date().getTime();
+      const remainingTime = endTime - currentTime;
+
+      if (remainingTime <= 0) {
+        setShowVerification(false);
+        setCountdown(0);
+
+        clearInterval(id); // id 변수 사용
+
+        setIntervalId(null); // intervalId 상태 초기화
+      } else {
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+        setCountdown(`${minutes}분 ${seconds < 10 ? `0${seconds}` : seconds}초`);
+      }
+    }, 1000);
+
+    setIntervalId(id); // intervalId 상태 업데이트
+  };
+  const handleVerify = () => {
+    checkAuthApi(signupData.phone.replace(/-/g, ''), verificationCode).then((data) => {
+      if (data === 'success') {
+        setPhoneAgree(false);
+        setShowVerification(false);
+        setCheckAgree(false);
+        setSuccessMessage(true);
+      } else {
+        setVerificationCode('');
+      }
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId); // cleanup 함수에서 이전의 타이머 정리
+      }
+    };
+  }, []);
 
   /**
    * mounted
@@ -91,27 +176,52 @@ export default function SignupForm() {
    * 회원가입 form 제출
    */
   const handleSubmit = (event) => {
+    setAgreeTerms(false);
     event.preventDefault();
-
     const data = new FormData(event.currentTarget);
-
     const newSignupData = {
       email: data.get('email').trim(),
       password: data.get('password').trim(),
-      phone: data.get('phoneNum').replace(/-/g, ''),
+      phone: signupData.phone.replace(/-/g, ''),
       name: data.get('name').trim(),
     };
-
-    setSignupData(newSignupData);
 
     // 비밀번호 확인 유효성 검사
     if (!validatePasswordConfirmation(newSignupData.password)) {
       SwalModals('error', '비밀번호 불일치', '비밀번호와 비밀번호 확인이 같지 않습니다.', false);
+      setAgreeTerms(true);
       return;
     }
-
-    setClickSubmit((prev) => !prev);
-    signupApi(newSignupData, setUserLoginState, router);
+    if (
+      !formValid.emailErr &&
+      !formValid.nameErr &&
+      !formValid.phoneErr &&
+      !formValid.pwErr &&
+      successMessage &&
+      signupData.email !== '' &&
+      signupData.name !== '' &&
+      signupData.password !== '' &&
+      signupData.phone !== ''
+    ) {
+      setSignupData(newSignupData);
+      setClickSubmit((prev) => !prev);
+      signupApi(newSignupData, setUserLoginState, router);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: `회원가입 실패!`,
+        html: `회원정보 작성 및 핸드폰 인증을 완료해주세요!`,
+        showConfirmButton: false,
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown',
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp',
+        },
+        timer: 1500,
+      });
+      setAgreeTerms(true);
+    }
   };
 
   return (
@@ -125,7 +235,8 @@ export default function SignupForm() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-            }}>
+            }}
+            disabled={true}>
             <Typography component="h1" variant="h4" sx={{ fontWeight: 'bold' }}>
               회원 가입
             </Typography>
@@ -196,27 +307,108 @@ export default function SignupForm() {
                     error={formValid.nameErr}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <InputLabel htmlFor="phoneNum" sx={{ fontSize: '1.2rem', my: 1 }}>
-                    전화번호
-                  </InputLabel>
-                  <TextField
-                    onBlur={(event) =>
-                      handlePhoneBlur(event, setFormValid, formValid, setSignupData, signupData)
-                    }
-                    required
-                    fullWidth
-                    id="phoneNum"
-                    label="전화번호를 입력해주세요"
-                    name="phoneNum"
-                    type="tel"
-                    autoComplete="tel"
-                    error={formValid.phoneErr}
-                    value={signupData.phone}
-                    onChange={handlePhoneNumChange}
-                  />
+                <Grid container item xs={12} justifyContent="space-between" alignItems="center">
+                  <Grid item xs={4}>
+                    <InputLabel htmlFor="phoneNum" sx={{ fontSize: '1.2rem', my: 1 }}>
+                      전화번호
+                    </InputLabel>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <div
+                      style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                      <Checkbox
+                        value="allowExtraEmails"
+                        color="primary"
+                        disabled={!checkAgree}
+                        onChange={() => setPhoneAgree(!phoneAgree)}
+                      />
+                      <Typography variant="body1">개인정보 이용에 동의합니다.</Typography>
+                    </div>
+                  </Grid>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={8.5}>
+                      <TextField
+                        onBlur={(event) => {
+                          handlePhoneBlur(
+                            event,
+                            setFormValid,
+                            formValid,
+                            setSignupData,
+                            signupData,
+                          );
+                        }}
+                        required
+                        fullWidth
+                        id="phoneNum"
+                        label="전화번호를 입력해주세요"
+                        name="phoneNum"
+                        type="tel"
+                        autoComplete="tel"
+                        error={formValid.phoneErr}
+                        value={signupData.phone}
+                        onChange={handlePhoneNumChange}
+                        disabled={!phoneAgree}
+                      />
+                    </Grid>
+                    <Grid item xs={3.5}>
+                      <Button
+                        variant="contained"
+                        onClick={handleSendVerification}
+                        disabled={!phoneAgree}>
+                        {showVerification ? '인증번호 재전송' : '인증번호 전송'}
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Grid>
-
+                <Grid container item xs={12} alignItems="center">
+                  {/* 애니메이션으로 나타나는 인증번호 입력 필드 */}
+                  {showVerification && (
+                    <Grid container spacing={2} alignItems="center">
+                      <Grid item xs={8.5}>
+                        <TextField
+                          disabled={!phoneAgree}
+                          fullWidth
+                          id="verificationCode"
+                          label="인증번호 입력"
+                          name="verificationCode"
+                          type="text"
+                          autoComplete="off"
+                          value={verificationCode}
+                          onChange={handleVerificationCodeChange}
+                          InputProps={{
+                            inputProps: {
+                              maxLength: 6, // 최대 길이 제한
+                            },
+                            endAdornment: (
+                              <Typography style={{ color: 'red', whiteSpace: 'nowrap' }}>
+                                {countdown}
+                              </Typography>
+                            ),
+                            style: { display: 'flex', alignItems: 'center' },
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={3.5}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          disabled={isButtonDisabled}
+                          onClick={handleVerify}>
+                          인증 확인
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  )}
+                  {successMessage && (
+                    <Grid display="flex" justifyContent="center" alignItems="center">
+                      <CheckCircleOutlineIcon color="success" />
+                      <Typography disabled={!successMessage} color="green" ml={1}>
+                        전화번호 인증에 성공하였습니다.
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
                 <Grid item xs={12}>
                   {/* 약관 내용 */}
                   <Accordion sx={{ my: 3 }}>

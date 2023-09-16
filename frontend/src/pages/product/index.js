@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CssBaseline,
@@ -9,7 +10,6 @@ import {
   responsiveFontSizes,
 } from '@mui/material';
 import theme from '@/styles/theme';
-import MiniCard from '@/components/common/MiniCard';
 import SearchBar from '@/components/product/SearchBar';
 import ProductCard from '@/components/product/ProductCard';
 import { useEffect, useState } from 'react';
@@ -19,7 +19,10 @@ import {
   keywordProductGetApi,
 } from '@/services/productApi';
 import MultipleSelect from '@/components/product/MultipleSelect';
-import SearchIcon from '@mui/icons-material/Search';
+
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import styles from './product.module.css';
+import { debounce } from 'lodash';
 export default function Products(props) {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
@@ -75,29 +78,25 @@ export default function Products(props) {
       setSelectMenus(selectBoxes);
     }
   }, [allProducts]);
-  /**
-   * 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
-   * */
-  const handleSearch = (keyword) => {
+
+  const handleSearchDebounced = debounce((keyword) => {
     keywordProductGetApi(keyword).then((res) => {
       if (res.status === 200) {
-        setAllProducts((prevProducts) => {
-          // 기존의 상태를 복사 -> content를 업데이트
-          return {
-            ...prevProducts,
-            productInfo: {
-              ...prevProducts.productInfo,
-              content: [...res.data.content],
-            },
-          };
-        });
+        setAllProducts((prevProducts) => ({
+          ...prevProducts,
+          productInfo: {
+            ...prevProducts.productInfo,
+            content: [...res.data.content],
+          },
+        }));
       }
     });
-  };
+  }, 500);
+
   /**
    * 필터링 관련 함수
    */
-  const handleFiltering = () => {
+  const handleFiltering = debounce(() => {
     filteringProductGetApi(selectMenuValue).then((res) => {
       if (res.status === 200) {
         setAllProducts((prevProducts) => {
@@ -112,7 +111,7 @@ export default function Products(props) {
         });
       }
     });
-  };
+  }, 200);
   /**
    * selectbox 선택 시, 선택한 selectItem 저장 함수
    */
@@ -129,6 +128,12 @@ export default function Products(props) {
     setSelectMenuValue(updatedValue);
   };
   const productsCss = {
+    mainBox: {
+      bgcolor: 'background.paper',
+      pt: 8,
+      pb: 6,
+      my: 4,
+    },
     gridContent: {
       height: '100%',
       display: 'flex',
@@ -136,7 +141,7 @@ export default function Products(props) {
       justifyContent: 'center',
     },
     contentContainer: {
-      py: 3,
+      // py: 3,
     },
     filteringBox: {
       maxWidth: '100%',
@@ -144,10 +149,12 @@ export default function Products(props) {
     filteringBtn: {
       float: 'right',
       marginTop: 3,
+      fontWeight: 'bold',
     },
     card: {
       padding: 2,
       width: '100%',
+      boxShadow: 2,
     },
     cardTypo: {
       display: 'flex',
@@ -164,13 +171,17 @@ export default function Products(props) {
         {/* main page */}
         <main>
           {/* 페이지 상단 serch box */}
-          <Grid mx="auto" container maxWidth="xl">
-            <MiniCard colorVal="#DEF2FF" shadowVal={3} marginVal={10}>
-              <Typography gutterBottom variant="h5" component="h5" mb={3}>
-                궁금한 차량 조회하기
-              </Typography>
-              <SearchBar onSearch={handleSearch} />
-            </MiniCard>
+          <Grid
+            container
+            mx="auto"
+            maxWidth="xl"
+            justifyContent="center"
+            className={styles.searchGrid}>
+            <Box className={styles.searchBox}>
+              <h5 className={styles.searchTitle}>우차차가 검증한 차량 조회하기</h5>
+              <SearchBar onSearch={handleSearchDebounced} />
+            </Box>
+            {/* <MiniCard colorVal="#FFF" shadowVal={3} marginVal={10}></MiniCard> */}
           </Grid>
           {/* 메인 페이지 content */}
           <Grid container maxWidth="xl" mx="auto" justifyContent="center">
@@ -188,9 +199,12 @@ export default function Products(props) {
                 mb={8}>
                 <Card sx={productsCss.card}>
                   <Typography variant="body1" sx={productsCss.cardTypo}>
-                    우차차에서 내 차 찾기
-                    <SearchIcon color="primary" fontSize="large" />
+                    조건 검색
+                    <Box ml={1}>
+                      <DirectionsCarIcon color="primary" />
+                    </Box>
                   </Typography>
+
                   {selectMenus &&
                     selectMenus.map((item, idx) => {
                       return (
@@ -209,7 +223,7 @@ export default function Products(props) {
                     sx={productsCss.filteringBtn}
                     variant="contained"
                     onClick={handleFiltering}>
-                    필터링 검색
+                    검색
                   </Button>
                 </Card>
               </Grid>
@@ -222,7 +236,7 @@ export default function Products(props) {
                 // mx={8}
                 sx={productsCss.contentContainer}
                 maxWidth="lg">
-                <Grid container spacing={4}>
+                <Grid container spacing={2}>
                   <ProductCard productItems={allProducts.productInfo} />
                 </Grid>
               </Grid>

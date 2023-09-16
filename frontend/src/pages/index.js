@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import {
   responsiveFontSizes,
   ThemeProvider,
-  Button,
   CssBaseline,
   Grid,
   Stack,
@@ -23,7 +22,6 @@ import {
 import styles from './main.module.css';
 import Image from 'next/image';
 import BannerImage from '../../public/assets/images/woochacha-banner01.svg';
-import AdImage from '../../public/assets/images/woochacha-ad01.svg';
 
 const mainFeaturedPost = {
   title: '우차차가 추천하는 금융상품 보러가기',
@@ -206,17 +204,17 @@ export default function Home(props) {
               <Typography component="h2" variant="h3" align="center" gutterBottom>
                 우차차에서
               </Typography>
-              <Typography component="h2" variant="h3" align="center" gutterBottom>
+              <Typography component="h2" variant="h3" align="center">
                 <span className={styles.strongColor}>허위매물 걱정 없는</span>
               </Typography>
-              <Typography component="h2" variant="h3" align="center" gutterBottom>
+              <Typography component="h2" variant="h3" align="center">
                 자동차를 만나보세요
               </Typography>
 
               <br />
 
-              <Typography variant="h5" align="center" my={4} paragraph className={styles.subTitle}>
-                우차차는 안정적으로 거래할 수 있는 중고차 거래 사이트입니다.
+              <Typography variant="h5" align="center" my={2} paragraph className={styles.subTitle}>
+                우차차는 중고차를 안정적으로 거래하실 수 있는 서비스입니다.
               </Typography>
             </Container>
           </Box>

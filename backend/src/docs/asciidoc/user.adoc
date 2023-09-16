@@ -1,0 +1,305 @@
+:toc: left
+:sectlinks:
+:sectnums:
+:docinfo: shared-head
+:toclevels: 2
+:source-highlighter: highlightjs
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= Woochacha User REST API
+
+== 매물
+=== 전체 조회
+==== Http Request
+include::{snippets}/product/get-all/http-request.adoc[]
+
+==== Http Response
+include::{snippets}/product/get-all/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/product/get-all/response-fields.adoc[]
+
+
+=== 상세 조회
+==== Http Request
+include::{snippets}/product/get-detail/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/product/get-detail/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/product/get-detail/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/product/get-detail/response-fields.adoc[]
+
+
+=== 필터링 검색
+==== Http Request
+include::{snippets}/product/filter/http-request.adoc[]
+
+==== Request Fields
+include::{snippets}/product/filter/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/product/filter/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/product/filter/response-fields.adoc[]
+
+
+=== 키워드 검색
+==== Http Request
+include::{snippets}/product/search/http-request.adoc[]
+
+==== Request Fields
+include::{snippets}/product/search/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/product/search/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/product/search/response-fields.adoc[]
+
+
+=== 판매 신청폼 입력
+==== Http Request
+include::{snippets}/product/purchase/http-request.adoc[]
+
+==== Request Fields
+include::{snippets}/product/purchase/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/product/purchase/http-response.adoc[]
+
+==== Response Body
+include::{snippets}/product/purchase/response-body.adoc[]
+
+== 회원
+=== 회원가입
+==== Http Request
+include::{snippets}/users/register//http-request.adoc[]
+
+==== Request Fields
+include::{snippets}/users/register/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/users/register/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/users/register/response-fields.adoc[]
+
+
+=== 로그인
+==== Http Request
+include::{snippets}/users/login//http-request.adoc[]
+
+==== Request Fields
+include::{snippets}/users/login/request-fields.adoc[]
+
+==== Http Response
+include::{snippets}/users/login/http-response.adoc[]
+
+==== Response Headers
+include::{snippets}/users/login/response-headers.adoc[]
+
+==== Response Fields
+include::{snippets}/users/login/response-fields.adoc[]
+
+
+=== 로그아웃
+==== Http Request
+include::{snippets}/users/logout//http-request.adoc[]
+
+==== Request Parameters
+include::{snippets}/users/logout/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/users/logout/http-response.adoc[]
+
+
+=== 회원 탈퇴
+==== Http Request
+include::{snippets}/users/signout/http-request.adoc[]
+
+==== Request Parameters
+include::{snippets}/users/signout/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/users/signout/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/users/signout/response-fields.adoc[]
+
+
+== 마이페이지
+=== 등록한 매물 조회
+==== Http Request
+include::{snippets}/mypage/get-purchase-request/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/get-purchase-request/path-parameters.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/get-purchase-request/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/get-purchase-request/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/mypage/get-purchase-request/response-fields.adoc[]
+
+
+=== 매물 판매 이력 조회
+==== Http Request
+include::{snippets}/mypage/sale-list/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/sale-list/path-parameters.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/sale-list/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/sale-list/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/mypage/sale-list/response-fields.adoc[]
+
+
+=== 매물 구매 이력 조회
+==== Http Request
+include::{snippets}/mypage/purchase-list/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/purchase-list/path-parameters.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/purchase-list/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/purchase-list/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/mypage/purchase-list/response-fields.adoc[]
+
+
+=== 프로필 조회
+==== Http Request
+include::{snippets}/mypage/get-profile/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/get-profile/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/get-profile/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/mypage/get-profile/response-fields.adoc[]
+
+
+=== 작성한 판매 신청폼 조회
+==== Http Request
+include::{snippets}/mypage/get-sale-request/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/get-sale-request/path-parameters.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/get-sale-request/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/get-sale-request/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/mypage/get-sale-request/response-fields.adoc[]
+
+
+=== 작성한 구매 신청폼 조회
+==== Http Request
+include::{snippets}/mypage/get-purchase-request/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/get-purchase-request/path-parameters.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/get-purchase-request/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/get-purchase-request/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/mypage/get-purchase-request/response-fields.adoc[]
+
+
+=== 작성한 상품 수정 신청폼 조회
+==== Http Request
+include::{snippets}/mypage/get-registered-edit/http-request.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/get-registered-edit/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/get-registered-edit/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/mypage/get-registered-edit/response-fields.adoc[]
+
+
+=== 상품 수정 신청폼 제출
+==== Http Request
+include::{snippets}/mypage/patch-registered-edit/http-request.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/patch-registered-edit/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/patch-registered-edit/http-response.adoc[]
+
+
+=== 상품 삭제 요청
+==== Http Request
+include::{snippets}/mypage/patch-registered-delete/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/patch-registered-delete/path-parameters.adoc[]
+
+==== Request Parameters
+include::{snippets}/mypage/patch-registered-delete/request-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/patch-registered-delete/http-response.adoc[]
+
+
+=== 프로필 이미지 조회
+==== Http Request
+include::{snippets}/mypage/get-profile/http-request.adoc[]
+
+==== Path Parameters
+include::{snippets}/mypage/get-profile/path-parameters.adoc[]
+
+==== Http Response
+include::{snippets}/mypage/get-profile/http-response.adoc[]
+
+
+== 매물 판매
+=== 판매 가능한 지점 조회
+==== Http Request
+include::{snippets}/sale/get-branch/http-request.adoc[]
+
+==== Http Response
+include::{snippets}/sale/get-branch/http-response.adoc[]
+
+==== Response Fields
+include::{snippets}/sale/get-branch/response-fields.adoc[]
+
+
+=== 판매 신청
+==== Http Request
+include::{snippets}/sale/submit-form/http-request.adoc[]
+
+==== Http Response
+include::{snippets}/sale/submit-form/http-response.adoc[]
