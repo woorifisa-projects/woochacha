@@ -113,83 +113,12 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         try {
             SaleForm saleForm = saleFormRepository.findById(saleFormId).get();
             String carNum = saleForm.getCarNum();
-            qldbDriver.QldbDriver().execute(txn -> {
-                // QLDB car 테이블 정보 조회
-                Result resultCar = txn.execute(
-                        "SELECT * FROM car AS c WHERE c.car_num=?", ionSys.newString(carNum));
-                IonStruct ionStructCar = (IonStruct) resultCar.iterator().next();
-                carNumQLDB = ((IonString) ionStructCar.get("car_num")).stringValue();
-                ownerNameQLDB = ((IonString) ionStructCar.get("car_owner_name")).stringValue();
-                ownerPhoneQLDB = ((IonString) ionStructCar.get("car_owner_phone")).stringValue();
-                yearQLDB = ((IonInt) ionStructCar.get("car_year")).intValue();
-                distanceQLDB = ((IonInt) ionStructCar.get("car_distance")).intValue();
-                capacityQLDB = ((IonInt) ionStructCar.get("car_capacity")).intValue();
+            getCarOnwerInfo(carNum);
+            getAccidentHistroy(carNum);
+            getExchangeHistory(carNum);
+            getCarInfo(carNum);
+            getCarOption(carNum);
 
-                // QLDB car_accident 테이블의 history 조회를 위한 metaId값 조회
-                String metadataIdCarAccident = qldbService.getMetaIdValue(carNum, "car_accident");
-
-                // QLDB car_accident 테이블의 history 조회
-                Result resultCarAccident = txn.execute(
-                        "SELECT ca.data.accident_type, ca.data.accident_date FROM history(car_accident) AS ca WHERE ca.metadata.id=?", ionSys.newString(metadataIdCarAccident));
-                registerProductAccidentInfos = new ArrayList<>();
-                for (IonValue ionValue : resultCarAccident) {
-                    IonStruct ionStruct = (IonStruct) ionValue;
-
-                    type = ((IonString) ionStruct.get("accident_type")).stringValue();
-                    date = ((IonString) ionStruct.get("accident_date")).stringValue();
-                    RegisterProductAccidentInfo registerProductAccidentInfo = RegisterProductAccidentInfo.builder()
-                            .type(type)
-                            .date(date)
-                            .build();
-                    registerProductAccidentInfos.add(registerProductAccidentInfo);
-                }
-
-                // QLDB car_exchange 테이블의 history 조회를 위한 metaId값 조회
-                String metaIdCarExchange = qldbService.getMetaIdValue(carNum, "car_exchange");
-                LOGGER.info("Exchange"+metaIdCarExchange);
-                LOGGER.info("Accident"+metadataIdCarAccident);
-
-                registerProductExchangeInfos = new ArrayList<>();
-                // QLDB car_exchange 테이블의 history 조회
-                Result resultCarExchange = txn.execute(
-                        "SELECT ce.data.exchange_type, ce.data.exchange_date FROM history(car_exchange) AS ce WHERE ce.metadata.id=?", ionSys.newString(metaIdCarExchange));
-                for (IonValue ionValue : resultCarExchange) {
-                    IonStruct ionStruct = (IonStruct) ionValue;
-
-                    type = ((IonString) ionStruct.get("exchange_type")).stringValue();
-                    date = ((IonString) ionStruct.get("exchange_date")).stringValue();
-                    RegisterProductExchangeInfo registerProductExchangeInfo = RegisterProductExchangeInfo.builder()
-                            .type(type)
-                            .date(date)
-                            .build();
-                    registerProductExchangeInfos.add(registerProductExchangeInfo);
-                }
-
-                // QLDB car_info 테이블 정보 조회
-                Result resultCarInfo = txn.execute(
-                        "SELECT * FROM car_info AS ci WHERE ci.car_num=?", ionSys.newString(carNum));
-                IonStruct ionStructCarInfo = ((IonStruct) resultCarInfo.iterator().next());
-                carFuelQLDB = ((IonString) ionStructCarInfo.get("car_fuel")).stringValue();
-                carTypeQLDB = ((IonString) ionStructCarInfo.get("car_type")).stringValue();
-                carTransmissionQLDB = ((IonString) ionStructCarInfo.get("car_transmission")).stringValue();
-                carColorQLDB = ((IonString) ionStructCarInfo.get("car_color")).stringValue();
-                carModelQLDB = ((IonString) ionStructCarInfo.get("car_model")).stringValue();
-                carNameQLDB = ((IonString) ionStructCarInfo.get("car_name")).stringValue();
-
-                // QLDB car_option 테이블 정보 조회
-                Result resultCarOption = txn.execute(
-                        "SELECT * FROM car_option AS co WHERE co.car_num=?", ionSys.newString(carNum));
-                IonStruct ionStructCarOption = ((IonStruct) resultCarOption.iterator().next());
-                heatSeatQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("heat_seat")).toString());
-                smartKeyQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("smart_key")).toString());
-                blackboxQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("blackbox")).toString());
-                navigationQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("navigation")).toString());
-                airbagQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("airbag")).toString());
-                sunroofQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("sunroof")).toString());
-                highPassQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("high_pass")).toString());
-                // TODO: rearview_camera로 수정. 현재는 QLDB에 cameara로 오타나있음
-                rearviewCameraQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("rearview_cameara")).toString());
-            });
             // TODO: 코드 간략하게 리팩토링
             RegisterProductBasicInfo registerProductBasicInfo = RegisterProductBasicInfo.builder()
                     .title(carModelQLDB + ' ' + carNameQLDB + ' ' + yearQLDB)
@@ -197,6 +126,7 @@ public class RegisterProductServiceImpl implements RegisterProductService {
                     .branch(saleForm.getBranch().getName().name())
                     .carName(carNameQLDB)
                     .build();
+
             RegisterProductDetailInfo registerProductDetailInfo = RegisterProductDetailInfo.builder()
                     .model(carModelQLDB)
                     .color(carColorQLDB)
@@ -206,8 +136,8 @@ public class RegisterProductServiceImpl implements RegisterProductService {
                     .carType(carTypeQLDB)
                     .fuelName(carFuelQLDB)
                     .transmissionName(carTransmissionQLDB)
-                    .produdctAccidentInfoList((List) registerProductAccidentInfos)
-                    .productExchangeInfoList((List) registerProductExchangeInfos)
+                    .produdctAccidentInfoList(registerProductAccidentInfos)
+                    .productExchangeInfoList(registerProductExchangeInfos)
                     .build();
 
             List<RegisterProductOptionInfo> options = new ArrayList<>();
@@ -232,6 +162,105 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         }
     }
 
+    private void getCarOnwerInfo(String carNum){
+        qldbDriver.QldbDriver().execute(txn -> {
+            // QLDB car 테이블 정보 조회
+            Result resultCar = txn.execute(
+                    "SELECT * FROM car AS c WHERE c.car_num=?", ionSys.newString(carNum));
+            IonStruct ionStructCar = (IonStruct) resultCar.iterator().next();
+            carNumQLDB = ((IonString) ionStructCar.get("car_num")).stringValue();
+            ownerNameQLDB = ((IonString) ionStructCar.get("car_owner_name")).stringValue();
+            ownerPhoneQLDB = ((IonString) ionStructCar.get("car_owner_phone")).stringValue();
+            yearQLDB = ((IonInt) ionStructCar.get("car_year")).intValue();
+            distanceQLDB = ((IonInt) ionStructCar.get("car_distance")).intValue();
+            capacityQLDB = ((IonInt) ionStructCar.get("car_capacity")).intValue();
+        });
+    }
+
+    // QLDB car_accident 테이블의 metaId 값을 통해 history 조회
+    private void getAccidentHistroy(String carNum){
+        qldbDriver.QldbDriver().execute(txn -> {
+            // QLDB car_accident 테이블의 history 조회를 위한 metaId값 조회
+            String metadataIdCarAccident = qldbService.getMetaIdValue(carNum, "car_accident");
+            LOGGER.info("Accident"+metadataIdCarAccident);
+
+            // QLDB car_accident 테이블의 history 조회
+            Result resultCarAccident = txn.execute(
+                    "SELECT ca.data.accident_type, ca.data.accident_date FROM history(car_accident) AS ca WHERE ca.metadata.id=?", ionSys.newString(metadataIdCarAccident));
+            registerProductAccidentInfos = new ArrayList<>();
+            for (IonValue ionValue : resultCarAccident) {
+                IonStruct ionStruct = (IonStruct) ionValue;
+
+                type = ((IonString) ionStruct.get("accident_type")).stringValue();
+                date = ((IonString) ionStruct.get("accident_date")).stringValue();
+                RegisterProductAccidentInfo registerProductAccidentInfo = RegisterProductAccidentInfo.builder()
+                        .type(type)
+                        .date(date)
+                        .build();
+                registerProductAccidentInfos.add(registerProductAccidentInfo);
+            }
+        });
+    }
+    // QLDB car_exchange 테이블의 metaId값을 통해 history 조회
+    private void getExchangeHistory(String carNum){
+        // QLDB car_exchange 테이블의 history 조회를 위한 metaId값 조회
+        qldbDriver.QldbDriver().execute(txn -> {
+            String metaIdCarExchange = qldbService.getMetaIdValue(carNum, "car_exchange");
+            LOGGER.info("Exchange" + metaIdCarExchange);
+
+            registerProductExchangeInfos = new ArrayList<>();
+            // QLDB car_exchange 테이블의 history 조회
+            Result resultCarExchange = txn.execute(
+                    "SELECT ce.data.exchange_type, ce.data.exchange_date FROM history(car_exchange) AS ce WHERE ce.metadata.id=?", ionSys.newString(metaIdCarExchange));
+            for (IonValue ionValue : resultCarExchange) {
+                IonStruct ionStruct = (IonStruct) ionValue;
+
+                type = ((IonString) ionStruct.get("exchange_type")).stringValue();
+                date = ((IonString) ionStruct.get("exchange_date")).stringValue();
+                RegisterProductExchangeInfo registerProductExchangeInfo = RegisterProductExchangeInfo.builder()
+                        .type(type)
+                        .date(date)
+                        .build();
+                registerProductExchangeInfos.add(registerProductExchangeInfo);
+            }
+        });
+    }
+
+    // car_info의 데이터를 조회한다(차량 기본 정보)
+    private void getCarInfo(String carNum){
+        qldbDriver.QldbDriver().execute(txn -> {
+            Result resultCarInfo = txn.execute(
+                    "SELECT * FROM car_info AS ci WHERE ci.car_num=?", ionSys.newString(carNum));
+            IonStruct ionStructCarInfo = ((IonStruct) resultCarInfo.iterator().next());
+            carFuelQLDB = ((IonString) ionStructCarInfo.get("car_fuel")).stringValue();
+            carTypeQLDB = ((IonString) ionStructCarInfo.get("car_type")).stringValue();
+            carTransmissionQLDB = ((IonString) ionStructCarInfo.get("car_transmission")).stringValue();
+            carColorQLDB = ((IonString) ionStructCarInfo.get("car_color")).stringValue();
+            carModelQLDB = ((IonString) ionStructCarInfo.get("car_model")).stringValue();
+            carNameQLDB = ((IonString) ionStructCarInfo.get("car_name")).stringValue();
+        });
+    }
+
+    // car_option의 데이터를 조회한다.(차량 옵션)
+    private void getCarOption(String carNum){
+        qldbDriver.QldbDriver().execute(txn -> {
+            // QLDB car_option 테이블 정보 조회
+            Result resultCarOption = txn.execute(
+                    "SELECT * FROM car_option AS co WHERE co.car_num=?", ionSys.newString(carNum));
+            IonStruct ionStructCarOption = ((IonStruct) resultCarOption.iterator().next());
+            heatSeatQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("heat_seat")).toString());
+            smartKeyQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("smart_key")).toString());
+            blackboxQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("blackbox")).toString());
+            navigationQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("navigation")).toString());
+            airbagQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("airbag")).toString());
+            sunroofQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("sunroof")).toString());
+            highPassQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("high_pass")).toString());
+            // TODO: rearview_camera로 수정. 현재는 QLDB에 cameara로 오타나있음
+            rearviewCameraQLDB = Boolean.parseBoolean(((IonBool) ionStructCarOption.get("rearview_cameara")).toString());
+        });
+    }
+
+
     // 관리자가 매물 등로 시 사용되는 메서드
     // QLDB에서 조회한 데이터, 입력받은 차량 가격과 이미지를 RDS 테이블 형식에 맞춰 변환해 저장 (매물 등록)
     @Transactional
@@ -239,12 +268,21 @@ public class RegisterProductServiceImpl implements RegisterProductService {
     public void registerProduct(Long saleFormId, RegisterInputDto registerInputDto) throws IOException, ParseException {
         RegisterProductDto registerProductDto = getRegisterProductInfo(saleFormId); // QLDB 데이터 조회
         registerInputDto.setCarNum(registerProductDto.getRegisterProductBasicInfo().getCarNum());
-        Integer price = registerInputDto.getPrice();
+        saveCarName(registerProductDto);
+        saveCarModel(registerProductDto);
+        saveCarDetail(registerProductDto);
+        saveCarBasicInfo(registerInputDto,saleFormId,registerProductDto);
+        saveCarOption(registerProductDto, saleFormId);
+        saveCarAccidentInfo(registerProductDto);
+        saveCarExchangeInfo(registerProductDto);
 
-        // RDS에 저장할 DTO객체 만들기
-        SaleForm saleForm = saleFormRepository.findById(saleFormId).get();
+        // 사용자가 업로드한 차량 이미지 RDS에 저장
+        amazonS3Service.uploadProductImage(registerInputDto);
+        logger.debug("carNum:{} 차량 이미지 업로드", carNumQLDB);
 
-        // QLDB에서 조회한 car_name이 RDS의 car_name 테이블에 없으면 insert 하기
+    }
+    // QLDB에서 조회한 car_name이 RDS의 car_name 테이블에 없으면 insert 하기
+    private void saveCarName(RegisterProductDto registerProductDto){
         if (carNameRepository.findByName(registerProductDto.getRegisterProductBasicInfo().getCarName()) == null) {
             CarName carName = CarName.builder()
                     .name(registerProductDto.getRegisterProductBasicInfo().getCarName())
@@ -252,8 +290,10 @@ public class RegisterProductServiceImpl implements RegisterProductService {
             carNameRepository.save(carName);
             logger.debug("새로운 차량 이름 RDS에 등록 carName:{}", carNameQLDB);
         }
+    }
 
-        // QLDB에서 조회한 model이 RDS의 model 테이블에 없으면 insert 하기
+    // QLDB에서 조회한 model이 RDS의 model 테이블에 없으면 insert 하기
+    private void saveCarModel(RegisterProductDto registerProductDto){
         if (modelRepository.findByName(ModelList.valueOf(registerProductDto.getRegisterProductDetailInfo().getModel())) == null) {
             Model model = Model.builder()
                     .name(ModelList.valueOf(registerProductDto.getRegisterProductDetailInfo().getModel()))
@@ -261,8 +301,10 @@ public class RegisterProductServiceImpl implements RegisterProductService {
             modelRepository.save(model);
             logger.debug("새로운 차량 모델 RDS에 등록 model:{}", carModelQLDB);
         }
+    }
 
-        // QLDB에서 조회한 데이터를 RDS 테이블 형식에 맞춰 Dto 객체 만들기
+    // QLDB에서 조회한 데이터를 CarDetail에 저장
+    private void saveCarDetail(RegisterProductDto registerProductDto){
         CarDetail carDetail = CarDetail.builder()
                 .carNum(registerProductDto.getRegisterProductBasicInfo().getCarNum())
                 .owner(saleForm.getMember().getName())
@@ -279,7 +321,9 @@ public class RegisterProductServiceImpl implements RegisterProductService {
                 .build();
         // 만들어진 Dto 객체 RDS에 insert
         carDetailRepository.save(carDetail);
-
+    }
+    // QLDB에서 불러온 내용에 대해 product에 저장
+    private void saveCarBasicInfo(RegisterInputDto registerInputDto, Long saleFormId, RegisterProductDto registerProductDto){
         Product product = Product.builder()
                 .saleForm(saleFormRepository.findById(saleFormId).get())
                 .price(registerInputDto.getPrice())
@@ -289,11 +333,9 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         // 만들어진 Dto 객체 RDS에 insert
         productRepository.save(product);
         logger.debug("saleFormId:{}에 대한 차량 기본 정보 RDS에 저장", saleFormId);
-
-        // 사용자가 업로드한 차량 이미지 RDS에 저장
-        boolean isRegistered = amazonS3Service.uploadProductImage(registerInputDto);
-        logger.debug("carNum:{} 차량 이미지 업로드", carNumQLDB);
-
+    }
+    // QLDB에서 불러온 내용을 차량 옵션에 저장
+    private void saveCarOption(RegisterProductDto registerProductDto, Long saleFormId){
         CarOption carOption = CarOption.builder()
                 .carDetail(carDetailRepository.findById(registerProductDto.getRegisterProductBasicInfo().getCarNum()).get())
                 .heatedSeat(registerProductDto.getRegisterProductOptionInfos().get(0).getWhether())
@@ -308,7 +350,9 @@ public class RegisterProductServiceImpl implements RegisterProductService {
         // 만들어진 Dto 객체 RDS에 insert
         carOptionRepository.save(carOption);
         logger.debug("saleFormId:{}에 대한 차량 옵션 정보 RDS에 저장", saleFormId);
-
+    }
+    //QLDB에서 불러온 내용을 차량 사고 이력에 저장
+    private void saveCarAccidentInfo(RegisterProductDto registerProductDto){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
         if ("".equals(registerProductDto.getRegisterProductDetailInfo().getProdudctAccidentInfoList())) {
             return;
@@ -333,7 +377,10 @@ public class RegisterProductServiceImpl implements RegisterProductService {
                 }
             }
         }
-
+    }
+    // QLDB에서 불러온 내용을 차량 교체 이력에 저장
+    private void saveCarExchangeInfo(RegisterProductDto registerProductDto) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
         for (int i = 0; i < registerProductDto.getRegisterProductDetailInfo().getProductExchangeInfoList().size(); i++) {
             Date date = formatter.parse(registerProductDto.getRegisterProductDetailInfo().getProductExchangeInfoList().get(i).getDate());
             CarExchangeInfo carExchangeInfo = CarExchangeInfo.builder()
