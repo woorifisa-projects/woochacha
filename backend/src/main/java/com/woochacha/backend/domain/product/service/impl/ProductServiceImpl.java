@@ -377,9 +377,12 @@ public class ProductServiceImpl implements ProductService {
             // 자신이 등록한 매물에 대해 구매신청을 하는 경우 예외처리
             throw new SellerBuyerSamePurchaseRequest();
         }
-        purchaseFormRepository.save(purchaseForm);
-        logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/detail/" + productPurchaseRequestDto.getProductId());
-        logger.info("pruchaseFormId:{} memberId:{} 구매 신청", productPurchaseRequestDto.getProductId(), productPurchaseRequestDto.getMemberId());
+        else{
+            purchaseFormRepository.save(purchaseForm);
+            logService.savedMemberLogWithTypeAndEtc(productPurchaseRequestDto.getMemberId(), "구매 신청", "/product/detail/" + productPurchaseRequestDto.getProductId());
+            logger.info("pruchaseFormId:{} memberId:{} 구매 신청", productPurchaseRequestDto.getProductId(), productPurchaseRequestDto.getMemberId());
+
+        }
     }
 
     @Override

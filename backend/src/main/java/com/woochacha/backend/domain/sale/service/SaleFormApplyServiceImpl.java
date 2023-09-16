@@ -10,6 +10,7 @@ import com.woochacha.backend.domain.qldb.service.QldbService;
 import com.woochacha.backend.domain.sale.dto.BranchDto;
 import com.woochacha.backend.domain.sale.entity.Branch;
 import com.woochacha.backend.domain.sale.entity.SaleForm;
+import com.woochacha.backend.domain.sale.exception.AlreadySubmitSaleForm;
 import com.woochacha.backend.domain.sale.repository.BranchRepository;
 import com.woochacha.backend.domain.sale.repository.SaleFormRepository;
 import com.woochacha.backend.domain.status.entity.CarStatus;
@@ -58,32 +59,39 @@ public class SaleFormApplyServiceImpl implements SaleFormApplyService{
         int countAccident;
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
-        String memberName = member.getName();
-        String memberPhone = member.getPhone();
-        Pair<String, String> ownerInfo = qldbService.getCarOwnerInfo(carNum);
-        String historyId = qldbService.getMetaIdValue(carNum, "car_accident");
-        if(historyId.isEmpty()){
-            countAccident = 0;
-        }else {
-            countAccident = qldbService.accidentHistoryInfo(historyId, "전손침수");
-        }
-        String owner = ownerInfo.getFirst();
-        String ownerPhone = ownerInfo.getSecond();
-        int checkCar = productRepository.checkCarNum(carNum, (short) 4);
-        if(memberName.equals(owner) && memberPhone.equals(ownerPhone) && countAccident == 0 && checkCar == 0){
-            saveSaleForm(carNum, memberId, branchId);
-            logService.savedMemberLogWithType(memberId, "판매 신청폼 제출");
-            return "차량 판매 신청이 성공적으로 완료되었습니다.";
-        } else if (!memberName.equals(owner)) {
-            return "차량 소유주가 일치하지 않습니다.";
-        } else if (!memberPhone.equals(ownerPhone)) {
-            return "차량 소유주가 일치하지 않습니다.";
-        } else if (countAccident != 0) {
-            return "침수사고가 존재하는 차량입니다.";
-        } else if (checkCar !=0){
-            return "이미 등록된 차량입니다.";
-        } else{
-            return "차량 조회 오류입니다";
+
+        // 이미 판매신청 한 차량인지 검증
+        if (saleFormRepository.registeredCarNumLen(memberId, carNum) > 0) {
+            // 이미 판매신청 한 차량이라면
+            throw new AlreadySubmitSaleForm();
+        }else{
+            String memberName = member.getName();
+            String memberPhone = member.getPhone();
+            Pair<String, String> ownerInfo = qldbService.getCarOwnerInfo(carNum);
+            String historyId = qldbService.getMetaIdValue(carNum, "car_accident");
+            if(historyId.isEmpty()){
+                countAccident = 0;
+            }else {
+                countAccident = qldbService.accidentHistoryInfo(historyId, "전손침수");
+            }
+            String owner = ownerInfo.getFirst();
+            String ownerPhone = ownerInfo.getSecond();
+            int checkCar = productRepository.checkCarNum(carNum, (short) 4);
+            if(memberName.equals(owner) && memberPhone.equals(ownerPhone) && countAccident == 0 && checkCar == 0){
+                saveSaleForm(carNum, memberId, branchId);
+                logService.savedMemberLogWithType(memberId, "판매 신청폼 제출");
+                return "차량 판매 신청이 성공적으로 완료되었습니다.";
+            } else if (!memberName.equals(owner)) {
+                return "차량 소유주가 일치하지 않습니다.";
+            } else if (!memberPhone.equals(ownerPhone)) {
+                return "차량 소유주가 일치하지 않습니다.";
+            } else if (countAccident != 0) {
+                return "침수사고가 존재하는 차량입니다.";
+            } else if (checkCar !=0){
+                return "이미 등록된 차량입니다.";
+            } else{
+                return "차량 조회 오류입니다";
+            }
         }
     }
 
