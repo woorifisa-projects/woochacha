@@ -109,10 +109,10 @@ export const loginApi = async (loginData, setUserLoginState, router) => {
         timer: 1500,
       });
       router.push('/');
+      return 'success';
     }
 
     if (!loginToken || response.data.code !== 1) {
-      console.log(response.data.code);
       if (response.data.code === 2) {
         Swal.fire({
           icon: 'error',
