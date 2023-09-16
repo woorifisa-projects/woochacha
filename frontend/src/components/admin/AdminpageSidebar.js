@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, Container, ListItemText, MenuItem, MenuList, Paper } from '@mui/material';
 import { HEADER_ADMIN_MINI_MENU } from '@/constants/string';
 import { useRouter } from 'next/router';
+import { debounce } from 'lodash';
 
 export default function AdminpageSidebar() {
   const router = useRouter();
@@ -50,9 +51,9 @@ export default function AdminpageSidebar() {
     });
   }, []);
 
-  const handleMove = (url) => {
+  const handleMove = debounce((url) => {
     router.push(url);
-  };
+  }, 300);
 
   return (
     <Container sx={myPageSidebarCss.container}>
