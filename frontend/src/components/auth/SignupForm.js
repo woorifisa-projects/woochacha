@@ -207,9 +207,6 @@ export default function SignupForm() {
       setClickSubmit((prev) => !prev);
       signupApi(newSignupData, setUserLoginState, router);
     } else {
-      console.log(formValid);
-      console.log(successMessage);
-      console.log(newSignupData);
       Swal.fire({
         icon: 'error',
         title: `회원가입 실패!`,
