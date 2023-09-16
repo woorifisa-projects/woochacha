@@ -23,11 +23,19 @@ import { ADMIN_APPROVE_MODAL } from '@/constants/string';
 import OneButtonModal from '@/components/common/OneButtonModal';
 import { oneApproveFormGetApi, oneApproveFormPatchApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminSalesApproveForm(props) {
   const [mounted, setMounted] = useState(false);
   const [approveSaleForm, setApproveSaleForm] = useState(); // 기존 qldb 값
   const [defaultDistance, setDefaultDistance] = useState(); // 기존 주행거리(유효성 검사용)
+  const [isSubmitting, setIsSubmitting] = useState(false); // 중복 요청 방지를 위한 상태
+  const [accidentDateValid, setAccidentDateValid] = useState(true); // 교통사고 선택 시, 날짜 필수값
+  const [exchangeDateValid, setExchangeDateValid] = useState(true); // 교체 선택 시, 날짜 필수값
+  const [accidentSelected, setAccidentSelected] = useState(false); // 사고 select 선택 시, 유효성 검사 조건
+  const [exchangeSelected, setExchangeSelected] = useState(false); // 교체 select 선택 시, 유효성 검사 조건
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // 현재 날짜의 자정
 
   const router = useRouter();
   const { saleformId } = props;
@@ -53,6 +61,23 @@ function AdminSalesApproveForm(props) {
   let responsiveFontTheme = responsiveFontSizes(theme);
 
   /**
+   * 유효성 검사
+   */
+  const isAccidentValid = () => {
+    return (
+      (accidentVal.accidentType === '교통사고' || accidentVal.accidentType === '침수사고') &&
+      accidentVal.accidentDesc.trim() !== ''
+    );
+  };
+
+  /**
+   * 유효성 검사 - 교체이력 값 여부 확인
+   */
+  const isExchangeValid = () => {
+    return exchangeVal.exchangeType !== '' && exchangeVal.exchangeDesc.trim() !== '';
+  };
+
+  /**
    * 승인 modal 창 열기 전, 주행거리 확인
    */
   const handleOpenModal = () => {
@@ -69,39 +94,72 @@ function AdminSalesApproveForm(props) {
    * 승인 요청
    */
   const handleSubmit = () => {
+    if (isSubmitting) {
+      // 이미 요청 중이면 무시
+      return;
+    }
+
+    if (accidentSelected && !isAccidentValid()) {
+      // 사고 정보를 선택했을 때, 사고 정보 유효성 검사 실패 시 사용자에게 메시지 표시
+      SwalModals('error', '입력 오류', '사고 정보를 올바르게 입력해주세요.', false);
+      return;
+    }
+
+    if (exchangeSelected && !isExchangeValid()) {
+      // 교체 정보를 선택했을 때, 교체 정보 유효성 검사 실패 시 사용자에게 메시지 표시
+      SwalModals('error', '입력 오류', '교체 정보를 올바르게 입력해주세요.', false);
+      return;
+    }
+
+    // 버튼 클릭 후 요청이 시작됐음을 표시
+    setIsSubmitting(true);
+
     const newApproveData = {
       distance: approveSaleForm.carDistance,
-      carAccidentInfoDto: {
-        accidentType: accidentVal.accidentType,
-        accidentDesc: accidentVal.accidentDesc,
-        accidentDate: accidentVal.accidentDate,
-      },
-      carExchangeInfoDtoList: {
-        exchangeType: exchangeVal.exchangeType,
-        exchangeDesc: exchangeVal.exchangeDesc,
-        exchangeDate: exchangeVal.exchangeDate,
-      },
+      carAccidentInfoDto: accidentSelected
+        ? {
+            accidentType: accidentVal.accidentType,
+            accidentDesc: accidentVal.accidentDesc,
+            accidentDate: accidentVal.accidentDate,
+          }
+        : null, // 사고 정보를 선택하지 않았을 경우 null로 설정
+      carExchangeInfoDtoList: exchangeSelected
+        ? {
+            exchangeType: exchangeVal.exchangeType,
+            exchangeDesc: exchangeVal.exchangeDesc,
+            exchangeDate: exchangeVal.exchangeDate,
+          }
+        : null, // 교체 정보를 선택하지 않았을 경우 null로 설정
     };
 
-    console.log(newApproveData);
-
-    oneApproveFormPatchApi(saleformId, newApproveData).then((res) => {
-      console.log(res);
-      if (res.status === 200 && res.data === true) {
-        SwalModals(
-          'success',
-          '점검 정보 승인',
-          '점검 정보가 승인되었습니다. 차량 게시글을 등록으로 이동합니다.',
-          false,
-        );
-        router.replace(`/admin/sales/register/${saleformId}`);
-        return;
-      }
-      if (res.status === 200 && res.data === false) {
-        SwalModals('error', '점검 정보 승인 오류', '잘못된 요청입니다. 다시 확인해주세요.', false);
-        return;
-      }
-    });
+    oneApproveFormPatchApi(saleformId, newApproveData)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200 && res.data === true) {
+          // 승인이 성공적으로 완료된 경우
+          SwalModals(
+            'success',
+            '점검 정보 승인',
+            '점검 정보가 승인되었습니다. 차량 게시글을 등록으로 이동합니다.',
+            false,
+          );
+          router.replace(`/admin/sales/register/${saleformId}`);
+          return;
+        }
+        if (res.status === 200 && res.data === false) {
+          SwalModals(
+            'error',
+            '점검 정보 승인 오류',
+            '잘못된 요청입니다. 다시 확인해주세요.',
+            false,
+          );
+          return;
+        }
+      })
+      .finally(() => {
+        // 요청이 완료되면 버튼 활성화
+        setIsSubmitting(false);
+      });
   };
 
   // [교체] select box func
@@ -110,6 +168,16 @@ function AdminSalesApproveForm(props) {
       ...exchangeVal,
       exchangeType: e.target.value,
     });
+    setExchangeSelected(true); // 교체부위가 선택되었다고 표시
+
+    // 교체부위 select box의 값이 없으면 교체사유와 date input을 비활성화
+    if (!e.target.value) {
+      setExchangeVal({
+        ...exchangeVal,
+        exchangeDesc: '', // 교체사유 초기화
+        exchangeDate: '', // 교체 date 초기화
+      });
+    }
   };
 
   // [교체] input box func
@@ -122,10 +190,27 @@ function AdminSalesApproveForm(props) {
 
   // [교체] date box func
   const handleExchangeDateChange = (e) => {
-    setExchangeVal({
-      ...exchangeVal,
-      exchangeDate: e.target.value,
-    });
+    const selectedDate = e.target.value;
+    const isValid = new Date(selectedDate) <= today;
+
+    if (!isValid) {
+      // 미래 날짜가 선택되면 경고 메시지 표시
+      SwalModals('error', '입력 오류', '미래 날짜는 선택할 수 없습니다.', false);
+
+      // 날짜를 오늘 날짜로 초기화
+      const formattedToday = today.toISOString().split('T')[0];
+      e.target.value = formattedToday; // 선택한 날짜를 오늘 날짜로 변경
+      setExchangeVal({
+        ...exchangeVal,
+        exchangeDate: formattedToday,
+      });
+    } else {
+      setExchangeVal({
+        ...exchangeVal,
+        exchangeDate: selectedDate,
+      });
+      setExchangeDateValid(isValid);
+    }
   };
 
   // [사고유형] select box func
@@ -134,6 +219,16 @@ function AdminSalesApproveForm(props) {
       ...accidentVal,
       accidentType: e.target.value,
     });
+    setAccidentSelected(true); // 사고유형이 선택되었다고 표시
+
+    // 사고부위 select box의 값이 없으면 사고유형 desc와 date input을 비활성화
+    if (!e.target.value) {
+      setAccidentVal({
+        ...accidentVal,
+        accidentDesc: '', // 사고유형 desc 초기화
+        accidentDate: '', // 사고유형 date 초기화
+      });
+    }
   };
 
   // [사고유형] input box func
@@ -148,10 +243,27 @@ function AdminSalesApproveForm(props) {
 
   // [사고유형] date box func
   const handleAccidentDateChange = (e) => {
-    setAccidentVal({
-      ...accidentVal,
-      accidentDate: e.target.value,
-    });
+    const selectedDate = e.target.value;
+    const isValid = new Date(selectedDate) <= today;
+
+    if (!isValid) {
+      // 미래 날짜가 선택되면 경고 메시지 표시
+      SwalModals('error', '입력 오류', '미래 날짜는 선택할 수 없습니다.', false);
+
+      // 날짜를 오늘 날짜로 초기화
+      const formattedToday = today.toISOString().split('T')[0];
+      e.target.value = formattedToday; // 선택한 날짜를 오늘 날짜로 변경
+      setAccidentVal({
+        ...accidentVal,
+        accidentDate: formattedToday,
+      });
+    } else {
+      setAccidentVal({
+        ...accidentVal,
+        accidentDate: selectedDate,
+      });
+      setAccidentDateValid(isValid);
+    }
   };
 
   // [주행거리] 주행거리 수정
@@ -308,6 +420,7 @@ function AdminSalesApproveForm(props) {
                     id="accidentDesc"
                     onChange={handleAccidentDescChange}
                     label="사고 이력을 입력해주세요."
+                    disabled={!accidentSelected || !accidentVal.accidentType}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -320,6 +433,7 @@ function AdminSalesApproveForm(props) {
                     id="carAccidentDate"
                     type="date"
                     onChange={handleAccidentDateChange}
+                    disabled={!accidentSelected || !accidentVal.accidentType}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -352,6 +466,7 @@ function AdminSalesApproveForm(props) {
                     label="교체 사유를 입력해주세요."
                     onChange={handleExchangeDescChange}
                     id="exchangeDesc"
+                    disabled={!exchangeSelected || !exchangeVal.exchangeType}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -364,11 +479,27 @@ function AdminSalesApproveForm(props) {
                     id="exchangeDate"
                     type="date"
                     onChange={handleExchangeDateChange}
+                    disabled={!exchangeSelected || !exchangeVal.exchangeType}
                   />
                 </Grid>
               </Grid>
               <Grid sx={saleApproveFormCss.submitBtn}>
-                <Button size="large" type="submit" variant="contained" onClick={handleOpenModal}>
+                <Button
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={handleOpenModal}
+                  disabled={
+                    isSubmitting ||
+                    (accidentSelected &&
+                      (!accidentVal.accidentType ||
+                        !accidentVal.accidentDesc ||
+                        !accidentVal.accidentDate)) ||
+                    (exchangeSelected &&
+                      (!exchangeVal.exchangeType ||
+                        !exchangeVal.exchangeDesc ||
+                        !exchangeVal.exchangeDate))
+                  }>
                   승인 신청
                 </Button>
               </Grid>
@@ -425,10 +556,7 @@ function AdminSalesApproveForm(props) {
       )}
     </ThemeProvider>
   ) : (
-    <>
-      {/* TODO: 데이터 로딩 component 보여주기 */}
-      <Typography>데이터 로딩중...</Typography>
-    </>
+    <LoadingBar />
   );
 }
 
