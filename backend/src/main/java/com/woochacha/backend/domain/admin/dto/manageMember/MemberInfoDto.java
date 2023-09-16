@@ -2,11 +2,13 @@ package com.woochacha.backend.domain.admin.dto.manageMember;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@Setter
 public class MemberInfoDto {
     private Byte isAvailable;
     private String name;

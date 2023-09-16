@@ -12,6 +12,10 @@ export default function ApproveModal(props) {
   const [mounted, setMounted] = useState(false);
   const { onClickModal, isOpen, modalContent, callBackOneFunc, callBackTwoFunc, children } = props;
 
+  const handleClickBg = () => {
+    onClickModal(false);
+  };
+
   const handleClickNo = () => {
     onClickModal(false);
     callBackTwoFunc(); // 반려 콜백함수 실행
@@ -33,7 +37,7 @@ export default function ApproveModal(props) {
           maxWidth="sm"
           fullWidth
           open={isOpen}
-          onClose={handleClickNo}
+          onClose={handleClickBg}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description">
           <DialogTitle id="alert-dialog-title">{modalContent.modalTitle}</DialogTitle>

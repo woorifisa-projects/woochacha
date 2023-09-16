@@ -23,6 +23,7 @@ import styles from './DefaultHeader.module.css';
 import Image from 'next/image';
 
 import LogoImage from '../../public/assets/images/logo.png';
+import { debounce } from 'lodash';
 
 function DefaultHeader() {
   const [mounted, setMounted] = useState(false);
@@ -35,10 +36,10 @@ function DefaultHeader() {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleCloseNavMenu = (url) => {
+  const handleCloseNavMenu = debounce((url) => {
     router.push(url);
     setAnchorElNav(null);
-  };
+  }, 300);
 
   useEffect(() => {
     setMounted(true);

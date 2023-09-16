@@ -28,6 +28,8 @@ import software.amazon.qldb.Result;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.slf4j.LoggerFactory;
 
 @Service
@@ -38,7 +40,6 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
     private final JPAQueryFactory jpaQueryFactory;
     private final QldbConfig qldbDriver;
     private final IonSystem ionSys = IonSystemBuilder.standard().build();
-    private CarInspectionInfoResponseDto carInspectionInfoResponseDto;
     private int carDistance;
     private final SaleFormRepository saleFormRepository;
     private final ExchangeTypeRepository exchangeTypeRepository;
@@ -89,63 +90,85 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         String exchangeMetaId = qldbService.getMetaIdValue(carNum, "car_exchange");
         logger.debug("get car_exchange metaIdValue from QLDB={}", exchangeMetaId);
 
-        List<CarAccidentInfoDto> accidentInfoDtoList = new ArrayList<>();
-        List<CarExchangeInfoDto> exchangeInfoDtoList = new ArrayList<>();
         try {
-            qldbDriver.QldbDriver().execute(txn -> {
-                Result accidentResult = txn.execute(
-                        "SELECT ca.data.accident_type, ca.data.accident_desc, ca.data.accident_date " +
-                                "FROM history(car_accident) AS ca " +
-                                "WHERE ca.metadata.id=?",
-                        ionSys.newString(accidentMetaId));
-                for (IonValue ionValue : accidentResult) {
-                    IonStruct ionStruct = (IonStruct) ionValue;
-                    CarAccidentInfoDto accidentInfoDto = CarAccidentInfoDto.builder()
-                            .accidentType(((IonString) ionStruct.get("accident_type")).stringValue())
-                            .accidentDesc(((IonString) ionStruct.get("accident_desc")).stringValue())
-                            .accidentDate(((IonString) ionStruct.get("accident_date")).stringValue())
-                            .build();
-                    accidentInfoDtoList.add(accidentInfoDto);
-                }
-                logger.debug("get accident history from QLDB ={}", accidentResult);
-                Result exchangeResult = txn.execute(
-                        "SELECT ce.data.exchange_type, ce.data.exchange_desc, ce.data.exchange_date " +
-                                "FROM history(car_exchange) AS ce " +
-                                "WHERE ce.metadata.id=?",
-                        ionSys.newString(exchangeMetaId));
-                for (IonValue ionValue : exchangeResult) {
-                    IonStruct ionStruct = (IonStruct) ionValue;
-                    CarExchangeInfoDto exchangeInfoDto = CarExchangeInfoDto.builder()
-                            .exchangeType(((IonString) ionStruct.get("exchange_type")).stringValue())
-                            .exchangeDesc(((IonString) ionStruct.get("exchange_desc")).stringValue())
-                            .exchangeDate(((IonString) ionStruct.get("exchange_date")).stringValue())
-                            .build();
-                    exchangeInfoDtoList.add(exchangeInfoDto);
-                }
-                logger.debug("get exchange history from QLDB ={}", exchangeResult);
-
-                Result resultCarInfo = txn.execute(
-                        "SELECT r.car_owner_name, r.car_owner_phone, r.car_distance FROM car AS r WHERE r.car_num=?", ionSys.newString(carNum));
-                IonStruct ionStruct = (IonStruct) resultCarInfo.iterator().next();
-                List<ExchangeType> exchangeTypeList = exchangeTypeRepository.findAll();
-                carInspectionInfoResponseDto = CarInspectionInfoResponseDto.builder()
-                        .carNum(carNum)
-                        .carOwnerName(((IonString) ionStruct.get("car_owner_name")).stringValue())
-                        .carOwnerPhone(((IonString) ionStruct.get("car_owner_phone")).stringValue())
-                        .carDistance(((IonInt) ionStruct.get("car_distance")).intValue())
-                        .carAccidentInfoDtoList(accidentInfoDtoList)
-                        .carExchangeInfoDtoList(exchangeInfoDtoList)
-                        .exchangeTypeList(exchangeTypeList)
-                        .build();
-                logger.debug("get carInspectionInfo={}", carInspectionInfoResponseDto);
-            });
-            return carInspectionInfoResponseDto;
+            List<CarAccidentInfoDto> accidentInfoDtoList = accidentHistory(accidentMetaId);
+            List<CarExchangeInfoDto> exchangeInfoDtoList = exchangeHistory(exchangeMetaId);
+            return carInfoHistory(carNum, accidentInfoDtoList,exchangeInfoDtoList);
         } catch (Exception e) {
             logger.error("QLDB로부터 차량조회 중 에러 발생");
             throw new CrudDataFromQLDBError();
         }
     }
 
+    //차량의 사고 내역 조회
+    private List<CarAccidentInfoDto> accidentHistory(String accidentMetaId){
+        List<CarAccidentInfoDto> accidentInfoDtoList = new ArrayList<>();
+        qldbDriver.QldbDriver().execute(txn -> {
+            Result accidentResult = txn.execute(
+                    "SELECT ca.data.accident_type, ca.data.accident_desc, ca.data.accident_date " +
+                            "FROM history(car_accident) AS ca " +
+                            "WHERE ca.metadata.id=?",
+                    ionSys.newString(accidentMetaId));
+            for (IonValue ionValue : accidentResult) {
+                IonStruct ionStruct = (IonStruct) ionValue;
+                CarAccidentInfoDto accidentInfoDto = CarAccidentInfoDto.builder()
+                        .accidentType(((IonString) ionStruct.get("accident_type")).stringValue())
+                        .accidentDesc(((IonString) ionStruct.get("accident_desc")).stringValue())
+                        .accidentDate(((IonString) ionStruct.get("accident_date")).stringValue())
+                        .build();
+                accidentInfoDtoList.add(accidentInfoDto);
+            }
+            logger.debug("get accident history from QLDB ={}", accidentResult);
+        });
+        return accidentInfoDtoList;
+    }
+
+    //차량의 교체 내역 조회
+    private List<CarExchangeInfoDto> exchangeHistory(String exchangeMetaId){
+        List<CarExchangeInfoDto> exchangeInfoDtoList = new ArrayList<>();
+        qldbDriver.QldbDriver().execute(txn -> {
+            Result exchangeResult = txn.execute(
+                    "SELECT ce.data.exchange_type, ce.data.exchange_desc, ce.data.exchange_date " +
+                            "FROM history(car_exchange) AS ce " +
+                            "WHERE ce.metadata.id=?",
+                    ionSys.newString(exchangeMetaId));
+            for (IonValue ionValue : exchangeResult) {
+                IonStruct ionStruct = (IonStruct) ionValue;
+                CarExchangeInfoDto exchangeInfoDto = CarExchangeInfoDto.builder()
+                        .exchangeType(((IonString) ionStruct.get("exchange_type")).stringValue())
+                        .exchangeDesc(((IonString) ionStruct.get("exchange_desc")).stringValue())
+                        .exchangeDate(((IonString) ionStruct.get("exchange_date")).stringValue())
+                        .build();
+                exchangeInfoDtoList.add(exchangeInfoDto);
+            }
+            logger.debug("get exchange history from QLDB ={}", exchangeResult);
+        });
+        return exchangeInfoDtoList;
+    }
+
+    //차량 총 내역 dto 생성
+    private CarInspectionInfoResponseDto carInfoHistory(String carNum, List<CarAccidentInfoDto> accidentInfoDtoList,List<CarExchangeInfoDto> exchangeInfoDtoList){
+        AtomicReference<CarInspectionInfoResponseDto> carInspectionInfoResponseDto = new AtomicReference<>(new CarInspectionInfoResponseDto());
+        qldbDriver.QldbDriver().execute(txn -> {
+            Result resultCarInfo = txn.execute(
+                    "SELECT r.car_owner_name, r.car_owner_phone, r.car_distance FROM car AS r WHERE r.car_num=?", ionSys.newString(carNum));
+            IonStruct ionStruct = (IonStruct) resultCarInfo.iterator().next();
+            List<ExchangeType> exchangeTypeList = exchangeTypeRepository.findAll();
+            carInspectionInfoResponseDto.set(CarInspectionInfoResponseDto.builder()
+                    .carNum(carNum)
+                    .carOwnerName(((IonString) ionStruct.get("car_owner_name")).stringValue())
+                    .carOwnerPhone(((IonString) ionStruct.get("car_owner_phone")).stringValue())
+                    .carDistance(((IonInt) ionStruct.get("car_distance")).intValue())
+                    .carAccidentInfoDtoList(accidentInfoDtoList)
+                    .carExchangeInfoDtoList(exchangeInfoDtoList)
+                    .exchangeTypeList(exchangeTypeList)
+                    .build());
+            logger.debug("get carInspectionInfo={}", carInspectionInfoResponseDto);
+        });
+        return carInspectionInfoResponseDto.get();
+    }
+
+    // 차량 점검 후 데이터 등록에 따른 기존 이력과 비교
     @Override
     public Boolean compareCarHistory(CompareRequestDto compareRequestDto, Long saleFormId){
         try{
@@ -202,7 +225,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         String carNum = saleForm.getCarNum();
         try {
             qldbDriver.QldbDriver().execute(txn -> {
-                Result result = txn.execute(
+                txn.execute(
                         "UPDATE car AS c SET c.car_distance=? WHERE c.car_num=?"
                         ,ionSys.newInt(carDistance),ionSys.newString(carNum));
                 logger.debug("QLDB 주행거리 정보 UPDATE");
@@ -219,7 +242,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         String carNum = saleForm.getCarNum();
         try {
             qldbDriver.QldbDriver().execute(txn -> {
-                Result result1 = txn.execute(
+                txn.execute(
                         "UPDATE car_accident AS ca " +
                                 "SET ca.accident_desc = ?, " +
                                 "ca.accident_type=?, " +
@@ -244,7 +267,7 @@ public class ApproveSaleServiceImpl implements ApproveSaleService {
         String carNum = saleForm.getCarNum();
         try {
             qldbDriver.QldbDriver().execute(txn -> {
-                Result result2 = txn.execute(
+                txn.execute(
                         "UPDATE car_exchange AS ce " +
                                 "SET ce.exchange_desc = ?, " +
                                 "ce.exchange_type=?, " +
