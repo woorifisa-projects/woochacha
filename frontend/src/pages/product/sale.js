@@ -26,6 +26,8 @@ export default function Sale() {
   const [branches, setBranches] = useState([]); // branch 목록을 저장할 state
   const [setCarNumberError, setGarageError] = useState(false);
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
+  const [disabledSubmitBtn, setDisabledSubmitBtn] = useState(false); // 버튼 비활성화 여부
+  const [isSubmitting, setIsSubmitting] = useState(false); // 진행 중 상태 확인
   const memberId = userLoginState.userId;
   const router = useRouter();
 
@@ -40,6 +42,14 @@ export default function Sale() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    // 이미 제출 요청이 진행 중인 경우
+    if (isSubmitting) {
+      return;
+    }
+
+    // 제출 요청 시작
+    setIsSubmitting(true);
+
     const saleForm = {
       memberId: memberId,
       branchId: carSaleData.garageSelection,
@@ -49,12 +59,13 @@ export default function Sale() {
     saleFormRequest(saleForm)
       .then((response) => {
         if (response === '차량 판매 신청이 성공적으로 완료되었습니다.') {
+          setDisabledSubmitBtn(true);
           SwalModals('success', '차량 판매 신청 완료', response, false);
-          router.push('/'); // 홈페이지로 리다이렉트
+          router.push('/');
         } else {
+          setDisabledSubmitBtn(false); // 차량판매 신청 실패 시, 재활성화
           SwalModals('error', '차량 판매 신청 실패', response, false);
 
-          // 차량 번호와 차고지 선택 부분을 초기화합니다.
           setCarSaleData({
             carNumber: '',
             garageSelection: '',
@@ -67,7 +78,13 @@ export default function Sale() {
           carNumber: '',
           garageSelection: '',
         });
+        SwalModals('error', '차량 판매 신청 실패', '차량 판매 신청 중 오류가 발생했습니다.', false);
         console.error('차량 판매 신청 중 오류가 발생했습니다.', error);
+
+        setDisabledSubmitBtn(false); // 차량 판매 오류 발생 시, 버튼 재활성화
+      })
+      .finally(() => {
+        setIsSubmitting(false); // 요청 종료
       });
   };
 
@@ -142,7 +159,11 @@ export default function Sale() {
               </Select>
             </Box>
             <Box display="flex" justifyContent="flex-end" width="60%" sx={{ mt: 1, mb: 9 }}>
-              <Button type="submit" variant="contained" onClick={handleSubmit}>
+              <Button
+                type="submit"
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={disabledSubmitBtn}>
                 신청하기
               </Button>
             </Box>
