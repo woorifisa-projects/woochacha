@@ -21,24 +21,25 @@ export default function ImageSlider(props) {
 
   const imageSliderCss = {
     box: {
-      mt: 3,
-      height: '20rem',
+      mt: 1,
+      height: '47rem',
       display: 'block',
       overflow: 'hidden',
-      width: '100%',
-      borderRadius: '15px',
+      width: '76rem',
+      borderRadius: '3px',
     },
     mobileStepper: {
       display: 'flex',
       alignItems: 'center',
       height: 50,
+      width: '76rem',
       pl: 2,
       bgcolor: 'rgb(255,255,255,0.3)',
     },
   };
 
   return (
-    <Box sx={{ maxWidth: 400, flexGrow: 1 }}>
+    <Box sx={{ maxWidth: 700, flexGrow: 1, marginLeft: 2 }}>
       <Box component="img" sx={imageSliderCss.box} src={image[activeStep]} />
       <MobileStepper
         sx={imageSliderCss.mobileStepper}
