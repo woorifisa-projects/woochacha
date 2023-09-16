@@ -58,13 +58,13 @@ export default function Sale() {
 
     saleFormRequest(saleForm)
       .then((response) => {
-        if (response === '차량 판매 신청이 성공적으로 완료되었습니다.') {
+        if (response.data === '차량 판매 신청이 성공적으로 완료되었습니다.') {
           setDisabledSubmitBtn(true);
-          SwalModals('success', '차량 판매 신청 완료', response, false);
+          SwalModals('success', '차량 판매 신청 완료', response.data, false);
           router.push('/');
         } else {
           setDisabledSubmitBtn(false); // 차량판매 신청 실패 시, 재활성화
-          SwalModals('error', '차량 판매 신청 실패', response, false);
+          SwalModals('error', '차량 판매 신청 실패', response.data, false);
 
           setCarSaleData({
             carNumber: '',
