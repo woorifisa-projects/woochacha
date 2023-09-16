@@ -175,12 +175,11 @@ public class SignServiceImpl implements SignService {
         // DB에 암호화되어 있는 핸드폰 번호를 복호화한 후, 사용자로부터 입력받은 핸드폰 번호와 비교
         List<Tuple> phoneDuplicateList = new ArrayList<>();
         for(Tuple encoded : encodedList) {
-            String decodingPhone = encoded.get(m.phone);
+            String decodingPhone;
+//            String decodingPhone = encoded.get(m.phone);
 
             // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
-//            if(!decodingPhone.contains("010")) {
-                decodingPhone = dataMasking.decoding(encoded.get(m.phone));
-//            }
+            decodingPhone = dataMasking.decoding(encoded.get(m.phone));
             if(decodingPhone.equals(signUpRequestDto.getPhone())) phoneDuplicateList.add(encoded);
         }
 
@@ -206,16 +205,12 @@ public class SignServiceImpl implements SignService {
     }
 
     private String duplicateEmailCheck(List<Tuple> encodedList, SignUpRequestDto signUpRequestDto) {
-        // DB에 암호화되어 있는 이메일을 복호화한 후, 사용자로부터 입력받은 이메일과 비교
         List<Tuple> emailDuplicateList = new ArrayList<>();
         for(Tuple encoded : encodedList) {
             String decodingEmail = encoded.get(m.email);
 
-            // 이미 암호화 되지 않은 상태로 저장되어 있는 데이터들은 복호화 진행 안함
-//            if(!decodingEmail.contains(".com")) {
-                decodingEmail = dataMasking.decoding(encoded.get(m.email));
-//            }
-            if(decodingEmail.equals(signUpRequestDto.getEmail())) emailDuplicateList.add(encoded);
+            if(decodingEmail.equals(signUpRequestDto.getEmail()))
+                emailDuplicateList.add(encoded);
         }
 
         // 이메일 번호 중복인 회원 리스트
