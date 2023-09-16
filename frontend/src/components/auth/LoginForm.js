@@ -127,7 +127,7 @@ export default function LoginForm() {
       Swal.fire({
         icon: 'error',
         title: `로그인 실패!`,
-        html: `로그인 입력값을 모두 작성해주세요!`,
+        html: `아이디 혹은 비밀번호가 올바르지 않습니다.`,
         showConfirmButton: false,
         showClass: {
           popup: 'animate__animated animate__fadeInDown',
