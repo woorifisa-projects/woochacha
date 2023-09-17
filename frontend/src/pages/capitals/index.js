@@ -69,7 +69,12 @@ export default function Capitals() {
 
         {/* banner */}
         <Stack alignItems="center" className={styles.bannerImageContainer}>
-          <Image src={BannerImage} layout="fill" className={styles.bannerImage} />
+          <Image
+            src={BannerImage}
+            layout="fill"
+            className={styles.bannerImage}
+            alt="banner-image"
+          />
         </Stack>
 
         {/* 대출 관련 content */}
@@ -92,7 +97,7 @@ export default function Capitals() {
                   <Grid container maxWidth="xl" mx="auto" alignItems="center">
                     <Grid item md={6} xs={12}>
                       {item.capitalImgUrl === 'metabusImg' ? (
-                        <Image src={metabusImg} width="100%" />
+                        <Image src={metabusImg} width="100%" alt="metabus-img" />
                       ) : (
                         <img src={item.capitalImgUrl} width="100%" />
                       )}

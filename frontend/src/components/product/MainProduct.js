@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { Paper, Typography, Grid, Box } from '@mui/material';
+import styles from './MainProduct.module.css';
 
 function MainProduct(props) {
   const { post } = props;
@@ -43,7 +44,7 @@ function MainProduct(props) {
             <Typography component="h5" variant="h5" color="inherit" paragraph>
               {post.description}
             </Typography>
-            <Link variant="subtitle1" color="inherit" href="/capitals">
+            <Link variant="subtitle1" href="/capitals" className={styles.link}>
               {post.linkText}
             </Link>
           </Box>
