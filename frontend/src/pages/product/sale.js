@@ -17,6 +17,7 @@ import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { useRouter } from 'next/router';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 export default function Sale() {
   const [carSaleData, setCarSaleData] = useState({
@@ -24,7 +25,6 @@ export default function Sale() {
     garageSelection: '', // 차고지 선택 필드
   });
   const [branches, setBranches] = useState([]); // branch 목록을 저장할 state
-  const [setCarNumberError, setGarageError] = useState(false);
   const [userLoginState, setUserLoginState] = useRecoilState(userLoggedInState);
   const [disabledSubmitBtn, setDisabledSubmitBtn] = useState(false); // 버튼 비활성화 여부
   const [isSubmitting, setIsSubmitting] = useState(false); // 진행 중 상태 확인
@@ -88,88 +88,86 @@ export default function Sale() {
       });
   };
 
-  return (
-    branches && (
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="md" sx={{ mt: 8, mb: 6 }}>
-          <CssBaseline />
-          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-            <div style={{ height: '35px' }}></div>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
-              내 차 판매 신청서 작성
-            </Typography>
-            <div style={{ height: '60px' }}></div>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="flex-start"
-              width="60%"
-              sx={{ mb: 2 }}>
-              <InputLabel htmlFor="carNumber" sx={{ fontSize: '1.2rem', mb: -0.5 }}>
-                차량번호
-              </InputLabel>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="carNumber"
-                label="차량번호를 입력해주세요"
-                name="carNumber"
-                autoComplete="off"
-                autoFocus
-                value={carSaleData.carNumber}
-                onChange={(e) => setCarSaleData({ ...carSaleData, carNumber: e.target.value })}
-              />
-            </Box>
-            <div style={{ height: '20px' }}></div>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="flex-start"
-              width="60%"
-              sx={{ mb: 2 }}>
-              <InputLabel htmlFor="garageSelection" sx={{ fontSize: '1.2rem' }}>
-                차고지 선택
-              </InputLabel>
-              <Box sx={{ mb: 1.3 }}></Box>
-              <Select
-                fullWidth
-                value={carSaleData.garageSelection}
-                onChange={(e) =>
-                  setCarSaleData({ ...carSaleData, garageSelection: e.target.value })
-                }
-                displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-                sx={{
-                  '& .MuiSelect-select': {
-                    '&:focus': {
-                      background: 'transparent',
-                    },
-                    color: carSaleData.garageSelection ? 'black' : 'gray',
-                  },
-                }}>
-                <MenuItem value="" disabled>
-                  <em>차고지 선택</em>
-                </MenuItem>
-                {branches.map((branch) => (
-                  <MenuItem key={branch.id} value={branch.id}>
-                    {branch.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            <Box display="flex" justifyContent="flex-end" width="60%" sx={{ mt: 1, mb: 9 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                onClick={handleSubmit}
-                disabled={disabledSubmitBtn}>
-                신청하기
-              </Button>
-            </Box>
+  return branches ? (
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="md" sx={{ mt: 8, mb: 6 }}>
+        <CssBaseline />
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+          <div style={{ height: '35px' }}></div>
+          <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            내 차 판매 신청서 작성
+          </Typography>
+          <div style={{ height: '60px' }}></div>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="flex-start"
+            width="60%"
+            sx={{ mb: 2 }}>
+            <InputLabel htmlFor="carNumber" sx={{ fontSize: '1.2rem', mb: -0.5 }}>
+              차량번호
+            </InputLabel>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="carNumber"
+              label="차량번호를 입력해주세요"
+              name="carNumber"
+              autoComplete="off"
+              autoFocus
+              value={carSaleData.carNumber}
+              onChange={(e) => setCarSaleData({ ...carSaleData, carNumber: e.target.value })}
+            />
           </Box>
-        </Container>
-      </ThemeProvider>
-    )
+          <div style={{ height: '20px' }}></div>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="flex-start"
+            width="60%"
+            sx={{ mb: 2 }}>
+            <InputLabel htmlFor="garageSelection" sx={{ fontSize: '1.2rem' }}>
+              차고지 선택
+            </InputLabel>
+            <Box sx={{ mb: 1.3 }}></Box>
+            <Select
+              fullWidth
+              value={carSaleData.garageSelection}
+              onChange={(e) => setCarSaleData({ ...carSaleData, garageSelection: e.target.value })}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Without label' }}
+              sx={{
+                '& .MuiSelect-select': {
+                  '&:focus': {
+                    background: 'transparent',
+                  },
+                  color: carSaleData.garageSelection ? 'black' : 'gray',
+                },
+              }}>
+              <MenuItem value="" disabled>
+                <em>차고지 선택</em>
+              </MenuItem>
+              {branches.map((branch) => (
+                <MenuItem key={branch.id} value={branch.id}>
+                  {branch.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+          <Box display="flex" justifyContent="flex-end" width="60%" sx={{ mt: 1, mb: 9 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={disabledSubmitBtn}>
+              신청하기
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
+  ) : (
+    <LoadingBar />
   );
 }
