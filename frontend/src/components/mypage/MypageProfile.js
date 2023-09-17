@@ -96,7 +96,7 @@ export default function MypageProfile() {
               전화번호
             </Grid>
             <Grid item xs={6}>
-              {memberProfile.phone}
+              {memberProfile.phone.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`)}
             </Grid>
             <Grid item xs={6} sx={mypageProfileCss.itemTitle}>
               이메일
