@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { EDIT_MODAL } from '@/constants/string';
 import BasicModal from '@/components/common/BasicModal';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminProductEdit(props) {
   const [mounted, setMounted] = useState(false);
@@ -78,73 +79,73 @@ function AdminProductEdit(props) {
     button: { mt: 3, mb: 2 },
   };
 
-  return (
-    mounted && (
-      <>
-        <Card sx={adminProductEditCss.card}>
-          <Typography
-            sx={adminProductEditCss.mypagesubTitle}
-            component="h5"
-            variant="h5"
-            gutterBottom>
-            {dummyData.title}
-          </Typography>
-          <Grid container spacing={2} noValidate justifyContent="center">
-            <Grid item xs={12} md={6}>
-              <Stack direction="column" alignItems="center" spacing={2} mb={5}>
-                <CardMedia
-                  sx={adminProductEditCss.cardMedia}
-                  image={dummyData.imageURL}
-                  title="게시글 이미지"
-                />
-              </Stack>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={adminProductEditCss.priceBox}>
-                <Grid sx={adminProductEditCss.gridBox}>
-                  <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                    현재 가격
-                  </Typography>
-                  <Typography textAlign="left">{`${dummyData.currentPrice} 만원`}</Typography>
-                </Grid>
-                <Grid>
-                  <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                    수정 신청한 가격
-                  </Typography>
-                  <Typography textAlign="left">{`${dummyData.currentPrice} 만원`}</Typography>
-                </Grid>
-              </Box>
-              <Grid item xs={12} md={6}>
-                <Button
-                  onClick={handleClickModal}
-                  // type="submit"
-                  size="large"
-                  variant="contained"
-                  sx={adminProductEditCss.button}>
-                  가격 수정 승인하기
-                </Button>
-                <Button
-                  onClick={handleClickModal}
-                  // type="submit"
-                  size="large"
-                  variant="contained"
-                  sx={adminProductEditCss.button}>
-                  가격 수정 승인하기
-                </Button>
+  return mounted ? (
+    <>
+      <Card sx={adminProductEditCss.card}>
+        <Typography
+          sx={adminProductEditCss.mypagesubTitle}
+          component="h5"
+          variant="h5"
+          gutterBottom>
+          {dummyData.title}
+        </Typography>
+        <Grid container spacing={2} noValidate justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <Stack direction="column" alignItems="center" spacing={2} mb={5}>
+              <CardMedia
+                sx={adminProductEditCss.cardMedia}
+                image={dummyData.imageURL}
+                title="게시글 이미지"
+              />
+            </Stack>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box sx={adminProductEditCss.priceBox}>
+              <Grid sx={adminProductEditCss.gridBox}>
+                <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
+                  현재 가격
+                </Typography>
+                <Typography textAlign="left">{`${dummyData.currentPrice} 만원`}</Typography>
               </Grid>
+              <Grid>
+                <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
+                  수정 신청한 가격
+                </Typography>
+                <Typography textAlign="left">{`${dummyData.currentPrice} 만원`}</Typography>
+              </Grid>
+            </Box>
+            <Grid item xs={12} md={6}>
+              <Button
+                onClick={handleClickModal}
+                // type="submit"
+                size="large"
+                variant="contained"
+                sx={adminProductEditCss.button}>
+                가격 수정 승인하기
+              </Button>
+              <Button
+                onClick={handleClickModal}
+                // type="submit"
+                size="large"
+                variant="contained"
+                sx={adminProductEditCss.button}>
+                가격 수정 승인하기
+              </Button>
             </Grid>
           </Grid>
-        </Card>
-        {showModal && (
-          <BasicModal
-            onClickModal={handleClickModal}
-            isOpen={showModal}
-            modalContent={EDIT_MODAL.CONTENTS}
-            callBackFunc={handleSubmit}
-          />
-        )}
-      </>
-    )
+        </Grid>
+      </Card>
+      {showModal && (
+        <BasicModal
+          onClickModal={handleClickModal}
+          isOpen={showModal}
+          modalContent={EDIT_MODAL.CONTENTS}
+          callBackFunc={handleSubmit}
+        />
+      )}
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

@@ -20,6 +20,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import NoData from '../common/NoData';
 
 /**
  * 페이지네이션 관련 함수
@@ -93,10 +94,6 @@ export default function MemberTable(props) {
     router.push(`${moveUrl}${memberId}`);
   };
 
-  const handleLogMove = (memberId) => {
-    router.push(`/admin/mebers/log/${memberId}`);
-  };
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -111,68 +108,69 @@ export default function MemberTable(props) {
       },
     },
   };
+  console.log(rows.length);
 
-  return (
-    mounted && (
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              {headerData.map((headerItem, idx) => {
-                return (
-                  <TableCell align="center" key={idx}>
-                    {headerItem.headerLabel}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* data map으로 반복 */}
-            {rows.map((row) => (
-              <TableRow sx={basicTableCss.tableRow} key={row.id}>
-                <TableCell onClick={() => handleMove(row.id)} align="center">
-                  {row[`${headerData[0].contentCell}`]}
+  return mounted && rows.length > 0 ? (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            {headerData.map((headerItem, idx) => {
+              return (
+                <TableCell align="center" key={idx}>
+                  {headerItem.headerLabel}
                 </TableCell>
-                <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
-                {row[headerData[3].contentCell] === 1 ? (
-                  <TableCell align="center">
-                    <Typography variant="body2" color="primary">{`일반 사용자`}</Typography>
-                  </TableCell>
-                ) : (
-                  <TableCell align="center">
-                    <Typography variant="body2" color="error">{`이용제한 사용자`}</Typography>
-                  </TableCell>
-                )}
+              );
+            })}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {/* data map으로 반복 */}
+          {rows.map((row) => (
+            <TableRow sx={basicTableCss.tableRow} key={row.id}>
+              <TableCell onClick={() => handleMove(row.id)} align="center">
+                {row[`${headerData[0].contentCell}`]}
+              </TableCell>
+              <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
+              <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
+              {row[headerData[3].contentCell] === 1 ? (
                 <TableCell align="center">
-                  <Link href={`/admin/members/log/${row.id}`}>로그조회</Link>
+                  <Typography variant="body2" color="primary">{`일반 사용자`}</Typography>
                 </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
-                count={contentData.totalElements}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+              ) : (
+                <TableCell align="center">
+                  <Typography variant="body2" color="error">{`이용제한 사용자`}</Typography>
+                </TableCell>
+              )}
+              <TableCell align="center">
+                <Link href={`/admin/members/log/${row.id}`}>로그조회</Link>
+              </TableCell>
             </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    )
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              colSpan={3}
+              count={contentData.totalElements}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
+  ) : (
+    <NoData />
   );
 }

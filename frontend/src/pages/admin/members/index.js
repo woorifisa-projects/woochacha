@@ -3,6 +3,7 @@ import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
 import withAdminAuth from '@/hooks/withAdminAuth';
 import { allUserGetApi } from '@/services/adminpageApi';
 import MemberTable from '@/components/admin/MemberTable';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminUserList() {
   const [mounted, setMounted] = useState(false);
@@ -53,21 +54,20 @@ function AdminUserList() {
     }
   }, [page, size]);
 
-  return (
-    mounted &&
-    allUserInfo && (
-      <>
-        <MemberTable
-          headerData={table_cell_data}
-          contentData={allUserInfo}
-          moveUrl={`/admin/members/`}
-          page={page}
-          size={size}
-          setPage={setPage}
-          setSize={setSize}
-        />
-      </>
-    )
+  return mounted && allUserInfo ? (
+    <>
+      <MemberTable
+        headerData={table_cell_data}
+        contentData={allUserInfo}
+        moveUrl={`/admin/members/`}
+        page={page}
+        size={size}
+        setPage={setPage}
+        setSize={setSize}
+      />
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

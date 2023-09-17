@@ -16,6 +16,7 @@ import withAdminAuth from '@/hooks/withAdminAuth';
 import { useRouter } from 'next/router';
 import { oneUserEditPatchApi, oneUserGetApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminUserEdit(props) {
   const [mounted, setMounted] = useState(false);
@@ -111,29 +112,29 @@ function AdminUserEdit(props) {
 
   const adminUserProfileEditCss = {
     mypageTitle: {
-      my: 4,
-      color: '#1490ef',
+      color: '#F95700',
       fontWeight: 'bold',
-      borderBottom: '1.5px solid #1490ef',
-      paddingBottom: '10px',
+      borderBottom: '1.5px solid #F95700',
+      marginBottom: 3,
     },
     card: {
-      maxWidth: '90rem',
-      maxHeight: '45rem',
+      maxWidth: '100%',
+      maxHeight: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 10,
-      paddingY: 1,
+      mb: 2,
+      paddingY: 2,
       textAlign: 'center',
-      boxShadow: 7,
+      boxShadow: 'none',
       borderRadius: '3rem',
     },
     cardMedia: {
-      width: '180px',
-      height: '180px',
-      borderRadius: '50%',
+      width: '200px',
+      height: '200px',
+      borderRadius: '15px',
+      boxShadow: 3,
     },
     subTitle: {
       fontWeight: 'bold',
@@ -155,92 +156,91 @@ function AdminUserEdit(props) {
     radioLeft: { marginRight: '70px' },
   };
 
-  return (
-    mounted &&
-    editProfileValue.imageUrl && (
-      <>
-        <Card sx={{ ...adminUserProfileEditCss.card, marginTop: '25px' }}>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <Typography
-              sx={adminUserProfileEditCss.mypageTitle}
-              component="h4"
-              variant="h5"
-              gutterBottom>
-              수정하기
-            </Typography>
-            <Stack direction="column" alignItems="center" spacing={2} mb={1}>
-              {
-                <CardMedia
-                  sx={adminUserProfileEditCss.cardMedia}
-                  image={editProfileValue.imageUrl}
-                  title="사용자 이미지"
-                />
-              }
-              <label>
-                <Checkbox
-                  checked={editProfileValue.isChecked}
-                  onChange={handleChangeCheckbox}
-                  inputProps={{ 'aria-label': 'controlled' }}
-                />
-                기본이미지로 수정
-              </label>
-            </Stack>
-            <Typography variant="body1" sx={adminUserProfileEditCss.subTitle}>
-              회원이름
-            </Typography>
-            <Typography sx={adminUserProfileEditCss.subContent}>
-              {editProfileValue.nameValue}
-            </Typography>
-
-            <Typography variant="body1" sx={adminUserProfileEditCss.subTitle}>
-              상태
-            </Typography>
-
-            <RadioGroup
-              row
-              aria-label="회원 상태"
-              name="userStatus"
-              value={editProfileValue.userStatus} // 선택된 값
-              defaultValue={editProfileValue.status}
-              onChange={handleRadioChange}
-              sx={adminUserProfileEditCss.radioBox} // 라디오 박스들을 중앙 정렬
-            >
-              <FormControlLabel
-                value={1} // "일반"
-                control={<Radio />} // 라디오 버튼
-                label="일반" // 라벨 텍스트
-                sx={adminUserProfileEditCss.radioLeft}
+  return mounted && editProfileValue.imageUrl ? (
+    <>
+      <Card sx={{ ...adminUserProfileEditCss.card }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Typography
+            sx={adminUserProfileEditCss.mypageTitle}
+            component="h4"
+            variant="h5"
+            gutterBottom>
+            수정하기
+          </Typography>
+          <Stack direction="column" alignItems="center" spacing={2} mb={1}>
+            {
+              <CardMedia
+                sx={adminUserProfileEditCss.cardMedia}
+                image={editProfileValue.imageUrl}
+                title="사용자 이미지"
               />
-              <FormControlLabel
-                value={0} // 이용제한 값
-                control={<Radio />} // 라디오 버튼
-                label="이용제한" // 라벨 텍스트
+            }
+            <label>
+              <Checkbox
+                checked={editProfileValue.isChecked}
+                onChange={handleChangeCheckbox}
+                inputProps={{ 'aria-label': 'controlled' }}
               />
-            </RadioGroup>
-            <Box sx={adminUserProfileEditCss.buttonBox}>
-              <Button
-                onClick={handleSubmit}
-                type="button"
-                size="large"
-                variant="contained"
-                sx={adminUserProfileEditCss.button}
-                disabled={disabledSubmitBtn || isSubmitting}>
-                수정
-              </Button>
-              <Button
-                type="button"
-                size="large"
-                variant="contained"
-                sx={adminUserProfileEditCss.button}
-                onClick={() => handleMoveUrl(`/admin/members/${memberId}`)}
-                color="error">
-                취소
-              </Button>
-            </Box>
+              기본이미지로 수정
+            </label>
+          </Stack>
+          <Typography variant="body1" sx={adminUserProfileEditCss.subTitle}>
+            회원이름
+          </Typography>
+          <Typography sx={adminUserProfileEditCss.subContent}>
+            {editProfileValue.nameValue}
+          </Typography>
+
+          <Typography variant="body1" sx={adminUserProfileEditCss.subTitle}>
+            상태
+          </Typography>
+
+          <RadioGroup
+            row
+            aria-label="회원 상태"
+            name="userStatus"
+            value={editProfileValue.userStatus} // 선택된 값
+            defaultValue={editProfileValue.status}
+            onChange={handleRadioChange}
+            sx={adminUserProfileEditCss.radioBox} // 라디오 박스들을 중앙 정렬
+          >
+            <FormControlLabel
+              value={1} // "일반"
+              control={<Radio />} // 라디오 버튼
+              label="일반" // 라벨 텍스트
+              sx={adminUserProfileEditCss.radioLeft}
+            />
+            <FormControlLabel
+              value={0} // 이용제한 값
+              control={<Radio />} // 라디오 버튼
+              label="이용제한" // 라벨 텍스트
+            />
+          </RadioGroup>
+          <Box sx={adminUserProfileEditCss.buttonBox}>
+            <Button
+              onClick={handleSubmit}
+              type="button"
+              size="large"
+              variant="contained"
+              sx={adminUserProfileEditCss.button}
+              disabled={disabledSubmitBtn || isSubmitting}>
+              수정
+            </Button>
+            <Button
+              type="button"
+              size="large"
+              variant="contained"
+              sx={adminUserProfileEditCss.button}
+              onClick={() => handleMoveUrl(`/admin/members/${memberId}`)}
+              color="error">
+              취소
+            </Button>
           </Box>
-        </Card>
-      </>
-    )
+        </Box>
+      </Card>
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 
