@@ -78,7 +78,7 @@ export default function Sale() {
           carNumber: '',
           garageSelection: '',
         });
-        SwalModals('error', '차량 판매 신청 실패', '차량 판매 신청 중 오류가 발생했습니다.', false);
+        // SwalModals('error', '차량 판매 신청 실패', '차량 판매 신청 중 오류가 발생했습니다.', false);
         console.error('차량 판매 신청 중 오류가 발생했습니다.', error);
 
         setDisabledSubmitBtn(false); // 차량 판매 오류 발생 시, 버튼 재활성화
