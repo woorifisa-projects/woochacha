@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Card,
+  Chip,
   Container,
   CssBaseline,
   Grid,
@@ -17,13 +18,17 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import withAdminAuth from '@/hooks/withAdminAuth';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import theme from '@/styles/theme';
 import { ADMIN_APPROVE_MODAL } from '@/constants/string';
 import OneButtonModal from '@/components/common/OneButtonModal';
 import { oneApproveFormGetApi, oneApproveFormPatchApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
 import LoadingBar from '@/components/common/LoadingBar';
+import styles from './approve.module.css';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CarCrashIcon from '@mui/icons-material/CarCrash';
+import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import BuildIcon from '@mui/icons-material/Build';
 
 function AdminSalesApproveForm(props) {
   const [mounted, setMounted] = useState(false);
@@ -293,12 +298,11 @@ function AdminSalesApproveForm(props) {
   const saleApproveFormCss = {
     approveFormTitle: {
       my: 10,
-      color: '#1490ef',
       fontWeight: 'bold',
     },
     titleCard: {
       py: 7,
-      boxShadow: 5,
+      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -310,13 +314,13 @@ function AdminSalesApproveForm(props) {
     },
     colorTypo: {
       display: 'inline',
-      color: '#1490ef',
       fontWeight: 'bold',
     },
     flexBox: {
       display: 'flex',
       alignItems: 'left',
       marginLeft: 0,
+      paddingLeft: 0,
     },
     formContents: {
       display: 'flex',
@@ -324,11 +328,13 @@ function AdminSalesApproveForm(props) {
       alignItems: 'left',
       marginLeft: 0,
     },
-    inputLabel: { fontSize: '1.2rem', my: 1 },
+    inputLabel: { fontSize: '1.2rem', my: 1, fontWeight: 'bold', color: '#F95700' },
     submitBtn: {
+      width: '100%',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      alignContent: 'center',
       my: 10,
     },
     historyCard: {
@@ -339,12 +345,17 @@ function AdminSalesApproveForm(props) {
   return mounted && approveSaleForm ? (
     <ThemeProvider theme={responsiveFontTheme}>
       <CssBaseline />
-      <Typography sx={saleApproveFormCss.approveFormTitle} component="h4" variant="h4" gutterBottom>
+      <Typography
+        sx={saleApproveFormCss.approveFormTitle}
+        color="primary"
+        component="h4"
+        variant="h4"
+        gutterBottom>
         판매 신청 관리
       </Typography>
       {/* subtitle card */}
       <Card sx={saleApproveFormCss.titleCard}>
-        <Typography variant="h4" sx={saleApproveFormCss.colorTypo}>
+        <Typography variant="h4" sx={saleApproveFormCss.colorTypo} color="primary">
           점검 정보 승인
         </Typography>
         <ArrowForwardIcon fontSize="large" />
@@ -359,10 +370,10 @@ function AdminSalesApproveForm(props) {
         <Typography component="h1" variant="h4" sx={saleApproveFormCss.approveFormTitle}>
           점검차량 정보 입력
         </Typography>
-        <Grid container sx={saleApproveFormCss.flexBox} spacing={5}>
+        <Grid container sx={saleApproveFormCss.flexBox}>
           <Grid item xs={12} md={6}>
             <Box noValidate>
-              <Grid container spacing={2}>
+              <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="carNum" sx={saleApproveFormCss.inputLabel}>
                     차량번호
@@ -483,7 +494,7 @@ function AdminSalesApproveForm(props) {
                   />
                 </Grid>
               </Grid>
-              <Grid sx={saleApproveFormCss.submitBtn}>
+              {/* <Grid sx={saleApproveFormCss.submitBtn}>
                 <Button
                   size="large"
                   type="submit"
@@ -502,47 +513,88 @@ function AdminSalesApproveForm(props) {
                   }>
                   승인 신청
                 </Button>
-              </Grid>
+              </Grid> */}
             </Box>
           </Grid>
 
           {/* HISTORY */}
-          <Grid item xs={12} md={6}>
-            <Grid container spacing={2}>
-              <Card sx={saleApproveFormCss.historyCard}>
+
+          <Grid item xs={12} md={6} justifyContent="center">
+            <Grid container className={styles.historyBox} justifyContent="center">
+              <div className={styles.historyCard}>
                 <Grid item xs={12} py={2}>
-                  <Typography variant="h5" fontWeight="bold">
-                    {`${approveSaleForm.carNum} 차량의 history`}
+                  <Typography variant="h5" fontWeight="bold" className={styles.strongText}>
+                    {`${approveSaleForm.carNum} `}
+                  </Typography>
+                  <Typography variant="h5" fontWeight="bold" className={styles.text}>
+                    {`차량의 기존이력`}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
                     사고이력 조회
                   </Typography>
                   {approveSaleForm.carAccidentInfoDtoList.map((accidentItem, idx) => {
                     return (
-                      <Typography
-                        key={
-                          idx
-                        }>{`[ ${accidentItem.accidentType} ] ${accidentItem.accidentDesc} ( ${accidentItem.accidentDate} )`}</Typography>
+                      <Typography key={idx}>
+                        {accidentItem.accidentType === '교통사고' ? (
+                          <div className={styles.historyAccidentBox}>
+                            <CarCrashIcon color="primary" />
+                            <span
+                              className={styles.strongText}>{`${accidentItem.accidentType}`}</span>
+                            <span>{` ${accidentItem.accidentDesc}`}</span>
+                            <Chip size="small" label={`${accidentItem.accidentDate}`} />
+                          </div>
+                        ) : (
+                          <div className={styles.historyAccidentBox}>
+                            <WaterDropOutlinedIcon color="primary" />
+                            <span
+                              className={styles.strongText}>{`${accidentItem.accidentType}`}</span>
+                            <span>{` ${accidentItem.accidentDesc}`}</span>
+                            <Chip size="small" label={`${accidentItem.accidentDate}`} />
+                          </div>
+                        )}
+                      </Typography>
                     );
                   })}
                 </Grid>
                 <Grid item xs={12} py={2}>
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography variant="h6" fontWeight="bold" gutterBottom>
                     교체이력 조회
                   </Typography>
                   {approveSaleForm.carExchangeInfoDtoList.map((exchangeItem, idx) => {
                     return (
-                      <Typography
-                        key={
-                          idx
-                        }>{`[ ${exchangeItem.exchangeType} ] ${exchangeItem.exchangeDesc} ( ${exchangeItem.exchangeDate} )`}</Typography>
+                      <div key={idx} className={styles.historyAccidentBox}>
+                        <BuildIcon color="primary" />
+                        <span className={styles.strongText}>{`${exchangeItem.exchangeType}`}</span>
+                        <span>{` ${exchangeItem.exchangeDesc}`}</span>
+                        <Chip size="small" label={`${exchangeItem.exchangeDate}`} />
+                      </div>
                     );
                   })}
                 </Grid>
-              </Card>
+              </div>
             </Grid>
+          </Grid>
+          <Grid sx={saleApproveFormCss.submitBtn}>
+            <Button
+              size="large"
+              type="submit"
+              variant="contained"
+              onClick={handleOpenModal}
+              disabled={
+                isSubmitting ||
+                (accidentSelected &&
+                  (!accidentVal.accidentType ||
+                    !accidentVal.accidentDesc ||
+                    !accidentVal.accidentDate)) ||
+                (exchangeSelected &&
+                  (!exchangeVal.exchangeType ||
+                    !exchangeVal.exchangeDesc ||
+                    !exchangeVal.exchangeDate))
+              }>
+              승인 신청
+            </Button>
           </Grid>
         </Grid>
       </Container>

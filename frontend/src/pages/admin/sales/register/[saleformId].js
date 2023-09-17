@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Card,
+  Chip,
   Container,
   CssBaseline,
   Grid,
@@ -17,8 +18,6 @@ import {
   responsiveFontSizes,
 } from '@mui/material';
 import { useRouter } from 'next/router';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import AddIcon from '@mui/icons-material/Add';
 import theme from '@/styles/theme';
 import withAdminAuth from '@/hooks/withAdminAuth';
 import { ADMIN_REGISTER_MODAL } from '@/constants/string';
@@ -28,6 +27,12 @@ import OneButtonModal from '@/components/common/OneButtonModal';
 import { oneRegisterFormGetApi, oneRegisterFormPostApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
 import LoadingBar from '@/components/common/LoadingBar';
+import styles from './register.module.css';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AddIcon from '@mui/icons-material/Add';
+import CarCrashIcon from '@mui/icons-material/CarCrash';
+import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import BuildIcon from '@mui/icons-material/Build';
 
 function AdminSalesRegisterForm(props) {
   let responsiveFontTheme = responsiveFontSizes(theme);
@@ -136,12 +141,11 @@ function AdminSalesRegisterForm(props) {
   const saleRegisterFormCss = {
     registerFormTitle: {
       my: 10,
-      color: '#1490ef',
       fontWeight: 'bold',
     },
     titleCard: {
       py: 7,
-      boxShadow: 5,
+      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -153,7 +157,6 @@ function AdminSalesRegisterForm(props) {
     },
     colorTypo: {
       display: 'inline',
-      color: '#1490ef',
       fontWeight: 'bold',
     },
     formContents: {
@@ -163,10 +166,12 @@ function AdminSalesRegisterForm(props) {
       marginLeft: 0,
     },
     submitBtn: {
+      width: '100%',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      my: 6,
+      alignContent: 'center',
+      my: 10,
     },
     imageBox: {
       display: 'inline',
@@ -186,10 +191,11 @@ function AdminSalesRegisterForm(props) {
       <CssBaseline />
       <Typography
         sx={saleRegisterFormCss.registerFormTitle}
+        color="primary"
         component="h4"
         variant="h4"
         gutterBottom>
-        관리자 페이지 - 차량 게시글 등록
+        차량 게시글 등록
       </Typography>
       {/* subtitle card */}
       <Card sx={saleRegisterFormCss.titleCard}>
@@ -197,16 +203,20 @@ function AdminSalesRegisterForm(props) {
           점검 정보 승인
         </Typography>
         <ArrowForwardIcon fontSize="large" />
-        <Typography variant="h4" sx={saleRegisterFormCss.colorTypo}>
+        <Typography variant="h4" sx={saleRegisterFormCss.colorTypo} color="primary">
           차량 게시글 등록
         </Typography>
       </Card>
 
       {/* form contents */}
-      <Container sx={saleRegisterFormCss.formContents} maxWidth="xs">
+      <Container sx={saleRegisterFormCss.formContents} maxWidth="md">
         <CssBaseline />
         <Box>
-          <Typography component="h1" variant="h4" sx={saleRegisterFormCss.registerFormTitle}>
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={saleRegisterFormCss.registerFormTitle}
+            color="primary">
             차량 게시글 등록
           </Typography>
           <Box noValidate>
@@ -240,7 +250,7 @@ function AdminSalesRegisterForm(props) {
                   주행거리
                 </Typography>
                 <Typography variant="body1">
-                  {`${registerInfo.registerProductDetailInfo.distance} km`}
+                  {`${registerInfo.registerProductDetailInfo.distance.toLocaleString()} km`}
                 </Typography>
               </Grid>
               <Grid item xs={12} py={2}>
@@ -248,7 +258,7 @@ function AdminSalesRegisterForm(props) {
                   연식
                 </Typography>
                 <Typography variant="body1">
-                  {registerInfo.registerProductDetailInfo.year}
+                  {`${registerInfo.registerProductDetailInfo.year} 년도`}
                 </Typography>
               </Grid>
               <Grid item xs={12} py={2}>
@@ -300,28 +310,42 @@ function AdminSalesRegisterForm(props) {
                 </Typography>
               </Grid>
               <Grid item xs={12} py={2}>
-                <Typography variant="h6" fontWeight="bold">
+                <Typography variant="h6" fontWeight="bold" gutterBottom>
                   사고이력
                 </Typography>
                 {registerInfo.registerProductDetailInfo.produdctAccidentInfoList.map(
                   (item, idx) => {
                     return (
-                      <Typography
-                        key={idx}
-                        variant="body1">{`${item.type} - ${item.date}`}</Typography>
+                      <Typography key={idx}>
+                        {item.type === '교통사고' ? (
+                          <div key={idx} className={styles.historyAccidentBox}>
+                            <CarCrashIcon color="primary" />
+                            <span className={styles.strongText}>{`${item.type}`}</span>
+                            <Chip size="small" label={`${item.date}`} />
+                          </div>
+                        ) : (
+                          <div key={idx} className={styles.historyAccidentBox}>
+                            <WaterDropOutlinedIcon color="primary" />
+                            <span className={styles.strongText}>{`${item.type}`}</span>
+                            <Chip size="small" label={`${item.date}`} />
+                          </div>
+                        )}
+                      </Typography>
                     );
                   },
                 )}
               </Grid>
               <Grid item xs={12} py={2}>
-                <Typography variant="h6" fontWeight="bold">
+                <Typography variant="h6" fontWeight="bold" gutterBottom>
                   교체부위
                 </Typography>
                 {registerInfo.registerProductDetailInfo.productExchangeInfoList.map((item, idx) => {
                   return (
-                    <Typography
-                      key={idx}
-                      variant="body1">{`${item.type} - ${item.date}`}</Typography>
+                    <div key={idx} className={styles.historyAccidentBox}>
+                      <BuildIcon color="primary" />
+                      <span className={styles.strongText}>{`${item.type}`}</span>
+                      <Chip size="small" label={`${item.date}`} />
+                    </div>
                   );
                 })}
               </Grid>
@@ -343,7 +367,7 @@ function AdminSalesRegisterForm(props) {
                 </List>
               </Grid>
               <Grid item xs={12} py={2}>
-                <Typography variant="h6" fontWeight="bold">
+                <Typography variant="h6" fontWeight="bold" gutterBottom>
                   판매가격
                 </Typography>
                 <TextField
