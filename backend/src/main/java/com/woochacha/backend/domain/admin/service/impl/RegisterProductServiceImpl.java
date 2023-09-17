@@ -111,7 +111,7 @@ public class RegisterProductServiceImpl implements RegisterProductService {
     @Override
     public RegisterProductDto getRegisterProductInfo(Long saleFormId) {
         try {
-            SaleForm saleForm = saleFormRepository.findById(saleFormId).get();
+            saleForm = saleFormRepository.findById(saleFormId).get();
             String carNum = saleForm.getCarNum();
             getCarOnwerInfo(carNum);
             getAccidentHistroy(carNum);
