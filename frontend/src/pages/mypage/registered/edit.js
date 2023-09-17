@@ -25,8 +25,11 @@ function RegisteredEdit(props) {
   const [verificationNum, setVerificationNum] = useState('');
 
   const handleVerificationNumChange = (event) => {
+    // console.log(event.target.value);
     const number = event.target.value.replace(/[^0-9]/g, '');
+    console.log(number);
     setVerificationNum(number);
+    setPriceValue(number);
   };
 
   const registeredEditCss = {
@@ -85,6 +88,7 @@ function RegisteredEdit(props) {
   const handleSubmit = async () => {
     setModifyPriceButton(true);
     console.log(mypageProductEditRequest.price);
+    console.log(priceValue);
     if (priceValue === '') {
       Swal.fire({
         icon: 'error',
@@ -94,7 +98,7 @@ function RegisteredEdit(props) {
       });
       setModifyPriceButton(false);
       return;
-    } else if (priceValue > mypageProductEditRequest.price) {
+    } else if (Number(priceValue) >= mypageProductEditRequest.price) {
       Swal.fire({
         icon: 'error',
         title: '기존 차량 가격보다 비싸게 판매할 수 없습니다.',

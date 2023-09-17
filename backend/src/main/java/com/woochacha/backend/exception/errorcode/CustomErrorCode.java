@@ -20,6 +20,8 @@ public enum CustomErrorCode implements ErrorCode{
     STATUS_IS_NOT_FOUND(HttpStatus.NOT_FOUND,"잘못된 상태 요청입니다."),
     TRANSACTION_IS_NOT_FOUND(HttpStatus.NOT_FOUND,"거래 완료 내역이 존재하지 않습니다."),
     CRUDE_QLDB_ERROR(HttpStatus.NOT_FOUND, "QLDB 조회 중 문제가 발생했습니다."),
+    SELLER_BUYER_SAME(HttpStatus.BAD_REQUEST, "본인이 등록한 매물은 구매할 수 없습니다."),
+    ALREADY_REJISTERED_CARNUM(HttpStatus.BAD_REQUEST, "이미 판매 요청 한 차량입니다."),
     ;
 
     private final HttpStatus httpStatus;

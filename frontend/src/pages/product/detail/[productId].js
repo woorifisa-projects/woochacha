@@ -161,12 +161,17 @@ export default function ProductDetail(props) {
       memberId: memberId,
       productId: productId,
     };
-    purchaseRequest(purchaseForm).then((res) => {
-      if (res.status === 200) {
-        SwalModals('success', '구매요청 완료', '구매요청이 완료되었습니다.', false);
-        router.push(`/product`);
-      }
-    });
+    purchaseRequest(purchaseForm)
+      .then((res) => {
+        if (res.status === 200) {
+          SwalModals('success', '구매요청 완료', '구매요청이 완료되었습니다.', false);
+          router.push(`/product`);
+        }
+      })
+      .catch((error) => {
+        SwalModals('error', '구매신청 실패', '본인이 등록한 매물은 구매할 수 없습니다.', false);
+        router.push(`/product/detail/${productId}`);
+      });
   };
 
   /**
@@ -233,93 +238,104 @@ export default function ProductDetail(props) {
               fontWeight="bold">
               {detailProduct.productBasicInfo.title}
             </Typography>
-            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-              <Typography
-                gutterBottom
-                variant="h6"
-                fontWeight="bold"
-                marginTop={1}
-                marginBottom={2}
-                marginRight={2}>
-                {detailProduct.productBasicInfo.carNum}
-              </Typography>
 
-              <Typography
-                gutterBottom
-                variant="h6"
-                marginTop={1}
-                marginBottom={2}
-                marginRight={1}
-                marginLeft={3}
-                color="gray">
-                {`${detailProduct.productBasicInfo.branch} ㆍ`}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="h6"
-                marginTop={1}
-                marginBottom={2}
-                marginRight={1}
-                color="gray">
-                {`${detailProduct.productDetailInfo.distance}km ㆍ`}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="h6"
-                marginTop={1}
-                marginBottom={2}
-                marginRight={1}
-                color="gray">
-                {`${detailProduct.productDetailInfo.carType} ㆍ`}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="h6"
-                marginTop={1}
-                marginBottom={2}
-                marginRight={1}
-                color="gray">
-                {`${detailProduct.productDetailInfo.fuelName} ㆍ`}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="h6"
-                marginTop={1}
-                marginBottom={2}
-                marginRight={1}
-                color="gray">
-                {`${detailProduct.productDetailInfo.transmissionName} ㆍ`}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="h6"
-                marginTop={1}
-                marginBottom={2}
-                marginRight={1}
-                color="gray">
-                {detailProduct.productDetailInfo.capacity}
-              </Typography>
+            <Grid container sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+              <Grid item md={8} xs={12} sx={{ display: 'flex' }}>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  fontWeight="bold"
+                  marginTop={1}
+                  marginBottom={2}
+                  marginRight={2}>
+                  {detailProduct.productBasicInfo.carNum}
+                </Typography>
 
-              <Typography
-                gutterBottom
-                variant="h4"
-                component="h4"
-                mr={1}
-                ml={50}
-                color="#F95700"
-                fontWeight="bold">
-                {`${Number(detailProduct.productBasicInfo.price).toLocaleString()}`}
-              </Typography>
-              <Typography
-                gutterBottom
-                variant="h4"
-                component="h4"
-                ml={1}
-                color="black"
-                fontWeight="bold">
-                {'만원'}
-              </Typography>
-            </div>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  marginTop={1}
+                  marginBottom={2}
+                  marginRight={1}
+                  marginLeft={3}
+                  color="gray">
+                  {`${detailProduct.productBasicInfo.branch} ㆍ`}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  marginTop={1}
+                  marginBottom={2}
+                  marginRight={1}
+                  color="gray">
+                  {`${detailProduct.productDetailInfo.distance}km ㆍ`}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  marginTop={1}
+                  marginBottom={2}
+                  marginRight={1}
+                  color="gray">
+                  {`${detailProduct.productDetailInfo.carType} ㆍ`}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  marginTop={1}
+                  marginBottom={2}
+                  marginRight={1}
+                  color="gray">
+                  {`${detailProduct.productDetailInfo.fuelName} ㆍ`}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  marginTop={1}
+                  marginBottom={2}
+                  marginRight={1}
+                  color="gray">
+                  {`${detailProduct.productDetailInfo.transmissionName} ㆍ`}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  marginTop={1}
+                  marginBottom={2}
+                  marginRight={1}
+                  color="gray">
+                  {`${detailProduct.productDetailInfo.capacity}인승`}
+                </Typography>
+              </Grid>
+
+              <Grid
+                item
+                md={4}
+                xs={12}
+                style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+                <Typography
+                  gutterBottom
+                  variant="h4"
+                  component="h4"
+                  mr={1}
+                  // ml="10%"
+                  color="#F95700"
+                  fontWeight="bold"
+                  style={{ marginLeft: 'auto', color: '#F95700', fontWeight: 'bold' }}>
+                  {`${Number(detailProduct.productBasicInfo.price).toLocaleString()}`}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="h4"
+                  component="h4"
+                  ml={1}
+                  color="black"
+                  fontWeight="bold">
+                  {'만원'}
+                </Typography>
+              </Grid>
+            </Grid>
+
             {/* <Grid container spacing={2} alignItems="flex-start" justifyContent="center" mb={2}> */}
             <Grid
               item
@@ -371,11 +387,6 @@ export default function ProductDetail(props) {
                           {'만원'}
                         </Typography>
                       </div>
-
-                      <Grid container spacing={2}>
-                        <Grid item></Grid>
-                        <Grid item></Grid>
-                      </Grid>
 
                       <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div
@@ -1028,132 +1039,137 @@ export default function ProductDetail(props) {
                   </Grid>
                 </Grid>
               </Grid>
-              <div
-                style={{
-                  position: 'sticky', // 스크롤에 따라 고정되도록 설정
-                  top: '84px', // 화면 상단에 고정
-                  height: '550px', // 컨테이너의 높이를 화면 높이로 설정
-                  width: '450px', // 원하는 사이드바의 너비 설정
-                  backgroundColor: 'white', // 배경색
-                  border: '1px solid #ccc', // 테두리 색상 및 두께 설정
-                  borderRadius: '5px', // 모서리를 둥글게
-                  padding: '20px', // 여백 설정
-                  marginLeft: '1%',
-                  // marginRight: '1%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}>
-                <div>
-                  <Typography
-                    sx={productDetailCss.productTitle}
-                    variant="h5"
-                    component="h5"
-                    fontWeight="bold">
-                    {detailProduct.productBasicInfo.title}
-                  </Typography>
-                  <div
-                    style={{
-                      backgroundColor: '#FFF9F7',
-                      borderRadius: '5px',
-                      padding: '16px',
-                    }}>
-                    <Typography gutterBottom variant="h6" mr={2} fontWeight="bold">
-                      차량 사고 내역
-                    </Typography>
 
-                    {
+              <Grid display="flex">
+                <div
+                  style={{
+                    position: 'sticky', // 스크롤에 따라 고정되도록 설정
+                    top: '84px', // 화면 상단에 고정
+                    height: 'fit-content', // 컨테이너의 높이를 화면 높이로 설정
+                    width: '450px', // 원하는 사이드바의 너비 설정
+                    backgroundColor: 'white', // 배경색
+                    border: '1px solid #ccc', // 테두리 색상 및 두께 설정
+                    borderRadius: '5px', // 모서리를 둥글게
+                    padding: '20px', // 여백 설정
+                    marginLeft: '1%',
+                    // marginRight: '1%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}>
+                  <Grid>
+                    <div>
                       <Typography
-                        gutterBottom
-                        variant="body2"
-                        style={{ borderBottom: '1px solid gray' }}
+                        sx={productDetailCss.productTitle}
+                        variant="h5"
+                        component="h5"
                         fontWeight="bold">
-                        사고 이력
+                        {detailProduct.productBasicInfo.title}
                       </Typography>
-                    }
-                    {detailProduct.productDetailInfo.productAccidentInfoList &&
-                    detailProduct.productDetailInfo.productAccidentInfoList.length > 0 ? (
-                      detailProduct.productDetailInfo.productAccidentInfoList.map(
-                        (accidentItem, idx) => (
-                          <Typography key={idx} gutterBottom variant="body2">
-                            {`${accidentItem.type ? `${accidentItem.type} :` : ''} ${
-                              accidentItem.count === 0 ? '' : `${accidentItem.count}번`
-                            }`}
-                          </Typography>
-                        ),
-                      )
-                    ) : (
-                      <Typography gutterBottom variant="body2">
-                        사고 이력 없음
-                      </Typography>
-                    )}
-                    {
-                      <Typography
-                        gutterBottom
-                        variant="body2"
+                      <div
                         style={{
-                          borderBottom: '1px solid gray',
-                          marginTop: '2em',
-                          position: 'relative',
-                        }}
-                        fontWeight="bold">
-                        교체 이력
-                      </Typography>
-                    }
-                    {detailProduct.productDetailInfo.productExchangeInfoList &&
-                    detailProduct.productDetailInfo.productExchangeInfoList.length > 0 ? (
-                      detailProduct.productDetailInfo.productExchangeInfoList.map(
-                        (exchangeItem, idx) => (
-                          <Typography key={idx} gutterBottom variant="body2">
-                            {`${exchangeItem.type} : ${exchangeItem.count} 번`}
+                          backgroundColor: '#FFF9F7',
+                          borderRadius: '5px',
+                          padding: '16px',
+                        }}>
+                        <Typography gutterBottom variant="h6" mr={2} fontWeight="bold">
+                          차량 사고 내역
+                        </Typography>
+
+                        {
+                          <Typography
+                            gutterBottom
+                            variant="body2"
+                            style={{ borderBottom: '1px solid gray' }}
+                            fontWeight="bold">
+                            사고 이력
                           </Typography>
-                        ),
-                      )
-                    ) : (
-                      <Typography gutterBottom variant="body2">
-                        교체 이력 없음
-                      </Typography>
-                    )}
-                  </div>
-                  <div
-                    style={{
-                      backgroundColor: '#FFF9F7',
-                      borderRadius: '5px',
-                      padding: '16px',
-                      marginTop: '2%',
-                    }}>
-                    <Box>
-                      <Typography gutterBottom variant="h6" mr={2} fontWeight="bold">
-                        차량 옵션 정보
-                      </Typography>
-                      {detailProduct.productOptionInfo.map((optionList, idx) => {
-                        return (
-                          <Typography key={idx} gutterBottom variant="body2">
-                            {/* <CheckBoxIcon
+                        }
+                        {detailProduct.productDetailInfo.productAccidentInfoList &&
+                        detailProduct.productDetailInfo.productAccidentInfoList.length > 0 ? (
+                          detailProduct.productDetailInfo.productAccidentInfoList.map(
+                            (accidentItem, idx) => (
+                              <Typography key={idx} gutterBottom variant="body2">
+                                {`${accidentItem.type ? `${accidentItem.type} :` : ''} ${
+                                  accidentItem.count === 0 ? '' : `${accidentItem.count}번`
+                                }`}
+                              </Typography>
+                            ),
+                          )
+                        ) : (
+                          <Typography gutterBottom variant="body2">
+                            사고 이력 없음
+                          </Typography>
+                        )}
+                        {
+                          <Typography
+                            gutterBottom
+                            variant="body2"
+                            style={{
+                              borderBottom: '1px solid gray',
+                              marginTop: '2em',
+                              position: 'relative',
+                            }}
+                            fontWeight="bold">
+                            교체 이력
+                          </Typography>
+                        }
+                        {detailProduct.productDetailInfo.productExchangeInfoList &&
+                        detailProduct.productDetailInfo.productExchangeInfoList.length > 0 ? (
+                          detailProduct.productDetailInfo.productExchangeInfoList.map(
+                            (exchangeItem, idx) => (
+                              <Typography key={idx} gutterBottom variant="body2">
+                                {`${exchangeItem.type} : ${exchangeItem.count} 번`}
+                              </Typography>
+                            ),
+                          )
+                        ) : (
+                          <Typography gutterBottom variant="body2">
+                            교체 이력 없음
+                          </Typography>
+                        )}
+                      </div>
+                      <div
+                        style={{
+                          backgroundColor: '#FFF9F7',
+                          borderRadius: '5px',
+                          padding: '16px',
+                          marginTop: '2%',
+                        }}>
+                        <Box>
+                          <Typography gutterBottom variant="h6" mr={2} fontWeight="bold">
+                            차량 옵션 정보
+                          </Typography>
+                          {detailProduct.productOptionInfo.map((optionList, idx) => {
+                            return (
+                              <Typography key={idx} gutterBottom variant="body2">
+                                {/* <CheckBoxIcon
                                 style={{ fontSize: '20px', color: 'gray', marginLeft: '5px' }}
                               /> */}
-                            {`${optionList.whether === 1 ? `${optionList.option}` : ''}`}
-                          </Typography>
-                        );
-                      })}
-                    </Box>
-                  </div>
-                </div>
+                                {`${optionList.whether === 1 ? `${optionList.option}` : ''}`}
+                              </Typography>
+                            );
+                          })}
+                        </Box>
+                      </div>
+                    </div>
 
-                <Button
-                  onClick={handleClickModal}
-                  mt={5}
-                  variant="contained"
-                  style={{
-                    ...buttonStyle,
-                    width: '90%',
-                    marginLeft: '5%',
-                    marginTop: '3%',
-                    fontWeight: 'bold',
-                  }} // width 속성 추가
-                >
-                  구매 신청
-                </Button>
-              </div>
+                    <Button
+                      onClick={handleClickModal}
+                      mt={5}
+                      variant="contained"
+                      style={{
+                        ...buttonStyle,
+                        width: '90%',
+                        marginLeft: '5%',
+                        marginTop: '3%',
+                        fontWeight: 'bold',
+                      }} // width 속성 추가
+                    >
+                      구매 신청
+                    </Button>
+                  </Grid>
+                </div>
+              </Grid>
             </Grid>
           </Box>
 
