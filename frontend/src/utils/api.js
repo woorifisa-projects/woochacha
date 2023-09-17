@@ -116,7 +116,6 @@ jsonInstance.interceptors.response.use(
   },
   function (error) {
     // 오류 응답을 처리
-    console.log(error.response.status);
     if (error.response.status === 401) {
       Swal.fire({
         icon: 'error',
@@ -247,7 +246,6 @@ authInstance.interceptors.response.use(
   },
   function (error) {
     // 오류 응답을 처리
-    console.log(error.response.status);
     if (error.response.status === 401) {
       LocalStorage.removeItem('loginToken');
       LocalStorage.removeItem('recoil-persist');
@@ -316,7 +314,6 @@ authFormInstance.interceptors.response.use(
   },
   function (error) {
     // 오류 응답을 처리
-    console.log(error.response.status);
     if (error.response.status === 401) {
       LocalStorage.removeItem('loginToken');
       LocalStorage.removeItem('recoil-persist');

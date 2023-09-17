@@ -20,4 +20,7 @@ public interface SaleFormRepository extends JpaRepository<SaleForm, Long> {
     @Query("SELECT COUNT(*) FROM SaleForm sf WHERE sf.member.id = :memberId AND sf.carStatus.id = :carStatusId")
     int countSale(@Param("memberId") Long memberId, @Param("carStatusId") short carStatusId);
 
+    @Query("SELECT COUNT(*) FROM SaleForm sf WHERE sf.member.id = :memberId AND sf.carNum = :carNum")
+    int registeredCarNumLen(@Param("memberId") Long memberId, @Param("carNum") String carNum);
+
 }
