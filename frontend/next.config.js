@@ -8,6 +8,10 @@ const nextConfig = {
     localIdentName: '[]',
   },
 
+  images: {
+    domains: ['woochacha.s3.ap-northeast-2.amazonaws.com'],
+  },
+
   // rewrite
   async rewrites() {
     return [
