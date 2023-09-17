@@ -126,6 +126,11 @@ table {
   border-spacing: 0;
 }
 
+html,
+body {
+  min-height: 100vh;
+}
+
 @font-face {
   font-family: 'NanumGothic';
   src: url(/frontend/public/assets/fonts/NanumGothic-Regular.ttf);
