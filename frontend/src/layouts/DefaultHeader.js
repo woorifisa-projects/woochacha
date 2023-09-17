@@ -23,7 +23,6 @@ import styles from './DefaultHeader.module.css';
 import Image from 'next/image';
 
 import LogoImage from '../../public/assets/images/logo.png';
-import { debounce } from 'lodash';
 
 function DefaultHeader() {
   const [mounted, setMounted] = useState(false);
@@ -36,10 +35,10 @@ function DefaultHeader() {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleCloseNavMenu = debounce((url) => {
+  const handleCloseNavMenu = (url) => {
     router.push(url);
     setAnchorElNav(null);
-  }, 300);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -72,7 +71,7 @@ function DefaultHeader() {
       display: { xs: 'none', md: 'flex', justifyContent: 'center' },
     },
     xsHeaderMenuItem: {
-      display: { xs: 'block', md: 'none' },
+      display: { xs: 'block', md: 'none', fontSize: '3rem' },
     },
     mdHeaderMenuItem: {
       my: 2,
@@ -90,8 +89,9 @@ function DefaultHeader() {
         elevation={0}
         color="transparent"
         position="sticky"
-        className={styles.headerContainer}>
-        <Container maxWidth className={styles.headerContainer}>
+        className={styles.headerContainer}
+        maxWidth="xl">
+        <Container maxWidth="xl" className={styles.headerContainer}>
           <Toolbar disableGutters>
             <Typography
               variant="h5"

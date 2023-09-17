@@ -24,6 +24,7 @@ export default function AdminPageLayout(props) {
     display: 'flex',
     flex: '1 1 auto',
     maxWidth: '100%',
+    height: '100%',
     minWidth: '300px',
     paddingLeft: '0px',
   }));
@@ -33,12 +34,16 @@ export default function AdminPageLayout(props) {
     flex: '1 1 auto',
     flexDirection: 'column',
     width: '100%',
+    height: '100%',
     minWidth: '300px',
+    paddingTop: '2rem',
+    paddingBottom: '2rem',
   });
 
   const productsCss = {
     gridContent: {
       height: '100%',
+      minHeight: '100%',
       display: 'flex',
       flexDirection: 'row',
     },
@@ -52,7 +57,7 @@ export default function AdminPageLayout(props) {
           {/* main page */}
           <main>
             {/* 관리자페이지 전체적인 layouts */}
-            <Grid mx="auto" spacing={2} container sx={productsCss.gridContent} maxWidth="xl" my={7}>
+            <Grid mx="auto" spacing={0} container sx={productsCss.gridContent} maxWidth="xl">
               {/* 관리자페이지 side menu */}
               <Grid item md={2} xs={12}>
                 <AdminpageSidebar />
