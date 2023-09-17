@@ -8,7 +8,7 @@ export default function Custom404() {
   return (
     <div className={styles.box}>
       <Stack alignItems="center" className={styles.bannerImageContainer}>
-        <Image src={image404} layout="fill" className={styles.bannerImage} />
+        <Image src={image404} layout="fill" className={styles.bannerImage} alt="404-image" />
       </Stack>
     </div>
   );

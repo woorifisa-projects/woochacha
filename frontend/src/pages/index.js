@@ -18,6 +18,7 @@ import Image from 'next/image';
 import BannerImage from '../../public/assets/images/woochacha-banner01.svg';
 import LoadingBar from '@/components/common/LoadingBar';
 import throttle from 'lodash/throttle';
+import { Router } from 'next/router';
 
 const mainFeaturedPost = {
   title: '우차차가 추천하는 금융상품 보러가기',
@@ -103,6 +104,10 @@ export default function Home(props) {
     }
   }, []);
 
+  const handelMove = () => {
+    Router.push('/product');
+  };
+
   const MainPageCss = {
     mainBox: {
       bgcolor: 'background.paper',
@@ -135,7 +140,12 @@ export default function Home(props) {
       {/* main page */}
       <main className={styles.main}>
         <Stack alignItems="center" className={styles.bannerImageContainer}>
-          <Image src={BannerImage} layout="fill" className={styles.bannerImage} />
+          <Image
+            src={BannerImage}
+            layout="fill"
+            className={styles.bannerImage}
+            alt="banner-image"
+          />
         </Stack>
 
         <Box sx={MainPageCss.mainBox}>
@@ -160,7 +170,7 @@ export default function Home(props) {
 
         {/* 차량 보러가기 버튼 */}
         <div className={styles.wrapper}>
-          <a className={styles.cta} href="#">
+          <a className={styles.cta} onClick={handelMove}>
             <span className={styles.span}>차량 보러가기!</span>
             <span className={styles.span}>
               <svg

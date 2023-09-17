@@ -10,3 +10,12 @@
 .boxColor {
   color: #fff;
 }
+
+.link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.link:hover {
+  cursor: pointer;
+}
