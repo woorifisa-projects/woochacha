@@ -16,9 +16,16 @@ import Image from 'next/image';
 import styles from './capitals.module.css';
 import BannerImage from '../../../public/assets/images/woochacha-capital01.svg';
 import metabusImg from '../../../public/assets/images/woochacha-capital02.svg';
+import { useEffect, useState } from 'react';
+import LoadingBar from '@/components/common/LoadingBar';
 
 export default function Capitals() {
   let responsiveFontTheme = responsiveFontSizes(theme);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const capitalCss = {
     mainCardTypo: {
@@ -43,7 +50,7 @@ export default function Capitals() {
     },
   };
 
-  return (
+  return mounted ? (
     <ThemeProvider theme={responsiveFontTheme}>
       <CssBaseline />
       {/* main page */}
@@ -122,5 +129,7 @@ export default function Capitals() {
         })}
       </main>
     </ThemeProvider>
+  ) : (
+    <LoadingBar />
   );
 }
