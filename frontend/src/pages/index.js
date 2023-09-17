@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import {
   responsiveFontSizes,
   ThemeProvider,
@@ -9,20 +8,16 @@ import {
   Box,
   Typography,
   Container,
-  Pagination,
 } from '@mui/material';
 import theme from '@/styles/theme';
 import ProductCard from '@/components/product/ProductCard';
 import MainProduct from '@/components/product/MainProduct';
-import {
-  allProductGetApi,
-  filteringProductGetApi,
-  keywordProductGetApi,
-} from '@/services/productApi';
+import { allProductGetApi } from '@/services/productApi';
 import styles from './main.module.css';
 import Image from 'next/image';
 import BannerImage from '../../public/assets/images/woochacha-banner01.svg';
 import LoadingBar from '@/components/common/LoadingBar';
+import throttle from 'lodash/throttle';
 
 const mainFeaturedPost = {
   title: '우차차가 추천하는 금융상품 보러가기',
@@ -34,13 +29,6 @@ const mainFeaturedPost = {
 export default function Home(props) {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
-  const [selectMenuValue, setSelectMenuValue] = useState({
-    typeList: [],
-    modelList: [],
-    transmissionList: [],
-  });
-  const [selectMenus, setSelectMenus] = useState();
-  const router = useRouter();
   let responsiveFontTheme = responsiveFontSizes(theme);
 
   const { allPr } = props;
@@ -48,12 +36,61 @@ export default function Home(props) {
   /**
    * 페이지네이션
    */
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
 
-  const handleChange = (event, value) => {
-    setPage(value - 1);
-  };
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    // throttle로 감싸주기 - 중복 api요청 막기 처리
+    const handleScroll = throttle(() => {
+      // 스크롤이 페이지 하단에 도달하면 새 데이터를 불러오기
+      if (
+        window.innerHeight + document.documentElement.scrollTop ===
+        document.documentElement.offsetHeight
+      ) {
+        // 더 불러올 데이터가 있고 현재 로딩 중이 아닌 경우에만 불러오도록
+        if (!loading && hasMore) {
+          // 로딩 상태를 설정하여 중복 요청을 방지
+          setLoading(true);
+          setPage(page + 1);
+          // 더 많은 데이터를 불러오는 API 호출
+          allProductGetApi(page, pageSize)
+            .then((res) => {
+              if (res.status === 200) {
+                const newContent = res.data.productInfo.content;
+                setAllProducts((prevProducts) => ({
+                  ...prevProducts,
+                  productInfo: {
+                    ...prevProducts.productInfo,
+                    content: [...prevProducts.productInfo.content, ...newContent],
+                  },
+                }));
+                setLoading(false);
+                setHasMore(!res.data.productInfo.last); // 마지막 페이지인 경우 hasMore값 !true(=false) 처리
+              } else {
+                // API 응답이 성공하지 않은 경우에 대한 처리를 추가
+                console.error('API 응답이 실패했습니다.');
+                setLoading(false);
+              }
+            })
+            .catch((error) => {
+              console.error('Error fetching data:', error);
+              setLoading(false);
+            });
+        }
+      }
+    }, 1000); // 1000ms(1초) 간격으로 스크롤 이벤트를 처리합니다.
+
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener('scroll', handleScroll);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [page, loading, hasMore]);
 
   /**
    * - 첫 렌더링시, 전체 product get
@@ -63,98 +100,8 @@ export default function Home(props) {
     if (!mounted) {
       setAllProducts(allPr);
       setMounted(true);
-    } else {
-      allProductGetApi(page, pageSize).then((res) => {
-        if (res.status === 200) {
-          setAllProducts(res.data);
-        }
-      });
     }
-  }, [page]);
-
-  /**
-   * selectmenu의 키와 라벨을 매핑
-   */
-  const selectBoxLabelMap = {
-    typeList: '차종',
-    modelList: '모델',
-    transmissionList: '변속기',
-  };
-
-  // selectBoxLabelMap 객체의 키 목록 가져오기
-  const mainSelectMenus = Object.keys(selectBoxLabelMap);
-
-  /**
-   * allProducts가 업데이트될 때만 selectBoxes를 생성하도록 이동
-   */
-  useEffect(() => {
-    if (allProducts) {
-      // 여러 옵션 중, 메인페이지에 나올 selectMenus만 필터링
-      const selectBoxes = mainSelectMenus
-        .filter((key) => allProducts.productFilterInfo[key])
-        .map((key) => ({
-          id: key,
-          label: selectBoxLabelMap[key],
-        }));
-      setSelectMenus(selectBoxes);
-    }
-  }, [allProducts]);
-
-  /**
-   * 검색어를 받아와서 API 호출 후 결과를 상태로 설정하는 함수
-   * */
-  const handleSearch = (keyword) => {
-    keywordProductGetApi(keyword).then((res) => {
-      if (res.status === 200) {
-        setAllProducts((prevProducts) => {
-          // 기존의 상태를 복사 -> content를 업데이트
-          return {
-            ...prevProducts,
-            productInfo: {
-              ...prevProducts.productInfo,
-              content: [...res.data.content],
-            },
-          };
-        });
-      }
-    });
-  };
-
-  /**
-   * 필터링 관련 함수
-   */
-  const handleFiltering = () => {
-    filteringProductGetApi(selectMenuValue).then((res) => {
-      if (res.status === 200) {
-        setAllProducts((prevProducts) => {
-          // 기존의 상태를 복사 -> content를 업데이트
-          return {
-            ...prevProducts,
-            productInfo: {
-              ...prevProducts.productInfo,
-              content: [...res.data.content],
-            },
-          };
-        });
-      }
-    });
-  };
-
-  /**
-   * selectbox 선택 시, 선택한 selectItem 저장 함수
-   */
-  const handleChangeSelect = (e, selectId) => {
-    const valueArr = e.target.value;
-    const updatedValue = {
-      ...selectMenuValue,
-      [selectId]: valueArr.map((item) => {
-        return {
-          id: item,
-        };
-      }),
-    };
-    setSelectMenuValue(updatedValue);
-  };
+  }, []);
 
   const MainPageCss = {
     mainBox: {
@@ -257,18 +204,8 @@ export default function Home(props) {
           </Grid>
         </Container>
 
-        {/* pagination */}
-        <Grid item md={12} xs={12} sx={MainPageCss.pagination}>
-          {allProducts.productInfo.totalPages === 0 ? (
-            ''
-          ) : (
-            <Pagination
-              count={allProducts.productInfo.totalPages}
-              page={page}
-              onChange={handleChange}
-            />
-          )}
-        </Grid>
+        {/* 로딩 상태 표시 */}
+        {loading && <LoadingBar />}
 
         <MainProduct post={mainFeaturedPost} />
       </main>
