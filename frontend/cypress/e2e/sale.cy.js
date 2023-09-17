@@ -27,8 +27,6 @@ describe('판매', () => {
 
       // 현재는 배포된 서버에서 로그인 버튼 한 번만 누르면 로그인 실패 모달이 떠서,
       // 두 번 클릭하는 것으로 우선 작성
-      cy.wait(500);
-      cy.get('.css-11uv7iu > .MuiBox-root > .MuiButton-root').click();
       cy.wait(1000);
       cy.get('.css-11uv7iu > .MuiBox-root > .MuiButton-root').click();
       
@@ -85,8 +83,6 @@ describe('판매', () => {
         .type(password, { force: true })
         .should('have.value', password);
 
-      cy.wait(500);
-      cy.get('.css-11uv7iu > .MuiBox-root > .MuiButton-root').click();
       cy.wait(1000);
       cy.get('.css-11uv7iu > .MuiBox-root > .MuiButton-root').click();
     
