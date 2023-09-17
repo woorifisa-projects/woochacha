@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { memberProfileGetApi } from '@/services/mypageApi';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
-import { debounce } from 'lodash';
 
 export default function MypageProfile() {
   const router = useRouter();
@@ -25,32 +24,39 @@ export default function MypageProfile() {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      mb: 5,
-      paddingY: 5,
+      my: 2,
+      paddingY: 2,
       textAlign: 'center',
-      boxShadow: 1,
+      boxShadow: 'none',
       borderRadius: '3rem',
     },
     cardMedia: {
-      width: '180px',
-      height: '180px',
-      borderRadius: '50%',
+      width: '200px',
+      height: '200px',
+      borderRadius: '15px',
+      boxShadow: 3,
     },
-    profileTitle: { color: '#1490ef' },
-    gridContainer: { marginTop: 5, width: 'fit-content', marginBottom: 5 },
+    name: {
+      padding: 3,
+      borderRadius: '15px',
+      border: '1px solid #F95700',
+      boxShadow: '70px 0px 50px -50px rgba(0,0,0,0.1)',
+    },
+    gridContainer: { marginTop: 5, width: 'fit-content', marginBottom: 5, textAlign: 'start' },
     buttonCard: {
       marginBottom: 5,
     },
     itemTitle: {
       fontWeight: 'bold',
+      textAlign: 'center',
     },
   };
 
   const memberId = userLoginState.userId;
 
-  const handleMove = debounce((url) => {
+  const handleMove = (url) => {
     router.push(url);
-  }, 200);
+  };
 
   // data 불러온 이후 필터링 data에 맞게 렌더링
   useEffect(() => {
@@ -75,8 +81,14 @@ export default function MypageProfile() {
           image={memberProfile.profileImage}
           title="profile-image"
         />
+
         <CardContent>
-          <Typography gutterBottom variant="h4" component="div" sx={mypageProfileCss.profileTitle}>
+          <Typography
+            gutterBottom
+            variant="h4"
+            component="div"
+            color="primary"
+            sx={mypageProfileCss.name}>
             {memberProfile.name} 님
           </Typography>
           <Grid container spacing={2} sx={mypageProfileCss.gridContainer}>

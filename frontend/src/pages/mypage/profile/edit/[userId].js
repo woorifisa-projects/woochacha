@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import withAuth from '@/hooks/withAuth';
 import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import MypageProfileEdit from '@/components/mypage/MypageProfileEdit';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function ProfileEdit(props) {
   const [mounted, setMounted] = useState(false);
@@ -12,12 +13,12 @@ function ProfileEdit(props) {
     setMounted(true);
   }, []);
 
-  return (
-    mounted && (
-      <>
-        <MypageProfileEdit />
-      </>
-    )
+  return mounted ? (
+    <>
+      <MypageProfileEdit />
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

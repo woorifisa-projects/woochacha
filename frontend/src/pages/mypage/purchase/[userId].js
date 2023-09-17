@@ -9,6 +9,7 @@ import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { mypagePurchasedProductsGetApi } from '@/services/mypageApi';
 import SubTabMenu from '@/components/common/SubTabMenu';
 import { SUB_PURCHASE_TAB_MENU } from '@/constants/string';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function Purchase(props) {
   const [mounted, setMounted] = useState(false);
@@ -59,38 +60,37 @@ function Purchase(props) {
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
 
-  return (
-    mounted &&
-    mypagePurchasedProducts && (
-      <>
-        <SubTabMenu currentVal={subMemuVal}>
-          {SUB_PURCHASE_TAB_MENU.map((item, idx) => {
-            return (
-              <Tab
-                key={idx}
-                value={item.value}
-                label={item.label}
-                onClick={() => handleMove(item.url)}
-              />
-            );
-          })}
-        </SubTabMenu>
-        <MypageCard content={mypagePurchasedProducts.content} />
-
-        {/* pagination */}
-        <Grid sx={mypageCss.pagination}>
-          {mypagePurchasedProducts.totalPages === 0 ? (
-            ''
-          ) : (
-            <Pagination
-              count={mypagePurchasedProducts.totalPages}
-              page={page + 1}
-              onChange={handleChange}
+  return mounted && mypagePurchasedProducts ? (
+    <>
+      <SubTabMenu currentVal={subMemuVal}>
+        {SUB_PURCHASE_TAB_MENU.map((item, idx) => {
+          return (
+            <Tab
+              key={idx}
+              value={item.value}
+              label={item.label}
+              onClick={() => handleMove(item.url)}
             />
-          )}
-        </Grid>
-      </>
-    )
+          );
+        })}
+      </SubTabMenu>
+      <MypageCard content={mypagePurchasedProducts.content} />
+
+      {/* pagination */}
+      <Grid sx={mypageCss.pagination}>
+        {mypagePurchasedProducts.totalPages === 0 ? (
+          ''
+        ) : (
+          <Pagination
+            count={mypagePurchasedProducts.totalPages}
+            page={page + 1}
+            onChange={handleChange}
+          />
+        )}
+      </Grid>
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 
