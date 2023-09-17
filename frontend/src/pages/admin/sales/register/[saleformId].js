@@ -44,6 +44,7 @@ function AdminSalesRegisterForm(props) {
 
   const router = useRouter();
   const { saleformId } = props;
+  console.log(props);
 
   const [isSubmitting, setIsSubmitting] = useState(false); // 중복 요청 방지
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(true); // 버튼 비활성화 상태 추가

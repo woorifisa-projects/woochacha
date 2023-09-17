@@ -24,6 +24,7 @@ export default function UserMyPageLayout(props) {
     display: 'flex',
     flex: '1 1 auto',
     maxWidth: '100%',
+    height: '100%',
     minWidth: '300px',
     paddingLeft: '0px',
   }));
@@ -33,12 +34,14 @@ export default function UserMyPageLayout(props) {
     flex: '1 1 auto',
     flexDirection: 'column',
     width: '100%',
+    height: '100%',
     minWidth: '300px',
   });
 
   const productsCss = {
     gridContent: {
       height: '100%',
+      minHeight: '100%',
       display: 'flex',
       flexDirection: 'row',
     },
@@ -52,16 +55,13 @@ export default function UserMyPageLayout(props) {
           {/* main page */}
           <main>
             {/* 마이페이지 전체적인 layouts */}
-            <Grid mx="auto" spacing={0} container sx={productsCss.gridContent} maxWidth="xl" my={3}>
+            <Grid mx="auto" spacing={0} container sx={productsCss.gridContent} maxWidth="xl">
               {/* 마이페이지 side menu */}
               <Grid item md={2} xs={12}>
                 <MypageSidebar />
               </Grid>
 
               {/* 마이페이지 세부 항목 관련 content */}
-              {/* <Container sx={productsCss.contentContainer} maxWidth="md">
-                {children}
-              </Container> */}
               <Grid item md={10} xs={12}>
                 <LayoutRoot>
                   <LayoutContainer>

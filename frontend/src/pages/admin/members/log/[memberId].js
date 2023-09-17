@@ -14,7 +14,6 @@ import {
   TableRow,
   Paper,
   IconButton,
-  Typography,
 } from '@mui/material';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -23,6 +22,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
 import { oneMemberLogGetApi } from '@/services/adminpageApi';
 import Link from 'next/link';
+import LoadingBar from '@/components/common/LoadingBar';
 
 /**
  * 페이지네이션 관련 함수
@@ -148,63 +148,67 @@ function LogDetail(props) {
     },
   ];
 
-  return (
-    mounted && (
-    oneMemberLog && (
-      <TableContainer component={Paper} sx={{ my: 10 }}>
-        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              {table_cell_data.map((headerItem, idx) => {
-                return (
-                  <TableCell align="center" key={idx}>
-                    {headerItem.headerLabel}
-                  </TableCell>
-                );
-              })}
+  return mounted && oneMemberLog ? (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            {table_cell_data.map((headerItem, idx) => {
+              return (
+                <TableCell align="center" key={idx}>
+                  {headerItem.headerLabel}
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {/* data map으로 반복 */}
+          {oneMemberLog.content.map((row) => (
+            <TableRow sx={basicTableCss.tableRow} key={row.id}>
+              <TableCell align="center">{row[`${table_cell_data[0].contentCell}`]}</TableCell>
+              <TableCell align="center">{row[`${table_cell_data[1].contentCell}`]}</TableCell>
+              <TableCell align="center">
+                {new Date(row[`${table_cell_data[2].contentCell}`])
+                  .toISOString()
+                  .replace('T', ' ')
+                  .slice(0, -5)}
+              </TableCell>
+              <TableCell align="center">{row[`${table_cell_data[3].contentCell}`]}</TableCell>
+              <TableCell align="center">
+                {row.etc !== null ? (
+                  <Link href={`/${row.etc}`}>보러가기</Link>
+                ) : (
+                  <span>링크 없음</span>
+                )}
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* data map으로 반복 */}
-            {oneMemberLog.content.map((row) => (
-              <TableRow sx={basicTableCss.tableRow} key={row.id}>
-                <TableCell align="center">{row[`${table_cell_data[0].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${table_cell_data[1].contentCell}`]}</TableCell>
-                <TableCell align="center">{new Date(row[`${table_cell_data[2].contentCell}`]).toISOString().replace('T', ' ').slice(0, -5)}</TableCell>
-                <TableCell align="center">{row[`${table_cell_data[3].contentCell}`]}</TableCell>
-                <TableCell align="center">
-                    {row.etc !== null ? (
-                        <Link href={`/${row.etc}`}>보러가기</Link>
-                    ) : (
-                        <span>링크 없음</span>
-                    )}
-                </TableCell>                
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
-                count={oneMemberLog.totalElements}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>,
-    ))
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              colSpan={3}
+              count={oneMemberLog.totalElements}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
+  ) : (
+    <LoadingBar />
   );
 }
 

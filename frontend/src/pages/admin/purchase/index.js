@@ -14,6 +14,7 @@ import {
   onePurchaseTransactionFormPostApi,
 } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminPurchaseList() {
   const [mounted, setMounted] = useState(false);
@@ -126,75 +127,74 @@ function AdminPurchaseList() {
     },
   ];
 
-  return (
-    mounted &&
-    allPurchaseFormInfo && (
-      <>
-        <PurchaseTable
-          headerData={table_cell_data}
-          contentData={allPurchaseFormInfo}
-          callbackFunc={handleClickModal}
-          getConfirmData={getConfirmData}
-          setConfirmFlag={setConfirmFlag}
-          moveDetailUrl={`/product/detail/`}
-          setCurrentPurchaseId={setCurrentPurchaseId}
-          page={page}
-          size={size}
-          setPage={setPage}
-          setSize={setSize}
-        />
-        {showModal && (
-          <OneButtonModal
-            onClickModal={handleClickModal}
-            isOpen={showModal}
-            modalContent={
-              confirmFlag ? ADMIN_PURCHASE_CONFIRM_MODAL.CONTENTS : ADMIN_PURCHASE_MODAL.CONTENTS
-            }
-            callBackFunc={confirmFlag ? handlePurchaseRequest : handleTransactionApprove}>
-            {/* 모달 children */}
-            {confirmFlag && confirmData ? (
-              // 검토여부 modal children
-              <Box>
-                <Grid container spacing={2} noValidate justifyContent="center" alignItems="center">
-                  <Grid item xs={12} md={6}>
+  return mounted && allPurchaseFormInfo ? (
+    <>
+      <PurchaseTable
+        headerData={table_cell_data}
+        contentData={allPurchaseFormInfo}
+        callbackFunc={handleClickModal}
+        getConfirmData={getConfirmData}
+        setConfirmFlag={setConfirmFlag}
+        moveDetailUrl={`/product/detail/`}
+        setCurrentPurchaseId={setCurrentPurchaseId}
+        page={page}
+        size={size}
+        setPage={setPage}
+        setSize={setSize}
+      />
+      {showModal && (
+        <OneButtonModal
+          onClickModal={handleClickModal}
+          isOpen={showModal}
+          modalContent={
+            confirmFlag ? ADMIN_PURCHASE_CONFIRM_MODAL.CONTENTS : ADMIN_PURCHASE_MODAL.CONTENTS
+          }
+          callBackFunc={confirmFlag ? handlePurchaseRequest : handleTransactionApprove}>
+          {/* 모달 children */}
+          {confirmFlag && confirmData ? (
+            // 검토여부 modal children
+            <Box>
+              <Grid container spacing={2} noValidate justifyContent="center" alignItems="center">
+                <Grid item xs={12} md={6}>
+                  <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
+                    판매자
+                  </Typography>
+                  <Typography textAlign="left">{`${confirmData.sellerName}`}</Typography>
+                  <Typography textAlign="left">{`${confirmData.sellerPhone}`}</Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Grid>
                     <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                      판매자
+                      구매자
                     </Typography>
-                    <Typography textAlign="left">{`${confirmData.sellerName}`}</Typography>
-                    <Typography textAlign="left">{`${confirmData.sellerPhone}`}</Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Grid>
-                      <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                        구매자
-                      </Typography>
-                      <Typography textAlign="left">{`${confirmData.buyerName}`}</Typography>
-                      <Typography textAlign="left">{`${confirmData.buyerPhone}`}</Typography>
-                    </Grid>
+                    <Typography textAlign="left">{`${confirmData.buyerName}`}</Typography>
+                    <Typography textAlign="left">{`${confirmData.buyerPhone}`}</Typography>
                   </Grid>
                 </Grid>
-                <TextField
-                  value={purchaseDateVal}
-                  onChange={handleChangeDate}
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="date"
-                  label="날짜를 선택해주세요"
-                  name="date"
-                  autoComplete="date"
-                  type="date"
-                  autoFocus
-                />
-              </Box>
-            ) : (
-              // 거래여부 modal children
-              <></>
-            )}
-          </OneButtonModal>
-        )}
-      </>
-    )
+              </Grid>
+              <TextField
+                value={purchaseDateVal}
+                onChange={handleChangeDate}
+                margin="normal"
+                required
+                fullWidth
+                id="date"
+                label="날짜를 선택해주세요"
+                name="date"
+                autoComplete="date"
+                type="date"
+                autoFocus
+              />
+            </Box>
+          ) : (
+            // 거래여부 modal children
+            <></>
+          )}
+        </OneButtonModal>
+      )}
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

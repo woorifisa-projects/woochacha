@@ -24,14 +24,24 @@ export const HEADER_MINI_MENU = {
       page: 'mypage',
     },
     {
-      pageName: '구매정보',
+      pageName: '구매이력',
       pageUrl: `/mypage/purchase`,
       page: 'purchase',
     },
     {
-      pageName: '판매정보',
+      pageName: '구매요청이력',
+      pageUrl: `/mypage/purchase-request`,
+      page: 'purchase-request',
+    },
+    {
+      pageName: '판매이력',
       pageUrl: `/mypage/sale`,
       page: 'sale',
+    },
+    {
+      pageName: '판매요청이력',
+      pageUrl: `/mypage/sale-request`,
+      page: 'sale-request',
     },
     {
       pageName: '등록한 매물정보',
@@ -161,7 +171,7 @@ export const EDIT_MODAL = {
     modalTitle: '수정하시겠습니까?',
     modalYesBtn: '네',
     modalNoBtn: '아니요',
-    modalContents: '수정 관련 텍스트입니다!!!',
+    modalContents: '수정을 등록하시려면 버튼을 눌러주세요.',
   },
 };
 
@@ -190,7 +200,7 @@ export const ADMIN_DENY_MODAL = {
     modalTitle: '승인을 반려하시겠습니까?',
     modalYesBtn: '네',
     modalNoBtn: '아니요',
-    modalContents: '승인 반려 관련 텍스트입니다!!!',
+    modalContents: '승인 반려는 취소할 수 없습니다.',
   },
 };
 

@@ -14,6 +14,7 @@ import {
 } from '@/services/adminpageApi';
 import ApproveModal from '@/components/common/ApproveModal';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminProductList() {
   const [mounted, setMounted] = useState(false);
@@ -152,81 +153,80 @@ function AdminProductList() {
     }
   }, [page, size]);
 
-  return (
-    mounted &&
-    allProductApplications && (
-      <>
-        <BasicButtonTable
-          headerData={table_cell_data}
-          contentData={allProductApplications}
-          deleteFunc={handleClickModal}
-          editFunc={handleClickModal}
-          getEditFunc={handleGetEditData}
-          setEditFlag={setEditFlag}
-          moveUrl={`/product/detail/`}
-          setCurrentProductId={setCurrentProductId}
-          currentProductId={currentProductId}
-          page={page}
-          size={size}
-          setPage={setPage}
-          setSize={setSize}
-        />
-        {showModal && (
-          <ApproveModal
-            onClickModal={handleClickModal}
-            isOpen={showModal}
-            modalContent={editFlag ? ADMIN_EDIT_MODAL.CONTENTS : DELETE_MODAL.CONTENTS}
-            callBackOneFunc={editFlag ? () => handleApproveEdit() : () => handleDelete()}
-            callBackTwoFunc={
-              editFlag
-                ? () => handleDenyEdit()
-                : () => {
-                    console.log();
-                  }
-            }>
-            {/* modal 자식 요소 - edit 의 경우, 가격 승인을 띄워주기 */}
-            {editFlag && editProductApplication ? (
-              <Grid container spacing={2} noValidate justifyContent="center" alignItems="center">
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h5" sx={adminProductCss.modalTitle}>
-                    {editProductApplication.title}
-                  </Typography>
-                  <Stack direction="column" alignItems="center" spacing={2} mb={5}>
-                    <CardMedia
-                      sx={adminProductCss.modalCardMedia}
-                      image={editProductApplication.imageUrl}
-                      title="게시글 이미지"
-                    />
-                  </Stack>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box sx={adminProductCss.modalPriceBox}>
-                    <Grid sx={adminProductCss.modalGridBox}>
-                      <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                        현재 가격
-                      </Typography>
-                      <Typography textAlign="left">{`${editProductApplication.price} 만원`}</Typography>
-                    </Grid>
-                    <Grid>
-                      <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                        수정 신청한 가격
-                      </Typography>
-                      <Typography textAlign="left">
-                        {editProductApplication.updatePrice !== null
-                          ? editProductApplication.updatePrice
-                          : '수정 신청한 가격이 없습니다!'}
-                      </Typography>
-                    </Grid>
-                  </Box>
-                </Grid>
+  return mounted && allProductApplications ? (
+    <>
+      <BasicButtonTable
+        headerData={table_cell_data}
+        contentData={allProductApplications}
+        deleteFunc={handleClickModal}
+        editFunc={handleClickModal}
+        getEditFunc={handleGetEditData}
+        setEditFlag={setEditFlag}
+        moveUrl={`/product/detail/`}
+        setCurrentProductId={setCurrentProductId}
+        currentProductId={currentProductId}
+        page={page}
+        size={size}
+        setPage={setPage}
+        setSize={setSize}
+      />
+      {showModal && (
+        <ApproveModal
+          onClickModal={handleClickModal}
+          isOpen={showModal}
+          modalContent={editFlag ? ADMIN_EDIT_MODAL.CONTENTS : DELETE_MODAL.CONTENTS}
+          callBackOneFunc={editFlag ? () => handleApproveEdit() : () => handleDelete()}
+          callBackTwoFunc={
+            editFlag
+              ? () => handleDenyEdit()
+              : () => {
+                  console.log();
+                }
+          }>
+          {/* modal 자식 요소 - edit 의 경우, 가격 승인을 띄워주기 */}
+          {editFlag && editProductApplication ? (
+            <Grid container spacing={2} noValidate justifyContent="center" alignItems="center">
+              <Grid item xs={12} md={6}>
+                <Typography variant="h5" sx={adminProductCss.modalTitle}>
+                  {editProductApplication.title}
+                </Typography>
+                <Stack direction="column" alignItems="center" spacing={2} mb={5}>
+                  <CardMedia
+                    sx={adminProductCss.modalCardMedia}
+                    image={editProductApplication.imageUrl}
+                    title="게시글 이미지"
+                  />
+                </Stack>
               </Grid>
-            ) : (
-              ''
-            )}
-          </ApproveModal>
-        )}
-      </>
-    )
+              <Grid item xs={12} md={6}>
+                <Box sx={adminProductCss.modalPriceBox}>
+                  <Grid sx={adminProductCss.modalGridBox}>
+                    <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
+                      현재 가격
+                    </Typography>
+                    <Typography textAlign="left">{`${editProductApplication.price} 만원`}</Typography>
+                  </Grid>
+                  <Grid>
+                    <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
+                      수정 신청한 가격
+                    </Typography>
+                    <Typography textAlign="left">
+                      {editProductApplication.updatePrice !== null
+                        ? editProductApplication.updatePrice
+                        : '수정 신청한 가격이 없습니다!'}
+                    </Typography>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          ) : (
+            ''
+          )}
+        </ApproveModal>
+      )}
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

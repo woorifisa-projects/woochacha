@@ -19,6 +19,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
+import NoData from '../common/NoData';
 
 /**
  * 페이지네이션 관련 함수
@@ -135,94 +136,90 @@ export default function PurchaseTable(props) {
     },
   };
 
-  return (
-    mounted && (
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              {headerData.map((headerItem, idx) => {
-                return (
-                  <TableCell align="center" key={idx}>
-                    {headerItem.headerLabel}
-                  </TableCell>
-                );
-              })}
+  return mounted && rows.length > 0 ? (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            {headerData.map((headerItem, idx) => {
+              return (
+                <TableCell align="center" key={idx}>
+                  {headerItem.headerLabel}
+                </TableCell>
+              );
+            })}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {/* data map으로 반복 */}
+          {rows.map((row, idx) => (
+            <TableRow
+              sx={basicButtonTableCss.tableRow}
+              key={idx}
+              onClick={() => handleCurrentPurchaseId(row.purchaseId)}>
+              <TableCell
+                sx={basicButtonTableCss.button}
+                onClick={() => handleMove(moveDetailUrl, row.productId)}
+                align="center">
+                {row[`${headerData[0].contentCell}`]}
+              </TableCell>
+              <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
+              <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
+              <TableCell align="center">
+                {row[`${headerData[3].contentCell}`] === 1 ? (
+                  <Button sx={basicButtonTableCss.button} variant="outlined" disabled>
+                    확인
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => handleConfirmProduct(row.purchaseId)}
+                    sx={basicButtonTableCss.button}
+                    variant="outlined"
+                    color="error">
+                    미확인
+                  </Button>
+                )}
+              </TableCell>
+              <TableCell align="center">
+                {row[`${headerData[4].contentCell}`] === 0 ? (
+                  <Button
+                    onClick={() => handlePurchaseProduct(row.purchaseId)}
+                    sx={basicButtonTableCss.button}
+                    variant="outlined">
+                    미성사
+                  </Button>
+                ) : (
+                  <Button sx={basicButtonTableCss.button} variant="outlined" color="error" disabled>
+                    성사
+                  </Button>
+                )}
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* data map으로 반복 */}
-            {rows.map((row, idx) => (
-              <TableRow
-                sx={basicButtonTableCss.tableRow}
-                key={idx}
-                onClick={() => handleCurrentPurchaseId(row.purchaseId)}>
-                <TableCell
-                  sx={basicButtonTableCss.button}
-                  onClick={() => handleMove(moveDetailUrl, row.productId)}
-                  align="center">
-                  {row[`${headerData[0].contentCell}`]}
-                </TableCell>
-                <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
-                <TableCell align="center">
-                  {row[`${headerData[3].contentCell}`] === 1 ? (
-                    <Button sx={basicButtonTableCss.button} variant="outlined" disabled>
-                      확인
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => handleConfirmProduct(row.purchaseId)}
-                      sx={basicButtonTableCss.button}
-                      variant="outlined"
-                      color="error">
-                      미확인
-                    </Button>
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  {row[`${headerData[4].contentCell}`] === 0 ? (
-                    <Button
-                      onClick={() => handlePurchaseProduct(row.purchaseId)}
-                      sx={basicButtonTableCss.button}
-                      variant="outlined">
-                      미성사
-                    </Button>
-                  ) : (
-                    <Button
-                      sx={basicButtonTableCss.button}
-                      variant="outlined"
-                      color="error"
-                      disabled>
-                      성사
-                    </Button>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
-                count={contentData.totalElements}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    )
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              colSpan={3}
+              count={contentData.totalElements}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
+  ) : (
+    <NoData />
   );
 }

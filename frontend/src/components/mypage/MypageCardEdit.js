@@ -19,7 +19,7 @@ export default function MypageCardEdit(props) {
 
   const mypageCardCss = {
     container: {
-      mb: 10,
+      my: 8,
     },
     card: {
       height: '100%',

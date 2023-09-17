@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import SubTabMenu from '@/components/common/SubTabMenu';
 import { SUB_PURCHASE_TAB_MENU } from '@/constants/string';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function PurchaseRequest() {
   const [mounted, setMounted] = useState(false);
@@ -59,38 +60,37 @@ function PurchaseRequest() {
     }
   }, [page]);
 
-  return (
-    mounted &&
-    mypagePurchaseRequestList && (
-      <>
-        <SubTabMenu currentVal={subMemuVal}>
-          {SUB_PURCHASE_TAB_MENU.map((item, idx) => {
-            return (
-              <Tab
-                key={idx}
-                value={item.value}
-                label={item.label}
-                onClick={() => handleMove(item.url)}
-              />
-            );
-          })}
-        </SubTabMenu>
-        <MypageCard content={mypagePurchaseRequestList.content} />
-
-        {/* pagination */}
-        <Grid sx={mypageCss.pagination}>
-          {mypagePurchaseRequestList.totalPages === 0 ? (
-            ''
-          ) : (
-            <Pagination
-              count={mypagePurchaseRequestList.totalPages}
-              page={page + 1}
-              onChange={handleChange}
+  return mounted && mypagePurchaseRequestList ? (
+    <>
+      <SubTabMenu currentVal={subMemuVal}>
+        {SUB_PURCHASE_TAB_MENU.map((item, idx) => {
+          return (
+            <Tab
+              key={idx}
+              value={item.value}
+              label={item.label}
+              onClick={() => handleMove(item.url)}
             />
-          )}
-        </Grid>
-      </>
-    )
+          );
+        })}
+      </SubTabMenu>
+      <MypageCard content={mypagePurchaseRequestList.content} />
+
+      {/* pagination */}
+      <Grid sx={mypageCss.pagination}>
+        {mypagePurchaseRequestList.totalPages === 0 ? (
+          ''
+        ) : (
+          <Pagination
+            count={mypagePurchaseRequestList.totalPages}
+            page={page + 1}
+            onChange={handleChange}
+          />
+        )}
+      </Grid>
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

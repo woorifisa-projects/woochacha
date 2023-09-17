@@ -6,6 +6,7 @@ import MypageCardEdit from '@/components/mypage/MypageCardEdit';
 import { mypageRegisteredProductsGetApi } from '@/services/mypageApi';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function RegisteredItem() {
   const [mounted, setMounted] = useState(false);
@@ -49,26 +50,25 @@ function RegisteredItem() {
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
 
-  return (
-    mounted &&
-    mypageRegisteredProducts && (
-      <>
-        <MypageCardEdit content={mypageRegisteredProducts.content} memberId={memberId}/>
+  return mounted && mypageRegisteredProducts ? (
+    <>
+      <MypageCardEdit content={mypageRegisteredProducts.content} memberId={memberId} />
 
-        {/* pagination */}
-        <Grid sx={registeredCss.pagination}>
-          {mypageRegisteredProducts.totalPages === 0 ? (
-            ''
-          ) : (
-            <Pagination
-              count={mypageRegisteredProducts.totalPages}
-              page={page + 1}
-              onChange={handleChange}
-            />
-          )}
-        </Grid>
-      </>
-    )
+      {/* pagination */}
+      <Grid sx={registeredCss.pagination}>
+        {mypageRegisteredProducts.totalPages === 0 ? (
+          ''
+        ) : (
+          <Pagination
+            count={mypageRegisteredProducts.totalPages}
+            page={page + 1}
+            onChange={handleChange}
+          />
+        )}
+      </Grid>
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

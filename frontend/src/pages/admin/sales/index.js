@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import AdminPageLayout from '@/layouts/admin/AdminPageLayout';
-import { CssBaseline, ThemeProvider, Typography, responsiveFontSizes } from '@mui/material';
+import { CssBaseline, ThemeProvider, responsiveFontSizes } from '@mui/material';
 import theme from '@/styles/theme';
 import withAdminAuth from '@/hooks/withAdminAuth';
 import { ADMIN_DENY_MODAL } from '@/constants/string';
@@ -9,6 +9,7 @@ import SaleTable from '@/components/admin/SaleTable';
 import BasicModal from '@/components/common/BasicModal';
 import { allSaleFormGetApi, denySaleFormPatchApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function AdminSalesList() {
   const [mounted, setMounted] = useState(false);
@@ -82,32 +83,31 @@ function AdminSalesList() {
     }
   }, [page, size]);
 
-  return (
-    mounted &&
-    allSaleFormInfo && (
-      <ThemeProvider theme={responsiveFontTheme}>
-        <CssBaseline />
-        <SaleTable
-          headerData={table_cell_data}
-          contentData={allSaleFormInfo}
-          moveUrl={`/admin/sales/approve/`}
-          callbackFunc={handleClickModal}
-          setCurrentSaleFormId={setCurrentSaleFormId}
-          page={page}
-          size={size}
-          setPage={setPage}
-          setSize={setSize}
+  return mounted && allSaleFormInfo ? (
+    <ThemeProvider theme={responsiveFontTheme}>
+      <CssBaseline />
+      <SaleTable
+        headerData={table_cell_data}
+        contentData={allSaleFormInfo}
+        moveUrl={`/admin/sales/approve/`}
+        callbackFunc={handleClickModal}
+        setCurrentSaleFormId={setCurrentSaleFormId}
+        page={page}
+        size={size}
+        setPage={setPage}
+        setSize={setSize}
+      />
+      {showModal && (
+        <BasicModal
+          onClickModal={handleClickModal}
+          isOpen={showModal}
+          modalContent={ADMIN_DENY_MODAL.CONTENTS}
+          callBackFunc={handleDeny}
         />
-        {showModal && (
-          <BasicModal
-            onClickModal={handleClickModal}
-            isOpen={showModal}
-            modalContent={ADMIN_DENY_MODAL.CONTENTS}
-            callBackFunc={handleDeny}
-          />
-        )}
-      </ThemeProvider>
-    )
+      )}
+    </ThemeProvider>
+  ) : (
+    <LoadingBar />
   );
 }
 

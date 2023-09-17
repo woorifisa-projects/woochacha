@@ -9,6 +9,7 @@ import SubTabMenu from '@/components/common/SubTabMenu';
 import { mypageSoldProductsGetApi } from '@/services/mypageApi';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
 import { SUB_SALE_TAB_MENU } from '@/constants/string';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function Sale() {
   const router = useRouter();
@@ -58,38 +59,37 @@ function Sale() {
     }
   }, [page]);
 
-  return (
-    mounted &&
-    mypageSoldProducts && (
-      <>
-        <SubTabMenu currentVal={subMemuVal}>
-          {SUB_SALE_TAB_MENU.map((item, idx) => {
-            return (
-              <Tab
-                key={idx}
-                value={item.value}
-                label={item.label}
-                onClick={() => handleMove(item.url)}
-              />
-            );
-          })}
-        </SubTabMenu>
-        <MypageCard content={mypageSoldProducts.content} />
-
-        {/* pagination */}
-        <Grid sx={mypageCss.pagination}>
-          {mypageSoldProducts.totalPages === 0 ? (
-            ''
-          ) : (
-            <Pagination
-              count={mypageSoldProducts.totalPages}
-              page={page + 1}
-              onChange={handleChange}
+  return mounted && mypageSoldProducts ? (
+    <>
+      <SubTabMenu currentVal={subMemuVal}>
+        {SUB_SALE_TAB_MENU.map((item, idx) => {
+          return (
+            <Tab
+              key={idx}
+              value={item.value}
+              label={item.label}
+              onClick={() => handleMove(item.url)}
             />
-          )}
-        </Grid>
-      </>
-    )
+          );
+        })}
+      </SubTabMenu>
+      <MypageCard content={mypageSoldProducts.content} />
+
+      {/* pagination */}
+      <Grid sx={mypageCss.pagination}>
+        {mypageSoldProducts.totalPages === 0 ? (
+          ''
+        ) : (
+          <Pagination
+            count={mypageSoldProducts.totalPages}
+            page={page + 1}
+            onChange={handleChange}
+          />
+        )}
+      </Grid>
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

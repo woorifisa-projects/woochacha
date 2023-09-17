@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Box, Container, ListItemText, MenuItem, MenuList, Paper } from '@mui/material';
 import { HEADER_ADMIN_MINI_MENU } from '@/constants/string';
 import { useRouter } from 'next/router';
-import { debounce } from 'lodash';
 
 export default function AdminpageSidebar() {
   const router = useRouter();
@@ -13,14 +12,21 @@ export default function AdminpageSidebar() {
   const myPageSidebarCss = {
     container: {
       width: '100%',
-      height: '80%',
+      height: '100%',
+      minHeight: '100%',
       textAlign: 'center',
     },
     mypageMenuPaper: {
-      backgroundColor: '#D6E6F5',
-      borderRadius: '1rem',
+      backgroundColor: '#FFF',
       minWidth: '150px',
       maxWidth: '100%',
+      height: '100%',
+      minHeight: '100%',
+      boxShadow: 'none',
+      borderRight: '1px solid rgb(235, 235, 235)',
+    },
+    mypageMenuUl: {
+      padding: 0,
     },
     mypageMenuItem: {
       borderRadius: '0px',
@@ -32,11 +38,11 @@ export default function AdminpageSidebar() {
       paddingBottom: 3,
       '&:hover': {
         cursor: 'pointer',
-        backgroundColor: '#B2D8FA',
+        backgroundColor: 'rgb(249,87,0, 0.3)',
       },
     },
     selectedMenuItem: {
-      backgroundColor: '#B2D8FA', // 현재 선택된 메뉴 아이템의 색상
+      backgroundColor: 'rgb(249,87,0, 0.3)', // 현재 선택된 메뉴 아이템의 색상
     },
   };
 
@@ -51,15 +57,15 @@ export default function AdminpageSidebar() {
     });
   }, []);
 
-  const handleMove = debounce((url) => {
+  const handleMove = (url) => {
     router.push(url);
-  }, 300);
+  };
 
   return (
-    <Container sx={myPageSidebarCss.container}>
-      <Box>
+    <Container sx={myPageSidebarCss.container} disableGutters={true}>
+      <Box sx={myPageSidebarCss.container}>
         <Paper sx={myPageSidebarCss.mypageMenuPaper}>
-          <MenuList dense>
+          <MenuList dense sx={myPageSidebarCss.mypageMenuUl}>
             {HEADER_ADMIN_MINI_MENU.CONTENTS.map((selectItem) => {
               return (
                 <MenuItem

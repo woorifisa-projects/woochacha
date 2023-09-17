@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tabs } from '@mui/material';
 
 export default function SubTabMenu(props) {
   const { currentVal, children } = props;

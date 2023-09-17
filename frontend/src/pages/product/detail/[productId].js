@@ -1,20 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CssBaseline,
-  Grid,
-  ThemeProvider,
-  Typography,
-  responsiveFontSizes,
-} from '@mui/material';
+import { Box, Button, Grid, ThemeProvider, Typography, responsiveFontSizes } from '@mui/material';
 import BasicModal from '@/components/common/BasicModal';
 import ImageSlider from '@/components/product/ImageSlider';
 import theme from '@/styles/theme';
-import { CAPITAL_CONTENTS, PURCHASE_MODAL } from '@/constants/string';
+import { PURCHASE_MODAL } from '@/constants/string';
 import { purchaseRequest } from '@/services/productApi';
 import { todayDate } from '@/utils/date';
 import { productDetailGetApi } from '@/services/productApi';
@@ -27,16 +17,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'; // 열선시트
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-
-import BuildIcon from '@mui/icons-material/Build';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import GroupsIcon from '@mui/icons-material/Groups';
-import styled from '@emotion/styled';
-import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
 
 // import { Line } from 'react-bootstrap-icons';
 

@@ -4,6 +4,7 @@ import UserMyPageLayout from '@/layouts/user/UserMyPageLayout';
 import MypageProfile from '@/components/mypage/MypageProfile';
 import { useRecoilState } from 'recoil';
 import { userLoggedInState } from '@/atoms/userInfoAtoms';
+import LoadingBar from '@/components/common/LoadingBar';
 
 function Mypage(props) {
   const [mounted, setMounted] = useState(false);
@@ -16,13 +17,12 @@ function Mypage(props) {
     setMounted(true);
   }, []);
 
-  return (
-    mounted &&
-    memberId && (
-      <>
-        <MypageProfile />
-      </>
-    )
+  return mounted && memberId ? (
+    <>
+      <MypageProfile />
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

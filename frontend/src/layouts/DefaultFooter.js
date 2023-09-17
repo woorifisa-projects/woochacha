@@ -1,54 +1,14 @@
-import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
-import { userLoggedInState } from '@/atoms/userInfoAtoms';
-
-import {
-  CssBaseline,
-  ThemeProvider,
-  Box,
-  Grid,
-  ListItem,
-  ListItemText,
-  Typography,
-} from '@mui/material';
+import { CssBaseline, ThemeProvider, Box, Grid } from '@mui/material';
 import theme from '@/styles/theme';
 import CopyRight from '@/components/common/CopyRight';
-import { HEADER_UNLOGIN_USER_MENU } from '@/constants/string';
 import { useEffect, useState } from 'react';
 
 export default function DefaultFooter() {
   const [mounted, setMouted] = useState(false);
-  const router = useRouter();
-  const userLoginState = useRecoilValue(userLoggedInState);
-
-  const handleMovePage = (url) => {
-    router.push(url);
-  };
 
   useEffect(() => {
     setMouted(true);
   }, []);
-
-  const FOOTER_MINI_MENU_LOGIN = {
-    CONTENTS: [
-      {
-        pageName: '내 프로필',
-        pageUrl: `/mypage/${userLoginState.userId}`,
-      },
-      {
-        pageName: '구매정보',
-        pageUrl: `/mypage/purchase/${userLoginState.userId}`,
-      },
-      {
-        pageName: '판매정보',
-        pageUrl: `/mypage/sale/${userLoginState.userId}`,
-      },
-      {
-        pageName: '등록한 매물정보',
-        pageUrl: `/mypage/registered/${userLoginState.userId}`,
-      },
-    ],
-  };
 
   const defaultFooter = {
     footerBox: {
@@ -60,6 +20,7 @@ export default function DefaultFooter() {
       mx: 'auto',
       color: theme.palette.primary.main,
       fontSize: '14px',
+      borderTop: '1px solid rgb(235, 235, 235)',
     },
     gridItems: {
       display: 'flex',

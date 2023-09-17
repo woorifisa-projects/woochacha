@@ -19,6 +19,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useRouter } from 'next/router';
+import NoData from '../common/NoData';
 
 /**
  * 페이지네이션 관련 함수
@@ -122,71 +123,71 @@ export default function SaleTable(props) {
     },
   };
 
-  return (
-    mounted && (
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              {headerData.map((headerItem, idx) => {
-                return (
-                  <TableCell align="center" key={idx}>
-                    {headerItem.headerLabel}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* data map으로 반복 */}
-            {rows.map((row) => (
-              <TableRow
-                sx={basicButtonTableCss.tableRow}
-                key={row.id}
-                onClick={() => handleCurrentId(row.id)}>
-                <TableCell align="center">{row[`${headerData[0].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
-                <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
-                <TableCell align="center">
-                  <Button
-                    onClick={() => handleMove(row.id)}
-                    sx={basicButtonTableCss.button}
-                    variant="contained">
-                    매물등록
-                  </Button>
-                  <Button
-                    onClick={callbackFunc}
-                    sx={basicButtonTableCss.button}
-                    variant="contained"
-                    color="error">
-                    반려하기
-                  </Button>
+  return mounted && rows.length > 0 ? (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            {headerData.map((headerItem, idx) => {
+              return (
+                <TableCell align="center" key={idx}>
+                  {headerItem.headerLabel}
                 </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                colSpan={3}
-                count={contentData.totalElements}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+              );
+            })}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {/* data map으로 반복 */}
+          {rows.map((row) => (
+            <TableRow
+              sx={basicButtonTableCss.tableRow}
+              key={row.id}
+              onClick={() => handleCurrentId(row.id)}>
+              <TableCell align="center">{row[`${headerData[0].contentCell}`]}</TableCell>
+              <TableCell align="center">{row[`${headerData[1].contentCell}`]}</TableCell>
+              <TableCell align="center">{row[`${headerData[2].contentCell}`]}</TableCell>
+              <TableCell align="center">
+                <Button
+                  onClick={() => handleMove(row.id)}
+                  sx={basicButtonTableCss.button}
+                  variant="contained">
+                  매물등록
+                </Button>
+                <Button
+                  onClick={callbackFunc}
+                  sx={basicButtonTableCss.button}
+                  variant="contained"
+                  color="error">
+                  반려하기
+                </Button>
+              </TableCell>
             </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    )
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              colSpan={3}
+              count={contentData.totalElements}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
+  ) : (
+    <NoData />
   );
 }

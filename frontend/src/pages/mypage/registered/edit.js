@@ -10,6 +10,7 @@ import {
 import { SwalModals } from '@/utils/modal';
 import Swal from 'sweetalert2';
 import { debounce } from 'lodash';
+import LoadingBar from '@/components/common/LoadingBar';
 function RegisteredEdit(props) {
   const router = useRouter();
   const { memberId, productId } = props; // query string
@@ -32,18 +33,13 @@ function RegisteredEdit(props) {
   };
 
   const registeredEditCss = {
-    mypageTitle: {
-      my: 10,
-      color: '#1490ef',
-      fontWeight: 'bold',
-    },
     mypagesubTitle: {
       fontWeight: 'bold',
-      mb: 3,
+      mb: 10,
     },
     card: {
-      maxWidth: '50rem',
-      maxHeight: '45rem',
+      maxWidth: '100%',
+      maxHeight: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -51,12 +47,11 @@ function RegisteredEdit(props) {
       marginBottom: 10,
       paddingY: 8,
       textAlign: 'center',
-      boxShadow: 7,
-      borderRadius: '3rem',
+      boxShadow: 'none',
     },
     cardMedia: {
-      width: '15rem',
-      height: '15rem',
+      width: '20rem',
+      height: '20rem',
       borderRadius: '1rem',
     },
     gridBox: {
@@ -86,10 +81,6 @@ function RegisteredEdit(props) {
     });
     setMounted(true);
   }, []);
-
-  const handleChangePrice = (e) => {
-    setPriceValue(e.target.value);
-  };
 
   /**
    * 수정 form 제출
@@ -135,73 +126,72 @@ function RegisteredEdit(props) {
     }
   };
 
-  return (
-    mounted && (
-      <>
-        <Card sx={registeredEditCss.card}>
-          <Typography
-            sx={registeredEditCss.mypagesubTitle}
-            component="h5"
-            variant="h5"
-            gutterBottom>
-            {mypageProductEditRequest.title}
-          </Typography>
-          <Grid container spacing={2} noValidate justifyContent="center">
-            <Grid item xs={12} md={6}>
-              <Stack direction="column" alignItems="center" spacing={2} mb={5}>
-                <CardMedia
-                  sx={registeredEditCss.cardMedia}
-                  image={mypageProductEditRequest.carImage}
-                  title="게시글 이미지"
-                />
-              </Stack>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={registeredEditCss.priceBox}>
-                <Grid sx={registeredEditCss.gridBox}>
-                  <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                    현재 가격
-                  </Typography>
-                  <Typography textAlign="left">{`${mypageProductEditRequest.price} 만원`}</Typography>
-                </Grid>
-                <Grid>
-                  <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
-                    수정할 가격
-                  </Typography>
-                  <TextField
-                    type="text"
-                    margin="normal"
-                    required
-                    name="updatePrice"
-                    label="가격 수정"
-                    value={verificationNum}
-                    fullWidth
-                    onChange={handleVerificationNumChange}
-                    InputProps={{
-                      endAdornment: (
-                        <Typography style={{ color: 'gray', whiteSpace: 'nowrap' }}>
-                          만원
-                        </Typography>
-                      ),
-                      style: { display: 'flex', alignItems: 'center' },
-                    }}
-                  />
-                </Grid>
-                <Button
-                  onClick={handleSubmit}
-                  type="submit"
-                  size="large"
-                  variant="contained"
-                  sx={registeredEditCss.button}
-                  disabled={modifyPriceButton}>
-                  가격 수정하기
-                </Button>
-              </Box>
-            </Grid>
+  return mounted ? (
+    <>
+      <Card sx={registeredEditCss.card}>
+        <Typography
+          sx={registeredEditCss.mypagesubTitle}
+          component="h5"
+          variant="h5"
+          gutterBottom
+          color="primary">
+          {mypageProductEditRequest.title}
+        </Typography>
+        <Grid container spacing={2} noValidate justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <Stack direction="column" alignItems="center" spacing={2} mb={5}>
+              <CardMedia
+                sx={registeredEditCss.cardMedia}
+                image={mypageProductEditRequest.carImage}
+                title="게시글 이미지"
+              />
+            </Stack>
           </Grid>
-        </Card>
-      </>
-    )
+          <Grid item xs={12} md={6}>
+            <Box sx={registeredEditCss.priceBox}>
+              <Grid sx={registeredEditCss.gridBox}>
+                <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
+                  현재 가격
+                </Typography>
+                <Typography textAlign="left">{`${mypageProductEditRequest.price} 만원`}</Typography>
+              </Grid>
+              <Grid>
+                <Typography variant="h6" component="h6" textAlign="left" fontWeight="bold">
+                  수정할 가격
+                </Typography>
+                <TextField
+                  type="text"
+                  margin="normal"
+                  required
+                  name="updatePrice"
+                  label="가격 수정"
+                  value={verificationNum}
+                  fullWidth
+                  onChange={handleVerificationNumChange}
+                  InputProps={{
+                    endAdornment: (
+                      <Typography style={{ color: 'gray', whiteSpace: 'nowrap' }}>만원</Typography>
+                    ),
+                    style: { display: 'flex', alignItems: 'center' },
+                  }}
+                />
+              </Grid>
+              <Button
+                onClick={handleSubmit}
+                type="submit"
+                size="large"
+                variant="contained"
+                sx={registeredEditCss.button}
+                disabled={modifyPriceButton}>
+                가격 수정하기
+              </Button>
+            </Box>
+          </Grid>
+        </Grid>
+      </Card>
+    </>
+  ) : (
+    <LoadingBar />
   );
 }
 

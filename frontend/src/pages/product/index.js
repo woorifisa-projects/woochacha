@@ -23,6 +23,8 @@ import MultipleSelect from '@/components/product/MultipleSelect';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import styles from './product.module.css';
 import { debounce } from 'lodash';
+import LoadingBar from '@/components/common/LoadingBar';
+import NoData from '@/components/common/NoData';
 export default function Products(props) {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
@@ -163,71 +165,67 @@ export default function Products(props) {
     },
     pagination: { display: 'flex', justifyContent: 'center', my: 8 },
   };
-  return (
-    allProducts &&
-    mounted && (
-      <ThemeProvider theme={responsiveFontTheme}>
-        <CssBaseline />
-        {/* main page */}
-        <main>
-          {/* 페이지 상단 serch box */}
-          <Grid
-            container
-            mx="auto"
-            maxWidth="xl"
-            justifyContent="center"
-            className={styles.searchGrid}>
-            <Box className={styles.searchBox}>
-              <h5 className={styles.searchTitle}>우차차가 검증한 차량 조회하기</h5>
-              <SearchBar onSearch={handleSearchDebounced} />
-            </Box>
-            {/* <MiniCard colorVal="#FFF" shadowVal={3} marginVal={10}></MiniCard> */}
-          </Grid>
-          {/* 메인 페이지 content */}
-          <Grid container maxWidth="xl" mx="auto" justifyContent="center">
-            <Grid mx="auto" container sx={productsCss.gridContent} maxWidth="xl">
-              {/* 구매 페이지 filltering side bar */}
-              <Grid
-                item
-                mx={4}
-                lg={2}
-                md={2}
-                xs={12}
-                spacing={1}
-                alignItems="center"
-                justifyContent="center"
-                mb={8}>
-                <Card sx={productsCss.card}>
-                  <Typography variant="body1" sx={productsCss.cardTypo}>
-                    조건 검색
-                    <Box ml={1}>
-                      <DirectionsCarIcon color="primary" />
-                    </Box>
-                  </Typography>
+  return allProducts && mounted ? (
+    <ThemeProvider theme={responsiveFontTheme}>
+      <CssBaseline />
+      {/* main page */}
+      <main>
+        {/* 페이지 상단 serch box */}
+        <Grid
+          container
+          mx="auto"
+          maxWidth="xl"
+          justifyContent="center"
+          className={styles.searchGrid}>
+          <Box className={styles.searchBox}>
+            <h5 className={styles.searchTitle}>우차차가 검증한 차량 조회하기</h5>
+            <SearchBar onSearch={handleSearchDebounced} />
+          </Box>
+          {/* <MiniCard colorVal="#FFF" shadowVal={3} marginVal={10}></MiniCard> */}
+        </Grid>
+        {/* 메인 페이지 content */}
+        <Grid container maxWidth="xl" mx="auto" justifyContent="center">
+          <Grid mx="auto" container sx={productsCss.gridContent} maxWidth="xl">
+            {/* 구매 페이지 filltering side bar */}
+            <Grid
+              item
+              mx={4}
+              lg={2}
+              md={2}
+              xs={12}
+              spacing={1}
+              alignItems="center"
+              justifyContent="center"
+              mb={8}>
+              <Card sx={productsCss.card}>
+                <Typography variant="body1" sx={productsCss.cardTypo}>
+                  조건 검색
+                  <Box ml={1}>
+                    <DirectionsCarIcon color="primary" />
+                  </Box>
+                </Typography>
 
-                  {selectMenus &&
-                    selectMenus.map((item, idx) => {
-                      return (
-                        <Grid key={idx} item sx={productsCss.filteringBox}>
-                          <MultipleSelect
-                            sx={productsCss.filteringBox}
-                            key={idx}
-                            selectMenu={item}
-                            selectItems={allProducts.productFilterInfo[`${item.id}`]}
-                            onChangeSelect={handleChangeSelect}
-                          />
-                        </Grid>
-                      );
-                    })}
-                  <Button
-                    sx={productsCss.filteringBtn}
-                    variant="contained"
-                    onClick={handleFiltering}>
-                    검색
-                  </Button>
-                </Card>
-              </Grid>
-              {/* 차량게시글 관련 content */}
+                {selectMenus &&
+                  selectMenus.map((item, idx) => {
+                    return (
+                      <Grid key={idx} item sx={productsCss.filteringBox}>
+                        <MultipleSelect
+                          sx={productsCss.filteringBox}
+                          key={idx}
+                          selectMenu={item}
+                          selectItems={allProducts.productFilterInfo[`${item.id}`]}
+                          onChangeSelect={handleChangeSelect}
+                        />
+                      </Grid>
+                    );
+                  })}
+                <Button sx={productsCss.filteringBtn} variant="contained" onClick={handleFiltering}>
+                  검색
+                </Button>
+              </Card>
+            </Grid>
+            {/* 차량게시글 관련 content */}
+            {allProducts.productInfo.content.length > 0 ? (
               <Grid
                 item
                 lg={8}
@@ -240,23 +238,36 @@ export default function Products(props) {
                   <ProductCard productItems={allProducts.productInfo} />
                 </Grid>
               </Grid>
-            </Grid>
-            {/* pagination */}
-            <Grid item md={12} xs={12} sx={productsCss.pagination}>
-              {allProducts.productInfo.totalPages === 0 ? (
-                ''
-              ) : (
-                <Pagination
-                  count={allProducts.productInfo.totalPages}
-                  page={page}
-                  onChange={handleChange}
-                />
-              )}
-            </Grid>
+            ) : (
+              <Grid
+                item
+                lg={8}
+                md={8}
+                xs={12}
+                // mx={8}
+                sx={productsCss.contentContainer}
+                maxWidth="lg">
+                <NoData />
+              </Grid>
+            )}
           </Grid>
-        </main>
-      </ThemeProvider>
-    )
+          {/* pagination */}
+          <Grid item md={12} xs={12} sx={productsCss.pagination}>
+            {allProducts.productInfo.totalPages === 0 ? (
+              ''
+            ) : (
+              <Pagination
+                count={allProducts.productInfo.totalPages}
+                page={page}
+                onChange={handleChange}
+              />
+            )}
+          </Grid>
+        </Grid>
+      </main>
+    </ThemeProvider>
+  ) : (
+    <LoadingBar />
   );
 }
 export async function getServerSideProps() {
