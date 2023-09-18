@@ -1,5 +1,5 @@
 # 우리가 찾는 차, WOOCHACHA
-<img src="docs/logo2.png"/>
+<img src="docs/logo2.png" width="500px"/>
 
 ## 허위 매물 걱정 없는 중고차 플랫폼
 <p align="center">
@@ -7,40 +7,41 @@
 메타버스 기술로 편리한 대출 상담까지 한 번에! <br>
 </p>
 
+<div align="center">
 
 [![wiki](http://img.shields.io/badge/-GitHub%20WiKi-black?style=flat&logo=github&logoColor=white&link=https://github.com/woorifisa-projects/woochacha/wiki)](https://github.com/woorifisa-projects/woochacha/wiki)
-
 [![tistory](http://img.shields.io/badge/-Tistory-3db39e?style=flat&logo=tistory&logoColor=white&link=https://woochacha.tistory.com/)](https://woochacha.tistory.com/)
-<br>
-
-[Backend REST Docs API 명세서 - 사용자](https://server.web.back.woochacha.store/docs/user.html) <br>
+[Backend REST Docs API 명세서 - 사용자](https://server.web.back.woochacha.store/docs/user.html)
 [Backend REST Docs API 명세서 - 관리자](https://server.web.back.woochacha.store/docs/admin.html)
+
+</div>
+
 <br><br><br>
 
 
 ## 우차차의 허위 매물 방지 기능을 소개합니다!
 ### QLDB
 
-<img src="docs/qldb.png"/>
+<img src="docs/qldb.png" width="500px"/>
 ✅ QLDB는 국가에서 관리하는 블록체인 기반기술로, 모든 실제 차량 정보와 소유주 정보가매칭되어 등록되어 있다고 가정합니다.<br><br>
 ✅ QLDB에는 차량과 관련된 모든 정보(소유주명,소유주 전화번호, 교체이력, 사고이력, 주행거리 등가 저장되며, 정비소, 본 플랫폼과 같은 자동차 관련사업자에 의해 이 정보는 지속적으로 업데이트됩니다.<br><br>
 ✅ QLDB 데이터베이스는 history기능을 이용해데이터의 수정 내역을 모두 조회할 수 있어 악의적인데이터 수정이 불가능합니다. 따라서 주행 거리를조작하거나 교체 이력 또는 사고 이력의 조작이불가합니다.<br><br>
-<img src="docs/sale.png"/>
+<img src="docs/sale.png" width="500px"/>
 ✅ 차량 판매 신청 시 QLDB에저장되어 있는 차량 번호와 소유주 이름, 전화번호를사용자가 입력한 차량번호와 사용자명, 전화번호를비교하고 일치하지 않을 시 차량 판매 신청이불가합니다.<br><br>
 ✅ 매물 판매글을 등록할 때는QLDB에서 조회한 데이터를 이용해 게시글을 등록하기때문에 모든 차량 정보는 조작되지 않았음을보장합니다.<br><br>
-<img src="docs/save.png"/>
+<img src="docs/save.png" width="500px"/>
 ✅ 매물 등록 시 차량 이미지, 업데이트 된 정(주행 거리, 차량 이미지 등)을 모두 관리자가입력하고 관리하기 때문에 본 플랫폼에서 거래되는모든 매물의 정보는 조작되지 않았음을 보장합니다.
 <br><br><br>
 
 ## 매타버스로 편리한 실시간 대출 상담 받기
-<img src="docs/wooritown.png"/>
+<img src="docs/wooritown.png" width="500px"/>
 💡 메타버스 상에서 자동차 구매를 위해 필요한 대출 상담을 실시간으로 받을 수 있습니다.<br><br>
 💡 대출 또는 자동차와 관련하여 같은 관심사를 가진 고객은 서로 대화를 나누며 정보를 교환할 수 있습니다.<br><br><br>
 
 
 ## Skills
-<img src="docs/front-skills.png">
-<img src="docs/back-skills.png">
+<img src="docs/front-skills.png" width="500px"/>
+<img src="docs/back-skills.png" width="500px"/>
 
 
 
@@ -48,7 +49,7 @@
 
 
 ## Infrastructure
-<img src="docs/infra.png"/>
+<img src="docs/infra.png" width="500px"/>
 
 <br><br><br>
 
