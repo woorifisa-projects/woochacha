@@ -22,24 +22,30 @@ export default function ImageSlider(props) {
   const imageSliderCss = {
     box: {
       mt: 1,
-      height: '47rem',
       display: 'block',
       overflow: 'hidden',
-      width: '76rem',
+      width: '100%', // 이미지를 부모 컨테이너에 꽉 차게 표시
+      height: '100%', // 이미지를 부모 컨테이너에 꽉 차게 표시
       borderRadius: '3px',
+      objectFit: 'cover', // 이미지의 가로세로 비율을 유지하면서 잘릴 수 있도록
     },
     mobileStepper: {
       display: 'flex',
       alignItems: 'center',
       height: 50,
-      width: '76rem',
+      width: '100%',
       pl: 2,
       bgcolor: 'rgb(255,255,255,0.3)',
     },
   };
 
   return (
-    <Box sx={{ maxWidth: 700, flexGrow: 1, marginLeft: 2 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        width: '100vw',
+        justifyContent: 'center',
+      }}>
       <Box component="img" sx={imageSliderCss.box} src={image[activeStep]} />
       <MobileStepper
         sx={imageSliderCss.mobileStepper}

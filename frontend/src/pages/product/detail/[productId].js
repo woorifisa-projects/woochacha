@@ -130,7 +130,7 @@ export default function ProductDetail(props) {
   const boxStyle = {
     backgroundColor: '#FFF9F7',
     borderRadius: '5px',
-    width: '760px',
+    width: '100%',
     height: '200px',
   };
 
@@ -197,7 +197,7 @@ export default function ProductDetail(props) {
       px: 8,
       my: 10,
       height: '100%',
-      width: '80%',
+      width: '90%',
       display: 'flex',
       flexDirection: 'column',
     },
@@ -209,7 +209,7 @@ export default function ProductDetail(props) {
       px: 8,
       my: 10,
       height: '100%',
-      width: '80%',
+      width: '90%',
       display: 'flex',
       flexDirection: 'column',
     },
@@ -221,8 +221,11 @@ export default function ProductDetail(props) {
       flexDirection: 'column',
       mb: 3,
     },
-    cardMedia: { pt: '56.25%', borderRadius: '1rem', minWidth: '150px', maxWidth: '700px' },
+    cardMedia: { pt: '56.25%', borderRadius: '1rem', minWidth: '150px', maxWidth: '100%' },
     cardContent: { flexGrow: 1 },
+    typo: {
+      width: 'fit-content',
+    },
   };
 
   return (
@@ -231,6 +234,7 @@ export default function ProductDetail(props) {
       <ThemeProvider theme={responsiveFontTheme}>
         <main>
           <Box sx={productDetailCss.detailHeaderBox}>
+            {/* 제목 */}
             <Typography
               sx={productDetailCss.productTitle}
               variant="h4"
@@ -239,78 +243,53 @@ export default function ProductDetail(props) {
               {detailProduct.productBasicInfo.title}
             </Typography>
 
+            {/* 제목 밑의 정보 box */}
             <Grid container sx={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-              <Grid item md={8} xs={12} sx={{ display: 'flex' }}>
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  fontWeight="bold"
-                  marginTop={1}
-                  marginBottom={2}
-                  marginRight={2}>
-                  {detailProduct.productBasicInfo.carNum}
-                </Typography>
-
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  marginTop={1}
-                  marginBottom={2}
-                  marginRight={1}
-                  marginLeft={3}
-                  color="gray">
-                  {`${detailProduct.productBasicInfo.branch} ㆍ`}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  marginTop={1}
-                  marginBottom={2}
-                  marginRight={1}
-                  color="gray">
-                  {`${detailProduct.productDetailInfo.distance}km ㆍ`}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  marginTop={1}
-                  marginBottom={2}
-                  marginRight={1}
-                  color="gray">
-                  {`${detailProduct.productDetailInfo.carType} ㆍ`}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  marginTop={1}
-                  marginBottom={2}
-                  marginRight={1}
-                  color="gray">
-                  {`${detailProduct.productDetailInfo.fuelName} ㆍ`}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  marginTop={1}
-                  marginBottom={2}
-                  marginRight={1}
-                  color="gray">
-                  {`${detailProduct.productDetailInfo.transmissionName} ㆍ`}
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  marginTop={1}
-                  marginBottom={2}
-                  marginRight={1}
-                  color="gray">
-                  {`${detailProduct.productDetailInfo.capacity}인승`}
-                </Typography>
+              {/* 오른쪽 정보 box */}
+              <Grid item md={9} xs={12} sx={{ display: 'flex' }}>
+                <Grid container display="flex" spacing={0} textAlign="center" flexWrap="nowrap">
+                  <Grid item xs={12} md={2}>
+                    <Typography variant="body1" color="gray" sx={productDetailCss.typo}>
+                      {detailProduct.productBasicInfo.carNum}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <Typography variant="body1" color="gray" sx={productDetailCss.typo}>
+                      {`${detailProduct.productBasicInfo.branch}`}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                    <Typography variant="body1" color="gray" sx={productDetailCss.typo}>
+                      {`${detailProduct.productDetailInfo.distance}km`}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <Typography variant="body1" color="gray" sx={productDetailCss.typo}>
+                      {`${detailProduct.productDetailInfo.carType}`}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                    <Typography variant="body1" color="gray" sx={productDetailCss.typo}>
+                      {`${detailProduct.productDetailInfo.fuelName}`}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <Typography variant="body1" color="gray" sx={productDetailCss.typo}>
+                      {`${detailProduct.productDetailInfo.transmissionName}`}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <Typography variant="body1" color="gray" sx={productDetailCss.typo}>
+                      {`${detailProduct.productDetailInfo.capacity}인승`}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
 
+              {/* 왼쪽 정보 box */}
               <Grid
                 item
-                md={4}
+                md={3}
                 xs={12}
                 style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
                 <Typography
@@ -318,7 +297,6 @@ export default function ProductDetail(props) {
                   variant="h4"
                   component="h4"
                   mr={1}
-                  // ml="10%"
                   color="#F95700"
                   fontWeight="bold"
                   style={{ marginLeft: 'auto', color: '#F95700', fontWeight: 'bold' }}>
@@ -341,7 +319,7 @@ export default function ProductDetail(props) {
               item
               xs={12}
               sm={12}
-              md={6}
+              md={12}
               container
               spacing={2}
               alignItems="flex-start"
@@ -350,16 +328,12 @@ export default function ProductDetail(props) {
               marginLeft={4}>
               <ImageSlider image={detailProduct.carImageList} />
             </Grid>
-            <Grid display="flex">
-              <Grid>
-                <Grid item xs={12} sm={12} md={6}>
-                  <Grid
-                    container
-                    spacing={2}
-                    alignItems="flex-start"
-                    justifyContent="center"
-                    mb={2}>
-                    <Grid item xs={12} sm={12} md={12}>
+            {/* 네모박스들 */}
+            <Grid display="flex" container width="100%">
+              <Grid item xs={12} md={8} width="100%">
+                <Grid item xs={12} sm={12} md={12}>
+                  <Grid container mb={2} width="80vw">
+                    <Grid item xs={12} sm={12} md={7}>
                       <div
                         style={{
                           display: 'flex',
@@ -388,10 +362,10 @@ export default function ProductDetail(props) {
                         </Typography>
                       </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
                         <div
                           style={{
-                            width: '370px', // 가로 크기
+                            width: '100%', // 가로 크기
                             height: '80px', // 세로 크기
                             borderRadius: '5px', // 모서리를 둥글게 만듭니다
                             border: '1px solid #ccc', // 테두리 색상 및 두께
@@ -432,7 +406,7 @@ export default function ProductDetail(props) {
                         </div>
                         <div
                           style={{
-                            width: '370px', // 가로 크기
+                            width: '100%', // 가로 크기
                             height: '80px', // 세로 크기
                             borderRadius: '5px', // 모서리를 둥글게 만듭니다
                             border: '1px solid #ccc', // 테두리 색상 및 두께
@@ -691,7 +665,7 @@ export default function ProductDetail(props) {
                   justifyContent="flex-start"
                   mb={2}
                   mt={1}>
-                  <Grid item>
+                  <Grid item width="100%">
                     <Box sx={boxStyle} variant="outlined">
                       <Grid display="flex">
                         <Grid
@@ -702,7 +676,7 @@ export default function ProductDetail(props) {
                           ml={4}
                           flexDirection="column"
                           marginTop="2%"
-                          width="63%">
+                          width="100%">
                           <div>
                             <div
                               style={{
@@ -766,7 +740,7 @@ export default function ProductDetail(props) {
                   </Typography>
                 </Box> */}
                     <Box sx={boxStyle} variant="outlined" marginTop={2}>
-                      <Grid container>
+                      <Grid container justifyContent="space-around">
                         <div>
                           <Typography fontWeight="bold" marginLeft={5} marginTop={7}>
                             신용카드 결제는 <span style={{ color: '#F95700' }}>우리카드</span>로만
@@ -779,7 +753,7 @@ export default function ProductDetail(props) {
                             * 혜택 문의: 자동차 금융상담센터(1577-9000)
                           </Typography>
                         </div>
-                        <Grid marginLeft={19} marginTop={4}>
+                        <Grid marginLeft={2} marginTop={4}>
                           <Button
                             onClick={() => {
                               window.open(wooriCardUrl);
@@ -905,7 +879,6 @@ export default function ProductDetail(props) {
                           display: 'flex',
                           flexDirection: 'row',
                           marginTop: '10px',
-                          marginTop: '5%',
                           marginLeft: '5%',
                         }}>
                         <Button
@@ -1014,8 +987,8 @@ export default function ProductDetail(props) {
                         style={{
                           display: 'flex',
                           flexDirection: 'row',
+                          flexWrap: 'nowrap',
                           marginTop: '10px',
-                          marginTop: '5%',
                           marginLeft: '5%',
                         }}>
                         <Button
@@ -1040,13 +1013,13 @@ export default function ProductDetail(props) {
                 </Grid>
               </Grid>
 
-              <Grid display="flex">
+              <Grid display="flex" item xs={12} md={4}>
                 <div
                   style={{
                     position: 'sticky', // 스크롤에 따라 고정되도록 설정
-                    top: '84px', // 화면 상단에 고정
+                    top: '200px', // 화면 상단에 고정
                     height: 'fit-content', // 컨테이너의 높이를 화면 높이로 설정
-                    width: '450px', // 원하는 사이드바의 너비 설정
+                    width: '100%', // 원하는 사이드바의 너비 설정
                     backgroundColor: 'white', // 배경색
                     border: '1px solid #ccc', // 테두리 색상 및 두께 설정
                     borderRadius: '5px', // 모서리를 둥글게
