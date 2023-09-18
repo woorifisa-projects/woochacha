@@ -326,7 +326,7 @@ export default function SignupForm() {
                   </div>
                 </Grid>
                 <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={8.5}>
+                  <Grid item xs={9}>
                     <TextField
                       onBlur={(event) => {
                         handlePhoneBlur(event, setFormValid, formValid, setSignupData, signupData);
@@ -344,7 +344,7 @@ export default function SignupForm() {
                       disabled={!phoneAgree}
                     />
                   </Grid>
-                  <Grid item xs={3.5}>
+                  <Grid item xs={3}>
                     <Button
                       variant="contained"
                       onClick={handleSendVerification}

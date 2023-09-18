@@ -390,7 +390,12 @@ function AdminSalesApproveForm(props) {
                   <InputLabel htmlFor="carOwnerPhone" sx={saleApproveFormCss.inputLabel}>
                     차량 소유주 번호
                   </InputLabel>
-                  <Typography variant="h5">{approveSaleForm.carOwnerPhone}</Typography>
+                  <Typography variant="h5">
+                    {approveSaleForm.carOwnerPhone.replace(
+                      /^(\d{2,3})(\d{3,4})(\d{4})$/,
+                      `$1-$2-$3`,
+                    )}
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <InputLabel htmlFor="carDistance" sx={saleApproveFormCss.inputLabel}>

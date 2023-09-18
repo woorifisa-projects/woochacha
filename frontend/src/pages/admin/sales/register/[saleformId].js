@@ -22,7 +22,6 @@ import theme from '@/styles/theme';
 import withAdminAuth from '@/hooks/withAdminAuth';
 import { ADMIN_REGISTER_MODAL } from '@/constants/string';
 import { handleMultipleFileUpload } from '@/components/common/MultipleFileUpload';
-import ImageSlider from '@/components/product/ImageSlider';
 import OneButtonModal from '@/components/common/OneButtonModal';
 import { oneRegisterFormGetApi, oneRegisterFormPostApi } from '@/services/adminpageApi';
 import { SwalModals } from '@/utils/modal';
@@ -33,6 +32,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CarCrashIcon from '@mui/icons-material/CarCrash';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import BuildIcon from '@mui/icons-material/Build';
+import DetailImageSlider from '@/components/product/DetailImageSlider';
 
 function AdminSalesRegisterForm(props) {
   let responsiveFontTheme = responsiveFontSizes(theme);
@@ -385,7 +385,11 @@ function AdminSalesRegisterForm(props) {
                   사진 등록 (최대 4장)
                 </Typography>
                 <Stack direction="column" alignItems="center" spacing={2} mb={5}>
-                  {previewImageList.length > 0 ? <ImageSlider image={previewImageList} /> : ''}
+                  {previewImageList.length > 0 ? (
+                    <DetailImageSlider image={previewImageList} />
+                  ) : (
+                    ''
+                  )}
                   <label htmlFor="upload-image">
                     <input
                       id="upload-image"
