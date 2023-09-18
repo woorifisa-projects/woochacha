@@ -99,7 +99,7 @@ function DefaultHeader() {
               component="a"
               href="/"
               sx={defaultHeaderCss.mdHeaderLogo}>
-              <Image src={LogoImage} width={180} height={80} alt="woochacha-logo" />
+              <Image src={LogoImage} width={180} height={60} alt="woochacha-logo" />
             </Typography>
 
             <Box sx={defaultHeaderCss.xsHeaderBox}>

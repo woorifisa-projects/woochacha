@@ -18,7 +18,7 @@ import Image from 'next/image';
 import BannerImage from '../../public/assets/images/woochacha-banner01.svg';
 import LoadingBar from '@/components/common/LoadingBar';
 import throttle from 'lodash/throttle';
-import { Router } from 'next/router';
+import { useRouter } from 'next/router';
 
 const mainFeaturedPost = {
   title: '우차차가 추천하는 금융상품 보러가기',
@@ -31,6 +31,7 @@ export default function Home(props) {
   const [mounted, setMounted] = useState(false);
   const [allProducts, setAllProducts] = useState();
   let responsiveFontTheme = responsiveFontSizes(theme);
+  const router = useRouter();
 
   const { allPr } = props;
 
@@ -105,7 +106,7 @@ export default function Home(props) {
   }, []);
 
   const handelMove = () => {
-    Router.push('/product');
+    router.push('/product');
   };
 
   const MainPageCss = {
@@ -145,6 +146,7 @@ export default function Home(props) {
             layout="fill"
             className={styles.bannerImage}
             alt="banner-image"
+            loading="lazy"
           />
         </Stack>
 

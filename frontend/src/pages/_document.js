@@ -9,11 +9,12 @@ export default function MyDocument(props) {
   const { emotionStyleTags } = props;
 
   return (
-    <Html lang="en">
+    <Html lang="ko">
       <Head>
         {/* PWA primary color */}
+        <title>우차차 | 우리가 찾는 차! 중고차 플랫폼 우차차입니다.</title>
         <meta name="theme-color" content={theme.palette.primary.main} />
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/assets/images/favicon.ico" />
         <meta name="emotion-insertion-point" content="" />
         <meta name="description" content="우리가 찾는 차! 중고차 플랫폼 우차차입니다." />
         {emotionStyleTags}
