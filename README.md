@@ -1,4 +1,4 @@
-# 우리가 찾는 차, WOOCHACHA
+# 우리가 찾는 차, WOOCHACHA - 🏆 최종 프로젝트 최우수상
 <div align="center"><img src="docs/logo2.png" width="500px"/></div>
 
 ## 허위 매물 걱정 없는 중고차 플랫폼
